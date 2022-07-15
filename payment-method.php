@@ -19,7 +19,7 @@
                             <h2 class="m-0">Payment Method</h2>
                             <img src="images/payment.png" alt="">
                         </div>
-                        <form action="">
+                        <form action="tha-network.php">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -52,7 +52,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="themeBtn" onclick="window.location.href='index.php'">CONFIRM PAYMENT</button>
+                            <button type="submit" class="themeBtn" onclick="window.location.href='tha-network.php'">CONFIRM PAYMENT</button>
                             <p class="color-grey mt-3">This payment information will be used for recurring payments every month. If you would like to cancel recurring payments go to your edit profile page to stop recurring payments.</p>
                         </form>
                     </div>

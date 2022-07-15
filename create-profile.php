@@ -16,7 +16,7 @@
                     <div class="contentWrap">
                         <a href="#"><img src="images/logo.png" alt="logo"></a>
                         <h2>Create Profile</h2>
-                        <form action="">
+                        <form action="payment-method.php">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -72,7 +72,7 @@
                                     <p class="color-danger">All United State citizens/residents are required to enter their social security numbers for Tax purposes. Your information will never be shared or used for any other purposes. If a social is not provided for US citizens/residents payments will not be distributed until your social is provided."</p>
                                 </div>
                             </div>
-                            <button type="submit" class="themeBtn" onclick="window.location.href='index.php'">NEXT</button>
+                            <button type="submit" class="themeBtn" onclick="window.location.href='payment-method.php'">NEXT</button>
                         </form>
                     </div>
                 </div>
@@ -80,4 +80,5 @@
         </div>
     </section>
 
+    
     <?php include 'include/footer.php' ?>
