@@ -26,7 +26,7 @@
                         </ul>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="one-pane" role="tabpanel" aria-labelledby="one-tab">
-                                <form action="create-profile.php">
+                                <form action="tha-network.php">
                                     <div class="form-group">
                                         <label for="email">Username or Email Address</label>
                                         <input type="email" name="email" placeholder="" class="form-control">
@@ -40,16 +40,16 @@
                                         <input type="checkbox" class="form-check-input" id="rememberMe">
                                         <label class="form-check-label" for="rememberMe">Rememer Me</label>
                                     </div>
-                                    <button type="submit" class="themeBtn" onclick="window.location.href='create-profile.php'">LOGIN</button>
+                                    <button type="submit" class="themeBtn" onclick="window.location.href='tha-network.php'">LOGIN</button>
                                 </form>
                             </div>
                             <div class="tab-pane fade" id="two-pane" role="tabpanel" aria-labelledby="two-tab">
-                                <form action="tha-network.php">
+                                <form action="create-profile.php">
                                     <div class="form-group">
                                         <label for="code" id="code">Code</label>
                                         <input type="text" name="code" id="code" placeholder="" class="form-control">
                                     </div>
-                                    <button type="submit" class="themeBtn" onclick="window.location.href='tha-network.php'">Submit</button>
+                                    <button type="submit" class="themeBtn" onclick="window.location.href='create-profile.php'">Submit</button>
                                 </form>
                             </div>
                         </div>

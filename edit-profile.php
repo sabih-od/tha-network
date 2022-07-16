@@ -145,7 +145,7 @@
                                 <a href="#" class="editProBtn">Edit</a>
                             </div>
                         </div>
-                        <div class="cardWrap">
+                        <form class="cardWrap" action="login.php">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -185,7 +185,7 @@
                         </div>
 
                         <div class="btn-group gap1">
-                            <button type="submit" class="themeBtn">Save</button>
+                            <button type="submit"  class="themeBtn" onclick="window.location.href='login.php">Save</button>
                             <button class="themeBtn discard">Discard Changes</button>
                         </div>
                     </div>
