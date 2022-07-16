@@ -17,7 +17,7 @@
                     <div class="col-md-4">
                         <div class="content">
                             <h3>Membership Pays</h3>
-                            <a href="login.php" class="themeBtn">Join Us</a>
+                            <a href="payment-method.php" class="themeBtn">Join Us</a>
                         </div>
                     </div>
                 </div>
