@@ -16,7 +16,7 @@
                     <div class="contentWrap">
                         <a href="#"><img src="images/logo.png" alt="logo"></a>
                         <h2>Create Profile</h2>
-                        <form action="login.php">
+                        <form action="tha-network.php">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -69,10 +69,11 @@
                                         <label for="securityNo">Social Security Number</label>
                                         <input type="text" name="securityNo" placeholder="" class="form-control">
                                     </div>
-                                    <p class="color-danger">All United State citizens/residents are required to enter their social security numbers for Tax purposes. Your information will never be shared or used for any other purposes. If a social is not provided for US citizens/residents payments will not be distributed until your social is provided."</p>
+                                    <p class="color-danger">All United State citizens/residents are required to enter their social security numbers for Tax purposes. Your information will never be shared or used for any other purposes. If a social is
+                                        not provided for US citizens/residents payments will not be distributed until your social is provided."</p>
                                 </div>
                             </div>
-                            <button type="submit" class="themeBtn" onclick="window.location.href='login.php'">NEXT</button>
+                            <button type="submit" class="themeBtn" onclick="window.location.href='tha-network.php'">NEXT</button>
                         </form>
                     </div>
                 </div>
@@ -80,5 +81,5 @@
         </div>
     </section>
 
-    
+
     <?php include 'include/footer.php' ?>

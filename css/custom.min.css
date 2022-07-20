@@ -1514,3 +1514,26 @@ footer .links li a:hover {
   background: var(--black);
   border-color: var(--black);
 }
+
+.getText a span {
+  font-size: 1.125rem;
+  color: #828282;
+  display: inline-block;
+}
+
+.getText {
+  padding-bottom: 1.3rem;
+}
+
+.invitationInner h3 {
+  font-size: 1rem;
+  color: #828282;
+}
+
+.invitationInner form .form-group label {
+  padding-right: 4rem;
+}
+
+.invitationInner .form-check {
+  padding-left: 0;
+}
