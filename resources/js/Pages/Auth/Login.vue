@@ -1,0 +1,184 @@
+<template>
+    <section class="loginSection">
+        <div class="loginWrap">
+            <div class="row mx-0 no-gutters">
+                <div class="col-md-7">
+                    <figure>
+                        <img :src="asset('images/loginImg.png')" class="w-100" alt="">
+                        <img :src="asset('images/user-logo.png')" class="login-logo" alt="">
+                    </figure>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="contentWrap">
+                        <a href="#"><img :src="asset('images/logo.png')" alt="logo"></a>
+                        <ul class="nav login-tabs" id="myTab" role="tablist">
+                            <li>
+                                <a class="nav-link" :class="{'active': !isCode}" id="one-tab" data-toggle="tab"
+                                   href="#one-pane" role="tab"
+                                   aria-controls="one-pane" aria-selected="true">Login</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" :class="{'active': isCode}" id="two-tab" data-toggle="tab"
+                                   href="#two-pane" role="tab"
+                                   aria-controls="two-pane" aria-selected="false">Invitation Code</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade" :class="{'active show': !isCode}" id="one-pane" role="tabpanel"
+                                 aria-labelledby="one-tab">
+                                <form @submit.prevent="submit">
+                                    <div class="form-group">
+                                        <label for="email">Username or Email Address</label>
+                                        <input type="text" id="email" v-model="form.email" placeholder=""
+                                               class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pass">Password</label>
+                                        <a href="forgot-password.php">Forget Password?</a>
+                                        <input type="password" id="pass" v-model="form.password" placeholder=""
+                                               class="form-control">
+                                    </div>
+                                    <div class="form-group form-check mb-3">
+                                        <input type="checkbox" class="form-check-input" v-model="form.remember"
+                                               id="rememberMe">
+                                        <label class="form-check-label" for="rememberMe">Rememer Me</label>
+                                    </div>
+                                    <div class="getText">
+                                        <Link :href="$route('invitationCodeForm')" replace>
+                                            <span>To get invitation code</span> Click Here
+                                        </Link>
+                                    </div>
+                                    <button type="submit" class="themeBtn" :disabled="form.processing">
+                                        {{ form.processing ? 'Please wait...' : 'LOGIN' }}
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade" id="two-pane" :class="{'active show': isCode}" role="tabpanel"
+                                 aria-labelledby="two-tab">
+                                <form @submit.prevent="verifyCode">
+                                    <div class="form-group">
+                                        <label for="code">Code</label>
+                                        <input type="text" v-model="codeForm.code" id="code" placeholder=""
+                                               class="form-control">
+                                    </div>
+                                    <button type="submit" class="themeBtn" :disabled="codeForm.processing">
+                                        {{ form.processing ? 'Please wait...' : 'Submit' }}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--    <section class="loginSection">
+            <div class="loginWrap">
+                <div class="row align-items-center mx-0 no-gutters">
+                    <div class="col-md-7">
+                        <figure><img src="images/loginImg.png" alt=""></figure>
+                    </div>
+
+                    <div class="col-md-5">
+                        <div class="contentWrap">
+                            <a href="#"><img src="images/logo.png" alt="logo"></a>
+                            <h2>Login <span>Login to Continue</span></h2>
+                            <form @submit.prevent="submit">
+                                <div class="form-group" :class="{'mb-0': errors.email}">
+                                    <i class="fas fa-user"></i>
+                                    <input type="email" v-model="form.email" placeholder="Email Address"
+                                           class="form-control">
+                                </div>
+                                <p v-if="errors.email" class="small text-danger">{{ errors.email }}</p>
+
+                                <div class="form-group" :class="{'mb-0': errors.password}">
+                                    <i class="fas fa-lock-open-alt"></i>
+                                    <input type="password" v-model="form.password" placeholder="Password"
+                                           class="form-control">
+                                </div>
+                                <p v-if="errors.password" class="small text-danger">{{ errors.password }}</p>
+                                <button type="submit">LOGIN</button>
+                                <div class="df jcsb aic">
+                                    <div class="form-group form-check mb-0">
+                                        <input type="checkbox" class="form-check-input" v-model="form.remember"
+                                               id="saveUser">
+                                        <label class="form-check-label" for="saveUser">Save User</label>
+                                    </div>
+                                    <a href="forgot-password.php">Forgot your password?</a>
+                                </div>
+                                <div class="df jcc aic mt-5">
+                                    <p>Don't Have an Account?
+                                        <Link :href="$route('registerForm')" replace>Sign Up</Link>
+                                    </p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>-->
+</template>
+
+<script>
+import {useForm, Link} from "@inertiajs/inertia-vue3";
+import {Inertia} from "@inertiajs/inertia";
+import utils from "../../mixins/utils";
+
+export default {
+    name: "Login",
+    mixins: [utils],
+    props: {
+        errors: Object,
+    },
+    components: {
+        Link
+    },
+    mounted() {
+        this.isCode = window.location.search.indexOf('send-code=success') > -1
+    },
+    data() {
+        return {
+            isCode: false,
+            form: useForm('loginForm', {
+                email: "",
+                password: "",
+                remember: false
+            }),
+            codeForm: useForm('codeForm', {
+                code: ''
+            })
+        }
+    },
+    methods: {
+        submit() {
+            if (this.form.processing) return;
+            this.form.post(this.$route('login'), {
+                replace: true,
+                onSuccess: () => {
+                    this.form.reset()
+                },
+                onFinish: () => {
+                    this.showErrorMessage()
+                }
+            })
+        },
+        verifyCode() {
+            if (this.codeForm.processing) return;
+            this.codeForm.post(this.$route('verifyCode'), {
+                replace: true,
+                onSuccess: () => {
+                    this.codeForm.reset()
+                },
+                onFinish: () => {
+                    this.showErrorMessage()
+                }
+            })
+        }
+    }
+}
+</script>
+
+<style scoped>
+
+</style>

@@ -1,0 +1,64 @@
+<template>
+    <div class="dropdown nav-icons">
+        <button class="dropdown-toggle" type="button" id="profileDropDown" data-toggle="dropdown" aria-expanded="false">
+            <img src="images/small-character.jpg" class="rounded-circle" alt="">
+        </button>
+        <div class="dropdown-menu" aria-labelledby="profileDropDown">
+            <a class="dropdown-item" href="profile.php">Profile</a>
+            <a class="dropdown-item" href="edit-profile.php">Edit Profile</a>
+            <div class="dropdown-divider"></div>
+            <Link :href="$route('logout')" method="post" replace :headers="logoutHeaders"
+                  class="dropdown-item">Logout
+            </Link>
+        </div>
+    </div>
+
+    <!--    <div class="dropdown">
+            <button class="dropdown-toggle" type="button" id="profileDropDown" data-toggle="dropdown"
+                    aria-expanded="false">
+                <img :src="profile_img" class="rounded-circle profileImgIcon" alt="">
+            </button>
+            <div class="dropdown-menu" aria-labelledby="profileDropDown">
+                <Link replace class="dropdown-item" :href="$route('profile')">My Profile</Link>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#tokenModal">Buy
+                    Tokens</a>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#changePassModal">Change
+                    Password</a>
+                <div class="dropdown-divider"></div>
+                <Link :href="$route('logout')" method="post" replace :headers="logoutHeaders"
+                      class="dropdown-item">Logout
+                </Link>
+            </div>
+        </div>-->
+</template>
+
+<script>
+import {Link, usePage} from "@inertiajs/inertia-vue3";
+
+export default {
+    name: "HeaderProfileMenu",
+    components: {
+        Link
+    },
+    computed: {
+        profile_img() {
+            return usePage().props.value?.auth_profile_image ?? this.$store.getters['Utils/public_asset']('images/ph-profile.jpg')
+        },
+    },
+    data() {
+        return {
+            logoutHeaders: {
+                'Cache-Control': 'nocache, no-store, max-age=0, must-revalidate',
+                'Pragma': 'nocache, no-store, max-age=0, must-revalidate',
+                'Expires': 'Fri, 01 Jan 1990 00:00:00 GMT',
+            }
+        }
+    },
+}
+</script>
+
+<style scoped>
+.profileImgIcon {
+    max-width: 40px;
+}
+</style>
