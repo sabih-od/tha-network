@@ -14,49 +14,52 @@
                         <a href="#"><img :src="asset('images/logo.png')" alt="logo"></a>
                         <div class="df jcsb mt-3">
                             <h2 class="m-0">Payment Method</h2>
-                            <img src="images/payment.png" alt="">
+                            <img :src="asset('images/payment.png')" alt="">
                         </div>
-                        <form @submit.prevent="">
-<!--                            <h3 class="text-secondary" v-if="formLoading">Please wait...</h3>-->
-<!--                            <div id="payment-element"></div>-->
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="cardname">Name on Card</label>
-                                        <input type="text" name="cardname" placeholder="" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="cardNo">Card Number</label>
-                                        <input type="text" name="cardNo" placeholder="" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mb-2">
-                                        <label for="expireDate">Expiration Date</label>
-                                        <input type="text" name="expireDate" placeholder="MM / YY" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="cvv">CVV Code</label>
-                                        <input type="text" name="cvv" placeholder="" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="zipCode">Billing Zipcode</label>
-                                        <input type="text" name="zipCode" placeholder="" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                            <Link type="button" class="themeBtn" :href="$route('registerForm')" replace>
-                                CONFIRM PAYMENT
-                            </Link>
-                            <p class="color-grey mt-3">This payment information will be used for recurring payments
-                                every month. If you would like to cancel recurring payments go to your edit profile page
-                                to stop recurring payments.</p>
+                        <form @submit.prevent="submit">
+                            <h3 class="text-secondary" v-if="mountLoading">Please wait...</h3>
+                            <div id="payment-element"></div>
+                            <!--                            <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label for="cardname">Name on Card</label>
+                                                                    <input type="text" name="cardname" placeholder="" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label for="cardNo">Card Number</label>
+                                                                    <input type="text" name="cardNo" placeholder="" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group mb-2">
+                                                                    <label for="expireDate">Expiration Date</label>
+                                                                    <input type="text" name="expireDate" placeholder="MM / YY" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="form-group">
+                                                                    <label for="cvv">CVV Code</label>
+                                                                    <input type="text" name="cvv" placeholder="" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label for="zipCode">Billing Zipcode</label>
+                                                                    <input type="text" name="zipCode" placeholder="" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                        </div>-->
+                            <template v-if="!mountLoading">
+                                <button type="submit" class="themeBtn mt-3">
+                                    {{ formLoading ? 'Please wait...' : 'CONFIRM PAYMENT' }}
+                                </button>
+                                <p class="color-grey mt-3">This payment information will be used for recurring payments
+                                    every month. If you would like to cancel recurring payments go to your edit profile
+                                    page
+                                    to stop recurring payments.</p>
+                            </template>
                         </form>
                     </div>
                 </div>
@@ -67,6 +70,8 @@
 
 <script>
 import utils from "../mixins/utils";
+import {useToast} from "vue-toastification";
+import {usePage} from "@inertiajs/inertia-vue3";
 
 export default {
     name: "Payment",
@@ -77,12 +82,14 @@ export default {
     data() {
         return {
             elements: null,
-            formLoading: true
+            stripe: null,
+            mountLoading: true,
+            formLoading: false,
         }
     },
     mounted() {
-        // console.log(this.client_secret, document.head.querySelector('#stripe-js'))
-        /*if (!document.head.querySelector('#stripe-js')) {
+        console.log(this.client_secret, document.head.querySelector('#stripe-js'))
+        if (!document.head.querySelector('#stripe-js')) {
             const scriptTag = document.createElement('script')
             scriptTag.src = 'https://js.stripe.com/v3/'
             scriptTag.onload = () => {
@@ -90,18 +97,36 @@ export default {
                 this.initialize()
             }
             document.head.appendChild(scriptTag)
-        }else{
+        } else {
             this.initialize()
-        }*/
+        }
     },
     methods: {
         initialize() {
-            const stripe = Stripe("pk_test_asd5yoHRyR9Wn14y6FwNcrCm");
-            this.elements = stripe.elements({clientSecret: this.client_secret})
+            this.stripe = Stripe("pk_test_0rY5rGJ7GN1xEhCB40mAcWjg");
+            this.elements = this.stripe.elements({clientSecret: this.client_secret})
 
             const paymentElement = this.elements.create("payment");
             paymentElement.mount("#payment-element");
+            paymentElement.on('ready', () => {
+                this.mountLoading = false
+            })
+        },
+        async submit() {
+            this.formLoading = true
+            const {error} = await this.stripe.confirmPayment({
+                elements: this.elements,
+                confirmParams: {
+                    return_url: this.$route('successPayment'),
+                },
+            });
 
+            (useToast()).clear();
+            if (error.type === "card_error" || error.type === "validation_error") {
+                (useToast()).error(error.message);
+            } else {
+                (useToast()).error("An unexpected error occurred.");
+            }
             this.formLoading = false
         }
     }

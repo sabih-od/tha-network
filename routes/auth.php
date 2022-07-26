@@ -29,6 +29,8 @@ Route::group(['middleware' => ['revalidate']], function () {
             ->name('howItWorks');
         Route::get('payment', [HowItWorks::class, 'paymentShow'])
             ->name('paymentShow');
+        Route::get('success-payment', [HowItWorks::class, 'successPayment'])
+            ->name('successPayment')->middleware('is.client.secret');
 
         // Register
         Route::get('create-profile', [RegisterController::class, 'showRegistrationForm'])

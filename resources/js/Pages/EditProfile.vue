@@ -8,72 +8,9 @@
                 <div class="col-md-10">
                     <BioUpdate/>
 
-                    <div class="edit-card">
-                        <a href="#" class="editProBtn">Edit</a>
-                        <div class="cardWrap">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="fname">First Name</label>
-                                        <input type="text" name="fname" class="form-control" placeholder="John">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="lname">Last Name</label>
-                                        <input type="text" name="lname" class="form-control" placeholder="Smit">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="email">Email</label>
-                                        <input type="email" name="email" class="form-control"
-                                               placeholder="Johnsmit23@gmail.com">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="phone">Phone</label>
-                                        <input type="text" name="phone" class="form-control" placeholder="+123-456-789">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <InfoUpdate/>
 
-                    <div class="edit-card">
-                        <a href="#" class="editProBtn">Edit</a>
-                        <div class="cardWrap">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="address">Address</label>
-                                        <input type="text" name="address" class="form-control"
-                                               placeholder="Lorem ipsum 23578">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="country">Country</label>
-                                        <input type="text" name="country" class="form-control"
-                                               placeholder="United State">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="city">City</label>
-                                        <input type="text" name="city" class="form-control" placeholder="New York">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="phone">Postel/Zip Code</label>
-                                        <input type="text" name="phone" class="form-control" placeholder="564289">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <AddressUpdate/>
 
                     <div class="edit-card">
                         <a href="#" class="editProBtn">Edit</a>
@@ -318,11 +255,15 @@ import CoverPhoto from "../components/CoverPhoto";
 import {Inertia} from "@inertiajs/inertia";
 import ProfileLayout from "../Layouts/ProfileLayout";
 import BioUpdate from "../components/Forms/BioUpdate";
+import InfoUpdate from "../components/Forms/InfoUpdate";
+import AddressUpdate from "../components/Forms/AddressUpdate";
 
 export default {
     name: "EditProfile",
     components: {
+        AddressUpdate,
         BioUpdate,
+        InfoUpdate,
         Main,
         UserInfo,
         Link,

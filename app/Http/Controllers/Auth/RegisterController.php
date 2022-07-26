@@ -52,7 +52,14 @@ class RegisterController extends Controller
 
     public function showRegistrationForm()
     {
-        return Inertia::render('Auth/Register');
+        $userInv = UserInvitation::where('id', session('validate-code'))
+            ->whereHas('payment')
+            ->whereNull('deleted_at')
+            ->exists();
+        if ($userInv)
+            return Inertia::render('Auth/Register');
+        else
+            return redirect(route('loginForm'));
     }
 
     /**
@@ -64,17 +71,16 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         $data['user_invitation_id'] = session('validate-code');
-//        dd($data);
         return Validator::make($data, [
             'user_invitation_id' => [
                 'required',
                 function ($attribute, $value, $fail) {
                     if (!$value) return;
                     $userInvitation = UserInvitation::where('id', $value)
-                        ->whereDoesntHave('payment')
+                        ->whereHas('payment')
                         ->whereNull('deleted_at')
                         ->exists();
-                    if (!$userInvitation){
+                    if (!$userInvitation) {
                         session()->flush();
                         $fail("Invalid invitation id!");
                     }

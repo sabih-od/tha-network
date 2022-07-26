@@ -9,7 +9,7 @@ trait StripePayment
 {
     public function generateClientSecret($amount = 0)
     {
-        Stripe::setApiKey('sk_test_D3IOwDmOjjy6zoV8eWWnd9s8');
+        Stripe::setApiKey('sk_test_lUp78O7PgN08WC9UgNRhOCnr');
 
         try {
             // Create a PaymentIntent with amount and currency

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\WebResponses;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,29 +53,58 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:255'],
-            'gender' => ['required', 'string', 'max:255'],
-            'dob' => ['required', 'date'],
-            'marital_status' => ['required', 'string', 'max:255'],
-            'country_of_residence' => ['required', 'string', 'max:255'],
-            'city' => ['required', 'string', 'max:255'],
-            'bio' => ['required', 'string', 'max:1000'],
-            'personal_links' => ['nullable', 'string', 'max:1000'],
-        ]);
+        $v_rules = [];
+
+        if ($request->has('bio'))
+            $v_rules = [
+                'bio' => ['required', 'string', 'max:1000'],
+            ];
+        elseif (
+            $request->has('first_name') &&
+            $request->has('last_name') &&
+            $request->has('email') &&
+            $request->has('phone')
+        )
+            $v_rules = [
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'phone' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'email', 'max:255', Rule::unique('users')
+                    ->whereNull('deleted_at')
+                    ->ignore(Auth::id())
+                ],
+            ];
+        elseif (
+            $request->has('address') &&
+            $request->has('country') &&
+            $request->has('city') &&
+            $request->has('postal_code')
+        )
+            $v_rules = [
+                'address' => ['required', 'string', 'max:255'],
+                'country' => ['required', 'string', 'max:255'],
+                'city' => ['required', 'string', 'max:255'],
+                'postal_code' => ['required', 'string', 'max:255'],
+            ];
+
+        if (empty($v_rules))
+            return WebResponses::exception('Invalid request!');
+
+        $data = $request->validate($v_rules);
 
         try {
             $user = Auth::user();
-            $user->name = $data['name'];
-            $user->save();
-            $user->profile()->updateOrCreate(
-                ['user_id' => Auth::id()],
-                collect($data)->except('name')->all()
+            if (collect($data)->has('email')) {
+                $user->email = $data['email'];
+                $user->save();
+            }
+
+            $user->profile()->update(
+                collect($data)->except(['email'])->all()
             );
-            return redirect()->route('editProfileForm')->with('success', 'Profile updated successfully!');
+            return WebResponses::success('Profile updated successfully!');
         } catch (\Exception $e) {
-            return redirect()->route('editProfileForm')->with('error', $e->getMessage());
+            return WebResponses::exception($e->getMessage());
         }
     }
 
@@ -170,7 +200,7 @@ class ProfileController extends Controller
             $auth = Auth::user();
             $is_blocked_by_user = $auth->isBlockedBy($user);
 
-            if($is_blocked_by_user){
+            if ($is_blocked_by_user) {
                 return redirect(route('home'))->with('error', "You are blocked by user!");
             }
 

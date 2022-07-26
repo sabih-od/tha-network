@@ -83,15 +83,19 @@ export default {
             (useToast()).success(usePage().props.value?.flash?.success ?? 'Request submitted successfully!');
         },
         showErrorMessages() {
-            (useToast()).clear();
-            const errors = usePage().props.value?.errors ?? {};
-            for (const x in errors) {
-                (useToast()).error(errors[x]);
-                break
-            }
-            if (usePage().props.value?.flash?.error) {
-                (useToast()).error(usePage().props.value.flash.error);
-            }
+            return new Promise((resolve, reject) => {
+                (useToast()).clear();
+                const errors = usePage().props.value?.errors ?? {};
+                for (const x in errors) {
+                    (useToast()).error(errors[x]);
+                    return reject()
+                }
+                if (usePage().props.value?.flash?.error) {
+                    (useToast()).error(usePage().props.value.flash.error);
+                    return reject()
+                }
+                resolve()
+            })
         }
     }
 }

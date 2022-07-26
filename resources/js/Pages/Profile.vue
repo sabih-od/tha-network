@@ -6,9 +6,8 @@
                 <div class="col-md-3">
                     <div class="cardWrap">
                         <h2>About</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                            labore et dolore magna aliqua. Ut enim ad minim veniam</p>
-                        <a href="#" class="btnDesign">See more</a>
+                        <p class="text-pre-wrap">{{ profile?.bio }}</p>
+                        <a href="#" @click.prevent class="btnDesign">See more</a>
                     </div>
 
                     <PeopleList/>
@@ -116,5 +115,7 @@ export default {
 </script>
 
 <style scoped>
-
+.text-pre-wrap {
+    white-space: pre-wrap;
+}
 </style>
