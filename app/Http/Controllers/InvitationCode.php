@@ -56,13 +56,16 @@ class InvitationCode extends Controller
             ]);
             DB::commit();
 
-            Mail::send(
-                'mails.send-invitation-code-mail',
-                ['code' => $code],
-                function ($message) use ($data) {
-                    $message->to($data['email'])->subject('Invitation Code!');
-                }
-            );
+            /* Mail::send(
+                 'mails.send-invitation-code-mail',
+                 ['code' => $code],
+                 function ($message) use ($data) {
+                     $message->to($data['email'])->subject('Invitation Code!');
+                 }
+             );*/
+
+            if (!$this->mailCode($data['email'], 'Tha Network - Invitation Code!', $code))
+                return WebResponses::exception("Email not send!");
 
             $route = route('loginForm', 'send-code=success');
             return WebResponses::success(
@@ -118,6 +121,39 @@ class InvitationCode extends Controller
             return $code;
         } catch (\Exception $e) {
             return $e;
+        }
+    }
+
+    /**
+     * @param $to
+     * @param $subject
+     * @param $code
+     * @return bool
+     */
+    public function mailCode($to, $subject, $code)
+    {
+        $from = 'no-reply@tha-network.com';
+
+        // To send HTML mail, the Content-type header must be set
+        $headers = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+
+        // Create email headers
+        $headers .= 'From: ' . $from . "\r\n" .
+            'Reply-To: ' . $from . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
+
+        // Compose a simple HTML email message
+        $message = '<html><body>';
+        $message .= '<h1 style="color:#f40;">Dear User!</h1>';
+        $message .= '<p style="color:#080;font-size:18px;">Your generated invitation code: ' . $code . '</p>';
+        $message .= '</body></html>';
+
+        // Sending email
+        if (mail($to, $subject, $message, $headers)) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
