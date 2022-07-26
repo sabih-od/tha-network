@@ -1,47 +1,76 @@
 <template>
     <div class="postBox">
-
-        <ul class="topList">
-            <li><a href="#" @click.prevent><i class="fal fa-edit"></i> Make Post</a></li>
-            <li>
-                <a href="#"><i class="fal fa-video-plus"></i>Upload Photos/Videos
-                    <input type="file" name="post_video[]" class="postFileUploader" @change.prevent="filesSelect"
-                           multiple>
-                </a>
-            </li>
-            <li><a href="#" @click.prevent><img :src="$store.getters['Utils/public_asset']('images/live.png')" alt="">
-                Live Video</a></li>
-        </ul>
-        <div v-if="renderedFiles.length > 0" class="row mx-2">
-            <div class="col-md-2 position-relative" v-for="(file, ind) in renderedFiles" :key="ind">
-                <img v-if="file.type === 'image'" :src="file.source" class="img-fluid w-100" alt="">
-                <i class="fas fa-times delete-icon" @click.prevent="removeFile($event, file.fileInd)"></i>
+        <form action="">
+            <ul class="topList">
+                <li><a href="#"><i class="fal fa-edit"></i> Make Post</a></li>
+                <!-- <li>
+                    <a href="#"><i class="fal fa-video-plus"></i>Upload Video
+                        <input type="file" name="post_video[]" class="postFileUploader" multiple="">
+                    </a>
+                </li>
+                <li><a href="#"><img src="images/live.png" alt=""> Live Video</a></li> -->
+            </ul>
+            <div class="textAreaWrap">
+                <div class="iconWrap"><img :src="asset('images/small-character.jpg')" class="rounded-circle" alt="">
+                </div>
+                <textarea name="post" placeholder="Want to Share a Memory?" id=""></textarea>
             </div>
-        </div>
-        <div class="textAreaWrap">
-            <div class="iconWrap"><img :src="profile_img" alt=""></div>
-            <textarea v-model="form.content" name="post" placeholder="Want to Share a Memory?" id=""></textarea>
-            <!--            <p v-if="errors?.content" class="small text-danger">{{ errors.content }}</p>-->
-        </div>
-        <!-- Video Preview -->
-        <div id="up_images">
-            <div class="cst_imgs">
-            </div>
-        </div>
-        <!-- Video Preview -->
-        <ul class="bottomList">
-            <!--            <li><a href="#" class="optBtn"><i class="fal fa-smile"></i> Feeling Activity</a>
-                        </li>
-                        <li><a href="#" class="optBtn"><i class="fas fa-map-marker-alt"></i>Location</a>
-                        </li>-->
-            <li class="ml-auto"><a @click.prevent="submit"
-                                   href="#"
-                                   class="themeBtn">Post Now</a></li>
-        </ul>
-        <teleport v-if="form.progress" to="body">
-            <ImageUploadingProgress :progress="form.progress.percentage"/>
-        </teleport>
+            <!-- Video Preview -->
+            <!-- <div id="up_images">
+                <div class="cst_imgs">
+                </div>
+            </div> -->
+            <!-- Video Preview -->
+            <ul class="bottomList">
+                <li><a href="#" class="optBtn"><i class="fal fa-smile"></i> Feeling Activity</a></li>
+                <li><a href="#" class="optBtn"><i class="fas fa-map-marker-alt"></i>Location</a></li>
+                <li class="ml-auto"><a href="#" class="btnDesign">Post Now</a></li>
+            </ul>
+        </form>
     </div>
+    <!--    <div class="postBox">
+
+            <ul class="topList">
+                <li><a href="#" @click.prevent><i class="fal fa-edit"></i> Make Post</a></li>
+                <li>
+                    <a href="#"><i class="fal fa-video-plus"></i>Upload Photos/Videos
+                        <input type="file" name="post_video[]" class="postFileUploader" @change.prevent="filesSelect"
+                               multiple>
+                    </a>
+                </li>
+                <li><a href="#" @click.prevent><img :src="$store.getters['Utils/public_asset']('images/live.png')" alt="">
+                    Live Video</a></li>
+            </ul>
+            <div v-if="renderedFiles.length > 0" class="row mx-2">
+                <div class="col-md-2 position-relative" v-for="(file, ind) in renderedFiles" :key="ind">
+                    <img v-if="file.type === 'image'" :src="file.source" class="img-fluid w-100" alt="">
+                    <i class="fas fa-times delete-icon" @click.prevent="removeFile($event, file.fileInd)"></i>
+                </div>
+            </div>
+            <div class="textAreaWrap">
+                <div class="iconWrap"><img :src="profile_img" alt=""></div>
+                <textarea v-model="form.content" name="post" placeholder="Want to Share a Memory?" id=""></textarea>
+                &lt;!&ndash;            <p v-if="errors?.content" class="small text-danger">{{ errors.content }}</p>&ndash;&gt;
+            </div>
+            &lt;!&ndash; Video Preview &ndash;&gt;
+            <div id="up_images">
+                <div class="cst_imgs">
+                </div>
+            </div>
+            &lt;!&ndash; Video Preview &ndash;&gt;
+            <ul class="bottomList">
+                &lt;!&ndash;            <li><a href="#" class="optBtn"><i class="fal fa-smile"></i> Feeling Activity</a>
+                            </li>
+                            <li><a href="#" class="optBtn"><i class="fas fa-map-marker-alt"></i>Location</a>
+                            </li>&ndash;&gt;
+                <li class="ml-auto"><a @click.prevent="submit"
+                                       href="#"
+                                       class="themeBtn">Post Now</a></li>
+            </ul>
+            <teleport v-if="form.progress" to="body">
+                <ImageUploadingProgress :progress="form.progress.percentage"/>
+            </teleport>
+        </div>-->
 </template>
 
 <script>
@@ -49,9 +78,11 @@ import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {useToast} from "vue-toastification";
 import {Inertia} from "@inertiajs/inertia";
 import ImageUploadingProgress from "./ImageUploadingProgress";
+import utils from "../mixins/utils";
 
 export default {
     name: "PostForm",
+    mixins: [utils],
     components: {ImageUploadingProgress},
     computed: {
         errors: () => usePage().props.value?.errors ?? null,

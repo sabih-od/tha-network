@@ -20,6 +20,11 @@ class CreateUserProfilesTable extends Migration
             $table->string('last_name');
             $table->string('phone');
             $table->string('social_security_number');
+            $table->text('bio')->nullable();
+            $table->string('address')->nullable();
+            $table->string('country')->nullable();
+            $table->string('city')->nullable();
+            $table->string('postal_code')->nullable();
             $table->timestamps();
         });
     }

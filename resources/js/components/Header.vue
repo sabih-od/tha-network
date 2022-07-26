@@ -2,9 +2,9 @@
     <header class="wow fadeInDown" data-wow-delay="0.5s">
         <div class="container-fluid">
             <nav class="navbar navbar-expand-lg">
-                <a class="navbar-brand" href="tha-network.php">
-                    <img src="images/logo.png" alt="logo">
-                </a>
+                <Link replace class="navbar-brand" :href="$route('home')">
+                    <img :src="asset('images/logo.png')" alt="logo">
+                </Link>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -44,9 +44,11 @@
 <script>
 import {Link, usePage} from '@inertiajs/inertia-vue3'
 import HeaderProfileMenu from "./HeaderProfileMenu";
+import utils from "../mixins/utils";
 
 export default {
     name: "Header",
+    mixins: [utils],
     components: {
         Link,
         HeaderProfileMenu

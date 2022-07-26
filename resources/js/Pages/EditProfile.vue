@@ -1,149 +1,310 @@
 <template>
-    <Main>
-        <section>
-            <CoverPhoto/>
-            <div class="container">
-                <div class="topWrap">
-                    <div class="row aic">
-                        <div class="col-md-6">
-                            <UserInfo/>
+    <section class="bg-grey editProfile pt-0">
+        <div class="container">
+            <div class="row jcc">
+                <div class="col-md-10">
+                    <h2>Personal Information</h2>
+                </div>
+                <div class="col-md-10">
+                    <BioUpdate/>
+
+                    <div class="edit-card">
+                        <a href="#" class="editProBtn">Edit</a>
+                        <div class="cardWrap">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="fname">First Name</label>
+                                        <input type="text" name="fname" class="form-control" placeholder="John">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="lname">Last Name</label>
+                                        <input type="text" name="lname" class="form-control" placeholder="Smit">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" name="email" class="form-control"
+                                               placeholder="Johnsmit23@gmail.com">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="phone">Phone</label>
+                                        <input type="text" name="phone" class="form-control" placeholder="+123-456-789">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="btn-group">
-                                <a href="#" @click.prevent class="themeBtn">personal chat group</a>
+                    </div>
+
+                    <div class="edit-card">
+                        <a href="#" class="editProBtn">Edit</a>
+                        <div class="cardWrap">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="address">Address</label>
+                                        <input type="text" name="address" class="form-control"
+                                               placeholder="Lorem ipsum 23578">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="country">Country</label>
+                                        <input type="text" name="country" class="form-control"
+                                               placeholder="United State">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="city">City</label>
+                                        <input type="text" name="city" class="form-control" placeholder="New York">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="phone">Postel/Zip Code</label>
+                                        <input type="text" name="phone" class="form-control" placeholder="564289">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="edit-card">
+                        <a href="#" class="editProBtn">Edit</a>
+                        <div class="cardWrap">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="newpass">Create New Password</label>
+                                        <input type="password" name="newpass" class="form-control"
+                                               placeholder="*********">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="verifyPass">Verify Password</label>
+                                        <input type="password" name="verifyPass" class="form-control"
+                                               placeholder="*********">
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="m-0">The password should be at least 8 characters long with (1 upper case letter,
+                                1 number, 1 special character (!@#$%^&*)</p>
+                        </div>
+                    </div>
+
+                    <div class="edit-card">
+                        <div class="df aic jcsb mb-2">
+                            <h2>Payment Method</h2>
+                            <div class="df aic gap1">
+                                <img src="images/payment2.png" alt="">
+                                <a href="#" class="editProBtn">Edit</a>
+                            </div>
+                        </div>
+                        <form class="cardWrap" action="login.php">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="cardName">Name on Card</label>
+                                        <input type="text" name="cardName" class="form-control"
+                                               placeholder="John Smith">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="cardNo">Card Number</label>
+                                        <input type="text" name="cardNo" class="form-control"
+                                               placeholder="123 456 7890 789 1234">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="zipcode">Billing Zipcode</label>
+                                        <input type="text" name="zipcode" class="form-control" placeholder="007788">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="expiry">Expiration date</label>
+                                        <input type="text" name="expiry" class="form-control"
+                                               placeholder="123 456 7890 789 1234">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="cvv">CVV Code</label>
+                                        <input type="password" name="cvv" class="form-control" placeholder="****">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="df aic jcsb">
+                                <a href="#" class="payBtn">Add another payment card</a>
+                                <a href="#" class="payBtn" data-toggle="modal" data-target="#attentionModal">stop
+                                    recurring payments </a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="btn-group gap1">
+                        <button type="submit" class="themeBtn" onclick="window.location.href='login.php">Save</button>
+                        <button class="themeBtn discard">Discard Changes</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!--    <Main>
+            <section>
+                <CoverPhoto/>
+                <div class="container">
+                    <div class="topWrap">
+                        <div class="row aic">
+                            <div class="col-md-6">
+                                <UserInfo/>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="btn-group">
+                                    <a href="#" @click.prevent class="themeBtn">personal chat group</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <ProfileLeftSide/>
+                        <div class="col-md-9">
+                            <div class="profile-wrap">
+                                <form @submit.prevent="submit">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group" :class="{'mb-0': form.errors.name}">
+                                                <label>Name</label>
+                                                <input type="text" v-model="form.name" placeholder="John"
+                                                       class="form-control">
+                                            </div>
+                                            <p v-if="form.errors.name" class="small text-danger text-right">{{
+                                                    form.errors.name
+                                                }}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Email</label>
+                                                <input type="email" placeholder="johnsmith88@gmail.com"
+                                                       class="form-control" :value="form.email" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" :class="{'mb-0': form.errors.phone}">
+                                                <label>Phone</label>
+                                                <input type="text" v-model="form.phone" placeholder="123 456 7890"
+                                                       class="form-control">
+                                            </div>
+                                            <p v-if="form.errors.phone" class="small text-danger text-right">{{
+                                                    form.errors.phone
+                                                }}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" :class="{'mb-0': form.errors.gender}">
+                                                <label>Gender</label>
+                                                <select v-model="form.gender" class="form-control">
+                                                    <option v-for="(item, ind) in genders" :key="ind" :value="item">{{
+                                                            item
+                                                        }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <p v-if="form.errors.gender" class="small text-danger text-right">{{
+                                                    form.errors.gender
+                                                }}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" :class="{'mb-0': form.errors.dob}">
+                                                <label>Date Of Brith</label>
+                                                <input type="date" v-model="form.dob" placeholder="03-05-1995"
+                                                       class="form-control">
+                                            </div>
+                                            <p v-if="form.errors.dob" class="small text-danger text-right">{{
+                                                    form.errors.dob
+                                                }}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" :class="{'mb-0': form.errors.marital_status}">
+                                                <label>Marital Status</label>
+                                                <select name="marital" v-model="form.marital_status" class="form-control">
+                                                    <option v-for="(item, ind) in marital_statuses" :key="ind"
+                                                            :value="item">{{
+                                                            item
+                                                        }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <p v-if="form.errors.marital_status" class="small text-danger text-right">{{
+                                                    form.errors.marital_status
+                                                }}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" :class="{'mb-0': form.errors.country_of_residence}">
+                                                <label>Country of Residence</label>
+                                                <input type="text" v-model="form.country_of_residence" placeholder="USA"
+                                                       class="form-control">
+                                            </div>
+                                            <p v-if="form.errors.country_of_residence" class="small text-danger text-right">
+                                                {{
+                                                    form.errors.country_of_residence
+                                                }}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group" :class="{'mb-0': form.errors.city}">
+                                                <label>City</label>
+                                                <input type="text" v-model="form.city" placeholder="New York"
+                                                       class="form-control">
+                                            </div>
+                                            <p v-if="form.errors.city" class="small text-danger text-right">{{
+                                                    form.errors.city
+                                                }}</p>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group" :class="{'mb-0': form.errors.bio}">
+                                                <label>Bio</label>
+                                                <textarea v-model="form.bio" placeholder="Enter Bio"
+                                                          class="form-control"></textarea>
+                                            </div>
+                                            <p v-if="form.errors.bio" class="small text-danger text-right">{{
+                                                    form.errors.bio
+                                                }}</p>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="form-group" :class="{'mb-0': form.errors.personal_links}">
+                                                <label>Personal Links</label>
+                                                <textarea v-model="form.personal_links" placeholder="Personal Links"
+                                                          class="form-control"></textarea>
+                                            </div>
+                                            <p v-if="form.errors.personal_links" class="small text-danger text-right">{{
+                                                    form.errors.personal_links
+                                                }}</p>
+                                        </div>
+
+                                        <div class="col-md-12 text-center">
+                                            <button class="themeBtn">UPDATE PROFILE</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <ProfileLeftSide/>
-                    <div class="col-md-9">
-                        <div class="profile-wrap">
-                            <form @submit.prevent="submit">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group" :class="{'mb-0': form.errors.name}">
-                                            <label>Name</label>
-                                            <input type="text" v-model="form.name" placeholder="John"
-                                                   class="form-control">
-                                        </div>
-                                        <p v-if="form.errors.name" class="small text-danger text-right">{{
-                                                form.errors.name
-                                            }}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Email</label>
-                                            <input type="email" placeholder="johnsmith88@gmail.com"
-                                                   class="form-control" :value="form.email" readonly>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group" :class="{'mb-0': form.errors.phone}">
-                                            <label>Phone</label>
-                                            <input type="text" v-model="form.phone" placeholder="123 456 7890"
-                                                   class="form-control">
-                                        </div>
-                                        <p v-if="form.errors.phone" class="small text-danger text-right">{{
-                                                form.errors.phone
-                                            }}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group" :class="{'mb-0': form.errors.gender}">
-                                            <label>Gender</label>
-                                            <select v-model="form.gender" class="form-control">
-                                                <option v-for="(item, ind) in genders" :key="ind" :value="item">{{
-                                                        item
-                                                    }}
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <p v-if="form.errors.gender" class="small text-danger text-right">{{
-                                                form.errors.gender
-                                            }}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group" :class="{'mb-0': form.errors.dob}">
-                                            <label>Date Of Brith</label>
-                                            <input type="date" v-model="form.dob" placeholder="03-05-1995"
-                                                   class="form-control">
-                                        </div>
-                                        <p v-if="form.errors.dob" class="small text-danger text-right">{{
-                                                form.errors.dob
-                                            }}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group" :class="{'mb-0': form.errors.marital_status}">
-                                            <label>Marital Status</label>
-                                            <select name="marital" v-model="form.marital_status" class="form-control">
-                                                <option v-for="(item, ind) in marital_statuses" :key="ind"
-                                                        :value="item">{{
-                                                        item
-                                                    }}
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <p v-if="form.errors.marital_status" class="small text-danger text-right">{{
-                                                form.errors.marital_status
-                                            }}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group" :class="{'mb-0': form.errors.country_of_residence}">
-                                            <label>Country of Residence</label>
-                                            <input type="text" v-model="form.country_of_residence" placeholder="USA"
-                                                   class="form-control">
-                                        </div>
-                                        <p v-if="form.errors.country_of_residence" class="small text-danger text-right">
-                                            {{
-                                                form.errors.country_of_residence
-                                            }}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group" :class="{'mb-0': form.errors.city}">
-                                            <label>City</label>
-                                            <input type="text" v-model="form.city" placeholder="New York"
-                                                   class="form-control">
-                                        </div>
-                                        <p v-if="form.errors.city" class="small text-danger text-right">{{
-                                                form.errors.city
-                                            }}</p>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group" :class="{'mb-0': form.errors.bio}">
-                                            <label>Bio</label>
-                                            <textarea v-model="form.bio" placeholder="Enter Bio"
-                                                      class="form-control"></textarea>
-                                        </div>
-                                        <p v-if="form.errors.bio" class="small text-danger text-right">{{
-                                                form.errors.bio
-                                            }}</p>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <div class="form-group" :class="{'mb-0': form.errors.personal_links}">
-                                            <label>Personal Links</label>
-                                            <textarea v-model="form.personal_links" placeholder="Personal Links"
-                                                      class="form-control"></textarea>
-                                        </div>
-                                        <p v-if="form.errors.personal_links" class="small text-danger text-right">{{
-                                                form.errors.personal_links
-                                            }}</p>
-                                    </div>
-
-                                    <div class="col-md-12 text-center">
-                                        <button class="themeBtn">UPDATE PROFILE</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <teleport v-if="form.processing" to="body">
-            <FormLoading/>
-        </teleport>
-    </Main>
+            </section>
+            <teleport v-if="form.processing" to="body">
+                <FormLoading/>
+            </teleport>
+        </Main>-->
 </template>
 
 <script>
@@ -155,10 +316,13 @@ import {useToast} from "vue-toastification";
 import FormLoading from "../components/FormLoading";
 import CoverPhoto from "../components/CoverPhoto";
 import {Inertia} from "@inertiajs/inertia";
+import ProfileLayout from "../Layouts/ProfileLayout";
+import BioUpdate from "../components/Forms/BioUpdate";
 
 export default {
     name: "EditProfile",
     components: {
+        BioUpdate,
         Main,
         UserInfo,
         Link,
@@ -166,6 +330,7 @@ export default {
         FormLoading,
         CoverPhoto
     },
+    layout: ProfileLayout,
     props: {
         user: Object,
         profile: Object

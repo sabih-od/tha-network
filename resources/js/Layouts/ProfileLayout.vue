@@ -1,35 +1,37 @@
 <template>
     <Main>
-        <section>
-            <CoverPhoto/>
-            <div class="container">
-                <div class="topWrap">
-                    <div class="row aic">
-                        <div class="col-md-6">
-                            <UserInfo/>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="btn-group">
-                                <a v-if="isFollowable" href="#" @click.prevent="blockToggle" class="themeBtn">{{
-                                        blockText
-                                    }}</a>
-                                <a v-if="isFollowable" href="#" @click.prevent="follow" class="themeBtn">{{
-                                        buttonText
-                                    }}</a>
-                                <a href="#" @click.prevent class="themeBtn">personal chat group</a>
-                                <Link v-if="!$store.state.Profile.is_another" replace :href="$route('editProfileForm')"
-                                      class="themeBtn">Edit profile
-                                </Link>
+        <CoverPhoto/>
+        <slot></slot>
+        <!--        <section>
+                    <CoverPhoto/>
+                    <div class="container">
+                        <div class="topWrap">
+                            <div class="row aic">
+                                <div class="col-md-6">
+                                    <UserInfo/>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="btn-group">
+                                        <a v-if="isFollowable" href="#" @click.prevent="blockToggle" class="themeBtn">{{
+                                                blockText
+                                            }}</a>
+                                        <a v-if="isFollowable" href="#" @click.prevent="follow" class="themeBtn">{{
+                                                buttonText
+                                            }}</a>
+                                        <a href="#" @click.prevent class="themeBtn">personal chat group</a>
+                                        <Link v-if="!$store.state.Profile.is_another" replace :href="$route('editProfileForm')"
+                                              class="themeBtn">Edit profile
+                                        </Link>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <ProfileLeftSide/>
+                            <slot></slot>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <ProfileLeftSide/>
-                    <slot></slot>
-                </div>
-            </div>
-        </section>
+                </section>-->
     </Main>
 </template>
 

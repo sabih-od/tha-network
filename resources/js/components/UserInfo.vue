@@ -82,8 +82,8 @@ export default {
 </script>
 
 <style scoped>
-.profileImg > img {
+/*.profileImg > img {
     width: 200px;
     height: 200px;
-}
+}*/
 </style>

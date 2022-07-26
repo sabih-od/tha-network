@@ -1,13 +1,44 @@
 <template>
-    <div class="coverPhoto">
-        <div class="filSet changePhoto" v-if="!$store.state.Profile.is_another">
-            <i class="fas fa-camera"></i><input type="file" @change.prevent="imageChange">
+    <!-- Begin: Cover Section -->
+    <section class="bg-grey cover-photo pt-0 pb-5">
+        <img :src="asset('images/cover-photo.jpg')" class="w-100" alt="">
+        <div class="container-fluid">
+            <div class="topWrap">
+                <div class="row aic">
+                    <div class="col-md-6">
+                        <UserInfo/>
+                        <!--                        <div class="userInfo">
+                                                    <div class="profileImg">
+                                                        <img src="images/char-usr.png" alt="">
+                                                        &lt;!&ndash; <div class="filSet">
+                                                            <i class="fas fa-camera"></i><input type="file">
+                                                        </div> &ndash;&gt;
+                                                    </div>
+                                                    <h2>John Smith <span>@johnsmith22</span></h2>
+                                                </div>-->
+                    </div>
+                    <div class="col-md-6">
+                        <a href="#" class="awardWrap profilePage">
+                            <img :src="asset('images/cup.png')" alt="">
+                        </a>
+                        <div class="btn-group">
+                            <a href="#" class="themeBtn">Message</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <img :src="profile_cover" alt="">
-        <teleport v-if="form.progress" to="body">
-            <ImageUploadingProgress :progress="form.progress.percentage"/>
-        </teleport>
-    </div>
+    </section>
+    <!-- END: Cover Section -->
+    <!--    <div class="coverPhoto">
+            <div class="filSet changePhoto" v-if="!$store.state.Profile.is_another">
+                <i class="fas fa-camera"></i><input type="file" @change.prevent="imageChange">
+            </div>
+            <img :src="profile_cover" alt="">
+            <teleport v-if="form.progress" to="body">
+                <ImageUploadingProgress :progress="form.progress.percentage"/>
+            </teleport>
+        </div>-->
 </template>
 
 <script>
@@ -15,11 +46,15 @@ import ImageUploadingProgress from './ImageUploadingProgress'
 import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {useToast} from "vue-toastification";
 import {Inertia} from "@inertiajs/inertia";
+import utils from "../mixins/utils";
+import UserInfo from "./UserInfo";
 
 export default {
     name: "CoverPhoto",
+    mixins: [utils],
     components: {
-        ImageUploadingProgress
+        ImageUploadingProgress,
+        UserInfo
     },
     computed: {
         errors: () => usePage().props.value?.errors ?? null,
