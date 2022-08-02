@@ -31,4 +31,50 @@
         </li>
     </ul>
     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text.</p>
+    <div class="commentWrapper">
+        <div class="comntBox">
+            <a href="profile.php"><img src="images/user1.jpg" class="rounded-circle" alt=""></a>
+            <div class="content">
+                <a href="profile.php">
+                    <h2>John Smith</h2>
+                </a>
+                <p>Lorem ipsum dolor sit amet consectetur</p>
+                <ul>
+                    <li><a href="#">Like</a></li>
+                    <li><a href="javascript:void(0)" class="replyBtn">Reply</a></li>
+                    <li class="ml-auto"><a href="#">1h ago</a></li>
+                </ul>
+                <div class="replyInput">
+                    <a href="profile.php"><img src="images/user1.jpg" class="rounded-circle" alt=""></a>
+                    <input type="text" placeholder="Write a Reply">
+                    <button><i class="fa fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="comntBox">
+            <a href="profile.php"><img src="images/user2.jpg" class="rounded-circle" alt=""></a>
+            <div class="content">
+                <a href="profile.php">
+                    <h2>James Olivia</h2>
+                </a>
+                <p>Lorem ipsum dolor sit amet consectetur</p>
+                <ul>
+                    <li><a href="#">Like</a></li>
+                    <li><a href="javascript:void(0)" class="replyBtn">Reply</a></li>
+                    <li class="ml-auto"><a href="#">1h ago</a></li>
+                </ul>
+                <div class="replyInput">
+                    <a href="profile.php"><img src="images/user1.jpg" class="rounded-circle" alt=""></a>
+                    <input type="text" placeholder="Write a Reply">
+                    <button><i class="fa fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="commentInput">
+        <a href="profile.php"><img src="images/user1.jpg" class="rounded-circle" alt=""></a>
+        <input type="text" placeholder="Write a comment">
+        <button><i class="fa fa-paper-plane"></i></button>
+    </div>
 </div>

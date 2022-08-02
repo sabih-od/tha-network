@@ -1537,3 +1537,113 @@ footer .links li a:hover {
 .invitationInner .form-check {
   padding-left: 0;
 }
+
+
+
+/* Comment & Reply */
+.feedBox .commentWrapper {
+    border-top: 1px solid #f1f3f8;
+    padding: 1rem 0;
+}
+
+.feedBox .comntBox {
+    padding: 0.5rem 1.25rem 0.5rem 0.5rem;
+    width: fit-content;
+    width: -moz-fit-content;
+    border-radius: 10px;
+    background-color: rgb(243, 246, 248);
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.feedBox .comntBox h2 {
+    font-size: 1.25rem;
+    color: var(--black);
+    font-weight: 600;
+    margin: 0;
+    line-height: 1;
+}
+
+.feedBox .comntBox ul {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    align-items: center;
+}
+
+.feedBox .comntBox p,
+.feedBox .comntBox ul li a {
+    color: #999999;
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 400;
+}
+
+.feedBox .comntBox ul li a:hover {
+    color: #1c92ff;
+}
+
+.feedBox .commentWrapper .comntBox:nth-child(2) {
+    margin-left: 3rem;
+}
+.replyInput,
+.commentInput {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    width: 100%;
+}
+
+.replyInput input,
+.commentInput input {
+    height: 3.125rem;
+    border: 1px solid #e8e7e7;
+    border-radius: 5px;
+    /* width: 100%; */
+    flex: 1;
+    padding-left: 1rem;
+}
+
+.replyInput button,
+.commentInput button {
+    height: 3.5rem;
+    width: 3.5rem;
+    display: inline-grid;
+    place-items: center;
+    border: 0;
+    color: var(--white);
+    font-size: 1.125rem;
+    border-radius: 50%;
+    border: 1px solid var(--black);
+    background-color: var(--black);
+}
+
+.commentInput button:hover {
+    color: var(--black);
+    background-color: var(--white);
+}
+
+.replyInput {
+    display: none;
+    padding: 1rem 0;
+}
+
+.replyInput a > img {
+    width: 2.5rem;
+}
+
+.replyInput input {
+    height: 2.5rem;
+}
+
+.replyInput button {
+    height: 2.5rem;
+    width: 2.5rem;
+    font-size: 1rem;
+}
+
+.replyInput.active {
+    display: flex !important;
+}
