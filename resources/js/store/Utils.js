@@ -30,6 +30,14 @@ export default {
                 const auth_id = usePage().props.value?.auth?.id
                 return user_id === auth_id ? route('profile') : route('userProfile', user_id)
             }
+        },
+        uuid() {
+            let dt = new Date().getTime();
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                const r = (dt + Math.random() * 16) % 16 | 0;
+                dt = Math.floor(dt / 16);
+                return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            });
         }
     },
     actions: {
@@ -79,23 +87,22 @@ export default {
             });
         },
         showSuccessMessage() {
-            (useToast()).clear();
-            (useToast()).success(usePage().props.value?.flash?.success ?? 'Request submitted successfully!');
+            if (usePage().props.value?.flash?.success) {
+                (useToast()).clear();
+                (useToast()).success(usePage().props.value?.flash?.success);
+            }
         },
         showErrorMessages() {
-            return new Promise((resolve, reject) => {
+            const errors = usePage().props.value?.errors ?? {};
+            for (const x in errors) {
                 (useToast()).clear();
-                const errors = usePage().props.value?.errors ?? {};
-                for (const x in errors) {
-                    (useToast()).error(errors[x]);
-                    return reject()
-                }
-                if (usePage().props.value?.flash?.error) {
-                    (useToast()).error(usePage().props.value.flash.error);
-                    return reject()
-                }
-                resolve()
-            })
+                (useToast()).error(errors[x]);
+                break
+            }
+            if (usePage().props.value?.flash?.error) {
+                (useToast()).clear();
+                (useToast()).error(usePage().props.value.flash.error);
+            }
         }
     }
 }

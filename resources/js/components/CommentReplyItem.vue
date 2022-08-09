@@ -1,14 +1,15 @@
 <template>
-    <div class="comntBox reply">
+    <div class="comntBox replyBox">
         <a href="#" class="iconWrap"><img :src="profile_img"
                                           class="rounded-circle" alt=""></a>
         <div class="content">
             <Link :href="$store.getters['Utils/generateProfileLink'](reply.user.id)" replace>
-                <h2>{{ reply.user.name }}</h2>
+                <h2>@{{ reply.user.username }}</h2>
             </Link>
             <p>{{ reply.comment }}</p>
             <ul>
-                <li v-if="is_delete_able" class="ml-auto">
+                <li><a href="#">Like</a></li>
+                <li v-if="is_delete_able">
                     <a href="#" @click.prevent="deleteReply(reply.id)" class="text-danger">Delete</a>
                 </li>
                 <!--                                    <li><a href="javascript:void(0)" class="replyBtn">Reply</a></li>-->
@@ -32,7 +33,7 @@ export default {
     },
     computed: {
         profile_img() {
-            return this.reply.user?.profile_img ?? this.$store.getters['Utils/public_asset']('images/ph-profile.jpg')
+            return this.reply.user?.profile_img ?? this.$store.getters['Utils/public_asset']('images/small-character.jpg')
         },
         is_delete_able() {
             if (this.$page.props?.auth?.id && this.reply?.user?.id)

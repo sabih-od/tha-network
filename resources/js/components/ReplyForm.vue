@@ -1,6 +1,6 @@
 <template>
     <div class="replyInput">
-        <a href="#" @click.prevent class="iconWrap"><img :src="profile_img" class="rounded-circle" alt=""></a>
+        <a href="#" @click.prevent class="iconWrap"><img :src="auth_image" class="rounded-circle" alt=""></a>
         <input type="text" ref="refInput" @keyup.enter.prevent="submit" v-model="form.reply"
                placeholder="Write a Reply">
         <button @click.prevent="submit"><i class="fa fa-paper-plane"></i></button>
@@ -10,14 +10,11 @@
 <script>
 import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {useToast} from "vue-toastification";
+import utils from "../mixins/utils";
 
 export default {
     name: "ReplyForm",
-    computed: {
-        profile_img() {
-            return usePage().props.value?.auth_profile_image ?? this.$store.getters['Utils/public_asset']('images/ph-profile.jpg')
-        },
-    },
+    mixins: [utils],
     props: {
         comment_id: String
     },
@@ -39,17 +36,11 @@ export default {
                     preserveState: true,
                     onSuccess: () => {
                         this.form.reset();
-                        (useToast()).clear();
-                        (useToast()).success(usePage().props.value?.flash?.success ?? 'Request submitted successfully!');
+                        this.showSuccessMessage()
                         this.$emit('created')
                     },
-                    onError: () => {
-                        (useToast()).clear();
-                        const errors = usePage().props.value?.errors ?? {};
-                        for (const x in errors) {
-                            (useToast()).error(errors[x]);
-                            break
-                        }
+                    onFinish: () => {
+                        this.showErrorMessage()
                     }
                 })
         },

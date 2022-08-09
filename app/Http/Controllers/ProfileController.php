@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Helpers\WebResponses;
 use App\Models\User;
+use App\Traits\CommentData;
+use App\Traits\PostData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -11,16 +13,15 @@ use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
+    use PostData, CommentData;
 
     public function show(Request $request)
     {
         try {
             $user = Auth::user();
             return Inertia::render('Profile', [
-                'user' => $user->only('id', 'name', 'email', 'created_at') ?? null,
+                'user' => $user->only('id', 'username', 'email', 'created_at') ?? null,
                 'profile' => $user->profile ?? null,
-                /*'profile_image' => $this->profileImg($user, 'profile_image'),
-                'profile_cover' => $this->profileImg($user, 'profile_cover'),
                 'posts' => Inertia::lazy(function () {
                     return $this->getPostData(true);
                 }),
@@ -29,7 +30,10 @@ class ProfileController extends Controller
                 }),
                 'replies' => Inertia::lazy(function () use ($request) {
                     return $this->getReplyData($request->comment_id ?? null);
-                }),*/
+                })
+                /*'profile_image' => $this->profileImg($user, 'profile_image'),
+                'profile_cover' => $this->profileImg($user, 'profile_cover'),
+                ,*/
             ]);
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());
@@ -197,12 +201,12 @@ class ProfileController extends Controller
             if (is_null($user))
                 return redirect()->route('home')->with('error', "Invalid user id!");
 
-            $auth = Auth::user();
+            /*$auth = Auth::user();
             $is_blocked_by_user = $auth->isBlockedBy($user);
 
             if ($is_blocked_by_user) {
                 return redirect(route('home'))->with('error', "You are blocked by user!");
-            }
+            }*/
 
             /*dd([
                 'is_following' => $auth->isFollowing($user),
@@ -211,13 +215,13 @@ class ProfileController extends Controller
             ]);*/
 
             return Inertia::render('UserProfile', [
-                'user' => $user->only('id', 'name', 'email', 'created_at') ?? null,
-                'is_following' => $auth->isFollowing($user),
-                'is_blocked_by_user' => $is_blocked_by_user,
-                'has_blocked' => $auth->hasBlocked($user),
+                'user' => $user->only('id', 'username', 'email', 'created_at') ?? null,
+//                'is_following' => $auth->isFollowing($user),
+//                'is_blocked_by_user' => $is_blocked_by_user,
+//                'has_blocked' => $auth->hasBlocked($user),
                 'profile' => $user->profile ?? null,
-                'profile_image' => $this->profileImg($user, 'profile_image'),
-                'profile_cover' => $this->profileImg($user, 'profile_cover'),
+//                'profile_image' => $this->profileImg($user, 'profile_image'),
+//                'profile_cover' => $this->profileImg($user, 'profile_cover'),
                 'posts' => Inertia::lazy(function () use ($user) {
                     return $this->getPostData(false, $user);
                 }),

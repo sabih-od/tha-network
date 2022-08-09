@@ -56,7 +56,7 @@ export default {
     computed: {
         cover_image() {
             return (url) => {
-                return url ?? this.$store.getters['Utils/public_asset']('images/ph-profile.jpg')
+                return url ?? this.$store.getters['Utils/public_asset']('images/small-character.jpg')
             }
         },
     },

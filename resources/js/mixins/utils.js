@@ -1,4 +1,4 @@
-import {Link} from "@inertiajs/inertia-vue3";
+import {Link, usePage} from "@inertiajs/inertia-vue3";
 
 export default {
     components: {
@@ -7,6 +7,24 @@ export default {
     computed: {
         asset() {
             return url => this.$store.getters['Utils/public_asset'](url)
+        },
+        auth_image() {
+            const img = usePage().props.value?.auth_profile_image
+            if (img !== '' && img !== null)
+                return img
+            return this.asset('images/small-character.jpg')
+        },
+        profile_link() {
+            return (id) => {
+                return this.$store.getters['Utils/generateProfileLink'](id)
+            }
+        },
+        profile_image() {
+            return (image) => {
+                if (image !== '' && image)
+                    return image
+                return this.asset('images/small-character.jpg')
+            }
         }
     },
     methods: {

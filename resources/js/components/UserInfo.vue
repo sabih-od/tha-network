@@ -6,20 +6,20 @@
                 <i class="fas fa-camera"></i><input type="file">
             </div> -->
         </div>
-        <h2>{{ name }} <span>@{{auth?.username}}</span></h2>
+        <h2>{{ name }} <span>@{{ user?.username }}</span></h2>
     </div>
-<!--    <div class="userInfo">
-        <div class="profileImg">
-            <img :src="profile_img" alt="">
-            <div class="filSet" v-if="!$store.state.Profile.is_another">
-                <i class="fas fa-camera"></i><input type="file" @change.prevent="imageChange">
+    <!--    <div class="userInfo">
+            <div class="profileImg">
+                <img :src="profile_img" alt="">
+                <div class="filSet" v-if="!$store.state.Profile.is_another">
+                    <i class="fas fa-camera"></i><input type="file" @change.prevent="imageChange">
+                </div>
             </div>
-        </div>
-        <h2>{{ user?.name ?? '' }} <span>{{ user?.email ?? '' }}</span></h2>
-        <teleport v-if="form.progress" to="body">
-            <ImageUploadingProgress :progress="form.progress.percentage"/>
-        </teleport>
-    </div>-->
+            <h2>{{ user?.name ?? '' }} <span>{{ user?.email ?? '' }}</span></h2>
+            <teleport v-if="form.progress" to="body">
+                <ImageUploadingProgress :progress="form.progress.percentage"/>
+            </teleport>
+        </div>-->
 </template>
 
 <script>
@@ -34,15 +34,19 @@ export default {
     mixins: [utils],
     components: {ImageUploadingProgress},
     computed: {
-        auth: () => usePage().props.value?.auth ?? null,
+        user() {
+            const page = usePage().component.value
+            if (page === 'UserProfile')
+                return usePage().props.value?.user ?? null
+            return usePage().props.value?.auth ?? null
+        },
         name: () => {
             const profile = usePage().props.value?.profile ?? null
-            return profile ? profile?.first_name+' '+profile?.last_name: ''
+            return profile ? profile?.first_name + ' ' + profile?.last_name : ''
         },
-        user: () => usePage().props.value?.user ?? null,
         errors: () => usePage().props.value?.errors ?? null,
         profile_img() {
-            return usePage().props.value?.profile_image ?? this.$store.getters['Utils/public_asset']('images/ph-profile.jpg')
+            return usePage().props.value?.profile_image ?? this.$store.getters['Utils/public_asset']('images/small-character.jpg')
         },
     },
     data() {

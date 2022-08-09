@@ -53,7 +53,7 @@
                         </div>
                     </div>
 
-                    <PostListItem v-for="n in 3" :key="n"/>
+                    <PostsList/>
 
                 </div>
                 <!-- Center Section -->
@@ -66,11 +66,6 @@
             </div>
         </div>
     </section>
-    <!--    <div class="col-md-9">
-            <PostForm/>
-
-            <PostsList/>
-        </div>-->
 </template>
 
 <script>
@@ -107,8 +102,8 @@ export default {
     },
     methods: {
         onPostCreated() {
-            this.$store.commit('Post/setIsLoadMore', false)
-            this.$store.dispatch('Post/loadPosts', this.$route('profile'))
+            // this.$store.commit('Post/setIsLoadMore', false)
+            // this.$store.dispatch('Post/loadPosts', this.$route('profile'))
         }
     }
 }

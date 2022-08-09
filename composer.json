@@ -16,6 +16,7 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
+        "overtrue/laravel-like": "^4.1",
         "spatie/laravel-medialibrary": "^9.0.0",
         "stripe/stripe-php": "^8.12",
         "tightenco/ziggy": "^1.4"

@@ -16,6 +16,7 @@
 import PostListItem from "./PostListItem";
 import SharePostModal from "./SharePostModal";
 import {Inertia} from "@inertiajs/inertia";
+import _ from "lodash";
 
 export default {
     name: "PostsList",
@@ -27,11 +28,7 @@ export default {
         return {
             loading: false,
             next_page_url: null,
-            posts: [],
-            queue_data: {
-                type: 'post_load',
-                url: null
-            }
+            posts: []
         }
     },
     mounted() {
@@ -39,50 +36,49 @@ export default {
         window.addEventListener('scroll', this.listener);
         this.$emitter.on('post-created', this.onPostCreated)
         this.$emitter.on('post-shared', this.onPostShared)
+        this.$emitter.on('comment-created', this.onCommentCreated)
+        this.$emitter.on('post-like-toggle', this.onLikeToggle)
+        this.$emitter.on('post-deleted', this.loadPosts)
+        this.$emitter.on('my-post-loading', (val) => {
+            this.loadPosts(null, val)
+        })
     },
     unmounted() {
         window.removeEventListener('scroll', this.listener)
-        this.$emitter.off('post-created', this.onPostCreated)
-        this.$emitter.off('post-shared', this.onPostShared)
+        this.$emitter.off('post-created')
+        this.$emitter.off('post-shared')
+        this.$emitter.off('comment-created')
+        this.$emitter.off('post-like-toggle')
+        this.$emitter.off('post-deleted')
+        this.$emitter.off('my-post-loading')
     },
     methods: {
-        loadPosts(url = null) {
+        loadPosts(url = null, is_my_posts = false) {
             if (this.loading) return;
-
-            if (this.$store.state.LoadingQueue.loading)
-                return;
 
             let isLoadMore = !!(url)
             url = url ?? this.$store.getters['Utils/baseUrl']
-            this.queue_data.url = url
 
-            // queue loading emit
-            this.$store.dispatch('LoadingQueue/initQueue', this.queue_data)
-
-            Inertia.get(url, {}, {
-                replace: true,
-                preserveScroll: true,
-                preserveState: true,
+            this.loading = true
+            if (!isLoadMore)
+                this.posts = []
+            this.$store.dispatch('HttpUtils/getReq', {
+                url: url,
                 only: ['posts'],
-                onStart: () => {
-                    this.loading = true
-                },
-                onSuccess: visit => {
-                    this.next_page_url = visit.props?.posts?.next_page_url ?? null
-                    if (isLoadMore)
-                        this.posts = [
-                            ...this.posts,
-                            ...(visit.props?.posts?.data ?? [])
-                        ]
-                    else
-                        this.posts = visit.props?.posts?.data ?? []
-                    this.$store.commit('Post/setPosts', this.posts)
-                    this.$store.dispatch('LoadingQueue/reInit')
-                },
-                onFinish: () => {
-                    this.loading = false
-                    window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
+                params: {
+                    is_my_posts: is_my_posts ? 1 : 0
                 }
+            }).then(res => {
+                this.next_page_url = res?.posts?.next_page_url ?? null
+                if (isLoadMore)
+                    this.posts = [
+                        ...this.posts,
+                        ...(res?.posts?.data ?? [])
+                    ]
+                else
+                    this.posts = res?.posts?.data ?? []
+            }).finally(() => {
+                this.loading = false
             })
         },
         listener() {
@@ -98,6 +94,23 @@ export default {
         onPostShared() {
             window.scrollTo(0, 0);
             this.loadPosts()
+        },
+        setPostData(post_id, post_data = {}) {
+            const post = _.find(this.posts, {id: post_id})
+            if (post)
+                _.set(this.posts, _.findIndex(this.posts, {id: post_id}), {
+                    ...post,
+                    ...post_data
+                })
+        },
+        onCommentCreated(post_id) {
+            const post = _.find(this.posts, {id: post_id})
+            this.setPostData(post_id, {
+                comments_count: post.comments_count + 1
+            })
+        },
+        onLikeToggle({post_id, post_data}) {
+            this.setPostData(post_id, post_data)
         },
     }
 }

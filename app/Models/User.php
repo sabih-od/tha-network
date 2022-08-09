@@ -9,10 +9,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Overtrue\LaravelLike\Traits\Liker;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasMedia
 {
-    use HasApiTokens, HasFactory, Notifiable, Uuids, SoftDeletes;
+    use HasApiTokens,
+        HasFactory,
+        Notifiable,
+        Uuids,
+        SoftDeletes,
+        Liker,
+        InteractsWithMedia;
 
     /**
      * The attributes that are mass assignable.
@@ -34,6 +43,14 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'media',
+        'deleted_at',
+        'updated_at',
+        'email_verified_at'
+    ];
+
+    protected $appends = [
+        'profile_image'
     ];
 
     /**
@@ -48,5 +65,19 @@ class User extends Authenticatable
     public function profile()
     {
         return $this->hasOne(UserProfile::class);
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function getProfileImageAttribute() {
+        return $this->getFirstMediaUrl('profile_image');
     }
 }

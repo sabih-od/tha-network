@@ -1,5 +1,21 @@
 <template>
     <div :class="{'shared-post': isSharable}">
+        <div class="df aic jcsb mb-3 w-100">
+            <Link replace :href="profile_link(post.user.id)" class="infoWrap">
+                <div class="userWrap"><img :src="profile_image(post?.user?.profile_img)" class="rounded-circle" alt="">
+                </div>
+                <h2>@{{ post.user.username }} <span>{{ $store.getters['Utils/fromNow'](post?.created_at) }}</span></h2>
+            </Link>
+            <div v-if="isCreatedByMe && !isSharable" class="dropdown">
+                <button class="dropdown-toggle" type="button" id="feed-option" data-toggle="dropdown"
+                        aria-expanded="false">
+                    <i class="fas fa-ellipsis-h"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="feed-option">
+                    <a class="dropdown-item" href="#" @click.prevent="postDelete">Delete Post</a>
+                </div>
+            </div>
+        </div>
         <template v-if="isMedia">
             <div class="row">
                 <div
@@ -21,27 +37,19 @@
             </div>
         </template>
         <p v-if="post?.content" class="mb-3 text-prewrap" :class="{'mt-0': !isMedia}">{{ post?.content }}</p>
-
-        <div class="df aic jcsb my-3 w-100">
-            <Link :href="$store.getters['Utils/generateProfileLink'](post?.user?.id)" replace class="infoWrap">
-                <div class="iconWrap"><img :src="profile_image" alt=""></div>
-                <h2>{{ post?.user?.name }} <span>{{ $store.getters['Utils/fromNow'](post?.created_at) }} </span></h2>
-            </Link>
-            <template v-if="isFollowEnable">
-                <FollowUserButton :user_id="post?.user?.id" :post_id="post?.id" :is-post-shared="isSharable"/>
-            </template>
-        </div>
     </div>
 </template>
 
 <script>
-import FollowUserButton from "./FollowUserButton";
-import {Link} from '@inertiajs/inertia-vue3'
+import {Link, usePage} from '@inertiajs/inertia-vue3'
+import utils from "../mixins/utils";
+import {Inertia} from "@inertiajs/inertia";
+import _ from "lodash";
 
 export default {
     name: "PostMainData",
+    mixins: [utils],
     components: {
-        FollowUserButton,
         Link
     },
     props: {
@@ -50,10 +58,6 @@ export default {
             default: false,
             type: Boolean
         },
-        isFollowEnable: {
-            default: true,
-            type: Boolean
-        }
     },
     data() {
         return {
@@ -70,6 +74,11 @@ export default {
         }
     },
     computed: {
+        isCreatedByMe() {
+            if (this.post?.user_id && usePage().props.value?.auth?.id)
+                return this.post?.user_id === usePage().props.value?.auth?.id
+            return false
+        },
         isMedia() {
             return this.post?.media_items && this.post.media_items.length > 0
         },
@@ -84,9 +93,6 @@ export default {
         },
         isIndexGreaterThan4() {
             return (ind) => ind > 4
-        },
-        profile_image() {
-            return this.post?.user?.profile_img ?? this.$store.getters['Utils/public_asset']('images/ph-profile.jpg')
         }
     },
     methods: {
@@ -104,6 +110,20 @@ export default {
                 })
             })
         },
+        postDelete() {
+            Inertia.delete(this.$route('postDelete', this.post.id), {
+                replace: true,
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: () => {
+                    this.$emitter.emit('post-deleted')
+                    this.showSuccessMessage()
+                },
+                onFinish: () => {
+                    this.showErrorMessage()
+                }
+            })
+        }
     }
 }
 </script>
@@ -119,5 +139,23 @@ export default {
 .img-fit {
     object-fit: cover;
     height: 300px;
+}
+
+.videoImg > span {
+    background-color: #ffffff80;
+    position: absolute;
+    left: calc(50% - 25px);
+    top: calc(50% - 25px);
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.text-prewrap {
+    white-space: pre-wrap;
 }
 </style>

@@ -1,16 +1,13 @@
 <template>
-    <div class="modal fade giftModal" :id="modalId" tabindex="-1"
+    <div class="modal fade" ref="shareModal" tabindex="-1"
          aria-labelledby="sharePostModalLabel"
          aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-                <!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>-->
                 <div class="modal-body p-0">
                     <h2>Share Post</h2>
 
-                    <PostMainData v-if="post" is-sharable :is-follow-enable="false" :post="post"/>
+                    <PostMainData v-if="post" is-sharable :post="post"/>
 
                     <div class="form-group">
                         <textarea v-model="form.content" class="form-control" rows="5"></textarea>
@@ -18,7 +15,9 @@
 
                     <div class="d-flex">
                         <button class="btn btn-danger ml-auto" @click.prevent="hide">Close</button>
-                        <button class="btn btn-success ml-2" @click.prevent="submit">Share</button>
+                        <button class="btn btn-success ml-2" @click.prevent="submit">
+                            {{ form.processing ? 'Sharing...' : 'Share' }}
+                        </button>
                     </div>
 
                 </div>
@@ -31,58 +30,60 @@
 import PostMainData from "./PostMainData";
 import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {useToast} from "vue-toastification";
+import utils from "../mixins/utils";
 
 export default {
     name: "SharePostModal",
+    mixins: [utils],
     components: {
         PostMainData
     },
     data() {
         return {
+            modal: null,
+            post: null,
             form: useForm({
                 content: "",
                 post_id: null
             }),
         }
     },
-    watch: {
-        post(val) {
-            this.form.post_id = val?.id ?? null
-        }
-    },
-    computed: {
-        modal() {
-            return this.$store.state.SharePostModal.modal
-        },
-        modalId() {
-            return this.$store.state.SharePostModal.modalId
-        },
-        post() {
-            return this.$store.state.SharePostModal.post
-        }
-    },
     mounted() {
-        const modalEl = document.getElementById(this.modalId)
-        this.$store.commit('SharePostModal/setModal', modalEl)
-
-        /*modalEl.addEventListener('hidden.bs.modal', function (event) {
-            console.log("closed modal")
-        })*/
+        const modalEl = this.$refs.shareModal
+        this.modal = new bootstrap.Modal(modalEl, {
+            keyboard: false,
+            backdrop: 'static'
+        })
+        this.$emitter.on('share-post-modal', (post) => {
+            this.post = post
+            this.form.post_id = post.id
+            this.show()
+        })
+    },
+    unmounted() {
+        this.$emitter.off('share-post-modal')
     },
     methods: {
+        show() {
+            this.modal.show()
+        },
         hide() {
-            this.$store.dispatch('SharePostModal/hideModal')
+            this.modal.hide()
         },
         submit() {
+            if (this.form.processing) return;
+
             this.form
                 .post(this.$route('sharePost'), {
                     replace: true,
                     onSuccess: () => {
-                        this.form.reset();
                         this.hide();
-                        (useToast()).clear();
-                        (useToast()).success(usePage().props.value?.flash?.success ?? 'Request submitted successfully!');
+                        this.form.reset();
+                        this.showSuccessMessage()
                         this.$emitter.emit('post-shared')
+                    },
+                    onFinish: () => {
+                        this.showErrorMessage()
                     }
                 })
         }

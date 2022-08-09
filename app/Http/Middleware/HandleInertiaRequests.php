@@ -38,7 +38,7 @@ class HandleInertiaRequests extends Middleware
     {
         $share_data = [
             'auth' => auth()->check() ? auth()->user()->only('id', 'username', 'email') : null,
-//            'auth_profile_image' => auth()->check() ? (auth()->user()->getFirstMedia('profile_image')->original_url ?? null) : null,
+            'auth_profile_image' => auth()->check() ? auth()->user()->getFirstMediaUrl('profile_image') : "",
             'flash' => [
                 'success' => function () use ($request) {
                     return $request->session()->get('success');

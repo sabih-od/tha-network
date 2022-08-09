@@ -40,14 +40,13 @@
 
                     <PostForm/>
 
-                    <PostListItem v-for="n in 3" :key="n"/>
+                    <PostsList/>
                 </div>
                 <!-- Center Section -->
 
                 <!-- Right Section -->
                 <div class="col-md-3">
-                    <a href="#" class="btnDesign postBtn mb-4 w-100 text-center" data-toggle="modal"
-                       data-target="#weeklyModal">My Posts</a>
+                    <a href="#" @click.prevent="myPost" class="btnDesign postBtn mb-4 w-100 text-center">{{ myPostText }}</a>
 
                     <WeeklyGoals/>
 
@@ -74,6 +73,7 @@ import WeeklyGoals from "../components/Widgets/WeeklyGoals";
 import NewMembersList from "../components/Widgets/NewMembersList";
 import Messages from "../components/Widgets/Messages";
 import ProfileLayout from "../Layouts/ProfileLayout";
+import PostsList from "../components/PostsList";
 
 export default {
     name: "Home",
@@ -87,11 +87,20 @@ export default {
         FriendStorySlider,
         PeopleList,
         Header,
-        UserInfo
+        UserInfo,
+        PostsList
     },
     layout: ProfileLayout,
+    computed: {
+        myPostText() {
+            if(this.is_my_posts)
+                return 'Go Back'
+            return 'My Posts'
+        }
+    },
     data() {
         return {
+            is_my_posts: false,
             // flash_error: this.$page.props?.flash?.error ?? null,
         }
     },
@@ -100,6 +109,12 @@ export default {
             (useToast()).error(this.flash_error);
         }*/
     },
+    methods: {
+        myPost() {
+            this.is_my_posts = !this.is_my_posts
+            this.$emitter.emit('my-post-loading', this.is_my_posts)
+        }
+    }
 }
 </script>
 

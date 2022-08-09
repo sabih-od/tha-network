@@ -1,82 +1,50 @@
 <template>
     <div class="postBox">
-        <form action="">
-            <ul class="topList">
-                <li><a href="#"><i class="fal fa-edit"></i> Make Post</a></li>
-                <!-- <li>
-                    <a href="#"><i class="fal fa-video-plus"></i>Upload Video
-                        <input type="file" name="post_video[]" class="postFileUploader" multiple="">
-                    </a>
-                </li>
-                <li><a href="#"><img src="images/live.png" alt=""> Live Video</a></li> -->
-            </ul>
-            <div class="textAreaWrap">
-                <div class="iconWrap"><img :src="asset('images/small-character.jpg')" class="rounded-circle" alt="">
-                </div>
-                <textarea name="post" placeholder="Want to Share a Memory?" id=""></textarea>
-            </div>
-            <!-- Video Preview -->
-            <!-- <div id="up_images">
-                <div class="cst_imgs">
-                </div>
-            </div> -->
-            <!-- Video Preview -->
-            <ul class="bottomList">
-                <li><a href="#" class="optBtn"><i class="fal fa-smile"></i> Feeling Activity</a></li>
-                <li><a href="#" class="optBtn"><i class="fas fa-map-marker-alt"></i>Location</a></li>
-                <li class="ml-auto"><a href="#" class="btnDesign">Post Now</a></li>
-            </ul>
-        </form>
-    </div>
-    <!--    <div class="postBox">
-
+        <form @submit.prevent="submit">
             <ul class="topList">
                 <li><a href="#" @click.prevent><i class="fal fa-edit"></i> Make Post</a></li>
-                <li>
-                    <a href="#"><i class="fal fa-video-plus"></i>Upload Photos/Videos
-                        <input type="file" name="post_video[]" class="postFileUploader" @change.prevent="filesSelect"
-                               multiple>
-                    </a>
-                </li>
-                <li><a href="#" @click.prevent><img :src="$store.getters['Utils/public_asset']('images/live.png')" alt="">
-                    Live Video</a></li>
             </ul>
+            <div class="textAreaWrap">
+                <div class="iconWrap">
+                    <img :src="auth_image" class="rounded-circle" alt="">
+                </div>
+                <textarea v-model="form.content" placeholder="Want to Share a Memory?"></textarea>
+            </div>
+
             <div v-if="renderedFiles.length > 0" class="row mx-2">
                 <div class="col-md-2 position-relative" v-for="(file, ind) in renderedFiles" :key="ind">
                     <img v-if="file.type === 'image'" :src="file.source" class="img-fluid w-100" alt="">
                     <i class="fas fa-times delete-icon" @click.prevent="removeFile($event, file.fileInd)"></i>
                 </div>
             </div>
-            <div class="textAreaWrap">
-                <div class="iconWrap"><img :src="profile_img" alt=""></div>
-                <textarea v-model="form.content" name="post" placeholder="Want to Share a Memory?" id=""></textarea>
-                &lt;!&ndash;            <p v-if="errors?.content" class="small text-danger">{{ errors.content }}</p>&ndash;&gt;
-            </div>
-            &lt;!&ndash; Video Preview &ndash;&gt;
-            <div id="up_images">
-                <div class="cst_imgs">
-                </div>
-            </div>
-            &lt;!&ndash; Video Preview &ndash;&gt;
+
+            <!-- Video Preview -->
             <ul class="bottomList">
-                &lt;!&ndash;            <li><a href="#" class="optBtn"><i class="fal fa-smile"></i> Feeling Activity</a>
-                            </li>
-                            <li><a href="#" class="optBtn"><i class="fas fa-map-marker-alt"></i>Location</a>
-                            </li>&ndash;&gt;
-                <li class="ml-auto"><a @click.prevent="submit"
-                                       href="#"
-                                       class="themeBtn">Post Now</a></li>
+                <li><a href="#" @click.prevent class="optBtn"><i class="fal fa-smile"></i> Feeling Activity</a></li>
+                <li><a href="#" @click.prevent class="optBtn"><i class="fas fa-map-marker-alt"></i>Location</a></li>
+                <li>
+                    <a href="#" class="optBtn" @click.prevent="$refs.selMedia.click()">
+                        <i class="fas fa-images"></i> Add Media
+                    </a>
+                    <input type="file" ref="selMedia" name="post_video[]" class="d-none" @change.prevent="filesSelect"
+                           multiple>
+                </li>
+                <li class="ml-auto">
+                    <a href="#" @click.prevent="submit" class="btnDesign">
+                        {{ form.processing ? 'Posting...' : 'Post Now' }}
+                    </a>
+                </li>
             </ul>
-            <teleport v-if="form.progress" to="body">
-                <ImageUploadingProgress :progress="form.progress.percentage"/>
-            </teleport>
-        </div>-->
+        </form>
+        <teleport v-if="form.progress" to="body">
+            <ImageUploadingProgress :progress="form.progress.percentage"/>
+        </teleport>
+    </div>
 </template>
 
 <script>
 import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {useToast} from "vue-toastification";
-import {Inertia} from "@inertiajs/inertia";
 import ImageUploadingProgress from "./ImageUploadingProgress";
 import utils from "../mixins/utils";
 
@@ -84,28 +52,6 @@ export default {
     name: "PostForm",
     mixins: [utils],
     components: {ImageUploadingProgress},
-    computed: {
-        errors: () => usePage().props.value?.errors ?? null,
-        // flashError: () => usePage().props.value?.flash?.error ?? null,
-        profile_img() {
-            return usePage().props.value?.auth_profile_image ?? this.$store.getters['Utils/public_asset']('images/ph-profile.jpg')
-        },
-    },
-    /*props: {
-        errors: Object
-    },*/
-    watch: {
-        errors(val) {
-            for (const key in val) {
-                (useToast()).error(val[key]);
-            }
-        },
-        /*flashError(val) {
-            if (val) {
-                (useToast()).error(val);
-            }
-        }*/
-    },
     data() {
         return {
             form: useForm({
@@ -132,19 +78,17 @@ export default {
                 })
                 .post(this.$route('postCreate'), {
                     replace: true,
+                    preserveState: true,
+                    preserveScroll: true,
                     forceFormData: true,
                     onSuccess: () => {
                         this.renderedFiles = [];
                         this.form.reset();
-                        (useToast()).clear();
-                        (useToast()).success(usePage().props.value?.flash?.success ?? 'Post created successfully!');
+                        this.showSuccessMessage()
                         this.$emitter.emit('post-created')
                     },
                     onFinish: () => {
-                        if (usePage().props.value?.flash?.error) {
-                            (useToast()).clear();
-                            (useToast()).error(usePage().props.value?.flash?.error ?? 'Server error!');
-                        }
+                        this.showErrorMessage()
                     }
                 })
         },
@@ -157,7 +101,7 @@ export default {
                     if (
                         (/^(image\/)[\w]+$/.test(fileType) || /^(video\/)[\w]+$/.test(fileType))
                     ) {
-                        const key = (new Date()).getTime()
+                        const key = this.$store.getters['Utils/uuid']
                         _this.form.files.push({
                             fileInd: key,
                             file: e.target.files[filesKey]

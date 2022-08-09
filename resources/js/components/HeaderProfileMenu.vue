@@ -1,7 +1,7 @@
 <template>
     <div class="dropdown nav-icons">
         <button class="dropdown-toggle" type="button" id="profileDropDown" data-toggle="dropdown" aria-expanded="false">
-            <img src="images/small-character.jpg" class="rounded-circle" alt="">
+            <img :src="auth_image" class="rounded-circle" alt="">
         </button>
         <div class="dropdown-menu" aria-labelledby="profileDropDown">
             <Link class="dropdown-item" replace :href="$route('profile')">Profile</Link>
@@ -34,16 +34,13 @@
 
 <script>
 import {Link, usePage} from "@inertiajs/inertia-vue3";
+import utils from "../mixins/utils";
 
 export default {
     name: "HeaderProfileMenu",
+    mixins: [utils],
     components: {
         Link
-    },
-    computed: {
-        profile_img() {
-            return usePage().props.value?.auth_profile_image ?? this.$store.getters['Utils/public_asset']('images/ph-profile.jpg')
-        },
     },
     data() {
         return {

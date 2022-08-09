@@ -4,16 +4,14 @@
             <a href="#" class="iconWrap"><img :src="profile_image"
                                               class="rounded-circle" alt=""></a>
             <div class="content">
-                <Link :href="$store.getters['Utils/generateProfileLink'](comment.user.id)" replace>
-                    <h2>{{ comment.user.name }}</h2>
+                <Link :href="profile_link(comment.user.id)" replace>
+                    <h2>@{{ comment.user.username }}</h2>
                 </Link>
                 <p>{{ comment.comment }}</p>
                 <ul>
-                    <!--                    <li><a href="#">Like</a></li>-->
+                    <li><a href="#">Like</a></li>
                     <li><a href="#" @click.prevent="repliesToggle"
-                           class="replyBtn">{{
-                            repliesCount
-                        }}</a></li>
+                           class="replyBtn">{{ repliesCount }}</a></li>
                     <li v-if="is_delete_able"><a href="#" class="text-danger"
                                                  @click.prevent="deleteComment(comment.id)">Delete</a>
                     </li>
@@ -22,7 +20,7 @@
                     {{ $store.getters['Utils/fromNow'](comment.created_at) }}
                 </p>
                 <ReplyForm
-                    v-if="showReplyForm"
+                    ref="replyForm"
                     @created="replyCreated"
                     :comment_id="comment.id"/>
             </div>
@@ -46,9 +44,11 @@ import _ from "lodash";
 import {Inertia} from "@inertiajs/inertia";
 import {useToast} from "vue-toastification";
 import {usePage, Link} from "@inertiajs/inertia-vue3";
+import utils from "../mixins/utils";
 
 export default {
     name: "CommentItem",
+    mixins: [utils],
     components: {
         ReplyForm,
         CommentReplyItem,
@@ -63,7 +63,7 @@ export default {
             return (this.commentData.replies_count > 0 ? `(${this.commentData.replies_count}) ` : '') + replyText
         },
         profile_image() {
-            return this.comment.user.profile_img ?? this.$store.getters['Utils/public_asset']('images/ph-profile.jpg')
+            return this.comment.user.profile_img ?? this.$store.getters['Utils/public_asset']('images/small-character.jpg')
         },
         is_delete_able() {
             if (this.$page.props?.auth?.id && this.comment?.user?.id)
@@ -86,6 +86,7 @@ export default {
     methods: {
         repliesToggle() {
             this.showReplyForm = !this.showReplyForm
+            $(this.$refs.replyForm.$el).slideToggle().delay(200).css('display', 'flex')
             if (this.showReplyForm)
                 this.loadReplies(this.comment.id)
         },
@@ -103,7 +104,22 @@ export default {
 
             url = url ?? this.$store.getters['Utils/baseUrl']
 
-            Inertia.get(url, {
+            this.loading = true
+            this.$store.dispatch('HttpUtils/getReq', {
+                url: url,
+                only: ['replies'],
+                params: {
+                    comment_id
+                }
+            }).then(res => {
+                this.next_page_url = res?.replies?.next_page_url ?? null
+                this.prev_page_url = res?.replies?.prev_page_url ?? null
+                this.commentData.replies = res?.replies?.data ?? []
+            }).finally(() => {
+                this.loading = false
+            })
+
+            /*Inertia.get(url, {
                 comment_id
             }, {
                 replace: true,
@@ -122,7 +138,7 @@ export default {
                     this.loading = false
                     window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
                 }
-            })
+            })*/
         },
         deleteComment(id) {
             if (this.loading) return;
