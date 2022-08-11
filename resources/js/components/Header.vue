@@ -23,7 +23,8 @@
                             <a class="nav-icons" href="#"><i class="fal fa-headset"></i></a>
                         </li>
                         <li>
-                            <a class="nav-icons" href="#"><i class="fal fa-comment-lines"></i></a>
+<!--                            <Link :href="$route('chatIndex')" replace><i class="fal fa-comments"></i> <span>5</span></Link>-->
+                            <a :href="$route('chatIndex')" class="nav-icons"><i class="fal fa-comment-lines"></i></a>
                         </li>
                         <li>
                             <a class="nav-icons" href="#"><i class="fal fa-bell"></i></a>
@@ -44,6 +45,7 @@
 <script>
 import {Link, usePage} from '@inertiajs/inertia-vue3'
 import HeaderProfileMenu from "./HeaderProfileMenu";
+import Chat from "../Pages/Chat";
 import utils from "../mixins/utils";
 
 export default {
@@ -51,7 +53,8 @@ export default {
     mixins: [utils],
     components: {
         Link,
-        HeaderProfileMenu
+        HeaderProfileMenu,
+        Chat
     },
     mounted() {
         this.$nextTick(() => {
