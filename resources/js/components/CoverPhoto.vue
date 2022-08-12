@@ -22,7 +22,8 @@
                             <img :src="asset('images/cup.png')" alt="">
                         </a>
                         <div class="btn-group">
-                            <a href="#" class="themeBtn">Message</a>
+<!--                            <a href="#" class="themeBtn">Message</a>-->
+                            <Link :href="$route('chatIndex')" class="themeBtn">Message</Link>
                         </div>
                     </div>
                 </div>
@@ -43,7 +44,7 @@
 
 <script>
 import ImageUploadingProgress from './ImageUploadingProgress'
-import {useForm, usePage} from "@inertiajs/inertia-vue3";
+import {Link, useForm, usePage} from "@inertiajs/inertia-vue3";
 import {useToast} from "vue-toastification";
 import {Inertia} from "@inertiajs/inertia";
 import utils from "../mixins/utils";
@@ -53,6 +54,7 @@ export default {
     name: "CoverPhoto",
     mixins: [utils],
     components: {
+        Link,
         ImageUploadingProgress,
         UserInfo
     },
