@@ -11,10 +11,11 @@
                     <span class="fa fa-bars"></span>
                 </button>
                 <form class="searchBar">
-                    <input type="search" placeholder="Search for creators, inspiration, projects..." name="search">
+                    <input type="search" placeholder="Search for creators, inspiration, projects..." name="search" v-model="search" @keyup.prevent="initateSearch()" autocomplete="off">
                     <!-- <button type="submit"><i class="fal fa-search"></i></button> -->
                     <div class="expandSearch">
-                        <p>Search for creators, inspiration, projects...</p>
+                        <p v-if="loading" class="text-secondary px-3">Please wait...</p>
+                        <Link v-for="user in peoples" :href="$route('userProfile', user.id)"><p>{{user.username}}</p></Link>
                     </div>
                 </form>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -56,6 +57,14 @@ export default {
         HeaderProfileMenu,
         Chat
     },
+    data() {
+        return {
+            search: '',
+            peoples: [],
+            loading: false,
+            debounce: null
+        }
+    },
     mounted() {
         this.$nextTick(() => {
             $(".searchBar input").focus(function () {
@@ -68,6 +77,26 @@ export default {
                 }
             });
         })
+    },
+    methods: {
+        initateSearch() {if (this.loading) return;
+            clearTimeout(this.debounce);
+            this.loading = true
+            this.peoples = []
+            this.debounce = setTimeout(() => {
+                this.$store.dispatch('HttpUtils/getReq', {
+                    url: this.$store.getters['Utils/baseUrl'],
+                    only: ['peoples'],
+                    params: {
+                        search: this.search
+                    }
+                }).then(res => {
+                    this.peoples = res?.peoples?.data ?? []
+                }).finally(() => {
+                    this.loading = false
+                })
+            }, 600);
+        }
     }
 }
 </script>

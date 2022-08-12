@@ -2,11 +2,14 @@
 
 namespace App\Http\Middleware;
 
+use App\Traits\UserData;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
+    use UserData;
     /**
      * The root template that's loaded on the first page visit.
      *
@@ -47,6 +50,9 @@ class HandleInertiaRequests extends Middleware
                     return $request->session()->get('error');
                 }
             ],
+            'peoples' => Inertia::lazy(function () use ($request) {
+                return $this->getPeoplesData($request);
+            }),
         ];
 
         if ($request->session()->has('v_data')) {
