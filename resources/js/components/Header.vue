@@ -24,7 +24,7 @@
                         </li>
                         <li>
 <!--                            <Link :href="$route('chatIndex')" replace><i class="fal fa-comments"></i> <span>5</span></Link>-->
-                            <a :href="$route('chatIndex')" class="nav-icons"><i class="fal fa-comment-lines"></i></a>
+                            <Link :href="$route('chatIndex')" class="nav-icons"><i class="fal fa-comment-lines"></i></Link>
                         </li>
                         <li>
                             <a class="nav-icons" href="#"><i class="fal fa-bell"></i></a>

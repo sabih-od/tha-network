@@ -60,12 +60,12 @@
                     </div>
 
                     <div class="col-md-9 col-sm-9 p-0 dse" id="chatbox">
-                        <style>
-                            .chatbox-media {
-                                width: 250px;
-                                height: 250px;
-                            }
-                        </style>
+<!--                        <style>-->
+<!--                            .chatbox-media {-->
+<!--                                width: 250px;-->
+<!--                                height: 250px;-->
+<!--                            }-->
+<!--                        </style>-->
                         <div class="settings-tray">
                             <div class="row jhnmsngr">
                                 <div class="col-sm-10">
@@ -119,7 +119,7 @@
                                             <div class="mesgHfs">
                                                 <h5>Jean Kruger</h5>
                                                 <div class="mesg-bx">
-                                                    <img class="chatbox-media" src="images/user1.jpg">
+                                                    <img class="chatbox-media" style="width: 250px; height: 250px;" src="images/user1.jpg">
                                                     <p>lorem ipsum</p>
                                                 </div>
                                                 <span>10 months ago</span>
@@ -8054,14 +8054,14 @@
         </div>
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="js/jquery-3.5.1.min.js"></script>
-        <script src="js/popper.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/jquery.fancybox.min.js"></script>
-        <script src="js/slick.min.js"></script>
-        <script src="js/wow.min.js"></script>
-        <script src="js/emoji.js"></script>
-        <script src="js/custom.min.js"></script>
+<!--        <script src="js/jquery-3.5.1.min.js"></script>-->
+<!--        <script src="js/popper.min.js"></script>-->
+<!--        <script src="js/bootstrap.min.js"></script>-->
+<!--        <script src="js/jquery.fancybox.min.js"></script>-->
+<!--        <script src="js/slick.min.js"></script>-->
+<!--        <script src="js/wow.min.js"></script>-->
+<!--        <script src="js/emoji.js"></script>-->
+<!--        <script src="js/custom.min.js"></script>-->
 
 
     </div>
