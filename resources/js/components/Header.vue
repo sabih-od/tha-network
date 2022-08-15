@@ -15,7 +15,7 @@
                     <!-- <button type="submit"><i class="fal fa-search"></i></button> -->
                     <div class="expandSearch">
                         <p v-if="loading" class="text-secondary px-3">Please wait...</p>
-                        <Link v-for="user in peoples" :href="$route('userProfile', user.id)"><p>{{user.username}}</p></Link>
+                        <Link v-for="user in peoples" :href="$route('userProfile', user.id)"><p>{{user.profile.first_name + ' ' + user.profile.last_name}}</p></Link>
                     </div>
                 </form>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">

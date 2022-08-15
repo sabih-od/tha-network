@@ -21,6 +21,7 @@ trait UserData
         }
 
         return $query
+            ->with('profile')
             ->latest()
             ->simplePaginate(5)
             ->through(function ($item, $key) {
