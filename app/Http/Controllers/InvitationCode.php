@@ -20,16 +20,19 @@ class InvitationCode extends Controller
 
     public function sendInvitationCode(Request $request)
     {
+//        dd($request->all());
         $data = $request->validate([
             'email' => [
-                'required',
+                'required_if:email,in:send_code_type',
+                'nullable',
                 'string',
                 'email',
                 'max:255',
                 Rule::unique('users')->whereNull('deleted_at'),
             ],
             'phone' => [
-                'required',
+                'required_if:phone,in:send_code_type',
+                'nullable',
                 'string',
                 'max:255'
             ],
@@ -147,6 +150,7 @@ class InvitationCode extends Controller
         $message = '<html><body>';
         $message .= '<h1 style="color:#f40;">Dear User!</h1>';
         $message .= '<p style="color:#080;font-size:18px;">Your generated invitation code: ' . $code . '</p>';
+        $message .= 'Link: <a href="'.route('loginForm', ['send_code' => 'success']).'">'.route('loginForm', ['send_code' => 'success']).'</a>';
         $message .= '</body></html>';
 
         // Sending email
