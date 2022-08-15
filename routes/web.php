@@ -5,6 +5,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -22,6 +23,16 @@ use Inertia\Inertia;
 /*Route::get('/', function () {
     return Inertia::render('Welcome');
 });*/
+
+Route::get('/temp', function() {
+//    dd('asd');
+    $start_of_week = Carbon::now()->startOfWeek();
+    $users = \App\Models\User::where('created_at', '>=', $start_of_week)
+                                ->take(8)
+                                ->orderBy('created_at', 'DESC')
+                                ->get();
+    dd($users);
+});
 
 Route::get('get/redis', function () {
     dd(\Illuminate\Support\Facades\Redis::get('test:key'));

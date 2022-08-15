@@ -12,6 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Overtrue\LaravelLike\Traits\Liker;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Overtrue\LaravelFollow\Followable;
 
 class User extends Authenticatable implements HasMedia
 {
@@ -21,7 +22,8 @@ class User extends Authenticatable implements HasMedia
         Uuids,
         SoftDeletes,
         Liker,
-        InteractsWithMedia;
+        InteractsWithMedia,
+        Followable;
 
     /**
      * The attributes that are mass assignable.
