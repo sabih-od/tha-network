@@ -12,7 +12,7 @@
                 <div class="col-md-5">
                     <div class="contentWrap">
                         <a href="#"><img :src="asset('images/logo.png')" alt="logo"></a>
-                        <ul class="nav login-tabs" id="myTab" role="tablist">
+                        <ul class="nav login-tabs" id="myTab" role="tablist" :hidden="isCode">
                             <li>
                                 <a class="nav-link" :class="{'active': !isCode}" id="one-tab" data-toggle="tab"
                                    href="#one-pane" role="tab"
@@ -45,9 +45,7 @@
                                         <label class="form-check-label" for="rememberMe">Rememer Me</label>
                                     </div>
                                     <div class="getText">
-                                        <Link :href="$route('invitationCodeForm')" replace>
-                                            <span>To get invitation code</span> Click Here
-                                        </Link>
+                                        <span>If you are visiting this page and were not given an invitation code by a member click <Link :href="$route('invitationCodeForm')" replace>this link</Link> to receive an invitation code.  If you were invited by another member please use the member's invitation code in order for the member to receive credit for the referral.</span>
                                     </div>
                                     <button type="submit" class="themeBtn" :disabled="form.processing">
                                         {{ form.processing ? 'Please wait...' : 'LOGIN' }}
@@ -58,7 +56,7 @@
                                  aria-labelledby="two-tab">
                                 <form @submit.prevent="verifyCode">
                                     <div class="form-group">
-                                        <label for="code">Code</label>
+                                        <label for="code">Enter your Invitation Code</label>
                                         <input type="text" v-model="codeForm.code" id="code" placeholder=""
                                                class="form-control">
                                     </div>
