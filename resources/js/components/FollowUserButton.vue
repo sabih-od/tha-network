@@ -1,5 +1,6 @@
 <template>
-    <a v-if="isFollowable" href="#" @click.prevent="follow" class="themeBtn">{{ buttonText }}</a>
+<!--    <a v-if="isFollowable" href="#" @click.prevent="follow" class="themeBtn">{{ buttonText }}</a>-->
+                <a href="#" class="nav-icons" @click.prevent="follow"><i :class="is_followed ? 'fal fa-user-check' : 'fal fa-user-plus'"></i></a>
 </template>
 
 <script>
@@ -13,7 +14,8 @@ export default {
         isPostShared: {
             type: Boolean,
             default: false
-        }
+        },
+        is_followed: false
     },
     data() {
         return {
@@ -45,16 +47,18 @@ export default {
                 preserveState: true,
                 preserveScroll: true,
                 onSuccess: () => {
-                    const setIsFollowing = !this.isFollowing
-                    this.$store.commit('Post/setFollowStatus', {
-                        user_id: this.user_id,
-                        path: 'user.is_followed',
-                        value: setIsFollowing
-                    });
-                    this.$emitter.emit('post-follow-user-toggle', {
-                        user_id: this.user_id,
-                        is_following: setIsFollowing
-                    })
+                    // const setIsFollowing = !this.isFollowing
+                    // this.$store.commit('Post/setFollowStatus', {
+                    //     user_id: this.user_id,
+                    //     path: 'user.is_followed',
+                    //     value: setIsFollowing
+                    // });
+                    // this.$emitter.emit('post-follow-user-toggle', {
+                    //     user_id: this.user_id,
+                    //     is_following: setIsFollowing
+                    // })
+                    // this.is_followed = !this.is_followed;
+                    this.$emit('update_is_followed', !this.is_followed);
                 },
                 onFinish: () => {
                     window.history.replaceState({}, '', this.initialUrl)
