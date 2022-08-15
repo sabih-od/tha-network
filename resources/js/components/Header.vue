@@ -13,9 +13,9 @@
                 <form class="searchBar">
                     <input type="search" placeholder="Search for creators, inspiration, projects..." name="search" v-model="search" @keyup.prevent="initateSearch()" autocomplete="off">
                     <!-- <button type="submit"><i class="fal fa-search"></i></button> -->
-                    <div class="expandSearch">
+                    <div class="expandSearch" ref="expand_search_visibility">
                         <p v-if="loading" class="text-secondary px-3">Please wait...</p>
-                        <Link v-for="user in peoples" :href="$route('userProfile', user.id)"><p>{{user.profile.first_name + ' ' + user.profile.last_name}}</p></Link>
+                        <Link v-for="user in peoples" @click.prevent="goToProfile()" :href="$route('userProfile', user.id)"><p>{{user.profile.first_name + ' ' + user.profile.last_name}}</p></Link>
                     </div>
                 </form>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -96,6 +96,11 @@ export default {
                     this.loading = false
                 })
             }, 600);
+        },
+        goToProfile() {
+            this.search = '';
+            this.peoples = [];
+            $('.expandSearch').slideUp('slow');
         }
     }
 }

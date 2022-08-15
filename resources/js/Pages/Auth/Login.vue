@@ -133,6 +133,7 @@ export default {
         Link
     },
     mounted() {
+        console.log(this.$route)
         this.isCode = window.location.search.indexOf('send-code=success') > -1
     },
     data() {
