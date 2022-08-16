@@ -71,6 +71,7 @@ class InvitationCode extends Controller
                 return WebResponses::exception("Email not send!");
 
             $route = route('loginForm', 'send-code=success');
+            session()->put('send-code', 'success');
             return WebResponses::success(
                 'Request submitted successfully!',
                 null,

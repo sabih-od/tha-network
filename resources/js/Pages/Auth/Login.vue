@@ -133,8 +133,11 @@ export default {
         Link
     },
     mounted() {
-        console.log(this.$route)
-        this.isCode = window.location.search.indexOf('send-code=success') > -1
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+        this.isCode = params['send-code'] && params['send-code'] == 'success';
+        // this.isCode = window.location.search.indexOf('send-code=success') > -1
     },
     data() {
         return {
