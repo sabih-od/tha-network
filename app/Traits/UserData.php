@@ -39,7 +39,11 @@ trait UserData
         if (!is_null($request->get('search'))) {
             $query->where(function ($q) use ($request) {
                 $q->where('username', 'like', "%{$request->search}%")
-                    ->orWhere('email', 'like', '%' . $request->search . '%');
+                    ->orWhere('email', 'like', '%' . $request->search . '%')
+                    ->orWhereHas('profile', function($q) use ($request) {
+                        return $q->where('first_name', 'like', "%{$request->search}%")
+                            ->orWhere('last_name', 'like', '%' . $request->search . '%');
+                    });
             });
         }
 
@@ -64,7 +68,11 @@ trait UserData
         if (!is_null($request->get('search'))) {
             $query->where(function ($q) use ($request) {
                 $q->where('username', 'like', "%{$request->search}%")
-                    ->orWhere('email', 'like', '%' . $request->search . '%');
+                    ->orWhere('email', 'like', '%' . $request->search . '%')
+                    ->orWhereHas('profile', function($q) use ($request) {
+                        return $q->where('first_name', 'like', "%{$request->search}%")
+                            ->orWhere('last_name', 'like', '%' . $request->search . '%');
+                    });
             });
         }
 

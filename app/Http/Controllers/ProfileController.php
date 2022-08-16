@@ -8,7 +8,9 @@ use App\Traits\CommentData;
 use App\Traits\PostData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 
 class ProfileController extends Controller
@@ -90,6 +92,14 @@ class ProfileController extends Controller
                 'city' => ['required', 'string', 'max:255'],
                 'postal_code' => ['required', 'string', 'max:255'],
             ];
+        elseif (
+            $request->has('oldpass') &&
+            $request->has('password') &&
+            $request->has('password_confirmation')
+        )
+            $v_rules = [
+                'password' => ['required', 'string', 'confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],
+            ];
 
         if (empty($v_rules))
             return WebResponses::exception('Invalid request!');
@@ -101,6 +111,16 @@ class ProfileController extends Controller
             if (collect($data)->has('email')) {
                 $user->email = $data['email'];
                 $user->save();
+            }
+
+            //change password
+            if (collect($data)->has('password')) {
+                if(!Hash::check($request->oldpass, $user->password)) {
+                    return WebResponses::exception('Incorrect old password');
+                }
+                $user->password = Hash::make($request->password);
+                $user->save();
+                return WebResponses::success('Profile updated successfully!');
             }
 
             $user->profile()->update(
