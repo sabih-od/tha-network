@@ -7,75 +7,68 @@
         <form action="">
             <div class="searchlist">
                 <i class="fal fa-search"></i>
-                <input type="search" placeholder="Search messages" name="search">
+                <input type="search" placeholder="Search messages" name="search" v-model="search" @keyup.prevent="initateSearch()" autocomplete="off">
                 <button><i class="fal fa-sliders-h"></i></button>
             </div>
         </form>
-        <div class="userList">
+        <div class="userList" v-for="user in peoples">
             <div class="userInfo">
-                <a href="profile.php"><img :src="asset('images/user1.jpg')" class="rounded-circle" alt=""></a>
-                <h3>Arman Rokni <a href="#">Connect</a></h3>
+                <Link :href="$route('userProfile', user.id)"><img :src="asset('images/user1.jpg')" class="rounded-circle" alt=""></Link>
+                <h3>
+                    <Link :href="$route('userProfile', user.id)">
+                        <strong>{{user.profile.first_name +' '+ user.profile.last_name}}</strong>
+                    </Link>
+                    <a href="#">Connect</a>
+                </h3>
             </div>
             <a href="#" class="nav-icons"><i class="fal fa-comments"></i></a>
         </div>
-        <div class="userList">
-            <div class="userInfo">
-                <a href="profile.php"><img :src="asset('images/user2.jpg')" class="rounded-circle" alt=""></a>
-                <h3>Arman Rokni <a href="#">Connect</a></h3>
-            </div>
-            <a href="#" class="nav-icons"><i class="fal fa-comments"></i></a>
-        </div>
-        <div class="userList">
-            <div class="userInfo">
-                <a href="profile.php"><img :src="asset('images/user3.jpg')" class="rounded-circle" alt=""></a>
-                <h3>Arman Rokni <a href="#">Connect</a></h3>
-            </div>
-            <a href="#" class="nav-icons"><i class="fal fa-comments"></i></a>
-        </div>
-        <div class="userList">
-            <div class="userInfo">
-                <a href="profile.php"><img :src="asset('images/user4.jpg')" class="rounded-circle" alt=""></a>
-                <h3>Arman Rokni <a href="#">Connect</a></h3>
-            </div>
-            <a href="#" class="nav-icons"><i class="fal fa-comments"></i></a>
-        </div>
-        <div class="userList">
-            <div class="userInfo">
-                <a href="profile.php"><img :src="asset('images/user5.jpg')" class="rounded-circle" alt=""></a>
-                <h3>Arman Rokni <a href="#">Connect</a></h3>
-            </div>
-            <a href="#" class="nav-icons"><i class="fal fa-comments"></i></a>
-        </div>
-        <div class="userList">
-            <div class="userInfo">
-                <a href="profile.php"><img :src="asset('images/user6.jpg')" class="rounded-circle" alt=""></a>
-                <h3>Arman Rokni <a href="#">Connect</a></h3>
-            </div>
-            <a href="#" class="nav-icons"><i class="fal fa-comments"></i></a>
-        </div>
-        <div class="userList">
-            <div class="userInfo">
-                <a href="profile.php"><img :src="asset('images/user7.jpg')" class="rounded-circle" alt=""></a>
-                <h3>Arman Rokni <a href="#">Connect</a></h3>
-            </div>
-            <a href="#" class="nav-icons"><i class="fal fa-comments"></i></a>
-        </div>
-        <div class="userList">
-            <div class="userInfo">
-                <a href="profile.php"><img :src="asset('images/user7.jpg')" class="rounded-circle" alt=""></a>
-                <h3>Arman Rokni <a href="#">Connect</a></h3>
-            </div>
-            <a href="#" class="nav-icons"><i class="fal fa-comments"></i></a>
+
+        <div style="text-align: center!important;" v-if="peoples.length == 0 && search == ''">
+            <h6>No users in your network.</h6>
         </div>
     </div>
 </template>
 
 <script>
 import utils from "../../mixins/utils";
+import {Link} from '@inertiajs/inertia-vue3'
 
 export default {
     name: "PeopleList",
-    mixins: [utils]
+    mixins: [utils],
+    components: {
+        Link
+    },
+    data() {
+        return {
+            search: '',
+            peoples: [],
+            debounce: null
+        }
+    },
+    mounted() {
+        this.initateSearch();
+    },
+    methods: {
+        initateSearch() {
+            clearTimeout(this.debounce);
+            this.peoples = []
+            this.debounce = setTimeout(() => {
+                this.$store.dispatch('HttpUtils/getReq', {
+                    url: this.$store.getters['Utils/baseUrl'],
+                    only: ['friends'],
+                    params: {
+                        search: this.search
+                    }
+                }).then(res => {
+                    this.peoples = res?.friends?.data.filter(element => element.is_followed == true) ?? []
+                }).finally(() => {
+                    // this.loading = false
+                })
+            }, 600);
+        }
+    }
 }
 </script>
 

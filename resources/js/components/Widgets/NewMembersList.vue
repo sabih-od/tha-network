@@ -26,48 +26,6 @@
         <div style="text-align: center!important;" v-if="peoples.length == 0 && search == ''">
             <h6>There are no new users yet.</h6>
         </div>
-<!--        <div class="userList">-->
-<!--            <div class="userInfo">-->
-<!--                <a href="profile.php"><img :src="asset('images/user3.jpg')" class="rounded-circle" alt=""></a>-->
-<!--                <h3>Arman Rokni <a href="#">Connect</a></h3>-->
-<!--            </div>-->
-<!--            <a href="#" class="nav-icons"><i class="fal fa-user-plus"></i></a>-->
-<!--        </div>-->
-<!--        <div class="userList">-->
-<!--            <div class="userInfo">-->
-<!--                <a href="profile.php"><img :src="asset('images/user4.jpg')" class="rounded-circle" alt=""></a>-->
-<!--                <h3>Arman Rokni <a href="#">Connect</a></h3>-->
-<!--            </div>-->
-<!--            <a href="#" class="nav-icons"><i class="fal fa-user-plus"></i></a>-->
-<!--        </div>-->
-<!--        <div class="userList">-->
-<!--            <div class="userInfo">-->
-<!--                <a href="profile.php"><img :src="asset('images/user5.jpg')" class="rounded-circle" alt=""></a>-->
-<!--                <h3>Arman Rokni <a href="#">Connect</a></h3>-->
-<!--            </div>-->
-<!--            <a href="#" class="nav-icons"><i class="fal fa-user-plus"></i></a>-->
-<!--        </div>-->
-<!--        <div class="userList">-->
-<!--            <div class="userInfo">-->
-<!--                <a href="profile.php"><img :src="asset('images/user6.jpg')" class="rounded-circle" alt=""></a>-->
-<!--                <h3>Arman Rokni <a href="#">Connect</a></h3>-->
-<!--            </div>-->
-<!--            <a href="#" class="nav-icons"><i class="fal fa-user-plus"></i></a>-->
-<!--        </div>-->
-<!--        <div class="userList">-->
-<!--            <div class="userInfo">-->
-<!--                <a href="profile.php"><img :src="asset('images/user7.jpg')" class="rounded-circle" alt=""></a>-->
-<!--                <h3>Arman Rokni <a href="#">Connect</a></h3>-->
-<!--            </div>-->
-<!--            <a href="#" class="nav-icons"><i class="fal fa-user-plus"></i></a>-->
-<!--        </div>-->
-<!--        <div class="userList">-->
-<!--            <div class="userInfo">-->
-<!--                <a href="profile.php"><img :src="asset('images/user7.jpg')" class="rounded-circle" alt=""></a>-->
-<!--                <h3>Arman Rokni <a href="#">Connect</a></h3>-->
-<!--            </div>-->
-<!--            <a href="#" class="nav-icons"><i class="fal fa-user-plus"></i></a>-->
-<!--        </div>-->
     </div>
 </template>
 

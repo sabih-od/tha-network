@@ -56,6 +56,9 @@ class HandleInertiaRequests extends Middleware
             'new_members' => Inertia::lazy(function () use ($request) {
                 return $this->getNewMembersData($request);
             }),
+            'friends' => Inertia::lazy(function () use ($request) {
+                return $this->getFriendsData($request);
+            }),
         ];
 
         if ($request->session()->has('v_data')) {
