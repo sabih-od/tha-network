@@ -12,29 +12,7 @@
 
                     <AddressUpdate/>
 
-                    <div class="edit-card">
-                        <a href="#" class="editProBtn">Edit</a>
-                        <div class="cardWrap">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="newpass">Create New Password</label>
-                                        <input type="password" name="newpass" class="form-control"
-                                               placeholder="*********">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="verifyPass">Verify Password</label>
-                                        <input type="password" name="verifyPass" class="form-control"
-                                               placeholder="*********">
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="m-0">The password should be at least 8 characters long with (1 upper case letter,
-                                1 number, 1 special character (!@#$%^&*)</p>
-                        </div>
-                    </div>
+                    <PasswordUpdate/>
 
                     <div class="edit-card">
                         <div class="df aic jcsb mb-2">
@@ -257,6 +235,7 @@ import ProfileLayout from "../Layouts/ProfileLayout";
 import BioUpdate from "../components/Forms/BioUpdate";
 import InfoUpdate from "../components/Forms/InfoUpdate";
 import AddressUpdate from "../components/Forms/AddressUpdate";
+import PasswordUpdate from "../components/Forms/PasswordUpdate";
 
 export default {
     name: "EditProfile",
@@ -264,6 +243,7 @@ export default {
         AddressUpdate,
         BioUpdate,
         InfoUpdate,
+        PasswordUpdate,
         Main,
         UserInfo,
         Link,

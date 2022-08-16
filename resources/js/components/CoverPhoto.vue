@@ -23,7 +23,7 @@
                         </a>
                         <div class="btn-group">
 <!--                            <a href="#" class="themeBtn">Message</a>-->
-                            <Link :href="$route('chatIndex')" class="themeBtn">Message</Link>
+                            <Link v-if="!edit_profile_active" :href="$route('chatIndex')" class="themeBtn">Message</Link>
                         </div>
                     </div>
                 </div>
@@ -64,11 +64,15 @@ export default {
             return usePage().props.value?.profile_cover ?? this.$store.getters['Utils/public_asset']('images/cover-photo.jpg')
         },
     },
+    mounted() {
+        // this.edit_profile_active = window.location.href.includes('edit-profile') ? true : false;
+    },
     data() {
         return {
             form: useForm({
                 cover: null
-            })
+            }),
+            edit_profile_active: false
         }
     },
     methods: {
