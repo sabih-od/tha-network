@@ -136,8 +136,8 @@ export default {
         const params = new Proxy(new URLSearchParams(window.location.search), {
             get: (searchParams, prop) => searchParams.get(prop),
         });
-        this.isCode = params['send-code'] && params['send-code'] == 'success';
-        // this.isCode = window.location.search.indexOf('send-code=success') > -1
+        // this.isCode = params['send-code'] && params['send-code'] == 'success';
+        this.isCode = window.location.search.indexOf('send-code=success') > -1
     },
     data() {
         return {

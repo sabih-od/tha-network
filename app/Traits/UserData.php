@@ -55,10 +55,28 @@ trait UserData
                 $item->is_followed = $item->isFollowedBy(User::find(Auth::id()));
                 return $item;
             });
+    }
 
+    protected function getFriendsData(Request $request)
+    {
+        $query = User::select('id', 'email', 'username');
 
-//
-//
-//
+        if (!is_null($request->get('search'))) {
+            $query->where(function ($q) use ($request) {
+                $q->where('username', 'like', "%{$request->search}%")
+                    ->orWhere('email', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        return $query
+            ->with('profile')
+            ->where('id', '!=', Auth::id())
+            ->simplePaginate(8)
+            ->through(function ($item, $key) {
+                $item->auth_id = Auth::id();
+                $item->profile_img = $item->getFirstMediaUrl('profile_image') ?? null;
+                $item->is_followed = $item->isFollowedBy(User::find(Auth::id()));
+                return $item;
+            });
     }
 }
