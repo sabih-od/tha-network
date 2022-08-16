@@ -151,7 +151,7 @@ class InvitationCode extends Controller
         $message = '<html><body>';
         $message .= '<h1 style="color:#f40;">Welcome to Tha Network!</h1>';
         $message .= '<p style="color:black;font-size:18px;">Please open up the link and use the invitation code given below to make an account: </p>';
-        $message .= '<br />' . $code;
+        $message .= '<br />' . $code . '<br />';
         $message .= 'Link: <a href="'.route('loginForm', ['send-code' => 'success']).'">'.route('loginForm', ['send-code' => 'success']).'</a>';
         $message .= '</body></html>';
 
