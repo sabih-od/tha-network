@@ -43,6 +43,16 @@ class HomeController extends Controller
             'replies' => Inertia::lazy(function () use ($request) {
                 return $this->getReplyData($request->comment_id ?? null);
             }),
+            'profile_cover' => $this->profileImg(Auth::user(), 'profile_cover'),
         ]);
+    }
+
+    private function profileImg($user, $collection)
+    {
+        $img = null;
+        if ($user) {
+            $img = $user->getFirstMedia($collection)->original_url ?? null;
+        }
+        return $img;
     }
 }

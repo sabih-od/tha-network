@@ -2,9 +2,24 @@
     <div class="userInfo">
         <div class="profileImg">
             <img :src="asset('images/char-usr.png')" alt="">
-            <!-- <div class="filSet">
-                <i class="fas fa-camera"></i><input type="file">
-            </div> -->
+            <a class="btn_edit_avatar" hidden="true" style="width: 40px;
+            height: 40px;
+            background: #9f9090;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            position: absolute;
+            right: 2rem;
+            bottom: 1rem;
+            font-size: 1rem;
+            color: white;
+            z-index: 999;">
+                <i class="fas fa-edit"></i>
+            </a>
+<!--            <div class="filSet">-->
+<!--                <i class="fas fa-camera"></i><input type="file">-->
+<!--            </div>-->
         </div>
         <h2>{{ name }} <span>@{{ user?.username }}</span></h2>
     </div>
