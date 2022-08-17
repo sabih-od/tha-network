@@ -25,7 +25,7 @@
         </div>
 
         <div style="text-align: center!important;" v-if="peoples.length == 0 && search == ''">
-            <h6>No users in your network.</h6>
+            <h6>There is no user in my network.</h6>
         </div>
     </div>
 </template>

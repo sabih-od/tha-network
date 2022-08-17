@@ -45,7 +45,13 @@
                                         <label class="form-check-label" for="rememberMe">Rememer Me</label>
                                     </div>
                                     <div class="getText">
-                                        <span>If you are visiting this page and were not given an invitation code by a member click <Link :href="$route('invitationCodeForm')" replace>this link</Link> to receive an invitation code.  If you were invited by another member please use the member's invitation code in order for the member to receive credit for the referral.</span>
+                                        <span>
+                                            <p>
+                                                1. If you are not a member you will need an invitation code to enter the site.<br />
+                                                2. If a member referred you and gave you an invitation code, use that code to enter the site.<br />
+                                                3. If you are visiting the site for the first time and interested in learning more about the site you will need to click <Link :href="$route('invitationCodeForm')" replace>here</Link> to receive an invitation code.
+                                            </p>
+                                        </span>
                                     </div>
                                     <button type="submit" class="themeBtn" :disabled="form.processing">
                                         {{ form.processing ? 'Please wait...' : 'LOGIN' }}
