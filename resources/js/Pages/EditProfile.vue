@@ -301,7 +301,17 @@ export default {
         }
     },
     mounted() {
-        this.$store.commit('Profile/setProfile', this.profile)
+        this.$store.commit('Profile/setProfile', this.profile);
+        //hide message button
+        $('.btn_message').prop('hidden', true);
+        $('.btn_edit_avatar').prop('hidden', false);
+        $('.changePhoto').prop('hidden', false);
+    },
+    unmounted() {
+        //un-hide message button
+        $('.btn_message').prop('hidden', false);
+        $('.btn_edit_avatar').prop('hidden', true);
+        $('.changePhoto').prop('hidden', true);
     },
     methods: {
         submit() {

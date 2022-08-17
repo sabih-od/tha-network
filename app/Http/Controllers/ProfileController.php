@@ -32,10 +32,9 @@ class ProfileController extends Controller
                 }),
                 'replies' => Inertia::lazy(function () use ($request) {
                     return $this->getReplyData($request->comment_id ?? null);
-                })
-                /*'profile_image' => $this->profileImg($user, 'profile_image'),
+                }),
+                'profile_image' => $this->profileImg($user, 'profile_image'),
                 'profile_cover' => $this->profileImg($user, 'profile_cover'),
-                ,*/
             ]);
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());
@@ -50,7 +49,7 @@ class ProfileController extends Controller
                 'user' => $user->only('name', 'email', 'created_at') ?? null,
                 'profile' => $user->profile ?? null,
 //                'profile_image' => $this->profileImg($user, 'profile_image'),
-//                'profile_cover' => $this->profileImg($user, 'profile_cover')
+                'profile_cover' => $this->profileImg($user, 'profile_cover')
             ]);
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());
@@ -241,7 +240,7 @@ class ProfileController extends Controller
 //                'has_blocked' => $auth->hasBlocked($user),
                 'profile' => $user->profile ?? null,
 //                'profile_image' => $this->profileImg($user, 'profile_image'),
-//                'profile_cover' => $this->profileImg($user, 'profile_cover'),
+                'profile_cover' => $this->profileImg($user, 'profile_cover'),
                 'posts' => Inertia::lazy(function () use ($user) {
                     return $this->getPostData(false, $user);
                 }),

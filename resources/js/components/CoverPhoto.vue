@@ -1,7 +1,13 @@
 <template>
     <!-- Begin: Cover Section -->
     <section class="bg-grey cover-photo pt-0 pb-5">
-        <img :src="asset('images/cover-photo.jpg')" class="w-100" alt="">
+        <div class="filSet changePhoto" hidden="true" v-if="!$store.state.Profile.is_another" style="background-color: #d3cbcb;">
+            <input type="file" class="form-control" @change.prevent="imageChange" style="position: relative; border: 1px solid red!important;">
+            <i class="fas fa-edit"></i>
+            Edit Cover Photo
+        </div>
+<!--        <img :src="asset('images/cover-photo.jpg')" class="w-100" alt="">-->
+        <img :src="profile_cover" class="w-100" alt="">
         <div class="container-fluid">
             <div class="topWrap">
                 <div class="row aic">
@@ -23,7 +29,7 @@
                         </a>
                         <div class="btn-group">
 <!--                            <a href="#" class="themeBtn">Message</a>-->
-                            <Link v-if="!edit_profile_active" :href="$route('chatIndex')" class="themeBtn">Message</Link>
+                            <Link v-if="!edit_profile_active" :href="$route('chatIndex')" class="themeBtn btn_message">Message</Link>
                         </div>
                     </div>
                 </div>
@@ -31,15 +37,15 @@
         </div>
     </section>
     <!-- END: Cover Section -->
-    <!--    <div class="coverPhoto">
-            <div class="filSet changePhoto" v-if="!$store.state.Profile.is_another">
-                <i class="fas fa-camera"></i><input type="file" @change.prevent="imageChange">
-            </div>
-            <img :src="profile_cover" alt="">
-            <teleport v-if="form.progress" to="body">
-                <ImageUploadingProgress :progress="form.progress.percentage"/>
-            </teleport>
-        </div>-->
+<!--    <div class="coverPhoto">-->
+<!--        <div class="filSet changePhoto" v-if="$store.state.Profile.is_another">-->
+<!--            <i class="fas fa-camera"></i><input type="file" @change.prevent="imageChange">-->
+<!--        </div>-->
+<!--        <img :src="profile_cover" alt="">-->
+<!--        <teleport v-if="form.progress" to="body">-->
+<!--            <ImageUploadingProgress :progress="form.progress.percentage"/>-->
+<!--        </teleport>-->
+<!--    </div>-->
 </template>
 
 <script>
@@ -65,6 +71,7 @@ export default {
         },
     },
     mounted() {
+        console.log(usePage().props.value.profile_cover);
         // this.edit_profile_active = window.location.href.includes('edit-profile') ? true : false;
     },
     data() {
