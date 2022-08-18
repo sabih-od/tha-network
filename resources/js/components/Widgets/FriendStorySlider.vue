@@ -57,7 +57,7 @@ export default {
                     dots: false,
                     arrows: true,
                     infinite: true,
-                    slidesToShow: slidesToShow - 1,
+                    slidesToShow: slidesToShow <= 1 ? 1 : slidesToShow - 1,
                     slidesToScroll: 1,
                     prevArrow: '<button type="button" class="slick-prev"><i class="fal fa-chevron-left"></i></button>',
                     nextArrow: '<button type="button" class="slick-next"><i class="fal fa-chevron-right"></i></button>',
