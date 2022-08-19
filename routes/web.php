@@ -3,6 +3,7 @@
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InvitationCode;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Carbon\Carbon;
@@ -90,6 +91,10 @@ Route::group([
     // Comment reply
     Route::post('comment/reply', [PostController::class, 'commentReplyStore'])
         ->name('commentReplyStore');
+
+    //invite other users
+    Route::post('send-invitation-code', [InvitationCode::class, 'sendInvitation'])
+        ->name('sendInvitation');
 
     // Chat routes
     Route::get('chat', [ChatController::class, 'index'])
