@@ -177,13 +177,22 @@ class InvitationCode extends Controller
 
         // Compose a simple HTML email message
         $message = '<html><body>';
-        $message .= '<h1 style="color:#f40;">Welcome to Tha Network!</h1>';
-        $message .= '<p style="color:black;font-size:18px;">Please open up the link and use the invitation code given below to make an account: </p>';
-        $message .= '<br />' . '44444444' . '<br />';
-        $message .= 'Link: <a href="'.route('loginForm', ['send-code' => 'success']).'">'.route('loginForm', ['send-code' => 'success']).'</a>';
+        $message .= '<p style="color:black;font-size:18px;">Hi,</p><br /><br />';
+        $message .= '<p style="color:black;font-size:18px;">You have been invited to join [Inviter\'s Name] network. You can join by clicking on the invitation link below.</p><br /><br />';
+        $message .= '<p style="color:black;font-size:18px;">Invitation Link: thanetwork.com/join/inviters_username</p><br /><br />';
+        $message .= '<p style="color:black;font-size:18px;">Regards,</p><br />';
+        $message .= '<p style="color:black;font-size:18px;">Team Tha Network</p><br />';
         $message .= '</body></html>';
 
         // Sending email
+//        Mail::send(
+//                 'mails.send-invitation-code-mail',
+//                 ['code' => 'code'],
+//                 function ($message) use ($to) {
+//                     $message->to($to)->subject('Invitation Code!');
+//                 }
+//             );
+
         if (mail($to, $subject, $message, $headers)) {
             return true;
         } else {

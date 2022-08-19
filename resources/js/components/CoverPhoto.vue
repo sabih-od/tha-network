@@ -36,6 +36,9 @@
                 </div>
             </div>
         </div>
+            <teleport to="body">
+                <SendInviteModal/>
+            </teleport>
     </section>
     <!-- END: Cover Section -->
 <!--    <div class="coverPhoto">-->
@@ -47,34 +50,11 @@
 <!--            <ImageUploadingProgress :progress="form.progress.percentage"/>-->
 <!--        </teleport>-->
 <!--    </div>-->
-
-    <div class="modal fade modal_invite" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Send Invitation</h5>
-                </div>
-                <div class="modal-body">
-                    <h5 class="modal-title" id="exampleModalLabel"><small>Send invitations to people to join your network</small></h5>
-                    <form @submit.prevent="sendInvite()">
-                        <div class="form-group">
-                            <input class="form-control" type="email" placeholder="Email" v-model="invite_form.email" :disabled="invite_form.processing">
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary form-control">Send</button>
-                        </div>
-                    </form>
-                </div>
-<!--                <div class="modal-footer">-->
-<!--                    <button type="button" class="btn btn-primary" @click.prevent="sendInvite()">Send</button>-->
-<!--                </div>-->
-            </div>
-        </div>
-    </div>
 </template>
 
 <script>
 import ImageUploadingProgress from './ImageUploadingProgress'
+import SendInviteModal from "./SendInviteModal";
 import {Link, useForm, usePage} from "@inertiajs/inertia-vue3";
 import {useToast} from "vue-toastification";
 import {Inertia} from "@inertiajs/inertia";
@@ -85,6 +65,7 @@ export default {
     name: "CoverPhoto",
     mixins: [utils],
     components: {
+        SendInviteModal,
         Link,
         ImageUploadingProgress,
         UserInfo
@@ -103,10 +84,6 @@ export default {
         return {
             form: useForm({
                 cover: null
-            }),
-            invite_form: useForm({
-                email: '',
-                processing: false
             }),
             edit_profile_active: false
         }
@@ -132,25 +109,6 @@ export default {
         inviteModal() {
             $('.modal_invite').modal('show');
         },
-        sendInvite() {
-            if (this.invite_form.processing) return;
-
-            this.invite_form.post(this.$route('sendInvitation'), {
-                replace: true,
-                onSuccess: () => {
-                    setTimeout(() => console.log('asd'), 3000);
-                    (useToast()).options = {
-                        "showDuration": "3000",
-                    };
-                    (useToast()).success('The invitation has been sent.');
-                    this.invite_form.reset()
-                    // this.showSuccessMessage()
-                },
-                onFinish: () => {
-                    this.showErrorMessage()
-                }
-            })
-        }
     }
 }
 </script>
