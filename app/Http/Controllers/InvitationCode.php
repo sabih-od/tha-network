@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\WebResponses;
 use App\Models\SendInvitation;
+use App\Models\User;
 use App\Models\UserInvitation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -162,7 +163,7 @@ class InvitationCode extends Controller
         }
     }
 
-    public function invitationMailCode($to, $subject)
+    public function invitationMailCode($to, $subject, $username, $name)
     {
         $from = 'no-reply@tha-network.com';
 
@@ -178,8 +179,8 @@ class InvitationCode extends Controller
         // Compose a simple HTML email message
         $message = '<html><body>';
         $message .= '<p style="color:black;font-size:18px;">Hi,</p><br /><br />';
-        $message .= '<p style="color:black;font-size:18px;">You have been invited to join [Inviter\'s Name] network. You can join by clicking on the invitation link below.</p><br /><br />';
-        $message .= '<p style="color:black;font-size:18px;">Invitation Link: thanetwork.com/join/inviters_username</p><br /><br />';
+        $message .= `<p style="color:black;font-size:18px;">You have been invited to join `.$name.`'s network. You can join by clicking on the invitation link below.</p><br /><br />`;
+        $message .= '<p style="color:black;font-size:18px;">Invitation Link: '.route('joinByInvite', $username).'</p><br /><br />';
         $message .= '<p style="color:black;font-size:18px;">Regards,</p><br />';
         $message .= '<p style="color:black;font-size:18px;">Team Tha Network</p><br />';
         $message .= '</body></html>';
@@ -216,7 +217,7 @@ class InvitationCode extends Controller
             //register mail code if necessary
             //
 
-            if (!$this->invitationMailCode($data['email'], 'Tha Network - Invitation Code!'))
+            if (!$this->invitationMailCode($data['email'], 'Tha Network - Invitation Code!', $request->username, $request->name))
                 return WebResponses::exception("Email not sent!");
 
 //            $route = route('loginForm', 'send-invite=success');
@@ -230,5 +231,17 @@ class InvitationCode extends Controller
 //            DB::rollBack();
             return WebResponses::exception($e->getMessage());
         }
+    }
+
+    public function join(Request $request, $username) {
+        //get inviter
+        $inviter = User::where('username', $username)->first();
+
+        session()->put('validate-code', '123123123');
+        session()->put('inviter_id', $inviter->id);
+
+        return Inertia::render('HowItWorks', [
+            'inviter' => $inviter
+        ]);
     }
 }

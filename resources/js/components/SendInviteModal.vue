@@ -38,17 +38,33 @@ export default {
     components: {
         PostMainData
     },
+    computed: {
+        user() {
+            const page = usePage().component.value
+            if (page === 'UserProfile')
+                return usePage().props.value?.user ?? null
+            return usePage().props.value?.auth ?? null
+        },
+        name: () => {
+            const profile = usePage().props.value?.profile ?? null
+            return profile ? profile?.first_name + ' ' + profile?.last_name : ''
+        }
+    },
     data() {
         return {
             modal: null,
             post: null,
             form: useForm({
                 email: '',
-                processing: false
+                processing: false,
+                username: '',
+                name: ''
             }),
         }
     },
     mounted() {
+        this.form.username = this.user.username;
+        this.form.name = this.name;
         const modalEl = this.$refs.inviteModal
         this.modal = new bootstrap.Modal(modalEl, {
             keyboard: false,

@@ -15,5 +15,7 @@ class Payment extends Model
         'amount',
         'client_secret',
         'payment_type',
+        'payable_type',
+        'payable_id',
     ];
 }

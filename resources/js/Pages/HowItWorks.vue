@@ -211,6 +211,12 @@ export default {
     mixins: [utils],
     components: {
         HowItWorksMenu
+    },
+    props: {
+        inviter: Object
+    },
+    mounted() {
+
     }
 }
 </script>
