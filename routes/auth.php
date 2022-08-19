@@ -40,5 +40,12 @@ Route::group(['middleware' => ['revalidate']], function () {
     });
 });
 
+Route::group(['middleware' => ['guest']], function() {
+    // visit by clicking invite
+    Route::get('join/{username}', [InvitationCode::class, 'join'])
+        ->name('joinByInvite');
+    // Register with invite link (without invitation code)
+});
+
 
 

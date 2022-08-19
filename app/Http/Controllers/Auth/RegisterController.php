@@ -56,7 +56,7 @@ class RegisterController extends Controller
             ->whereHas('payment')
             ->whereNull('deleted_at')
             ->exists();
-        if ($userInv)
+        if ($userInv || session()->has('inviter_id'))
             return Inertia::render('Auth/Register');
         else
             return redirect(route('loginForm'));

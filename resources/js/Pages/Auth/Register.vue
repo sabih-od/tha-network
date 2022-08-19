@@ -155,7 +155,11 @@ export default {
     name: "Register",
     mixins: [utils],
     props: {
-        errors: Object
+        errors: Object,
+        inviter_id: Object
+    },
+    mounted() {
+        console.log(this.inviter_id);
     },
     data() {
         return {
@@ -168,6 +172,7 @@ export default {
                 password: '',
                 password_confirmation: '',
                 social_security_number: '',
+                inviter_id: this.inviter
             })
         }
     },

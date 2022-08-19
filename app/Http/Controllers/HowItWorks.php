@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Payment;
 use App\Models\UserInvitation;
 use App\Traits\StripePayment;
 use Illuminate\Http\Request;
@@ -42,13 +43,25 @@ class HowItWorks extends Controller
             ->whereDoesntHave('payment')
             ->whereNull('deleted_at')
             ->first();
-        if (is_null($userInv))
+
+        //checking for inviter in session
+        if (is_null($userInv) && !session()->has('inviter_id'))
             return redirect()->route('loginForm');
 
-        $payment = $userInv->payment()->create([
-            'amount' => $this->amount,
-            'client_secret' => session('client-secret')
-        ]);
+        //if registered by following invitation link
+        if(session()->has('inviter_id') && is_null($userInv)) {
+            $payment = Payment::create([
+                'amount' => $this->amount,
+                'client_secret' => session('client-secret'),
+                'payable_type' => 'App\Models\Payment',
+                'payable_id' => session()->get('inviter_id')
+            ]);
+        } else {
+            $payment = $userInv->payment()->create([
+                'amount' => $this->amount,
+                'client_secret' => session('client-secret')
+            ]);
+        }
 
         return redirect()->route('registerForm');
     }
