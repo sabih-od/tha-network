@@ -24,6 +24,10 @@ Route::group(['middleware' => ['revalidate']], function () {
         Route::post('verify-code', [InvitationCode::class, 'verifyCode'])
             ->name('verifyCode');
 
+        //invite other users
+        Route::post('send-invitation-code', [InvitationCode::class, 'sendInvitation'])
+            ->name('sendInvitation');
+
         // if user enter valid code
         Route::get('how-it-works', [HowItWorks::class, 'show'])
             ->name('howItWorks');

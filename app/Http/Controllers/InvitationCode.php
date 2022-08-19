@@ -20,7 +20,6 @@ class InvitationCode extends Controller
 
     public function sendInvitationCode(Request $request)
     {
-//        dd($request->all());
         $data = $request->validate([
             'email' => [
                 'required_if:email,in:send_code_type',
@@ -160,6 +159,67 @@ class InvitationCode extends Controller
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function invitationMailCode($to, $subject)
+    {
+        $from = 'no-reply@tha-network.com';
+
+        // To send HTML mail, the Content-type header must be set
+        $headers = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+
+        // Create email headers
+        $headers .= 'From: ' . $from . "\r\n" .
+            'Reply-To: ' . $from . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
+
+        // Compose a simple HTML email message
+        $message = '<html><body>';
+        $message .= '<h1 style="color:#f40;">Welcome to Tha Network!</h1>';
+        $message .= '<p style="color:black;font-size:18px;">Please open up the link and use the invitation code given below to make an account: </p>';
+        $message .= '<br />' . '44444444' . '<br />';
+        $message .= 'Link: <a href="'.route('loginForm', ['send-code' => 'success']).'">'.route('loginForm', ['send-code' => 'success']).'</a>';
+        $message .= '</body></html>';
+
+        // Sending email
+        if (mail($to, $subject, $message, $headers)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function sendInvitation(Request $request) {
+        $data = $request->validate([
+            'email' => [
+                'required',
+                'nullable',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->whereNull('deleted_at'),
+            ]
+        ]);
+
+        try {
+            //register mail code if necessary
+            //
+
+            if (!$this->invitationMailCode($data['email'], 'Tha Network - Invitation Code!'))
+                return WebResponses::exception("Email not sent!");
+
+//            $route = route('loginForm', 'send-invite=success');
+            session()->put('send-invite', 'success');
+            return WebResponses::success(
+                'Request submitted successfully!',
+                null
+//                $route
+            );
+        } catch (\Exception $e) {
+//            DB::rollBack();
+            return WebResponses::exception($e->getMessage());
         }
     }
 }
