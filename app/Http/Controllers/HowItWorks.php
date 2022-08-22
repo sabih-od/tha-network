@@ -65,6 +65,4 @@ class HowItWorks extends Controller
 
         return redirect()->route('registerForm');
     }
-
-
 }

@@ -56,8 +56,15 @@ class RegisterController extends Controller
             ->whereHas('payment')
             ->whereNull('deleted_at')
             ->exists();
-        if ($userInv || session()->has('inviter_id'))
+        if ($userInv) {
             return Inertia::render('Auth/Register');
+        }
+        //checking for inviter info as well
+        else if (session()->has('inviter_id')) {
+            return Inertia::render('Auth/Register', [
+                'inviter_id' => session()->get('inviter_id')
+            ]);
+        }
         else
             return redirect(route('loginForm'));
     }
@@ -75,12 +82,12 @@ class RegisterController extends Controller
             'user_invitation_id' => [
                 'required',
                 function ($attribute, $value, $fail) {
-                    if (!$value) return;
+                    if (!$value || !(session()->has('inviter_id'))) return;
                     $userInvitation = UserInvitation::where('id', $value)
                         ->whereHas('payment')
                         ->whereNull('deleted_at')
                         ->exists();
-                    if (!$userInvitation) {
+                    if (!$userInvitation || !(session()->has('inviter_id'))) {
                         session()->flush();
                         $fail("Invalid invitation id!");
                     }
