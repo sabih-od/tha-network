@@ -84,7 +84,8 @@ export default {
             this.modal.show()
         },
         hide() {
-            this.modal.hide()
+            // this.modal.hide()
+            $('.modal_invite').modal('hide');
         },
         submit() {
             if (this.form.processing) return;
@@ -98,6 +99,7 @@ export default {
                         "showDuration": "3000",
                     };
                     (useToast()).success('The invitation has been sent.');
+                    this.hide();
                     this.form.reset()
                     // this.showSuccessMessage()
                 },
