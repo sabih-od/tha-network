@@ -45,8 +45,6 @@ Route::group(['middleware' => ['guest']], function() {
     Route::get('join/{username}', [InvitationCode::class, 'join'])
         ->name('joinByInvite');
     // Register with invite link (without invitation code)
-    Route::post('invited-sign-up', [RegisterController::class, 'register'])
-        ->name('invitedRegister');
 });
 
 
