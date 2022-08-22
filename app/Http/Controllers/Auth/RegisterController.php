@@ -8,7 +8,9 @@ use App\Models\SendInvitation;
 use App\Models\UserInvitation;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -158,5 +160,36 @@ class RegisterController extends Controller
         ]);
 
         return $user;
+    }
+
+//    override function
+    public function register(Request $request)
+    {
+//        return User::find(session()->get('inviter_id'));
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        //if user was invited by link: add to their friend list
+        if(session()->has('inviter_id')) {
+            $check = User::where('id', session()->get('inviter_id'))->get();
+            if(count($check) > 0) {
+//                $inviter = $check[0];
+                $inviter = User::find(session()->get('inviter_id'));
+                $user = User::find($user->id);
+                $user->follow($inviter);
+                session()->remove('inviter_id');
+            }
+        }
+
+        $this->guard()->login($user);
+
+        if ($response = $this->registered($request, $user)) {
+            return $response;
+        }
+
+        return $request->wantsJson()
+            ? new JsonResponse([], 201)
+            : redirect($this->redirectPath());
     }
 }
