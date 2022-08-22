@@ -14,6 +14,7 @@
                 <h3>
                     <Link :href="$route('userProfile', user.id)">
                         <strong>{{user.profile.first_name +' '+ user.profile.last_name}}</strong>
+<!--                        <strong>{{user.profile.first_name}}</strong>-->
                     </Link>
                     <a href="#">Connect</a>
                 </h3>

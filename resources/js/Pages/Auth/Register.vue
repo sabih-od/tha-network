@@ -156,7 +156,7 @@ export default {
     mixins: [utils],
     props: {
         errors: Object,
-        inviter_id: Object
+        inviter_id: null
     },
     mounted() {
         console.log(this.inviter_id);

@@ -180,7 +180,7 @@ class InvitationCode extends Controller
         $message = '<html><body>';
         $message .= '<p style="color:black;font-size:18px;">Hi,</p><br /><br />';
         $message .= `<p style="color:black;font-size:18px;">You have been invited to join `.$name.`'s network. You can join by clicking on the invitation link below.</p><br /><br />`;
-        $message .= '<p style="color:black;font-size:18px;">Invitation Link: '.route('joinByInvite', $username).'</p><br /><br />';
+        $message .= '<p style="color:black;font-size:18px;">Invitation Link: <a href="'.route('joinByInvite', $username).'">'.route('joinByInvite', $username).'</a></p><br /><br />';
         $message .= '<p style="color:black;font-size:18px;">Regards,</p><br />';
         $message .= '<p style="color:black;font-size:18px;">Team Tha Network</p><br />';
         $message .= '</body></html>';
@@ -234,14 +234,37 @@ class InvitationCode extends Controller
     }
 
     public function join(Request $request, $username) {
-        //get inviter
-        $inviter = User::where('username', $username)->first();
+        try {
+            //get inviter
+            $inviter = User::where('username', $username)->first();
 
-        session()->put('validate-code', '123123123');
-        session()->put('inviter_id', $inviter->id);
+//        session()->put('validate-code', '123123123');
+            session()->put('inviter_id', $inviter->id);
 
-        return Inertia::render('HowItWorks', [
-            'inviter' => $inviter
-        ]);
+            $code = $this->generateUniqueCode();
+            DB::beginTransaction();
+            $sendInvitation = SendInvitation::firstOrNew([
+                'email' => 'inviter@tha-network.com'
+            ]);
+            $sendInvitation->save();
+            $sendInvitation->invitation()->forceDelete();
+            $sendInvitation->invitation()->create([
+                'code' => $code
+            ]);
+            DB::commit();
+            session()->put('send-code', 'success');
+            $userInvitation = null;
+            $userInvitation = UserInvitation::where('code', $code)
+                ->whereDoesntHave('payment')
+                ->whereNull('deleted_at')
+                ->first();
+            session()->put('validate-code', $userInvitation->id);
+
+            return Inertia::render('HowItWorks', [
+                'inviter' => $inviter
+            ]);
+        } catch (\ErrorException $e) {
+            return WebResponses::exception($e->getMessage());
+        }
     }
 }
