@@ -32,4 +32,4 @@ createInertiaApp({
     },
 })
 
-// app.config.globalProperties.$route = route
+//  app.config.globalProperties.$route = route

@@ -1,8 +1,15 @@
 <template>
+<!--    <form action="#" @submit.prevent="submit">-->
+<!--        <div class="searchBox">-->
+<!--            <input type="text" v-model="search" placeholder="Search" name="search" id="search" autocomplete="off">-->
+<!--            <button><i class="fal fa-search"></i></button>-->
+<!--        </div>-->
+<!--    </form>-->
     <form action="#" @submit.prevent="submit">
-        <div class="searchBox">
-            <input type="text" v-model="search" placeholder="Search" name="search" id="search" autocomplete="off">
-            <button><i class="fal fa-search"></i></button>
+        <div class="search-box">
+            <div class="input-wrapper">
+                <input type="text" v-model="search" placeholder="Search Contact" name="search" id="search" autocomplete="off">
+            </div>
         </div>
     </form>
 </template>
@@ -17,7 +24,7 @@ export default {
     },
     methods: {
         submit() {
-            this.$emit('search', this.search)
+            this.$emit('search', this.search);
         }
     }
 }

@@ -1,7 +1,17 @@
 <template>
-    <a href="#" @click.prevent="select" class="grpName">
-        <ProfileImageIconRounded :profile_img="cover?.profile_img"/>
-        <h2>{{ cover?.name }}</h2>
+<!--    <a href="#" @click.prevent="select" class="grpName">-->
+<!--        <ProfileImageIconRounded :profile_img="cover?.profile_img"/>-->
+<!--        <h2>{{ cover?.name }}</h2>-->
+<!--    </a>-->
+
+    <a href="#" @click.prevent="select">
+        <div class="friend-drawer friend-drawer--onhover">
+
+            <ProfileImageIconRounded :profile_img="cover?.profile_img"/>
+            <div class="text">
+                <h6>{{ cover?.profile?.first_name + ' ' + cover?.profile?.last_name}}</h6>
+            </div>
+        </div>
     </a>
 </template>
 

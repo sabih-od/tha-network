@@ -29,8 +29,9 @@
                         </a>
                         <div class="btn-group">
 <!--                            <a href="#" class="themeBtn">Message</a>-->
-                            <button v-if="!edit_profile_active" class="themeBtn btn_message" @click.prevent="inviteModal()">Invite</button>
-                            <Link v-if="!edit_profile_active" :href="$route('chatIndex')" class="themeBtn btn_message">Message</Link>
+                            <button v-if="!edit_profile_active" class="themeBtn btn_invite" @click.prevent="inviteModal()">Invite</button>
+<!--                            <a v-if="!edit_profile_active" href="#" @click="$emitter.emit('chat-with-profile')" class="themeBtn btn_message">Message</a>-->
+                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_message" data-profile="asd" @click.prevent="chatWithProfile()">Message</Link>
                         </div>
                     </div>
                 </div>
@@ -77,15 +78,20 @@ export default {
         },
     },
     mounted() {
-        console.log(usePage().props.value.profile_cover);
+        // console.log(usePage().props.value.profile_cover);
         // this.edit_profile_active = window.location.href.includes('edit-profile') ? true : false;
+
     },
     data() {
         return {
             form: useForm({
                 cover: null
             }),
-            edit_profile_active: false
+            edit_profile_active: false,
+            channelForm: useForm({
+                chat_type: 'individual',
+                user_id: null
+            })
         }
     },
     methods: {
@@ -109,6 +115,67 @@ export default {
         inviteModal() {
             $('.modal_invite').modal('show');
         },
+        chatWithProfile() {
+            // this.channelForm.user_id = $('.btn_message').data('profile');
+            // this.channelForm
+            //     .post(this.$route('channelStore'), {
+            //         replace: true,
+            //         preserveScroll: true,
+            //         preserveState: true,
+            //         onSuccess: () => {
+            //             this.form.user_id = null
+            //             // console.log(usePage().props.value)
+            //             const v_data = usePage().props.value?.v_data
+            //             if (v_data) {
+            //                 this.$emitter.emit('chat_active', v_data.channel.id)
+            //                 this.$emitter.emit('chat_active_user_data', v_data.cover_data)
+            //             }
+            //             // this.loadChatListing();
+            //             // this.$store.dispatch('Utils/showSuccessMessage')
+            //         },
+            //         onError: () => {
+            //             this.$store.dispatch('Utils/showErrorMessages')
+            //         }
+            //     })
+
+            // Inertia.get(this.$route('chatIndex'), {
+            //     profile_id: $('.btn_message').data('profile')
+            // }, {
+            //     replace: true,
+            //     preserveScroll: true,
+            //     preserveState: true,
+            //     only: ['profile_id'],
+            //     onStart: () => {
+            //         this.loading = true
+            //     },
+            //     onSuccess: visit => {
+            //         console.log(visit);
+            //     },
+            //     onFinish: () => {
+            //         this.loading = false
+            //         window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
+            //     }
+            // })
+
+            this.$store.commit('Chat/setActiveUserId', $('.btn_message').data('profile'));
+            Inertia.get(this.$route('chatIndex'), {
+
+            }, {
+                replace: true,
+                preserveScroll: true,
+                preserveState: true,
+                onStart: () => {
+                    this.loading = true
+                },
+                onSuccess: visit => {
+                    // console.log(visit);
+                },
+                onFinish: () => {
+                    this.loading = false
+                    window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
+                }
+            })
+        }
     }
 }
 </script>

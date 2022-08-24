@@ -74,6 +74,7 @@ import ProfileLayout from "../Layouts/ProfileLayout";
 import PeopleList from "../components/Widgets/PeopleList";
 import NewMembersList from "../components/Widgets/NewMembersList";
 import utils from "../mixins/utils";
+import {useForm, usePage} from "@inertiajs/inertia-vue3";
 
 export default {
     name: "UserProfile",
@@ -92,11 +93,11 @@ export default {
         this.$store.commit('Profile/setIsAnother', true)
         this.$store.commit('Profile/setProfile', this.profile)
 
-        // posts listing initialize
-        // this.$store.commit('Post/setInitialUrl', this.$page.url)
-        // this.$store.commit('Post/setIsLoadMore', false)
-        // this.$store.commit('Post/setPosts', [])
-        // this.$store.dispatch('Post/loadPosts', this.$route('profile'))
+        $('.btn_message').prop('hidden', !(usePage().props.value?.is_auth_friend));
+        $('.btn_message').data('profile', usePage().props.value?.user.id);
+    },
+    unmounted() {
+        $('.btn_message').prop('hidden', usePage().props.value?.is_auth_friend);
     }
 }
 </script>

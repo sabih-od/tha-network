@@ -3,6 +3,7 @@ import Profile from './Profile'
 import Utils from './Utils'
 import SharePostModal from './SharePostModal'
 import HttpUtils from "./HttpUtils";
+import Chat from "./Chat";
 
 export default createStore({
     modules: {
@@ -10,5 +11,6 @@ export default createStore({
         Utils,
         SharePostModal,
         HttpUtils,
+        Chat,
     }
 })

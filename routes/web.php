@@ -99,14 +99,14 @@ Route::group([
     // Chat routes
     Route::get('chat', [ChatController::class, 'index'])
         ->name('chatIndex');
-//    Route::post('chat/message', [ChatController::class, 'chatMessageStore'])
-//        ->name('chatMessageStore');
-//    Route::delete('chat/destroy', [ChatController::class, 'chatMessageDestroy'])
-//        ->name('chatMessageDestroy');
+    Route::post('chat/message', [ChatController::class, 'chatMessageStore'])
+        ->name('chatMessageStore');
+    Route::delete('chat/destroy', [ChatController::class, 'chatMessageDestroy'])
+        ->name('chatMessageDestroy');
 
     // Channel routes
-    /*Route::post('channel/create', [ChannelController::class, 'store'])
-        ->name('channelStore');*/
+    Route::post('channel/create', [ChannelController::class, 'store'])
+        ->name('channelStore');
 });
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

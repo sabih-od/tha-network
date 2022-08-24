@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use App\Traits\UserData;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Middleware;
 
@@ -41,7 +43,7 @@ class HandleInertiaRequests extends Middleware
     {
         $share_data = [
             'auth' => auth()->check() ? auth()->user()->only('id', 'username', 'email') : null,
-            'auth_profile_image' => auth()->check() ? auth()->user()->getFirstMediaUrl('profile_image') : "",
+            'auth_profile_image' => auth()->check() && auth()->user()->getFirstMediaUrl('profile_image') ? auth()->user()->getFirstMediaUrl('profile_image') : asset('images/small-character.jpg'),
             'flash' => [
                 'success' => function () use ($request) {
                     return $request->session()->get('success');
@@ -58,7 +60,7 @@ class HandleInertiaRequests extends Middleware
             }),
             'friends' => Inertia::lazy(function () use ($request) {
                 return $this->getFriendsData($request);
-            }),
+            })
         ];
 
         if ($request->session()->has('v_data')) {

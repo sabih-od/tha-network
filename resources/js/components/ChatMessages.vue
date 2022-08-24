@@ -1,15 +1,60 @@
 <template>
     <div class="centerBox" ref="chatContainer">
         <template v-if="active_channel_id">
-            <ChatMessageItem
-                :channel_id="this.active_channel_id"
-                v-for="message in messages"
-                :message="message"
-                :key="message.id"
-            />
+<!--            <ChatMessageItem-->
+<!--                :channel_id="this.active_channel_id"-->
+<!--                v-for="message in messages"-->
+<!--                :message="message"-->
+<!--                :key="message.id"-->
+<!--            />-->
 
-            <div class="chatMsgOpt">
-                <MessageForm :channel_id="this.active_channel_id"/>
+<!--            <div class="chatMsgOpt">-->
+<!--                <MessageForm :channel_id="this.active_channel_id"/>-->
+<!--            </div>-->
+
+            <!--header-->
+            <div class="settings-tray">
+                <div class="row jhnmsngr">
+                    <div class="col-sm-10">
+                        <div class="chatHead">
+                            <h6>{{active_user_name}}</h6>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <span class="settings-tray--right"> </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-panel">
+                <!--messages-->
+                <div class="chatSec">
+                    <ChatMessageItem
+                        :channel_id="this.active_channel_id"
+                        v-for="message in messages"
+                        :message="message"
+                        :key="message.id"
+                    />
+                </div>
+
+                <!--inside search-->
+                <div class="insideSearch">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="searchBtn" type="button"><i class="fa fa-search"></i></button>
+                        </div>
+                        <input type="text" placeholder="Search here...">
+                        <div class="input-group-prepend">
+                            <button class="closeSearchBtn" type="button"><i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--message form-->
+            <div class="chat-box-tray">
+                <MessageForm></MessageForm>
             </div>
         </template>
         <h3 v-else class="text-secondary text-center mt-5">No chat selected!</h3>
@@ -33,6 +78,7 @@ export default {
     data() {
         return {
             active_channel_id: null,
+            active_user_name: null,
             last_scroll_height: null,
             loading: false,
             messages: [],
@@ -44,6 +90,7 @@ export default {
         this.$emitter.on('chat_message_added', this.newMessageAddedListener)
         this.$emitter.on('chat_message_deleted', this.messageDeletedListener)
         this.$emitter.on('chat_message_stored', this.chatMessageStoredListener)
+        this.$emitter.on('chat_active_user_data', this.onChatActiveUserData)
         const el = this.$refs.chatContainer
         if (el)
             el.addEventListener('scroll', this.scrollListener)
@@ -142,6 +189,9 @@ export default {
             if (el) {
                 this.last_scroll_height = el.scrollHeight
             }
+        },
+        onChatActiveUserData(data) {
+            this.active_user_name = data.profile?.first_name + ' ' + data.profile?.last_name;
         }
     }
 }
