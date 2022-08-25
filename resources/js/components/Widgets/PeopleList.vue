@@ -57,12 +57,12 @@ export default {
             this.debounce = setTimeout(() => {
                 this.$store.dispatch('HttpUtils/getReq', {
                     url: this.$store.getters['Utils/baseUrl'],
-                    only: ['friends'],
+                    only: ['network_members'],
                     params: {
                         search: this.search
                     }
                 }).then(res => {
-                    this.peoples = res?.friends?.data.filter(element => element.is_followed == true) ?? []
+                    this.peoples = res?.network_members?.data ?? []
                 }).finally(() => {
                     // this.loading = false
                 })

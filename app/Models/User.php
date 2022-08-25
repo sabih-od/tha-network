@@ -69,6 +69,11 @@ class User extends Authenticatable implements HasMedia
         return $this->hasOne(UserProfile::class);
     }
 
+    public function network()
+    {
+        return $this->hasOne(Network::class);
+    }
+
     public function posts()
     {
         return $this->hasMany(Post::class);

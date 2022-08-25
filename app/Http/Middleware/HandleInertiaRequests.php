@@ -60,6 +60,9 @@ class HandleInertiaRequests extends Middleware
             }),
             'friends' => Inertia::lazy(function () use ($request) {
                 return $this->getFriendsData($request);
+            }),
+            'network_members' => Inertia::lazy(function () use ($request) {
+                return $this->getNetworkMemberssData($request);
             })
         ];
 

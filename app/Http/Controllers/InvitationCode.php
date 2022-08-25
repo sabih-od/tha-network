@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\WebResponses;
+use App\Models\Network;
 use App\Models\SendInvitation;
 use App\Models\User;
 use App\Models\UserInvitation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
@@ -222,6 +224,16 @@ class InvitationCode extends Controller
 
 //            $route = route('loginForm', 'send-invite=success');
             session()->put('send-invite', 'success');
+
+            //check for user's network. create new if not created already
+            $network_check = Network::where('user_id', Auth::id())->get();
+            if(count($network_check) == 0) {
+                Network::create([
+                    'user_id' => Auth::id()
+                ]);
+            }
+
+
             return WebResponses::success(
                 'Request submitted successfully!',
                 null
