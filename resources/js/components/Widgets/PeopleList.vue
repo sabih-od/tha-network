@@ -21,7 +21,8 @@
                     <a href="#">Connect</a>
                 </h3>
             </div>
-            <a href="#" class="nav-icons"><i class="fal fa-comments"></i></a>
+            <FollowUserButton :user_id="user.id" :is_followed="user.is_followed" @update_is_followed="user.is_followed = !user.is_followed"></FollowUserButton>
+<!--            <a href="#" class="nav-icons"><i class="fal fa-comments"></i></a>-->
         </div>
 
         <div style="text-align: center!important;" v-if="peoples.length == 0 && search == ''">
@@ -33,12 +34,14 @@
 <script>
 import utils from "../../mixins/utils";
 import {Link} from '@inertiajs/inertia-vue3'
+import FollowUserButton from "../FollowUserButton";
 
 export default {
     name: "PeopleList",
     mixins: [utils],
     components: {
-        Link
+        Link,
+        FollowUserButton
     },
     data() {
         return {
