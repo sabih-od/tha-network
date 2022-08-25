@@ -11,7 +11,8 @@ class UserDelete extends Model
     use HasFactory, Uuids;
 
     protected $fillable = [
-        'user_id'
+        'user_id',
+        'created_at'
     ];
 
     public function user()
@@ -22,5 +23,15 @@ class UserDelete extends Model
     public function messages()
     {
         return $this->morphTo();
+    }
+
+    public function channels()
+    {
+        return $this->morphTo();
+    }
+
+    public function channels2()
+    {
+        return $this->belongsTo(Channel::class, 'deleteable_id');
     }
 }

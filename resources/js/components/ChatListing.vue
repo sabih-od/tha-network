@@ -44,6 +44,7 @@ import {useToast} from "vue-toastification";
 import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
 import ChatListingItem from "./ChatListingItem";
+import _ from "lodash";
 
 export default {
     name: "ChatListing",
@@ -73,13 +74,16 @@ export default {
     },
     mounted() {
         this.$emitter.on('chat_active', this.checkForEmptyList);
+        this.$emitter.on('chat_user_select', this.onUserSelectListener);
+        this.$emitter.on('conversation_deleted', this.conversationDeletedListener)
 
         // this.$emitter.on('activate-channel', this.onActivateChannelListener)
-        let active_user_id_check = this.$store.getters['Chat/activeUserId'];
-        if(active_user_id_check) {
-            alert('active user id' + active_user_id_check);
-            this.$emitter.emit('chat_user_select', active_user_id_check);
-        }
+        // let active_user_id_check = this.$store.getters['Chat/activeUserId'];
+        // if(active_user_id_check) {
+        //     alert('user id: ' + active_user_id_check);
+        //     this.$emitter.emit('chat_user_select', active_user_id_check);
+        //     this.$store.commit('Chat/setActiveUserId', null);
+        // }
 
         const user_id = location.hash.replace('#', '')
         if (user_id.trim()) {
@@ -92,7 +96,6 @@ export default {
             // }
         }
 
-        this.$emitter.on('chat_user_select', this.onUserSelectListener)
         this.loadChatListing()
 
         //create chat modal
@@ -116,6 +119,13 @@ export default {
         onActivateChannelListener(profile_id) {
             this.form.user_id = profile_id;
             this.createOrGetChannel();
+        },
+        conversationDeletedListener(id) {
+            // alert('conversationDeletedListener');
+            _.remove(this.channels, (val) => {
+                return val.id === id
+            })
+            this.loadChatListing()
         },
 
         directChatLoad(user_id) {

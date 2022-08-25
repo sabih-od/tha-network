@@ -107,6 +107,8 @@ Route::group([
     // Channel routes
     Route::post('channel/create', [ChannelController::class, 'store'])
         ->name('channelStore');
+    Route::delete('channel/destroy', [ChannelController::class, 'channelDestroy'])
+        ->name('channelDestroy');
 });
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

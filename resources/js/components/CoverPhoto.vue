@@ -31,7 +31,9 @@
 <!--                            <a href="#" class="themeBtn">Message</a>-->
                             <button v-if="!edit_profile_active" class="themeBtn btn_invite" @click.prevent="inviteModal()">Invite</button>
 <!--                            <a v-if="!edit_profile_active" href="#" @click="$emitter.emit('chat-with-profile')" class="themeBtn btn_message">Message</a>-->
-                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_message" data-profile="asd" @click.prevent="chatWithProfile()">Message</Link>
+                            <Link v-if="!edit_profile_active" :href="$route('chatIndex')" class="themeBtn btn_message" data-profile="asd" @click.prevent="chatWithProfile()">Message</Link>
+                            <!--hidden button to go to chat-->
+<!--                            <Link :href="$route('chatIndex')" hidden ref="hiddenChatButton"></Link>-->
                         </div>
                     </div>
                 </div>
@@ -116,27 +118,27 @@ export default {
             $('.modal_invite').modal('show');
         },
         chatWithProfile() {
-            // this.channelForm.user_id = $('.btn_message').data('profile');
-            // this.channelForm
-            //     .post(this.$route('channelStore'), {
-            //         replace: true,
-            //         preserveScroll: true,
-            //         preserveState: true,
-            //         onSuccess: () => {
-            //             this.form.user_id = null
-            //             // console.log(usePage().props.value)
-            //             const v_data = usePage().props.value?.v_data
-            //             if (v_data) {
-            //                 this.$emitter.emit('chat_active', v_data.channel.id)
-            //                 this.$emitter.emit('chat_active_user_data', v_data.cover_data)
-            //             }
-            //             // this.loadChatListing();
-            //             // this.$store.dispatch('Utils/showSuccessMessage')
-            //         },
-            //         onError: () => {
-            //             this.$store.dispatch('Utils/showErrorMessages')
-            //         }
-            //     })
+            const profile_id = $('.btn_message').data('profile');
+            this.$store.commit('Chat/setActiveUserId', profile_id);
+
+            this.channelForm.user_id = profile_id;
+            this.channelForm
+                .post(this.$route('channelStore'), {
+                    replace: true,
+                    preserveScroll: true,
+                    preserveState: true,
+                    onSuccess: () => {
+                        this.form.user_id = null
+                        // const v_data = usePage().props.value?.v_data
+                        // if (v_data) {
+                        //     this.$emitter.emit('chat_active', v_data.channel.id)
+                        //     this.$emitter.emit('chat_active_user_data', v_data.cover_data)
+                        // }
+                    },
+                    onError: () => {
+                        this.$store.dispatch('Utils/showErrorMessages')
+                    }
+                })
 
             // Inertia.get(this.$route('chatIndex'), {
             //     profile_id: $('.btn_message').data('profile')
@@ -157,24 +159,24 @@ export default {
             //     }
             // })
 
-            this.$store.commit('Chat/setActiveUserId', $('.btn_message').data('profile'));
-            Inertia.get(this.$route('chatIndex'), {
-
-            }, {
-                replace: true,
-                preserveScroll: true,
-                preserveState: true,
-                onStart: () => {
-                    this.loading = true
-                },
-                onSuccess: visit => {
-                    // console.log(visit);
-                },
-                onFinish: () => {
-                    this.loading = false
-                    window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
-                }
-            })
+            // this.$refs.hiddenChatButton[0].click();
+            // Inertia.get(this.$route('chatIndex'), {
+            //
+            // }, {
+            //     replace: true,
+            //     preserveScroll: true,
+            //     preserveState: true,
+            //     onStart: () => {
+            //         this.loading = true
+            //     },
+            //     onSuccess: visit => {
+            //         // console.log(visit);
+            //     },
+            //     onFinish: () => {
+            //         this.loading = false
+            //         window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
+            //     }
+            // })
         }
     }
 }

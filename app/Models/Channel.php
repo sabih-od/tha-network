@@ -57,4 +57,9 @@ class Channel extends Model
     {
         return Auth::check() && in_array(Auth::id(), $this->participants ?? []);
     }*/
+
+    public function userDelete()
+    {
+        return $this->morphOne(UserDelete::class, 'deleteable');
+    }
 }

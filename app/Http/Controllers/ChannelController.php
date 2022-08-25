@@ -95,4 +95,34 @@ class ChannelController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
+
+    public function channelDestroy(Request $request)
+    {
+        $channel = null;
+        $request->validate([
+            'id' => [
+                'required',
+                function ($attribute, $value, $fail) use (&$channel) {
+                    if (!$value) return;
+
+                    $channel = Channel::where([
+                        ['id', $value]
+                    ])->whereDoesntHave('userDelete')->first();
+
+                    if (is_null($channel)) {
+                        $fail("Invalid channel!");
+                    }
+                }
+            ]
+        ]);
+        try {
+            $channel->userDelete()->create([
+                'user_id' => Auth::id()
+            ]);
+
+            return redirect()->route('chatIndex')->with('success', 'Channel deleted successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('chatIndex')->with('error', $e->getMessage());
+        }
+    }
 }
