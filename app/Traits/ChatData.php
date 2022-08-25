@@ -16,8 +16,8 @@ trait ChatData
             ->whereHas('users', function ($q) {
                 $q->where('id', Auth::id());
             })
-            ->whereHas('userDelete', function ($qq) {
-                $qq->where('user_id', Auth::id());
+            ->whereHas('userDelete', function ($q) {
+                $q->where('user_id', Auth::id());
             })->first();
 //        dd(is_null($user_delete_record));
 //        dd($user_delete_record);
@@ -48,7 +48,7 @@ trait ChatData
 ////                    $q->where('user_id', Auth::id())
 ////                        ->whereHas('channels2', function($q) use($user_delete_record) {
 ////                            $q->whereHas('messages', function($q) use($user_delete_record) {
-////                                $q->where('created_at', '>', $user_delete_record->created_at);
+////                                $q->where('created_at', '>', $user_delete_record->userDelete->created_at);
 ////                            });
 ////                        });
 ////                });
