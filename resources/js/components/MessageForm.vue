@@ -13,7 +13,6 @@
             class="demo6 form-control"
             id="message-text"
             ref="textInput"
-            v-model="this.form.message"
             @keydown.enter.prevent.exact="submit"
             @keyup.ctrl.enter.prevent="newLine"
             :disabled="this.form.processing"
