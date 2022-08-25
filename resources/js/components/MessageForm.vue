@@ -1,24 +1,47 @@
 <template>
-    <form @submit.prevent="submit">
-        <div class="wrapper">
-            <button><i class="fas fa-plus-circle"></i></button>
-            <div
-                class="text-editor"
-                ref="textInput"
-                @keydown.enter.prevent.exact="submit"
-                @keyup.ctrl.enter.prevent="newLine"
-                :contenteditable="!this.form.processing"
-            ></div>
-
-            <!--            <textarea class="form-control" rows="1" ref="textInput" v-model="this.form.message"
-                                  :disabled="this.form.processing" placeholder="Message Typing"></textarea>-->
-            <!--            <input v-model="this.form.message" ref="textInput" :disabled="this.form.processing" type="text"
-                               placeholder="Message Typing">-->
-            <button><i class="fas fa-gift"></i></button>
-            <!-- <button><i class="fas fa-plus-circle"></i></button> -->
-            <EmojiButton ref="emojiComponent" @select-emoji="addEmoji"/>
+        <div v-if="renderedFiles.length > 0" class="render-img-wrapper">
+            <div class="row mx-2">
+                <div class="col-md-2 position-relative render-img-con" v-for="(file, ind) in renderedFiles" :key="ind">
+                    <img v-if="file.type === 'image'" :src="file.source" class="img-fluid w-100" alt="">
+                    <i class="fas fa-times delete-icon"
+                       @click.prevent="removeFile($event, file.fileInd, files, renderedFiles)"></i>
+                </div>
+            </div>
         </div>
-    </form>
+
+        <div
+            class="demo6 form-control"
+            id="message-text"
+            ref="textInput"
+            v-model="this.form.message"
+            @keydown.enter.prevent.exact="submit"
+            @keyup.ctrl.enter.prevent="newLine"
+            :disabled="this.form.processing"
+            :contenteditable="!this.form.processing"
+        ></div>
+
+<!--        <input type="text" placeholder="Type your message here..." class="demo6" id="message-text" data-to="11"-->
+<!--               ref="textInput"-->
+<!--               v-model="this.form.message"-->
+<!--               @keydown.enter.prevent.exact="submit"-->
+<!--               @keyup.ctrl.enter.prevent="newLine"-->
+<!--               :disabled="this.form.processing">-->
+
+        <!--                            <Emojionearea-->
+    <!--                                :search="false"-->
+    <!--                            ></Emojionearea>-->
+    <EmojiButton ref="emojiComponent" @select-emoji="addEmoji"/>
+
+    <div class="papr-clp" id="post-image">
+        <i class="far fa-paperclip"></i>
+        <input type="file" name="file" id="msgfile" accept="image/*, video/*, audio/*" @change.prevent="filesSelect($event, files, renderedFiles)"
+               multiple>
+    </div>
+
+
+    <button class="btn btn-default text-white" id="send_message" @click="submit">
+        <i class="fa fa-paper-plane"></i>
+    </button>
 </template>
 
 <script>
@@ -39,14 +62,23 @@ export default {
         channel_id(val) {
             this.form.channel_id = val
             this.$refs.emojiComponent.hide()
+        },
+        renderedFiles: {
+            deep: true,
+            handler(val) {
+                this.$emit('change-files', val)
+                this.cursorToEnd()
+            }
         }
     },
     data() {
         return {
             form: useForm({
                 channel_id: this.channel_id,
-                message: ''
-            })
+                message: '',
+            }),
+            files: [],
+            renderedFiles: []
         }
     },
     methods: {
@@ -83,12 +115,18 @@ export default {
         },
         submit() {
             const el = this.$refs.textInput
-            if (el.innerHTML.trim() === '') return
-            this.form.message = _.escape(el.innerHTML)
             const date = new Date()
-            this.$emitter.emit('chat_message_added', {
-                id: 'msg_' + date.getTime(),
-                content: this.form.message,
+            const id = 'msg_' + date.getTime()
+
+            //uncomment innerHTML when emoji work done
+            if (el.innerHTML.trim() === '' && this.files.length < 0) return
+            this.form.message = _.escape(el.innerHTML)
+            // this.form.message = _.escape(el.value)
+
+            let send_data = {
+                id,
+                content: '&nbsp;',
+                file: null,
                 created_at: date.toISOString(),
                 isForm: true,
                 sender: {
@@ -96,7 +134,40 @@ export default {
                     name: usePage().props.value?.auth?.name,
                     profile_img: usePage().props.value?.auth_profile_image,
                 }
-            })
+            }
+
+            if (this.files.length > 0) {
+                for (const fileKey in this.files) {
+                    const fileObj = this.files[fileKey]
+                    send_data = {
+                        ...send_data,
+                        id: id + '_' + fileKey,
+                        file: fileObj.file
+                    }
+                    this.$emitter.emit('chat_message_added', send_data)
+                }
+                this.renderedFiles = []
+                this.files = []
+            }
+
+            send_data = {
+                ...send_data,
+                id,
+                file: null,
+                content: this.form.message
+            }
+            this.$emitter.emit('chat_message_added', send_data);
+            // this.$emitter.emit('chat_message_added', {
+            //     id: 'msg_' + date.getTime(),
+            //     content: this.form.message,
+            //     created_at: date.toISOString(),
+            //     isForm: true,
+            //     sender: {
+            //         id: usePage().props.value?.auth?.id,
+            //         name: usePage().props.value?.auth?.name,
+            //         profile_img: usePage().props.value?.auth_profile_image,
+            //     }
+            // })
             el.innerHTML = ""
             this.form.reset();
             setTimeout(() => {
@@ -105,6 +176,56 @@ export default {
             return;
 
 
+        },
+        filesSelect(e) {
+            const _this = this
+
+            for (const filesKey in e.target.files) {
+                const fileType = e.target.files[filesKey]?.type
+                if (fileType) {
+                    if (
+                        (/^(image\/)[\w]+$/.test(fileType) || /^(video\/)[\w]+$/.test(fileType))
+                    ) {
+                        const key = this.$store.getters['Utils/uuid']
+                        _this.files.push({
+                            fileInd: key,
+                            file: e.target.files[filesKey]
+                        })
+                        // render files
+                        let reader = new FileReader();
+                        reader.onload = function () {
+                            _this.renderedFiles.push({
+                                fileInd: key,
+                                type: 'image',
+                                source: reader.result
+                            })
+                        }
+                        if (/^(image\/)[\w]+$/.test(fileType)) {
+                            reader.readAsDataURL(e.target.files[filesKey]);
+                        } else {
+                            _this.$store.dispatch('Utils/getVideoCover', {
+                                file_url: URL.createObjectURL(e.target.files[filesKey]),
+                                seekTo: 2
+                            }).then(res => {
+                                reader.readAsDataURL(res);
+                            }).catch(err => {
+                                (useToast()).clear();
+                                (useToast()).error(err);
+                            })
+
+                        }
+                    } else {
+                        (useToast()).clear();
+                        (useToast()).error("Invalid file selected!");
+                    }
+                }
+            }
+            e.target.value = ""
+        },
+        removeFile(e, fileInd) {
+            e.preventDefault()
+            _.remove(this.files, {fileInd})
+            _.remove(this.renderedFiles, {fileInd})
         }
     }
 }

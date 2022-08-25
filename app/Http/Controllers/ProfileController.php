@@ -250,6 +250,11 @@ class ProfileController extends Controller
                 'replies' => Inertia::lazy(function () use ($request) {
                     return $this->getReplyData($request->comment_id ?? null);
                 }),
+                'is_auth_friend' => function() use ($user) {
+                    $auth = User::find(Auth::id());
+                    return $auth->isFollowing($user) || $auth->isFollowedBy($user);
+                }
+
             ]);
         } catch (\Exception $e) {
             return redirect()->route('home')->with('error', $e->getMessage());

@@ -105,9 +105,12 @@ export default {
         }
     },
     mounted() {
-        /*if (this.flash_error) {
-            (useToast()).error(this.flash_error);
-        }*/
+        //hide message button
+        $('.btn_message').prop('hidden', true);
+    },
+    unmounted() {
+        //un-hide message button
+        $('.btn_message').prop('hidden', false);
     },
     methods: {
         myPost() {

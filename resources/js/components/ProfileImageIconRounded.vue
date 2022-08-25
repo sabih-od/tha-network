@@ -1,6 +1,7 @@
 <template>
-    <a :href="profile_url" class="iconWrap"><img :src="render_image(profile_img)"
-                                      class="rounded-circle" alt=""></a>
+<!--    <a :href="profile_url" class="iconWrap"><img :src="render_image(profile_img)"-->
+<!--                                      class="rounded-circle" alt=""></a>-->
+    <img class="profile-image" :src="render_image(profile_img)" alt="" width="35" height="35">
 </template>
 
 <script>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Helpers\WebResponses;
 use App\Http\Controllers\Controller;
+use App\Models\Network;
+use App\Models\NetworkMember;
 use App\Models\SendInvitation;
 use App\Models\UserInvitation;
 use App\Providers\RouteServiceProvider;
@@ -12,6 +14,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -177,7 +180,25 @@ class RegisterController extends Controller
 //                $inviter = $check[0];
                 $inviter = User::find(session()->get('inviter_id'));
                 $user = User::find($user->id);
-                $user->follow($inviter);
+
+
+                //$user->follow($inviter);
+
+                //add to inviters network
+                NetworkMember::create([
+                    'user_id' =>  $user->id,
+                    'network_id' => $inviter->network->id,
+                ]);
+
+                //add inviter to user's network
+                $new_network = Network::create([
+                    'user_id' => $user->id
+                ]);
+                NetworkMember::create([
+                    'user_id' =>  $inviter->id,
+                    'network_id' => $new_network->id,
+                ]);
+
                 session()->remove('inviter_id');
             }
         }

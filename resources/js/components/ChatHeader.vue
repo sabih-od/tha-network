@@ -57,11 +57,11 @@ export default {
         HeaderProfileMenu
     },
     computed: {
-        // cover_image() {
-        //     return (url) => {
-        //         return url ?? this.$store.getters['Utils/public_asset']('images/small-character.jpg')
-        //     }
-        // },
+        cover_image() {
+            return (url) => {
+                return url ?? this.$store.getters['Utils/public_asset']('images/small-character.jpg')
+            }
+        },
     },
     data() {
         return {
@@ -73,7 +73,7 @@ export default {
         }
     },
     mounted() {
-        // this.$emitter.on('chat_active_user_data', this.onChatActiveUserData)
+        this.$emitter.on('chat_active_user_data', this.onChatActiveUserData)
     },
     methods: {
         initateSearch() {

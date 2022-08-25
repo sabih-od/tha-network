@@ -75,6 +75,7 @@ import ProfileLayout from "../Layouts/ProfileLayout";
 import PeopleList from "../components/Widgets/PeopleList";
 import PostListItem from "../components/PostListItem";
 import NewMembersList from "../components/Widgets/NewMembersList";
+import {usePage} from "@inertiajs/inertia-vue3";
 
 export default {
     name: "Profile",
@@ -93,12 +94,16 @@ export default {
     mounted() {
         this.$store.commit('Profile/setIsAnother', false)
         this.$store.commit('Profile/setProfile', this.profile)
+        $('.btn_message').prop('hidden', true);
 
         // posts listing initialize
         // this.$store.commit('Post/setInitialUrl', this.$page.url)
         // this.$store.commit('Post/setIsLoadMore', false)
         // this.$store.commit('Post/setPosts', [])
         // this.$store.dispatch('Post/loadPosts', this.$route('profile'))
+    },
+    unmounted() {
+        $('.btn_message').prop('hidden', false);
     },
     methods: {
         onPostCreated() {
