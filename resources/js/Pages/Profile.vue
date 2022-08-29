@@ -6,7 +6,7 @@
                 <div class="col-md-3">
                     <div class="cardWrap">
                         <h2>About</h2>
-                        <p class="text-pre-wrap">{{ profile?.bio }}</p>
+                        <p class="text-pre-wrap">{{ bio }}</p>
                         <a href="#" @click.prevent class="btnDesign">See more</a>
                     </div>
 
@@ -40,14 +40,14 @@
                         <div class="col-md-4">
                             <div class="profileAwards">
                                 <img src="images/friends.png" alt="">
-                                <h3>250</h3>
+                                <h3>{{ friends_count }}</h3>
                                 <p>Friends</p>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="profileAwards">
                                 <img src="images/connections.png" alt="">
-                                <h3>1000</h3>
+                                <h3>{{ network_count }}</h3>
                                 <p>Connections</p>
                             </div>
                         </div>
@@ -86,6 +86,13 @@ export default {
         PostForm,
         PostsList
     },
+    data() {
+        return {
+            friends_count: null,
+            network_count: null,
+            bio: null,
+        }
+    },
     layout: ProfileLayout,
     props: {
         user: Object,
@@ -95,6 +102,15 @@ export default {
         this.$store.commit('Profile/setIsAnother', false)
         this.$store.commit('Profile/setProfile', this.profile)
         $('.btn_message').prop('hidden', true);
+        $('.btn_add_friend').prop('hidden', true);
+        $('.btn_accept_request').prop('hidden', true);
+        $('.btn_reject_request').prop('hidden', true);
+        $('.btn_unfriend').prop('hidden', true);
+        $('.btn_block').prop('hidden', true);
+
+        this.friends_count = usePage().props.value?.friends_count;
+        this.network_count = usePage().props.value?.network_count;
+        this.bio = this.profile.bio;
 
         // posts listing initialize
         // this.$store.commit('Post/setInitialUrl', this.$page.url)

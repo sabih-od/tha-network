@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvitationCode;
 use App\Http\Controllers\PostController;
@@ -109,6 +110,18 @@ Route::group([
         ->name('channelStore');
     Route::delete('channel/destroy', [ChannelController::class, 'channelDestroy'])
         ->name('channelDestroy');
+
+    // Friend Request routes
+    Route::get('send-request/{target_id}', [FriendRequestController::class, 'sendRequest'])
+        ->name('sendRequest');
+    Route::get('accept-request/{target_id}', [FriendRequestController::class, 'acceptRequest'])
+        ->name('acceptRequest');
+    Route::get('reject-request/{target_id}', [FriendRequestController::class, 'rejectRequest'])
+        ->name('rejectRequest');
+    Route::get('unfriend/{target_id}', [FriendRequestController::class, 'unfriend'])
+        ->name('unfriend');
+    Route::get('block/{target_id}', [FriendRequestController::class, 'block'])
+        ->name('block');
 });
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

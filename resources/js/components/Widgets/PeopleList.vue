@@ -1,7 +1,8 @@
 <template>
     <div class="cardWrap">
         <div class="df aic jcsb mb-3">
-            <h2 class="m-0">People In My Network</h2>
+            <h2 v-if="page_type != 'UserProfile'" class="m-0">People In My Network</h2>
+            <h2 v-if="page_type == 'UserProfile'" class="m-0">Prople In user's network </h2>
             <a href="#" class="viewBtn">See all</a>
         </div>
         <form action="">
@@ -33,7 +34,7 @@
 
 <script>
 import utils from "../../mixins/utils";
-import {Link} from '@inertiajs/inertia-vue3'
+import {Link, usePage} from '@inertiajs/inertia-vue3'
 import FollowUserButton from "../FollowUserButton";
 
 export default {
@@ -43,15 +44,24 @@ export default {
         Link,
         FollowUserButton
     },
+    computed: {
+        page_type: function page_type() {
+            return usePage().component.value;
+        }
+    },
     data() {
         return {
             search: '',
             peoples: [],
-            debounce: null
+            debounce: null,
+            user_id: null
         }
     },
     mounted() {
         this.initateSearch();
+        if (this.page_type === 'UserProfile') {
+            this.user_id = this.$parent.user.id;
+        }
     },
     methods: {
         initateSearch() {
@@ -62,10 +72,11 @@ export default {
                     url: this.$store.getters['Utils/baseUrl'],
                     only: ['network_members'],
                     params: {
-                        search: this.search
+                        search: this.search,
+                        user_id: this.user_id
                     }
                 }).then(res => {
-                    this.peoples = res?.network_members?.data ?? []
+                    this.peoples = res?.network_members?.data.filter(element => element.has_blocked == false) ?? []
                 }).finally(() => {
                     // this.loading = false
                 })

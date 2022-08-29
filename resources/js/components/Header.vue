@@ -91,7 +91,7 @@ export default {
                         search: this.search
                     }
                 }).then(res => {
-                    this.peoples = res?.peoples?.data ?? []
+                    this.peoples = res?.peoples?.data.filter(element => element.has_blocked == false) ?? []
                 }).finally(() => {
                     this.loading = false
                 })

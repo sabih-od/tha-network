@@ -8,6 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use function PHPUnit\Framework\isNull;
 
 trait UserData
 {
@@ -40,7 +41,7 @@ trait UserData
             ->through(function ($item, $key) use ($user_id) {
                 $auth_user = Auth::user();
 //                $item->auth_id = $auth_user->id;
-//                $item->has_blocked = $auth_user->hasBlocked($item);
+                $item->has_blocked = $auth_user->hasBlocked($item);
                 $item->is_following = $auth_user->isFollowing($item);
                 $item->is_follower = $auth_user->isFollowedBy($item);
                 $item->profile_img = $item->getFirstMedia('profile_image')->original_url ?? null;
@@ -126,6 +127,8 @@ trait UserData
             ->simplePaginate(5)
             ->through(function ($item, $key) {
                 $item->auth_id = Auth::id();
+                $auth_user = Auth::user();
+                $item->has_blocked = $auth_user->hasBlocked($item);
                 $item->profile_img = $item->getFirstMediaUrl('profile_image') ?? null;
                 return $item;
             });
@@ -155,6 +158,8 @@ trait UserData
             ->simplePaginate(8)
             ->through(function ($item, $key) {
                 $item->auth_id = Auth::id();
+                $auth_user = Auth::user();
+                $item->has_blocked = $auth_user->hasBlocked($item);
                 $item->profile_img = $item->getFirstMediaUrl('profile_image') ?? null;
                 $item->is_followed = $item->isFollowedBy(User::find(Auth::id()));
                 return $item;
@@ -163,6 +168,7 @@ trait UserData
 
     protected function getFriendsData(Request $request)
     {
+        $user_id = $request->has('user_id') ? $request->get('user_id') : Auth::id();
         $query = User::select('id', 'email', 'username');
 
         if (!is_null($request->get('search'))) {
@@ -178,19 +184,22 @@ trait UserData
 
         return $query
             ->with('profile')
-            ->where('id', '!=', Auth::id())
+            ->where('id', '!=', $user_id)
             ->simplePaginate(8)
-            ->through(function ($item, $key) {
-                $item->auth_id = Auth::id();
+            ->through(function ($item, $key) use($user_id) {
+                $item->auth_id = $user_id;
+                $auth_user = Auth::user();
+                $item->has_blocked = $auth_user->hasBlocked($item);
                 $item->profile_img = $item->getFirstMediaUrl('profile_image') ?? null;
-                $item->is_followed = $item->isFollowedBy(User::find(Auth::id()));
+                $item->is_followed = $item->isFollowedBy(User::find($user_id));
                 return $item;
             });
     }
 
     protected function getNetworkMemberssData(Request $request)
     {
-        $network = Network::where('user_id', Auth::id())->first();
+        $user_id = $request->has('user_id') ? $request->get('user_id') : Auth::id();
+        $network = Network::where('user_id', $user_id)->first();
         $network_members = $network->members()->get();
         $network_member_ids = [];
         foreach ($network_members as $network_member) {
@@ -212,12 +221,14 @@ trait UserData
         return $query
             ->with('profile')
             ->whereIn('id', $network_member_ids)
-            ->where('id', '!=', Auth::id())
+            ->where('id', '!=', $user_id)
             ->simplePaginate(8)
-            ->through(function ($item, $key) {
-                $item->auth_id = Auth::id();
+            ->through(function ($item, $key) use($user_id) {
+                $item->auth_id = $user_id;
+                $auth_user = Auth::user();
+                $item->has_blocked = $auth_user->hasBlocked($item);
                 $item->profile_img = $item->getFirstMediaUrl('profile_image') ?? null;
-                $item->is_followed = $item->isFollowedBy(User::find(Auth::id()));
+                $item->is_followed = $item->isFollowedBy(User::find($user_id));
                 return $item;
             });
     }

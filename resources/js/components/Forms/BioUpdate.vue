@@ -21,6 +21,16 @@
                     placeholder="Enter Bio"
                     :readonly="!isEdit"
                     rows="3"></textarea>
+
+                <label for="bio">Marital Status </label>
+                <select
+                    id="marital_status"
+                    v-model="form.marital_status"
+                    class="form-control"
+                    :readonly="!isEdit">
+                    <option value="married">Married</option>
+                    <option value="single">Single</option>
+                </select>
             </div>
         </div>
     </form>
@@ -35,7 +45,8 @@ export default {
         return {
             isEdit: false,
             form: useForm({
-                bio: usePage().props.value?.profile?.bio
+                bio: usePage().props.value?.profile?.bio,
+                marital_status: usePage().props.value?.profile?.marital_status
             })
         }
     },
@@ -57,6 +68,7 @@ export default {
         },
         cancel() {
             this.form.bio = usePage().props.value?.profile?.bio
+            this.form.marital_status = usePage().props.value?.profile?.marital_status
             this.isEdit = false
         }
     }

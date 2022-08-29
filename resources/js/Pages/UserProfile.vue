@@ -4,7 +4,7 @@
             <div class="row">
                 <!-- Left Section -->
                 <div class="col-md-3">
-                    <div class="cardWrap">
+                    <div class="cardWrap" v-if="profile?.bio">
                         <h2>About</h2>
                         <p class="text-pre-wrap">{{ profile?.bio }}</p>
                         <a href="#" @click.prevent class="btnDesign">See more</a>
@@ -15,9 +15,9 @@
                     <div class="cardWrap">
                         <h2>Basic info Details</h2>
                         <ul class="infoList">
-                            <li><i class="fas fa-home"></i> Lives in New York, USA.</li>
-                            <li><i class="fas fa-heart"></i> Single</li>
-                            <li><i class="fas fa-clock"></i> Joined April 2016</li>
+                            <li v-if="profile?.city && profile?.country"><i class="fas fa-home"></i> Lives in {{ profile?.city + ', ' + profile?.country + '.'}}</li>
+                            <li><i class="fas fa-heart" v-if="profile?.marital_status"></i> {{ profile?.marital_status }}</li>
+                            <li><i class="fas fa-clock"></i> Joined {{ new Date(user.created_at).toLocaleString('en-us',{month:'short', year:'numeric'}) }}</li>
                             <li><img :src="asset('images/followers.png')" alt=""> Followed by 2,838 people</li>
                             <li>
                                 <p class="ml-4">See More Details...</p>
@@ -40,14 +40,14 @@
                         <div class="col-md-4">
                             <div class="profileAwards">
                                 <img :src="asset('images/friends.png')" alt="">
-                                <h3>250</h3>
+                                <h3>{{ friends_count }}</h3>
                                 <p>Friends</p>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="profileAwards">
                                 <img :src="asset('images/connections.png')" alt="">
-                                <h3>1000</h3>
+                                <h3>{{ network_count }}</h3>
                                 <p>Connections</p>
                             </div>
                         </div>
@@ -84,17 +84,59 @@ export default {
         PeopleList,
         NewMembersList
     },
+    computed: {
+        formattedDate(string) {
+            let dt = new Date(string);
+            return dt;
+        }
+    },
+    data() {
+        return {
+            friends_count: null,
+            network_count: null,
+            request_sent: null,
+            request_received: null,
+        }
+    },
     layout: ProfileLayout,
     props: {
         user: Object,
-        profile: Object
+        profile: Object,
     },
     mounted() {
         this.$store.commit('Profile/setIsAnother', true)
         this.$store.commit('Profile/setProfile', this.profile)
 
+        this.friends_count = usePage().props.value?.friends_count;
+        this.network_count = usePage().props.value?.network_count;
+        this.request_sent = usePage().props.value?.request_sent;
+        this.request_received = usePage().props.value?.request_received;
+
+        //message button behaviour
         $('.btn_message').prop('hidden', !(usePage().props.value?.is_auth_friend));
         $('.btn_message').data('profile', usePage().props.value?.user.id);
+
+        //add friend button behaviour
+        $('.btn_add_friend').prop('hidden', usePage().props.value?.is_auth_friend || this.request_received);
+        $('.btn_add_friend').html(this.request_sent ? 'Request Sent' : 'Add Friend');
+        $('.btn_add_friend').prop('disabled', this.request_sent);
+        $('.btn_add_friend').data('profile', this.$route('sendRequest', usePage().props.value?.user.id));
+
+        //unfriend button behaviour
+        $('.btn_unfriend').prop('hidden', !(usePage().props.value?.is_auth_friend));
+        $('.btn_unfriend').data('profile', this.$route('unfriend', usePage().props.value?.user.id));
+
+        //unfriend button behaviour
+        $('.btn_block').prop('hidden', false);
+        $('.btn_block').data('profile', this.$route('block', usePage().props.value?.user.id));
+
+        //accept request button behaviour
+        $('.btn_accept_request').prop('hidden', !this.request_received);
+        $('.btn_accept_request').data('profile', this.$route('acceptRequest', usePage().props.value?.user.id));
+
+        //reject request button behaviour
+        $('.btn_reject_request').prop('hidden', !this.request_received);
+        $('.btn_reject_request').data('profile', this.$route('rejectRequest', usePage().props.value?.user.id));
     },
     unmounted() {
         $('.btn_message').prop('hidden', usePage().props.value?.is_auth_friend);

@@ -15,5 +15,6 @@ class UserProfile extends Model
         'last_name',
         'phone',
         'social_security_number',
+        'marital_status',
     ];
 }

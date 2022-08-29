@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Helpers\ProfileUtils;
 use App\Models\Channel;
 use App\Models\User;
+use App\Models\UserDelete;
 use App\Traits\ChannelData;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -29,12 +31,15 @@ class ChannelController extends Controller
             ]
         ]);
 
-//        try {
+        try {
             $auth = Auth::user();
             $user = User::find($request->user_id);
 
             if (!$auth->isFollowing($user) && !$auth->isFollowedBy($user))
                 return redirect()->route('chatIndex')->with('error', 'You are not following this user!');
+
+            if ($user->hasBlocked($auth) || $auth->hasBlocked($user))
+                return redirect()->route('chatIndex')->with('error', 'You do not have enough permissions to send message to this user.');
 
 //            if ($auth->isBlockedBy($user))
 //                return redirect()->route('chatIndex')->with('error', 'You are blocked by this user!');
@@ -80,9 +85,9 @@ class ChannelController extends Controller
                     'channel' => $channel,
                     'cover_data' => $cover_data
                 ]);
-//        } catch (\Exception $e) {
-//            return redirect()->route('chatIndex')->with('error', $e->getMessage());
-//        }
+        } catch (\Exception $e) {
+            return redirect()->route('chatIndex')->with('error', $e->getMessage());
+        }
     }
 
     public function show(Request $request, $channel_id)
@@ -107,7 +112,8 @@ class ChannelController extends Controller
 
                     $channel = Channel::where([
                         ['id', $value]
-                    ])->whereDoesntHave('userDelete')->first();
+//                    ])->whereDoesntHave('userDelete')->first();
+                    ])->first();
 
                     if (is_null($channel)) {
                         $fail("Invalid channel!");
@@ -116,9 +122,15 @@ class ChannelController extends Controller
             ]
         ]);
         try {
-            $channel->userDelete()->create([
-                'user_id' => Auth::id()
-            ]);
+            if($channel->userDelete()->exists()) {
+                $user_delete = UserDelete::find($channel->userDelete->id);
+                $user_delete->updated_at = Carbon::now();
+                $user_delete->save();
+            } else {
+                $channel->userDelete()->create([
+                    'user_id' => Auth::id()
+                ]);
+            }
 
             return redirect()->route('chatIndex')->with('success', 'Channel deleted successfully!');
         } catch (\Exception $e) {
