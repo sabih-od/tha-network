@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\WebResponses;
+use App\Models\FriendRequest;
 use App\Models\User;
 use App\Traits\CommentData;
 use App\Traits\PostData;
@@ -35,6 +36,8 @@ class ProfileController extends Controller
                 }),
                 'profile_image' => $this->profileImg($user, 'profile_image'),
                 'profile_cover' => $this->profileImg($user, 'profile_cover'),
+                'friends_count' => count($user->followers),
+                'network_count' => $user->network()->exists() ? count($user->network->members) : 0
             ]);
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());
@@ -60,9 +63,10 @@ class ProfileController extends Controller
     {
         $v_rules = [];
 
-        if ($request->has('bio'))
+        if ($request->has('bio') || $request->has('marital_status'))
             $v_rules = [
                 'bio' => ['required', 'string', 'max:1000'],
+                'marital_status' => ['required', 'in:married,single'],
             ];
         elseif (
             $request->has('first_name') &&
@@ -184,6 +188,7 @@ class ProfileController extends Controller
             $follow_user = User::find($request->user_id);
 
             $user->toggleFollow($follow_user);
+            $follow_user->toggleFollow($user);
 
             $isFollowing = $user->isFollowing($follow_user) ? 'following' : 'unfollow';
             return redirect(url()->previous(true))->with('success', "User $isFollowing successfully!");
@@ -217,8 +222,14 @@ class ProfileController extends Controller
     {
         try {
             $user = User::find($id);
-            if (is_null($user))
-                return redirect()->route('home')->with('error', "Invalid user id!");
+            $auth_user = Auth::user();
+//            dd(count($user->network->members));
+
+        if (is_null($user) || $user->hasBlocked($auth_user) || $auth_user->hasBlocked($user))
+            return redirect()->route('home')->with('error', "Invalid user id!");
+        //request sent check
+            $request_sent_check = FriendRequest::where('user_id', Auth::id())->where('target_id', $id)->get();
+            $request_received_check = FriendRequest::where('user_id', $id)->where('target_id', Auth::id())->get();
 
             /*$auth = Auth::user();
             $is_blocked_by_user = $auth->isBlockedBy($user);
@@ -232,9 +243,10 @@ class ProfileController extends Controller
                 'is_blocked_by_user' => $auth->isBlockedBy($user),
                 'has_blocked' => $auth->hasBlocked($user),
             ]);*/
-
             return Inertia::render('UserProfile', [
                 'user' => $user->only('id', 'username', 'email', 'created_at') ?? null,
+                'request_sent' => count($request_sent_check) > 0,
+                'request_received' => count($request_received_check) > 0,
 //                'is_following' => $auth->isFollowing($user),
 //                'is_blocked_by_user' => $is_blocked_by_user,
 //                'has_blocked' => $auth->hasBlocked($user),
@@ -253,7 +265,9 @@ class ProfileController extends Controller
                 'is_auth_friend' => function() use ($user) {
                     $auth = User::find(Auth::id());
                     return $auth->isFollowing($user) || $auth->isFollowedBy($user);
-                }
+                },
+                'friends_count' => count($user->followers),
+                'network_count' => $user->network()->exists() ? count($user->network->members) : 0
 
             ]);
         } catch (\Exception $e) {

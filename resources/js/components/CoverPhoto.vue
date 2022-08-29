@@ -32,6 +32,11 @@
                             <button v-if="!edit_profile_active" class="themeBtn btn_invite" @click.prevent="inviteModal()">Invite</button>
 <!--                            <a v-if="!edit_profile_active" href="#" @click="$emitter.emit('chat-with-profile')" class="themeBtn btn_message">Message</a>-->
                             <Link v-if="!edit_profile_active" :href="$route('chatIndex')" class="themeBtn btn_message" data-profile="asd" @click.prevent="chatWithProfile()">Message</Link>
+                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_add_friend" data-profile="asd" @click.prevent="addFriend()">Add Friend</Link>
+                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_unfriend" data-profile="asd" @click.prevent="unfriend()">Unfriend</Link>
+                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_block" data-profile="asd" @click.prevent="block()">Block</Link>
+                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_accept_request" data-profile="asd" @click.prevent="acceptRequest()">Accept Request</Link>
+                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_reject_request" data-profile="asd" @click.prevent="rejectRequest()">Reject Request</Link>
                             <!--hidden button to go to chat-->
 <!--                            <Link :href="$route('chatIndex')" hidden ref="hiddenChatButton"></Link>-->
                         </div>
@@ -93,6 +98,8 @@ export default {
             channelForm: useForm({
                 chat_type: 'individual',
                 user_id: null
+            }),
+            friendRequestForm: useForm({
             })
         }
     },
@@ -139,44 +146,109 @@ export default {
                         this.$store.dispatch('Utils/showErrorMessages')
                     }
                 })
-
-            // Inertia.get(this.$route('chatIndex'), {
-            //     profile_id: $('.btn_message').data('profile')
-            // }, {
-            //     replace: true,
-            //     preserveScroll: true,
-            //     preserveState: true,
-            //     only: ['profile_id'],
-            //     onStart: () => {
-            //         this.loading = true
-            //     },
-            //     onSuccess: visit => {
-            //         console.log(visit);
-            //     },
-            //     onFinish: () => {
-            //         this.loading = false
-            //         window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
-            //     }
-            // })
-
-            // this.$refs.hiddenChatButton[0].click();
-            // Inertia.get(this.$route('chatIndex'), {
-            //
-            // }, {
-            //     replace: true,
-            //     preserveScroll: true,
-            //     preserveState: true,
-            //     onStart: () => {
-            //         this.loading = true
-            //     },
-            //     onSuccess: visit => {
-            //         // console.log(visit);
-            //     },
-            //     onFinish: () => {
-            //         this.loading = false
-            //         window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
-            //     }
-            // })
+        },
+        addFriend() {
+            this.friendRequestForm.get($('.btn_add_friend').data('profile'), {
+                replace: true,
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: visit => {
+                    this.$store.dispatch('Utils/showSuccessMessage')
+                    $('.btn_add_friend').html('Request Sent');
+                    $('.btn_add_friend').prop('disabled', true);
+                    // this.$emit('deleted')
+                    // this.$emitter.emit('chat_message_deleted', this.form.id)
+                },
+                onError: () => {
+                    this.$store.dispatch('Utils/showErrorMessages')
+                },
+                onFinish: () => {
+                    window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
+                }
+            })
+        },
+        acceptRequest() {
+            this.friendRequestForm.get($('.btn_accept_request').data('profile'), {
+                replace: true,
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: visit => {
+                    this.$store.dispatch('Utils/showSuccessMessage')
+                    $('.btn_message').prop('hidden', false);
+                    $('.btn_unfriend').prop('hidden', false);
+                    $('.btn_accept_request').prop('hidden', true);
+                    $('.btn_reject_request').prop('hidden', true);
+                    // this.$emit('deleted')
+                    // this.$emitter.emit('chat_message_deleted', this.form.id)
+                },
+                onError: () => {
+                    this.$store.dispatch('Utils/showErrorMessages')
+                },
+                onFinish: () => {
+                    window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
+                }
+            })
+        },
+        rejectRequest() {
+            this.friendRequestForm.get($('.btn_reject_request').data('profile'), {
+                replace: true,
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: visit => {
+                    this.$store.dispatch('Utils/showSuccessMessage')
+                    $('.btn_add_friend').prop('hidden', false);
+                    $('.btn_accept_request').prop('hidden', true);
+                    $('.btn_reject_request').prop('hidden', true);
+                },
+                onError: () => {
+                    this.$store.dispatch('Utils/showErrorMessages')
+                },
+                onFinish: () => {
+                    window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
+                }
+            })
+        },
+        unfriend() {
+            this.friendRequestForm.get($('.btn_unfriend').data('profile'), {
+                replace: true,
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: visit => {
+                    this.$store.dispatch('Utils/showSuccessMessage')
+                    $('.btn_message').prop('hidden', true);
+                    $('.btn_unfriend').prop('hidden', true);
+                    $('.btn_add_friend').prop('hidden', false);
+                    // this.$emit('deleted')
+                    // this.$emitter.emit('chat_message_deleted', this.form.id)
+                },
+                onError: () => {
+                    this.$store.dispatch('Utils/showErrorMessages')
+                },
+                onFinish: () => {
+                    window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
+                }
+            })
+        },
+        block() {
+            this.friendRequestForm.get($('.btn_block').data('profile'), {
+                replace: true,
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: visit => {
+                    this.$store.dispatch('Utils/showSuccessMessage')
+                    $('.btn_message').prop('hidden', true);
+                    $('.btn_unfriend').prop('hidden', true);
+                    $('.btn_add_friend').prop('hidden', false);
+                    // this.$emit('deleted')
+                    // this.$emitter.emit('chat_message_deleted', this.form.id)
+                },
+                onError: () => {
+                    this.$store.dispatch('Utils/showErrorMessages')
+                },
+                onFinish: () => {
+                    window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
+                }
+            })
         }
     }
 }

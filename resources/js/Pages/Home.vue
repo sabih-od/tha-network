@@ -107,10 +107,20 @@ export default {
     mounted() {
         //hide message button
         $('.btn_message').prop('hidden', true);
+        $('.btn_add_friend').prop('hidden', true);
+        $('.btn_accept_request').prop('hidden', true);
+        $('.btn_reject_request').prop('hidden', true);
+        $('.btn_unfriend').prop('hidden', true);
+        $('.btn_block').prop('hidden', true);
     },
     unmounted() {
         //un-hide message button
         $('.btn_message').prop('hidden', false);
+        $('.btn_add_friend').prop('hidden', false);
+        $('.btn_accept_request').prop('hidden', false);
+        $('.btn_reject_request').prop('hidden', false);
+        $('.btn_unfriend').prop('hidden', false);
+        $('.btn_block').prop('hidden', false);
     },
     methods: {
         myPost() {

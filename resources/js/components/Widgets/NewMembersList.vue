@@ -1,6 +1,7 @@
 <template>
     <div class="cardWrap">
-        <h2>This Weeks New Members to Tha Network</h2>
+        <h2 v-if="only == 'new_members'">This Weeks New Members to Tha Network</h2>
+        <h2 v-if="only == 'friends'">Friends List</h2>
         <form action="">
             <div class="searchlist">
                 <i class="fal fa-search"></i>
@@ -31,7 +32,7 @@
 
 <script>
 import utils from "../../mixins/utils";
-import {Link} from '@inertiajs/inertia-vue3'
+import {Link, usePage} from '@inertiajs/inertia-vue3'
 import FollowUserButton from "../FollowUserButton";
 import HeaderProfileMenu from "../HeaderProfileMenu";
 import Chat from "../../Pages/Chat";
@@ -43,15 +44,29 @@ export default {
         Link,
         FollowUserButton
     },
+    computed: {
+        page_type: function page_type() {
+            return usePage().component.value;
+        }
+    },
     data() {
         return {
             search: '',
             peoples: [],
-            debounce: null
+            debounce: null,
+            user_id: null,
+            only: 'new_members'
         }
     },
     mounted() {
         this.initateSearch();
+        if (this.page_type === 'UserProfile') {
+            this.user_id = this.$parent.user.id;
+            this.only = 'friends';
+        } else {
+            this.user_id = null;
+            this.only = 'new_members';
+        }
     },
     methods: {
         initateSearch() {
@@ -60,12 +75,16 @@ export default {
             this.debounce = setTimeout(() => {
                 this.$store.dispatch('HttpUtils/getReq', {
                     url: this.$store.getters['Utils/baseUrl'],
-                    only: ['new_members'],
+                    only: [this.only],
                     params: {
-                        search: this.search
+                        search: this.search,
+                        user_id: this.user_id
                     }
                 }).then(res => {
-                    this.peoples = res?.new_members?.data ?? []
+                    if (this.only == 'new_members')
+                        this.peoples = res?.new_members?.data.filter(element => element.has_blocked == false) ?? []
+                    else
+                        this.peoples = res?.friends?.data.filter(element => element.is_followed == true && element.has_blocked == false) ?? []
                 }).finally(() => {
                     // this.loading = false
                 })

@@ -13,6 +13,7 @@ trait ChatData
     protected function getChannelsData(Request $request)
     {
         $user_delete_record = Channel::select('id', 'creator_id', 'participants', 'chat_type', 'created_at')
+            ->with('userDelete')
             ->whereHas('users', function ($q) {
                 $q->where('id', Auth::id());
             })
@@ -26,37 +27,38 @@ trait ChatData
 //            ->with('creator')
             ->whereHas('users', function ($q) {
                 $q->where('id', Auth::id());
-            })->whereDoesntHave('userDelete', function ($q) {
-                $q->where('user_id', Auth::id());
-            });
-//            ->when(is_null($user_delete_record), function($q) {
-//                $q->whereDoesntHave('userDelete', function ($q) {
-//                    $q->where('user_id', Auth::id());
-//                });
-//            })
-//            ->when($user_delete_record, function($q) use($user_delete_record) {
-////                $q->whereHas('deleteable', function ($q) use ($user_delete_record) {
-////                    $q->where('user_id', Auth::id())
-////                        ->whereHas('channels', function($q) use($user_delete_record) {
-////                            $q->whereHas('messages', function($q) use($user_delete_record) {
-////                                $q->where('created_at', '>', $user_delete_record->created_at);
-////                            });
-////                        });
-////                });
-//
-////                $q->whereHas('userDelete', function($q) use($user_delete_record){
-////                    $q->where('user_id', Auth::id())
-////                        ->whereHas('channels2', function($q) use($user_delete_record) {
-////                            $q->whereHas('messages', function($q) use($user_delete_record) {
-////                                $q->where('created_at', '>', $user_delete_record->userDelete->created_at);
-////                            });
-////                        });
-////                });
-//
-////                $q->whereHas('messages', function($q) use($user_delete_record) {
-////                        $q->where('created_at', '>', $user_delete_record->created_at);
-////                    })->whereHas('userDelete');
+            })
+//            ->whereDoesntHave('userDelete', function ($q) {
+//                $q->where('user_id', Auth::id());
 //            });
+            ->when(is_null($user_delete_record), function($q) {
+                $q->whereDoesntHave('userDelete', function ($q) {
+                    $q->where('user_id', Auth::id());
+                });
+            })
+            ->when($user_delete_record, function($q) use($user_delete_record) {
+//                $q->whereHas('deleteable', function ($q) use ($user_delete_record) {
+//                    $q->where('user_id', Auth::id())
+//                        ->whereHas('channels', function($q) use($user_delete_record) {
+//                            $q->whereHas('messages', function($q) use($user_delete_record) {
+//                                $q->where('created_at', '>', $user_delete_record->created_at);
+//                            });
+//                        });
+//                });
+
+                $q->whereHas('userDelete', function($q) use($user_delete_record){
+                    $q->where('user_id', Auth::id())
+                        ->whereHas('channels2', function($q) use($user_delete_record) {
+                            $q->whereHas('messages', function($q) use($user_delete_record) {
+                                $q->where('updated_at', '>', $user_delete_record->userDelete->created_at);
+                            });
+                        });
+                });
+
+//                $q->whereHas('messages', function($q) use($user_delete_record) {
+//                        $q->where('created_at', '>', $user_delete_record->created_at);
+//                    })->whereHas('userDelete');
+            });
 
         if (!is_null($request->get('search'))) {
             $query->whereHas('users', function($q) use ($request) {

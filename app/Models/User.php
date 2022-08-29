@@ -13,6 +13,8 @@ use Overtrue\LaravelLike\Traits\Liker;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Overtrue\LaravelFollow\Followable;
+use LaravelInteraction\Block\Concerns\Blockable;
+use LaravelInteraction\Block\Concerns\Blocker;
 
 class User extends Authenticatable implements HasMedia
 {
@@ -23,7 +25,9 @@ class User extends Authenticatable implements HasMedia
         SoftDeletes,
         Liker,
         InteractsWithMedia,
-        Followable;
+        Followable,
+        Blockable,
+        Blocker;
 
     /**
      * The attributes that are mass assignable.

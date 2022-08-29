@@ -306,6 +306,13 @@ export default {
         $('.btn_message').prop('hidden', true);
         $('.btn_edit_avatar').prop('hidden', false);
         $('.changePhoto').prop('hidden', false);
+
+        $('.btn_add_friend').prop('hidden', true);
+        $('.btn_accept_request').prop('hidden', true);
+        $('.btn_reject_request').prop('hidden', true);
+        $('.btn_unfriend').prop('hidden', true);
+        $('.btn_block').prop('hidden', true);
+
     },
     unmounted() {
         //un-hide message button
