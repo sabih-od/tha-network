@@ -42,7 +42,7 @@ trait UserData
             ->through(function ($item, $key) use ($user_id) {
                 $auth_user = Auth::user();
 //                $item->auth_id = $auth_user->id;
-                $item->has_blocked = $auth_user->hasBlocked($item);
+                $item->has_blocked = $item->hasBlocked($auth_user);
                 $item->is_following = $auth_user->isFollowing($item);
                 $item->is_follower = $auth_user->isFollowedBy($item);
                 $item->profile_img = $item->getFirstMedia('profile_image')->original_url ?? null;
@@ -129,7 +129,7 @@ trait UserData
             ->through(function ($item, $key) {
                 $item->auth_id = Auth::id();
                 $auth_user = Auth::user();
-                $item->has_blocked = $auth_user->hasBlocked($item);
+                $item->has_blocked = $item->hasBlocked($auth_user);
                 $item->profile_img = $item->getFirstMediaUrl('profile_image') ?? null;
                 return $item;
             });
@@ -153,7 +153,6 @@ trait UserData
 
         return $query
             ->with('profile')
-            ->where('id', '!=', Auth::id())
             ->where('created_at', '>=', $start_of_week)
             ->orderBy('created_at', 'DESC')
             ->simplePaginate(8)
@@ -164,7 +163,7 @@ trait UserData
                 $request_received_check = FriendRequest::where('user_id', $item->id)->where('target_id', Auth::id())->get();
                 $item->request_sent = count($request_sent_check) > 0;
                 $item->request_received = count($request_received_check) > 0;
-                $item->has_blocked = $auth_user->hasBlocked($item);
+                $item->has_blocked = $item->hasBlocked($auth_user);
                 $item->profile_img = $item->getFirstMediaUrl('profile_image') ?? null;
                 $item->is_followed = $item->isFollowedBy(User::find(Auth::id()));
                 return $item;
@@ -198,7 +197,7 @@ trait UserData
                 $request_received_check = FriendRequest::where('user_id', $item->id)->where('target_id', Auth::id())->get();
                 $item->request_sent = count($request_sent_check) > 0;
                 $item->request_received = count($request_received_check) > 0;
-                $item->has_blocked = $auth_user->hasBlocked($item);
+                $item->has_blocked = $item->hasBlocked($auth_user);
                 $item->profile_img = $item->getFirstMediaUrl('profile_image') ?? null;
                 $item->is_followed = $item->isFollowedBy(User::find($user_id));
                 return $item;
@@ -239,7 +238,7 @@ trait UserData
                 $request_received_check = FriendRequest::where('user_id', $item->id)->where('target_id', Auth::id())->get();
                 $item->request_sent = count($request_sent_check) > 0;
                 $item->request_received = count($request_received_check) > 0;
-                $item->has_blocked = $auth_user->hasBlocked($item);
+                $item->has_blocked = $item->hasBlocked($auth_user);
                 $item->profile_img = $item->getFirstMediaUrl('profile_image') ?? null;
                 $item->is_followed = $item->isFollowedBy(User::find($user_id));
                 return $item;

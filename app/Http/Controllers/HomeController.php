@@ -29,9 +29,10 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $profile = Auth::user()->profile ?? null;
-        if(!is_null($profile))
-            $profile = $profile->only('first_name', 'last_name');
+//        if(!is_null($profile))
+//            $profile = $profile->only('first_name', 'last_name');
         return Inertia::render('Home', [
+            'user' => Auth::user()->only('id', 'username', 'email', 'created_at') ?? null,
             'profile' => $profile,
             'posts' => Inertia::lazy(function () use ($request) {
                 $is_my_post = boolval($request->get('is_my_posts', 0));
@@ -44,6 +45,8 @@ class HomeController extends Controller
                 return $this->getReplyData($request->comment_id ?? null);
             }),
             'profile_cover' => $this->profileImg(Auth::user(), 'profile_cover'),
+            'friends_count' => count(Auth::user()->followers),
+            'network_count' => Auth::user()->network()->exists() ? count(Auth::user()->network->members) : 0
         ]);
     }
 
