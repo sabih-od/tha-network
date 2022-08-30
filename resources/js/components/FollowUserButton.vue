@@ -1,13 +1,22 @@
 <template>
 <!--    <a v-if="isFollowable" href="#" @click.prevent="follow" class="themeBtn">{{ buttonText }}</a>-->
-                <a href="#" class="nav-icons" @click.prevent="follow"><i :class="is_followed ? 'fal fa-user-check' : 'fal fa-user-plus'"></i></a>
+    <Link v-if="!request_sent && is_followed" :href="$route('userProfile', user_id)" class="nav-icons"><i class="fal fa-user"></i></Link>
+    <a v-if="!request_sent && !is_followed" href="#" class="nav-icons" @click.prevent="follow"><i class="fal fa-user-plus"></i></a>
+    <a v-if="request_sent" href="#" class="nav-icons" @click.prevent="follow"><i class="fal fa-check"></i></a>
 </template>
 
 <script>
 import {Inertia} from "@inertiajs/inertia";
+import {useForm, Link} from "@inertiajs/inertia-vue3";
+import SendInviteModal from "./SendInviteModal";
+import ImageUploadingProgress from "./ImageUploadingProgress";
+import UserInfo from "./UserInfo";
 
 export default {
     name: "FollowUserButton",
+    components: {
+        Link,
+    },
     props: {
         user_id: String,
         post_id: String,
@@ -15,11 +24,18 @@ export default {
             type: Boolean,
             default: false
         },
-        is_followed: false
+        is_followed: false,
+        request_sent: '',
+        request_received: ''
     },
     data() {
         return {
-            initialUrl: this.$page.url
+            initialUrl: this.$page.url,
+            friendRequestForm: useForm({
+                "redirect": false
+            }),
+            request_sent: this.request_sent,
+            request_received: this.request_received
         }
     },
     computed: {
@@ -40,28 +56,33 @@ export default {
     },
     methods: {
         follow() {
-            Inertia.post(this.$route('userFollowToggle'), {
-                user_id: this.user_id
-            }, {
+            // Inertia.post(this.$route('userFollowToggle'), {
+            //     user_id: this.user_id
+            // }, {
+            //     replace: true,
+            //     preserveState: true,
+            //     preserveScroll: true,
+            //     onSuccess: () => {
+            //         this.$emit('update_is_followed', !this.is_followed);
+            //     },
+            //     onFinish: () => {
+            //         window.history.replaceState({}, '', this.initialUrl)
+            //     }
+            // })
+
+            this.friendRequestForm.get(this.$route('sendRequest', this.user_id), {
                 replace: true,
                 preserveState: true,
                 preserveScroll: true,
-                onSuccess: () => {
-                    // const setIsFollowing = !this.isFollowing
-                    // this.$store.commit('Post/setFollowStatus', {
-                    //     user_id: this.user_id,
-                    //     path: 'user.is_followed',
-                    //     value: setIsFollowing
-                    // });
-                    // this.$emitter.emit('post-follow-user-toggle', {
-                    //     user_id: this.user_id,
-                    //     is_following: setIsFollowing
-                    // })
-                    // this.is_followed = !this.is_followed;
-                    this.$emit('update_is_followed', !this.is_followed);
+                onSuccess: visit => {
+                    this.$store.dispatch('Utils/showSuccessMessage');
+                    this.request_sent = true;
+                },
+                onError: () => {
+                    this.$store.dispatch('Utils/showErrorMessages')
                 },
                 onFinish: () => {
-                    window.history.replaceState({}, '', this.initialUrl)
+                    window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
                 }
             })
         }
