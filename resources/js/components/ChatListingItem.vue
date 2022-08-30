@@ -37,7 +37,8 @@ export default {
     },
     props: {
         channel_id: String,
-        cover: Object
+        cover: Object,
+        is_auth_friend: Boolean
     },
     data() {
         return {
@@ -63,6 +64,11 @@ export default {
         select() {
             this.$emitter.emit('chat_active', this.channel_id)
             this.$emitter.emit('chat_active_user_data', this.cover)
+            if(!this.is_auth_friend){
+                this.$emitter.emit('unfriended_user_active');
+            } else {
+                this.$emitter.emit('unfriended_user_inactive');
+            }
         },
         deleteConversation() {
             if (this.form.processing) return;

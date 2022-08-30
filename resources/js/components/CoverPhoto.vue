@@ -230,7 +230,8 @@ export default {
             })
         },
         block() {
-            this.friendRequestForm.get($('.btn_block').data('profile'), {
+            const url = $('.btn_block').data('profile');
+            this.friendRequestForm.get(url, {
                 replace: true,
                 preserveState: true,
                 preserveScroll: true,
@@ -239,6 +240,7 @@ export default {
                     $('.btn_message').prop('hidden', true);
                     $('.btn_unfriend').prop('hidden', true);
                     $('.btn_add_friend').prop('hidden', false);
+                    $('.btn_block').html(url.includes('unblock') ? 'Block' : 'Unblock');
                     // this.$emit('deleted')
                     // this.$emitter.emit('chat_message_deleted', this.form.id)
                 },

@@ -122,6 +122,8 @@ Route::group([
         ->name('unfriend');
     Route::get('block/{target_id}', [FriendRequestController::class, 'block'])
         ->name('block');
+    Route::get('unblock/{target_id}', [FriendRequestController::class, 'unblock'])
+        ->name('unblock');
 });
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

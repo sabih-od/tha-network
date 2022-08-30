@@ -28,6 +28,7 @@
                 :channel_id="channel.id"
                 :cover="channel.cover_detail"
                 :key="channel.id"
+                :is_auth_friend="channel.is_auth_friend"
             />
 
             <teleport to="body">

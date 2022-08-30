@@ -11,7 +11,7 @@
             </li>
             <li><a href="#"><i class="fal fa-comment-dots"></i></a></li>
             <li><a href="#" @click.prevent="sharePost(post)"><i class="fal fa-share-alt"></i></a></li>
-            <li class="ml-auto"><a href="#"><i class="fal fa-bookmark"></i></a></li>
+<!--            <li class="ml-auto"><a href="#"><i class="fal fa-bookmark"></i></a></li>-->
         </ul>
         <ul v-if="post?.likers_count > 0" class="likedUser">
             <li v-for="liker in post?.recent_likes" :key="liker.id">

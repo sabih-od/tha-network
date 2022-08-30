@@ -225,8 +225,12 @@ class ProfileController extends Controller
             $auth_user = Auth::user();
 //            dd(count($user->network->members));
 
-        if (is_null($user) || $user->hasBlocked($auth_user) || $auth_user->hasBlocked($user))
+        if (is_null($user) || $user->hasBlocked($auth_user))
             return redirect()->route('home')->with('error', "Invalid user id!");
+
+        if($id == Auth::id())
+            return redirect()->route('profile')->with('error', "Invalid user id!");
+
         //request sent check
             $request_sent_check = FriendRequest::where('user_id', Auth::id())->where('target_id', $id)->get();
             $request_received_check = FriendRequest::where('user_id', $id)->where('target_id', Auth::id())->get();
@@ -267,7 +271,8 @@ class ProfileController extends Controller
                     return $auth->isFollowing($user) || $auth->isFollowedBy($user);
                 },
                 'friends_count' => count($user->followers),
-                'network_count' => $user->network()->exists() ? count($user->network->members) : 0
+                'network_count' => $user->network()->exists() ? count($user->network->members) : 0,
+                'user_is_blocked' => $auth_user->hasBlocked($user)
 
             ]);
         } catch (\Exception $e) {

@@ -15,19 +15,19 @@
                         <ul class="infoList">
                             <li><i class="fas fa-trophy"></i> Rank 10th</li>
 
-                            <li><i class="fas fa-user-friends"></i> Friends 250</li>
+                            <li><i class="fas fa-user-friends"></i> Friends: {{ friends_count }}</li>
 
-                            <li><i class="fas fa-clock"></i> Connections 1000</li>
+<!--                            <li><i class="fas fa-clock"></i> Connections: {{ network_count }}</li>-->
 
-                            <li><i class="fas fa-home"></i> Lives in New York, USA.</li>
+                            <li v-if="profile?.city && profile?.country"><i class="fas fa-home"></i> Lives in {{ profile?.city + ', ' + profile?.country + '.'}}</li>
 
-                            <li><i class="fas fa-heart"></i> Single</li>
-                            <li><i class="fas fa-clock"></i> Joined April 2016</li>
+                            <li><i class="fas fa-heart" v-if="profile?.marital_status"></i> {{ profile?.marital_status }}</li>
+                            <li><i class="fas fa-clock"></i> Joined {{ new Date(user.created_at).toLocaleString('en-us',{month:'short', year:'numeric'}) }}</li>
                             <li><i class="fas fa-bullseye-arrow"></i> Weekly Goal 500 Person</li>
-                            <li><img :src="asset('images/followers.png')" alt=""> Followed by 2,838 people</li>
-                            <li>
-                                <p class="ml-4">See More Details...</p>
-                            </li>
+<!--                            <li><img :src="asset('images/followers.png')" alt=""> Followed by 2,838 people</li>-->
+<!--                            <li>-->
+<!--                                <p class="ml-4">See More Details...</p>-->
+<!--                            </li>-->
                         </ul>
                         <a href="#" class="btnDesign">Edit Info Details</a>
                     </div>
@@ -74,6 +74,7 @@ import NewMembersList from "../components/Widgets/NewMembersList";
 import Messages from "../components/Widgets/Messages";
 import ProfileLayout from "../Layouts/ProfileLayout";
 import PostsList from "../components/PostsList";
+import {usePage} from "@inertiajs/inertia-vue3";
 
 export default {
     name: "Home",
@@ -91,6 +92,10 @@ export default {
         PostsList
     },
     layout: ProfileLayout,
+    props: {
+        user: Object,
+        profile: Object,
+    },
     computed: {
         myPostText() {
             if(this.is_my_posts)
@@ -102,6 +107,8 @@ export default {
         return {
             is_my_posts: false,
             // flash_error: this.$page.props?.flash?.error ?? null,
+            friends_count: null,
+            network_count: null,
         }
     },
     mounted() {
@@ -112,6 +119,9 @@ export default {
         $('.btn_reject_request').prop('hidden', true);
         $('.btn_unfriend').prop('hidden', true);
         $('.btn_block').prop('hidden', true);
+
+        this.friends_count = usePage().props.value?.friends_count;
+        this.network_count = usePage().props.value?.network_count;
     },
     unmounted() {
         //un-hide message button

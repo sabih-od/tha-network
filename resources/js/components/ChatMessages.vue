@@ -1,5 +1,5 @@
 <template>
-    <div class="centerBox" ref="chatContainer">
+    <div class="centerBox" ref="chatContainer" v-if="is_auth_friend">
         <template v-if="active_channel_id">
 <!--            <ChatMessageItem-->
 <!--                :channel_id="this.active_channel_id"-->
@@ -59,6 +59,9 @@
         </template>
         <h3 v-else class="text-secondary text-center mt-5">No chat selected!</h3>
     </div>
+    <div class="centerBox" ref="chatContainer" v-else>
+        <h3 class="text-secondary text-center mt-5">This user isn’t in your friend list send request to send a message</h3>
+    </div>
 </template>
 
 <script>
@@ -83,6 +86,7 @@ export default {
             loading: false,
             messages: [],
             next_page_url: null,
+            is_auth_friend: true,
         }
     },
     mounted() {
@@ -91,6 +95,8 @@ export default {
         this.$emitter.on('chat_message_deleted', this.messageDeletedListener)
         this.$emitter.on('chat_message_stored', this.chatMessageStoredListener)
         this.$emitter.on('chat_active_user_data', this.onChatActiveUserData)
+        this.$emitter.on('unfriended_user_active', this.onUnfriendedUserActive);
+        this.$emitter.on('unfriended_user_inactive', this.onUnfriendedUserInactive);
         const el = this.$refs.chatContainer
         if (el)
             el.addEventListener('scroll', this.scrollListener)
@@ -192,6 +198,12 @@ export default {
         },
         onChatActiveUserData(data) {
             this.active_user_name = data.profile?.first_name + ' ' + data.profile?.last_name;
+        },
+        onUnfriendedUserActive() {
+            this.is_auth_friend = false;
+        },
+        onUnfriendedUserInactive() {
+            this.is_auth_friend = true;
         }
     }
 }

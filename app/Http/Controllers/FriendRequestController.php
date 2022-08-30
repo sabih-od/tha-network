@@ -17,11 +17,15 @@ class FriendRequestController extends Controller
 
             if($auth->isFollowing($target) || $auth->isFollowedBy($target)) {
                 return redirect()->route('userProfile', $target_id)->with('error', 'User already in friend list.');
+//                return WebResponses::exception('User already in friend list.');
             }
 
             $check = FriendRequest::where('user_id', Auth::id())->where('target_id', $target_id)->get();
-            if(count($check) > 0) {
+            $check2 = FriendRequest::where('user_id', $target_id)->where('target_id', Auth::id())->get();
+
+            if(count($check) > 0 || count($check2) > 0) {
                 return redirect()->route('userProfile', $target_id)->with('error', 'Request Already Sent');
+//                return WebResponses::exception('Request Already Sent');
             }
 
             FriendRequest::create([
@@ -96,20 +100,39 @@ class FriendRequestController extends Controller
     }
 
     public function block(Request $request, $target_id) {
-//        try {
+        try {
             $auth = User::find(Auth::id());
             $target = User::find($target_id);
 
-            if($auth->hasBlocked($target) || $target->hasBlocked($auth)) {
+            if($auth->hasBlocked($target)) {
                 return redirect()->route('userProfile', $target_id)->with('error', 'Already blocked.');
             }
 
+            $auth->unfollow($target);
+            $target->unfollow($auth);
             $auth->block($target);
-            $target->block($auth);
 
-            return redirect()->route('home')->with('success', 'Blocked user successfully!');
-//        } catch (\Exception $e) {
-//            return redirect()->route('userProfile', $target_id)->with('error', $e->getMessage());
-//        }
+//            return redirect()->route('home')->with('success', 'Blocked user successfully!');
+            return redirect()->route('userProfile', $target_id)->with('success', 'Blocked user successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('userProfile', $target_id)->with('error', $e->getMessage());
+        }
+    }
+
+    public function unblock(Request $request, $target_id) {
+        try {
+            $auth = User::find(Auth::id());
+            $target = User::find($target_id);
+
+            if(!$auth->hasBlocked($target)) {
+                return redirect()->route('userProfile', $target_id)->with('error', 'Already unblocked.');
+            }
+
+            $auth->unblock($target);
+
+            return redirect()->route('userProfile', $target_id)->with('success', 'Unblocked user successfully!');
+        } catch (\Exception $e) {
+            return redirect()->route('userProfile', $target_id)->with('error', $e->getMessage());
+        }
     }
 }
