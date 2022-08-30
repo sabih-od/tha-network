@@ -18,6 +18,7 @@ class Channel extends Model
         'creator_id',
         'participants',
         'chat_type',
+        'last_message_at'
     ];
 
     protected $casts = [

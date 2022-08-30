@@ -12,53 +12,34 @@ trait ChatData
 {
     protected function getChannelsData(Request $request)
     {
-        $user_delete_record = Channel::select('id', 'creator_id', 'participants', 'chat_type', 'created_at')
-            ->with('userDelete')
-            ->whereHas('users', function ($q) {
-                $q->where('id', Auth::id());
-            })
-            ->whereHas('userDelete', function ($q) {
-                $q->where('user_id', Auth::id());
-            })->first();
+//        $user_delete_record = Channel::select('id', 'creator_id', 'participants', 'chat_type', 'created_at')
+//            ->with('userDelete')
+//            ->whereHas('users', function ($q) {
+//                $q->where('id', Auth::id());
+//            })
+//            ->whereHas('userDelete', function ($q) {
+//                $q->where('user_id', Auth::id());
+//            })->first();
 //        dd(is_null($user_delete_record));
 //        dd($user_delete_record);
         $query = Channel::select('id', 'creator_id', 'participants', 'chat_type')
 //            ->with('creator.profile')
 //            ->with('creator')
+            ->whereDoesntHave('userDelete', function ($q) {
+                $q->where('user_id', Auth::id())
+                    ->whereRaw('`user_deletes`.`created_at` > `channels`.`last_message_at`');
+            })
             ->whereHas('users', function ($q) {
                 $q->where('id', Auth::id());
-            })
-//            ->whereDoesntHave('userDelete', function ($q) {
-//                $q->where('user_id', Auth::id());
-//            });
-            ->when(is_null($user_delete_record), function($q) {
-                $q->whereDoesntHave('userDelete', function ($q) {
-                    $q->where('user_id', Auth::id());
-                });
-            })
-            ->when($user_delete_record, function($q) use($user_delete_record) {
-//                $q->whereHas('deleteable', function ($q) use ($user_delete_record) {
-//                    $q->where('user_id', Auth::id())
-//                        ->whereHas('channels', function($q) use($user_delete_record) {
-//                            $q->whereHas('messages', function($q) use($user_delete_record) {
-//                                $q->where('created_at', '>', $user_delete_record->created_at);
-//                            });
-//                        });
-//                });
-
-                $q->whereHas('userDelete', function($q) use($user_delete_record){
-                    $q->where('user_id', Auth::id())
-                        ->whereHas('channels2', function($q) use($user_delete_record) {
-                            $q->whereHas('messages', function($q) use($user_delete_record) {
-                                $q->where('updated_at', '>', $user_delete_record->userDelete->created_at);
-                            });
-                        });
-                });
-
-//                $q->whereHas('messages', function($q) use($user_delete_record) {
-//                        $q->where('created_at', '>', $user_delete_record->created_at);
-//                    })->whereHas('userDelete');
             });
+//            ->withCount([
+//                'notifications' => function ($q) {
+//                    $q->where([
+//                        ['viewed', 0],
+//                        ['user_id', Auth::id()],
+//                    ]);
+//                }
+//            ]);
 
         if (!is_null($request->get('search'))) {
             $query->whereHas('users', function($q) use ($request) {
@@ -188,7 +169,7 @@ trait ChatData
             });
         }*/
 
-        return $channel
+        $query = $channel
             ->messages()
             ->select('id', 'content', 'sender_id', 'created_at', 'channel_id')
             ->with(['sender' => function ($q) {
@@ -196,7 +177,14 @@ trait ChatData
             }])
             ->whereDoesntHave('userDelete', function ($q) {
                 $q->where('user_id', Auth::id());
-            })
+            });
+
+        $userDelete = $channel->userDelete()->where('user_id', Auth::id())->first();
+        if (!is_null($userDelete)) {
+            $query = $query->where('created_at', '>', $userDelete->created_at);
+        }
+
+        return $query
             ->latest()
             ->simplePaginate(15)
             ->through(function ($item, $key) {

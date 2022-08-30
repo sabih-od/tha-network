@@ -80,10 +80,10 @@ class ChatController extends Controller
             if ($channel->chat_type == 'individual') {
                 $auth = Auth::user();
                 $friend = $channel->users()->where('id', '<>', $auth->id)->first();
-//                if ($auth->isBlockedBy($friend))
-//                    return redirect()->route('chatIndex')->with('error', 'You are blocked by this user!');
-//                elseif ($auth->hasBlocked($friend))
-//                    return redirect()->route('chatIndex')->with('error', 'You are blocked this user!');
+                if ($auth->isBlockedBy($friend))
+                    return redirect()->route('chatIndex')->with('error', 'You are blocked by this user!');
+                elseif ($auth->hasBlocked($friend))
+                    return redirect()->route('chatIndex')->with('error', 'You have blocked this user!');
             }
             $message = $channel->messages()->create([
                 'sender_id' => Auth::id(),
@@ -102,8 +102,22 @@ class ChatController extends Controller
                 ] : null;
             }
 
+            $channel->last_message_at = $message->created_at;
+            $channel->save();
+
 //            $users = $channel->users()->where('id', '<>', Auth::id())->get();
-            event(new NewMessage($channel->id, $message));
+
+            //notification work
+//            event(new NewMessage($channel->id, $message));
+
+//            $participants = collect($channel->participants)->filter(function ($item) {
+//                return $item != Auth::id();
+//            })->all();
+//            foreach ($participants as $user_id) {
+//                $body = "You have a new message!";
+//                dispatch(new CreateNotification($channel->id, 'channel', $user_id, $body));
+//                event(new NewNotification($user_id, $body, 'channel', $channel->id));
+//            }
 
             return redirect()->route('chatIndex')
                 ->with('success', 'Message stored it successfully!')
