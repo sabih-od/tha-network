@@ -118,7 +118,7 @@ export default {
 
         //add friend button behaviour
         $('.btn_add_friend').prop('hidden', usePage().props.value?.is_auth_friend || this.request_received);
-        $('.btn_add_friend').html(this.request_sent ? 'Request Sent' : 'Add Friend');
+        $('.btn_add_friend').html(this.request_sent ? '<i class="fa fa-check mr-2"></i>Request Sent' : '<i class="fa fa-plus" aria-hidden="true"></i> Add Friend');
         $('.btn_add_friend').prop('disabled', this.request_sent);
         $('.btn_add_friend').data('profile', this.$route('sendRequest', usePage().props.value?.user.id));
 

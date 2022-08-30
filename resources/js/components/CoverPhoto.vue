@@ -32,7 +32,7 @@
                             <button v-if="!edit_profile_active" class="themeBtn btn_invite" @click.prevent="inviteModal()">Invite</button>
 <!--                            <a v-if="!edit_profile_active" href="#" @click="$emitter.emit('chat-with-profile')" class="themeBtn btn_message">Message</a>-->
                             <Link v-if="!edit_profile_active" :href="$route('chatIndex')" class="themeBtn btn_message" data-profile="asd" @click.prevent="chatWithProfile()">Message</Link>
-                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_add_friend" data-profile="asd" @click.prevent="addFriend()">Add Friend</Link>
+                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_add_friend" data-profile="asd" @click.prevent="addFriend()"><i class="fa fa-plus" aria-hidden="true"></i>Add Friend</Link>
                             <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_unfriend" data-profile="asd" @click.prevent="unfriend()">Unfriend</Link>
                             <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_block" data-profile="asd" @click.prevent="block()">Block</Link>
                             <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_accept_request" data-profile="asd" @click.prevent="acceptRequest()">Accept Request</Link>
@@ -154,7 +154,7 @@ export default {
                 preserveScroll: true,
                 onSuccess: visit => {
                     this.$store.dispatch('Utils/showSuccessMessage')
-                    $('.btn_add_friend').html('Request Sent');
+                    $('.btn_add_friend').html('<i class="fa fa-check mr-2"></i>Request Sent');
                     $('.btn_add_friend').prop('disabled', true);
                     // this.$emit('deleted')
                     // this.$emitter.emit('chat_message_deleted', this.form.id)

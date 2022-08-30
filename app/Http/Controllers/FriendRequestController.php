@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\WebResponses;
 use App\Models\FriendRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -27,6 +28,10 @@ class FriendRequestController extends Controller
                 'user_id' => Auth::id(),
                 'target_id' => $target_id,
             ]);
+
+            if($request->has('redirect')) {
+                return WebResponses::success('Request Sent Successfully!');
+            }
             return redirect()->route('userProfile', $target_id)->with('success', 'Request Sent Successfully!');
         } catch (\Exception $e) {
             return redirect()->route('userProfile', $target_id)->with('error', $e->getMessage());

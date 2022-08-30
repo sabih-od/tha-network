@@ -7,7 +7,7 @@
         <form action="">
             <div class="searchlist">
                 <i class="fal fa-search"></i>
-                <input type="search" placeholder="Search messages" name="search">
+                <input type="search" placeholder="Search messages" name="search" v-model="search" @keyup.prevent="fetchFriendRequests()" autocomplete="off">
                 <button><i class="fal fa-sliders-h"></i></button>
             </div>
         </form>
@@ -21,9 +21,10 @@
                     <a class="nav-link" id="two-tab" data-toggle="tab" href="#two-pane" role="tab"
                        aria-controls="two-pane" aria-selected="false">Read</a>
                 </li>
+                <!--friend requests-->
                 <li>
                     <a class="nav-link" id="three-tab" data-toggle="tab" href="#three-pane" role="tab"
-                       aria-controls="three-pane" aria-selected="false">Friend Requests (2)</a>
+                       aria-controls="three-pane" aria-selected="false">Friend Requests <span v-if="peoples.length > 0">({{ peoples.length }})</span></a>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -143,62 +144,21 @@
                         </div>
                     </div>
                 </div>
+                <!--friend requests-->
                 <div class="tab-pane fade" id="three-pane" role="tabpanel" aria-labelledby="three-tab">
-                    <div class="userList">
+                    <div class="userList" v-for="user in peoples">
                         <div class="userInfo">
-                            <a href="profile.php"><img :src="asset('images/user1.jpg')" class="rounded-circle"
-                                                       alt=""></a>
-                            <h3>Arman Rokni <a href="#">Active 30m ago</a></h3>
+                            <Link :href="$route('userProfile', user.id)"><img :src="asset('images/user1.jpg')" class="rounded-circle" alt=""></Link>
+                            <h3>
+                                <Link :href="$route('userProfile', user.id)">
+                                    <strong>{{user.profile.first_name +' '+ user.profile.last_name}}</strong>
+                                </Link>
+                                <a href="#">Connect</a>
+                            </h3>
                         </div>
                     </div>
-                    <div class="userList">
-                        <div class="userInfo">
-                            <a href="profile.php"><img :src="asset('images/user2.jpg')" class="rounded-circle"
-                                                       alt=""></a>
-                            <h3>Arman Rokni <a href="#">Active 30m ago</a></h3>
-                        </div>
-                    </div>
-                    <div class="userList">
-                        <div class="userInfo">
-                            <a href="profile.php"><img :src="asset('images/user3.jpg')" class="rounded-circle"
-                                                       alt=""></a>
-                            <h3>Arman Rokni <a href="#">Active 30m ago</a></h3>
-                        </div>
-                    </div>
-                    <div class="userList">
-                        <div class="userInfo">
-                            <a href="profile.php"><img :src="asset('images/user4.jpg')" class="rounded-circle"
-                                                       alt=""></a>
-                            <h3>Arman Rokni <a href="#">Active 30m ago</a></h3>
-                        </div>
-                    </div>
-                    <div class="userList">
-                        <div class="userInfo">
-                            <a href="profile.php"><img :src="asset('images/user5.jpg')" class="rounded-circle"
-                                                       alt=""></a>
-                            <h3>Arman Rokni <a href="#">Active 30m ago</a></h3>
-                        </div>
-                    </div>
-                    <div class="userList">
-                        <div class="userInfo">
-                            <a href="profile.php"><img :src="asset('images/user6.jpg')" class="rounded-circle"
-                                                       alt=""></a>
-                            <h3>Arman Rokni <a href="#">Active 30m ago</a></h3>
-                        </div>
-                    </div>
-                    <div class="userList">
-                        <div class="userInfo">
-                            <a href="profile.php"><img :src="asset('images/user7.jpg')" class="rounded-circle"
-                                                       alt=""></a>
-                            <h3>Arman Rokni <a href="#">Active 30m ago</a></h3>
-                        </div>
-                    </div>
-                    <div class="userList">
-                        <div class="userInfo">
-                            <a href="profile.php"><img :src="asset('images/user7.jpg')" class="rounded-circle"
-                                                       alt=""></a>
-                            <h3>Arman Rokni <a href="#">Active 30m ago</a></h3>
-                        </div>
+                    <div style="text-align: center!important;" v-if="peoples.length === 0 && search === ''">
+                        <h6>There are no new friend requests yet.</h6>
                     </div>
                 </div>
 
@@ -209,10 +169,54 @@
 
 <script>
 import utils from "../../mixins/utils";
+import {Link, usePage} from "@inertiajs/inertia-vue3";
+import FollowUserButton from "../FollowUserButton";
 
 export default {
     name: "Messages",
-    mixins: [utils]
+    mixins: [utils],
+    components: {
+        Link,
+        FollowUserButton
+    },
+    computed: {
+
+    },
+    data() {
+        return {
+            search: '',
+            peoples: [],
+            debounce: null,
+        }
+    },
+    mounted() {
+        this.fetchFriendRequests();
+    },
+    methods: {
+        fetchFriendRequests() {
+            clearTimeout(this.debounce);
+            this.peoples = []
+            this.debounce = setTimeout(() => {
+                this.$store.dispatch('HttpUtils/getReq', {
+                    url: this.$store.getters['Utils/baseUrl'],
+                    only: ['friend_requests'],
+                    params: {
+                      search: this.search
+                    }
+                }).then(res => {
+                    console.log('-------------------------');
+                    console.log('-------------------------');
+                    console.log(res?.friend_requests?.data);
+                    console.log('-------------------------');
+                    console.log('-------------------------');
+                    // this.peoples = res?.new_members?.data.filter(element => element.has_blocked == false) ?? [];
+                    this.peoples = res?.friend_requests?.data ?? [];
+                }).finally(() => {
+                    // this.loading = false
+                })
+            }, 600);
+        }
+    }
 }
 </script>
 

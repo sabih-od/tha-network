@@ -21,7 +21,7 @@
             </div>
 <!--            follow button-->
 <!--            <a href="#" class="nav-icons"><i class="fal fa-user-plus"></i></a>-->
-            <FollowUserButton :user_id="user.id" :is_followed="user.is_followed" @update_is_followed="user.is_followed = !user.is_followed"></FollowUserButton>
+            <FollowUserButton :user_id="user.id" :is_followed="user.is_followed" :request_sent="user.request_sent" :request_received="user.request_received" @update_is_followed="user.is_followed = !user.is_followed"></FollowUserButton>
         </div>
 
         <div style="text-align: center!important;" v-if="peoples.length == 0 && search == ''">
