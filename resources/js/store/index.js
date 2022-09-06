@@ -4,6 +4,8 @@ import Utils from './Utils'
 import SharePostModal from './SharePostModal'
 import HttpUtils from "./HttpUtils";
 import Chat from "./Chat";
+import Channel from "./Channel";
+import Notification from "./Notification";
 
 export default createStore({
     modules: {
@@ -12,5 +14,7 @@ export default createStore({
         SharePostModal,
         HttpUtils,
         Chat,
+        Channel,
+        Notification,
     }
 })

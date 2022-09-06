@@ -67,6 +67,7 @@ export default {
             loading: false,
             next_page_url: null,
             channels: [],
+            channels_notifications_counts: [],
             form: useForm({
                 chat_type: 'individual',
                 user_id: null

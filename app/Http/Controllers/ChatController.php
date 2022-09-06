@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewNotification;
+use App\Jobs\CreateNotification;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Events\NewMessage;
 use App\Models\Channel;
@@ -108,16 +111,17 @@ class ChatController extends Controller
 //            $users = $channel->users()->where('id', '<>', Auth::id())->get();
 
             //notification work
-//            event(new NewMessage($channel->id, $message));
+            event(new NewMessage($channel->id, $message));
 
-//            $participants = collect($channel->participants)->filter(function ($item) {
-//                return $item != Auth::id();
-//            })->all();
-//            foreach ($participants as $user_id) {
-//                $body = "You have a new message!";
-//                dispatch(new CreateNotification($channel->id, 'channel', $user_id, $body));
-//                event(new NewNotification($user_id, $body, 'channel', $channel->id));
-//            }
+            $participants = collect($channel->participants)->filter(function ($item) {
+                return $item != Auth::id();
+            })->all();
+            $sender = User::with('profile')->find(Auth::id());
+            foreach ($participants as $user_id) {
+                $body = "You have a new message!";
+                dispatch(new CreateNotification($channel->id, 'channel', $user_id, $body, $sender->id));
+                event(new NewNotification($user_id, $body, 'channel', $channel->id, $sender));
+            }
 
             return redirect()->route('chatIndex')
                 ->with('success', 'Message stored it successfully!')

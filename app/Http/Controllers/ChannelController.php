@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use function PHPUnit\Framework\isNull;
 
 class ChannelController extends Controller
 {
@@ -56,6 +57,16 @@ class ChannelController extends Controller
                 $channel->save();
             }
 
+            //mark notifications as read
+//            if(!isNull($channel)) {
+//                $channel->notifications()->where([
+//                    ['viewed', 0],
+//                    ['user_id', Auth::id()],
+//                ])->update([
+//                    'viewed' => 1
+//                ]);
+//            }
+
             $cover_data = null;
             if ($channel->chat_type == 'individual') {
                 $cover_data = $channel->users()
@@ -98,6 +109,27 @@ class ChannelController extends Controller
             return response()->json($channel);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function viewedNotification(Request $request, $channel_id)
+    {
+        try {
+            $channel = Channel::find($channel_id);
+
+            if (is_null($channel))
+                throw new \Exception('Invalid channel id!');
+
+            $channel->notifications()->where([
+                ['viewed', 0],
+                ['user_id', Auth::id()],
+            ])->update([
+                'viewed' => 1
+            ]);
+
+            return redirect()->back()->with('success', 'Successfully viewed notifications!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 

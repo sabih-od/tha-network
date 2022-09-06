@@ -1,5 +1,5 @@
 <template>
-    <div class="centerBox" ref="chatContainer" v-if="is_auth_friend">
+    <div class="centerBox"  v-if="is_auth_friend">
         <template v-if="active_channel_id">
 <!--            <ChatMessageItem-->
 <!--                :channel_id="this.active_channel_id"-->
@@ -28,7 +28,7 @@
 
             <div class="chat-panel">
                 <!--messages-->
-                <div class="chatSec">
+                <div class="chatSec" ref="chatContainer">
                     <ChatMessageItem
                         :channel_id="this.active_channel_id"
                         v-for="message in messages"
@@ -59,7 +59,7 @@
         </template>
         <h3 v-else class="text-secondary text-center mt-5">No chat selected!</h3>
     </div>
-    <div class="centerBox" ref="chatContainer" v-else>
+    <div class="centerBox" ref="chatContainer2" v-else>
         <h3 class="text-secondary text-center mt-5">This user isn’t in your friend list send request to send a message</h3>
     </div>
 </template>
@@ -67,6 +67,7 @@
 <script>
 import MessageForm from "./MessageForm";
 import {Inertia} from "@inertiajs/inertia";
+import {usePage} from "@inertiajs/inertia-vue3";
 import ChatMessageItem from "./ChatMessageItem";
 import _ from "lodash";
 import queues from "../mixins/queues";
@@ -87,6 +88,19 @@ export default {
             messages: [],
             next_page_url: null,
             is_auth_friend: true,
+        }
+    },
+    watch: {
+        active_channel_id(val, old) {
+            if (old) {
+                this.$echo.leave('App.Models.Channel.' + old)
+            }
+            if (val) {
+                this.$echo.private('App.Models.Channel.' + val)
+                    .listen('NewMessage', this.channelListenAddNewMessage)
+                this.chatActiveListener(val)
+            }
+            // this.$store.commit('Channel/setChatActiveChannel', val)
         }
     },
     mounted() {
@@ -134,6 +148,13 @@ export default {
             const message = _.find(this.messages, {id: data.old_id})
             if (message) {
                 _.set(message, 'created_id', data.id)
+            }
+        },
+        channelListenAddNewMessage(e) {
+            if (e.data) {
+                if (e?.data?.sender?.id !== usePage().props.value?.auth?.id) {
+                    this.newMessageAddedListener(e.data)
+                }
             }
         },
         scrollListener(e) {

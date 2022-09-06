@@ -167,6 +167,7 @@ class InvitationCode extends Controller
 
     public function invitationMailCode($to, $subject, $username, $name)
     {
+//        dd($username);
         $from = 'no-reply@tha-network.com';
 
         // To send HTML mail, the Content-type header must be set
@@ -204,6 +205,7 @@ class InvitationCode extends Controller
     }
 
     public function sendInvitation(Request $request) {
+//        dd($request->username);
         $data = $request->validate([
             'email' => [
                 'required',
