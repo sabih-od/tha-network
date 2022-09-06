@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Channel;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -15,4 +16,10 @@ use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
+});
+
+Broadcast::channel('App.Models.Channel.{id}', function ($user, $id) {
+    return Channel::where('id', (int) $id)->whereHas('users', function($q) use ($user) {
+        $q->where('id', $user->id);
+    })->exists();
 });

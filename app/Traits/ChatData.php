@@ -31,15 +31,15 @@ trait ChatData
             })
             ->whereHas('users', function ($q) {
                 $q->where('id', Auth::id());
-            });
-//            ->withCount([
-//                'notifications' => function ($q) {
-//                    $q->where([
-//                        ['viewed', 0],
-//                        ['user_id', Auth::id()],
-//                    ]);
-//                }
-//            ]);
+            })
+            ->withCount([
+                'notifications' => function ($q) {
+                    $q->where([
+                        ['viewed', 0],
+                        ['user_id', Auth::id()],
+                    ]);
+                }
+            ]);
 
         if (!is_null($request->get('search'))) {
             $query->whereHas('users', function($q) use ($request) {
@@ -156,6 +156,16 @@ trait ChatData
 
         if (is_null($channel))
             return [];
+
+        //mark notifications as read
+        if($channel) {
+            $channel->notifications()->where([
+                ['viewed', 0],
+                ['user_id', Auth::id()],
+            ])->update([
+                'viewed' => 1
+            ]);
+        }
 
         /*$query = Channel::select('id', 'participants', 'chat_type')
             ->whereHas('users', function ($q) {

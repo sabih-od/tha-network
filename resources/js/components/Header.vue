@@ -31,6 +31,9 @@
                             <a class="nav-icons" href="#"><i class="fal fa-bell"></i></a>
                         </li>
                         <li>
+                            <ChatMessagesCounterButton/>
+                        </li>
+                        <li>
                             <a class="nav-icons" href="#"><i class="fal fa-user"></i></a>
                         </li>
                         <li>
@@ -48,6 +51,7 @@ import {Link, usePage} from '@inertiajs/inertia-vue3'
 import HeaderProfileMenu from "./HeaderProfileMenu";
 import Chat from "../Pages/Chat";
 import utils from "../mixins/utils";
+import ChatMessagesCounterButton from "./ChatMessagesCounterButton";
 
 export default {
     name: "Header",
@@ -55,7 +59,8 @@ export default {
     components: {
         Link,
         HeaderProfileMenu,
-        Chat
+        Chat,
+        ChatMessagesCounterButton
     },
     data() {
         return {

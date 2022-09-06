@@ -7,7 +7,7 @@
     <a href="#" @click.prevent="select">
         <div class="friend-drawer friend-drawer--onhover">
 
-            <ProfileImageIconRounded :profile_img="cover?.profile_img"/>
+            <ProfileImageIconRounded :profile_img="cover?.profile_img" :count="notifications_count"/>
             <div class="text">
                 <h6>{{ cover?.profile?.first_name + ' ' + cover?.profile?.last_name}}</h6>
             </div>
@@ -47,6 +47,21 @@ export default {
             })
         }
     },
+    computed: {
+        notifications_count() {
+            return this.$store.getters['Channel/getChannelNotificationsCount'](this.channel_id)
+        }
+    },
+    watch: {
+        notifications_count(val) {
+            if (val > 0 && this.channel_id === this.$store.state.Channel.chat_active_channel) {
+                clearTimeout(this.debounce);
+                this.debounce = setTimeout(() => {
+                    this.viewedNotifications(this.channel.id)
+                }, 1500)
+            }
+        }
+    },
     mounted() {
         let active_user_id_check = this.$store.getters['Chat/activeUserId'];
         if(active_user_id_check) {
@@ -63,12 +78,36 @@ export default {
     methods: {
         select() {
             this.$emitter.emit('chat_active', this.channel_id)
+            this.$store.commit('Channel/setChatActiveChannel', this.channel_id)
             this.$emitter.emit('chat_active_user_data', this.cover)
             if(!this.is_auth_friend){
                 this.$emitter.emit('unfriended_user_active');
             } else {
                 this.$emitter.emit('unfriended_user_inactive');
             }
+
+            if (this.notifications_count > 0) {
+                this.viewedNotifications(this.channel.id)
+            }
+        },
+        viewedNotifications(channel_id) {
+            Inertia.post(this.$route('channelNotificationViewed', channel_id),
+                {},
+                {
+                    replace: true,
+                    preserveState: true,
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        this.$store.commit('Channel/setChannelsNotificationsCounts', {
+                            id: channel_id,
+                            count: 0
+                        })
+                    },
+                    onFinish: () => {
+                        this.$store.dispatch('Utils/showErrorMessages')
+                        this.$store.dispatch('Notification/updateTotalCount')
+                    }
+                })
         },
         deleteConversation() {
             if (this.form.processing) return;
@@ -78,6 +117,7 @@ export default {
                 preserveState: true,
                 preserveScroll: true,
                 onSuccess: visit => {
+                    this.$store.dispatch('Channel/loadChatListing')
                     // this.$store.dispatch('Utils/showSuccessMessage');
                     // this.$emit('deleted')
                     // this.$emitter.emit('conversation_deleted', this.form.id);
@@ -86,6 +126,7 @@ export default {
                     this.$store.dispatch('Utils/showErrorMessages')
                 },
                 onFinish: () => {
+                    this.$store.dispatch('Utils/showErrorMessages')
                     window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
                 }
             })

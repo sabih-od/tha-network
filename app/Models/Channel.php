@@ -54,6 +54,11 @@ class Channel extends Model
         return $this->hasOne(Group::class);
     }
 
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'notifiable');
+    }
+
     /*public function getIAmParticipantAttribute()
     {
         return Auth::check() && in_array(Auth::id(), $this->participants ?? []);

@@ -90,6 +90,8 @@ export default {
         submit() {
             if (this.form.processing) return;
 
+            this.form.username = this.user.username;
+
             this.form.post(this.$route('sendInvitation'), {
                 replace: true,
                 onSuccess: (response) => {

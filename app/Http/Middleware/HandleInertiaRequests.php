@@ -8,10 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Middleware;
+use App\Traits\NotificationData;
 
 class HandleInertiaRequests extends Middleware
 {
-    use UserData;
+    use UserData, NotificationData;
     /**
      * The root template that's loaded on the first page visit.
      *
@@ -66,7 +67,16 @@ class HandleInertiaRequests extends Middleware
             }),
             'friend_requests' => Inertia::lazy(function () use ($request) {
                 return $this->getFriendRequestsData($request);
-            })
+            }),
+            'notification_count' => Inertia::lazy(function () use ($request) {
+                return $this->totalNotificationCount();
+            }),
+            'unread_notifications' => Inertia::lazy(function () use ($request) {
+                return $this->unreadNotifications();
+            }),
+            'read_notifications' => Inertia::lazy(function () use ($request) {
+                return $this->readNotifications();
+            }),
         ];
 
         if ($request->session()->has('v_data')) {

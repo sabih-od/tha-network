@@ -111,6 +111,10 @@ Route::group([
     Route::delete('channel/destroy', [ChannelController::class, 'channelDestroy'])
         ->name('channelDestroy');
 
+    // Notification routes
+    Route::post('channel-notification-viewed/{id}', [ChannelController::class, 'viewedNotification'])
+        ->name('channelNotificationViewed');
+
     // Friend Request routes
     Route::get('send-request/{target_id}', [FriendRequestController::class, 'sendRequest'])
         ->name('sendRequest');
