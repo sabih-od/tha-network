@@ -62,7 +62,7 @@
                 </div>
                 <!--friend requests-->
                 <div class="tab-pane fade" id="three-pane" role="tabpanel" aria-labelledby="three-tab">
-                    <div class="userList" v-for="user in peoples">
+                    <div class="userList" v-for="user in peoples" :ref="'fr_' + user.id">
                         <div class="userInfo">
                             <Link :href="$route('userProfile', user.id)"><img :src="asset('images/user1.jpg')" class="rounded-circle" alt=""></Link>
                             <h3>
@@ -72,6 +72,7 @@
                                 <a href="#">Connect</a>
                             </h3>
                         </div>
+                        <RequestButtonSection :user_id="user.id"></RequestButtonSection>
                     </div>
                     <div style="text-align: center!important;" v-if="peoples.length === 0 && search === ''">
                         <h6>There are no new friend requests yet.</h6>
@@ -87,6 +88,7 @@
 import utils from "../../mixins/utils";
 import {Link, usePage} from "@inertiajs/inertia-vue3";
 import FollowUserButton from "../FollowUserButton";
+import RequestButtonSection from "../RequestButtonSection";
 import {Inertia} from "@inertiajs/inertia";
 
 export default {
@@ -94,7 +96,8 @@ export default {
     mixins: [utils],
     components: {
         Link,
-        FollowUserButton
+        FollowUserButton,
+        RequestButtonSection
     },
     computed: {
 
@@ -113,6 +116,7 @@ export default {
         this.$emitter.emit('request_for_notifications');
         this.$emitter.on('unread_notifications_updated', this.populateUnreadNotifications);
         this.$emitter.on('read_notifications_updated', this.populateReadNotifications);
+        this.$emitter.on('remove_fr_section', this.fetchFriendRequests);
     },
     methods: {
         fetchFriendRequests() {
@@ -146,7 +150,7 @@ export default {
         },
         chatWithProfile(sender_id) {
             this.$emitter.emit('request_chat_with_profile', sender_id);
-        }
+        },
     }
 }
 </script>

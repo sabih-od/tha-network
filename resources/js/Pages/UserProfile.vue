@@ -118,6 +118,9 @@ export default {
         $('.btn_message').prop('hidden', !(usePage().props.value?.is_auth_friend));
         $('.btn_message').data('profile', usePage().props.value?.user.id);
 
+        //invite button behaviour
+        $('.btn_invite').prop('hidden', true);
+
         //add friend button behaviour
         $('.btn_add_friend').prop('hidden', usePage().props.value?.is_auth_friend || this.request_received);
         $('.btn_add_friend').html(this.request_sent ? '<i class="fa fa-check mr-2"></i>Request Sent' : '<i class="fa fa-plus" aria-hidden="true"></i> Add Friend');
@@ -153,6 +156,9 @@ export default {
     },
     unmounted() {
         $('.btn_message').prop('hidden', usePage().props.value?.is_auth_friend);
+
+        //invite button behaviour
+        $('.btn_invite').prop('hidden', false);
     }
 }
 </script>

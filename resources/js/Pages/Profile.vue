@@ -15,13 +15,14 @@
                     <div class="cardWrap">
                         <h2>Basic info Details</h2>
                         <ul class="infoList">
-                            <li><i class="fas fa-home"></i> Lives in New York, USA.</li>
-                            <li><i class="fas fa-heart"></i> Single</li>
-                            <li><i class="fas fa-clock"></i> Joined April 2016</li>
-                            <li><img src="images/followers.png" alt=""> Followed by 2,838 people</li>
-                            <li>
-                                <p class="ml-4">See More Details...</p>
-                            </li>
+                            <li><i class="fas fa-user-friends"></i> Friends: {{ friends_count }}</li>
+                            <li v-if="profile?.city && profile?.country"><i class="fas fa-home"></i> Lives in {{ profile?.city + ', ' + profile?.country + '.'}}</li>
+                            <li><i class="fas fa-heart" v-if="profile?.marital_status"></i> {{ profile?.marital_status }}</li>
+                            <li><i class="fas fa-clock"></i> Joined {{ new Date(user.created_at).toLocaleString('en-us',{month:'short', year:'numeric'}) }}</li>
+<!--                            <li><img src="images/followers.png" alt=""> Followed by 2,838 people</li>-->
+<!--                            <li>-->
+<!--                                <p class="ml-4">See More Details...</p>-->
+<!--                            </li>-->
                         </ul>
                     </div>
                 </div>
@@ -107,6 +108,7 @@ export default {
         $('.btn_reject_request').prop('hidden', true);
         $('.btn_unfriend').prop('hidden', true);
         $('.btn_block').prop('hidden', true);
+        $('.btn_invite').prop('hidden', false);
 
         this.friends_count = usePage().props.value?.friends_count;
         this.network_count = usePage().props.value?.network_count;
@@ -120,6 +122,7 @@ export default {
     },
     unmounted() {
         $('.btn_message').prop('hidden', false);
+        $('.btn_invite').prop('hidden', true);
     },
     methods: {
         onPostCreated() {

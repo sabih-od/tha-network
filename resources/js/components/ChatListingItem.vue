@@ -19,7 +19,8 @@
                     <i class="far fa-ellipsis-v"></i>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownNotifications">
-                    <button class="dropdown-item" @click.prevent="deleteConversation" type="button">Delete Conversation</button>
+<!--                    <button class="dropdown-item" @click.prevent="deleteConversation" type="button">Delete Conversation</button>-->
+                    <a class="dropdown-item" @click.stop.prevent="deleteConversation" href="#">Delete Conversation</a>
                 </div>
             </div>
         </div>
@@ -118,9 +119,9 @@ export default {
                 preserveScroll: true,
                 onSuccess: visit => {
                     this.$store.dispatch('Channel/loadChatListing')
-                    // this.$store.dispatch('Utils/showSuccessMessage');
+                    this.$store.dispatch('Utils/showSuccessMessage');
                     // this.$emit('deleted')
-                    // this.$emitter.emit('conversation_deleted', this.form.id);
+                    this.$emitter.emit('conversation_deleted', this.form.id);
                 },
                 onError: () => {
                     this.$store.dispatch('Utils/showErrorMessages')
@@ -130,8 +131,8 @@ export default {
                     window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
                 }
             })
-            this.$store.dispatch('Utils/showSuccessMessage');
-            this.$emitter.emit('conversation_deleted', this.form.id);
+            // this.$store.dispatch('Utils/showSuccessMessage');
+            // this.$emitter.emit('conversation_deleted', this.form.id);
         },
     }
 }

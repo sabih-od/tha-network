@@ -59,6 +59,10 @@ class FriendRequestController extends Controller
             $auth->follow($target);
             $target->follow($auth);
             $check[0]->delete();
+
+            if($request->has('redirect')) {
+                return back()->with('success', 'Added to friend list!');
+            }
             return redirect()->route('userProfile', $target_id)->with('success', 'Added to friend list!');
         } catch (\Exception $e) {
             return redirect()->route('userProfile', $target_id)->with('error', $e->getMessage());
@@ -75,6 +79,10 @@ class FriendRequestController extends Controller
                 return redirect()->route('userProfile', $target_id)->with('error', 'Request not found.');
             }
             $check[0]->delete();
+
+            if($request->has('redirect')) {
+                return back()->with('success', 'Request Rejected!');
+            }
             return redirect()->route('userProfile', $target_id)->with('success', 'Request Rejected!');
         } catch (\Exception $e) {
             return redirect()->route('userProfile', $target_id)->with('error', $e->getMessage());
