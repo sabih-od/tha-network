@@ -312,6 +312,7 @@ export default {
         $('.btn_reject_request').prop('hidden', true);
         $('.btn_unfriend').prop('hidden', true);
         $('.btn_block').prop('hidden', true);
+        $('.btn_invite').prop('hidden', true);
 
     },
     unmounted() {
@@ -319,6 +320,7 @@ export default {
         $('.btn_message').prop('hidden', false);
         $('.btn_edit_avatar').prop('hidden', true);
         $('.changePhoto').prop('hidden', true);
+        $('.btn_invite').prop('hidden', false);
     },
     methods: {
         submit() {

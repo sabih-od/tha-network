@@ -1,8 +1,8 @@
 <template>
     <div class="dropdown nav-icons">
-        <button class="dropdown-toggle" type="button" id="profileDropDown" data-toggle="dropdown" aria-expanded="false">
+        <a class="dropdown-toggle" type="button" id="profileDropDown" data-toggle="dropdown" aria-expanded="false">
             <i class="fal fa-bell"></i>
-        </button>
+        </a>
         <div class="dropdown-menu" aria-labelledby="profileDropDown">
             <span v-if="notifications.length == 0" class="dropdown-item">No new messages</span>
             <Link v-else v-for="notification in notifications" class="dropdown-item" replace @click.prevent="chatWithProfile(notification.sender.id)">New message from

@@ -2,10 +2,11 @@
     <div class="cardWrap">
         <h2>My Friends</h2>
         <div class="storySlider" ref="storyWrapper">
-            <div class="storyWrap" v-for="user in peoples" :key="user.id">
+            <div class="storyWrap" v-if="peoples.length > 0" v-for="user in peoples" :key="user.id">
                 <Link :href="$route('userProfile', user.id)" class="imgBox"><img :src="asset('images/story1.jpg')" alt=""></Link>
                 <h3>{{user.profile.first_name +' '+ user.profile.last_name}}</h3>
             </div>
+            <span class="text-center" v-else><strong>You have no friends.</strong></span>
         </div>
     </div>
 </template>

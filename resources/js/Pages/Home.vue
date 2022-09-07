@@ -119,6 +119,7 @@ export default {
         $('.btn_reject_request').prop('hidden', true);
         $('.btn_unfriend').prop('hidden', true);
         $('.btn_block').prop('hidden', true);
+        $('.btn_invite').prop('hidden', false);
 
         this.friends_count = usePage().props.value?.friends_count;
         this.network_count = usePage().props.value?.network_count;
@@ -131,6 +132,7 @@ export default {
         $('.btn_reject_request').prop('hidden', false);
         $('.btn_unfriend').prop('hidden', false);
         $('.btn_block').prop('hidden', false);
+        $('.btn_invite').prop('hidden', true);
     },
     methods: {
         myPost() {

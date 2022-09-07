@@ -1,23 +1,23 @@
 <template>
-        <div v-if="renderedFiles.length > 0" class="render-img-wrapper">
-            <div class="row mx-2">
-                <div class="col-md-2 position-relative render-img-con" v-for="(file, ind) in renderedFiles" :key="ind">
-                    <img v-if="file.type === 'image'" :src="file.source" class="img-fluid w-100" alt="">
-                    <i class="fas fa-times delete-icon"
-                       @click.prevent="removeFile($event, file.fileInd, files, renderedFiles)"></i>
-                </div>
+    <div v-if="renderedFiles.length > 0" class="render-img-wrapper">
+        <div class="row mx-2">
+            <div class="col-md-2 position-relative render-img-con" v-for="(file, ind) in renderedFiles" :key="ind">
+                <img v-if="file.type === 'image'" :src="file.source" class="img-fluid w-100" alt="">
+                <i class="fas fa-times delete-icon"
+                   @click.prevent="removeFile($event, file.fileInd, files, renderedFiles)"></i>
             </div>
         </div>
+    </div>
 
-        <div
-            class="demo6 form-control"
-            id="message-text"
-            ref="textInput"
-            @keydown.enter.prevent.exact="submit"
-            @keyup.ctrl.enter.prevent="newLine"
-            :disabled="this.form.processing"
-            :contenteditable="!this.form.processing"
-        ></div>
+    <div v-if="is_auth_friend"
+        class="demo6 form-control"
+        id="message-text"
+        ref="textInput"
+        @keydown.enter.prevent.exact="submit"
+        @keyup.ctrl.enter.prevent="newLine"
+        :disabled="this.form.processing"
+        :contenteditable="!this.form.processing"
+    ></div>
 
 <!--        <input type="text" placeholder="Type your message here..." class="demo6" id="message-text" data-to="11"-->
 <!--               ref="textInput"-->
@@ -29,18 +29,22 @@
         <!--                            <Emojionearea-->
     <!--                                :search="false"-->
     <!--                            ></Emojionearea>-->
-    <EmojiButton ref="emojiComponent" @select-emoji="addEmoji"/>
+    <EmojiButton v-if="is_auth_friend" ref="emojiComponent" @select-emoji="addEmoji"/>
 
-    <div class="papr-clp" id="post-image">
+    <div v-if="is_auth_friend" class="papr-clp" id="post-image">
         <i class="far fa-paperclip"></i>
         <input type="file" name="file" id="msgfile" accept="image/*, video/*, audio/*" @change.prevent="filesSelect($event, files, renderedFiles)"
                multiple>
     </div>
 
 
-    <button class="btn btn-default text-white" id="send_message" @click="submit">
+    <button v-if="is_auth_friend" class="btn btn-default text-white" id="send_message" @click="submit">
         <i class="fa fa-paper-plane"></i>
     </button>
+
+    <div v-else class="centerBox text-center" ref="chatContainer2" style="width: 100%;">
+        <h3 class="text-secondary text-center mt-3">This user isn’t in your friend list. Send request to send a message</h3>
+    </div>
 </template>
 
 <script>
@@ -55,7 +59,8 @@ export default {
         EmojiButton
     },
     props: {
-        channel_id: String
+        channel_id: String,
+        is_auth_friend: Boolean
     },
     watch: {
         channel_id(val) {
@@ -124,7 +129,7 @@ export default {
 
             let send_data = {
                 id,
-                content: '&nbsp;',
+                content: null,
                 file: null,
                 created_at: date.toISOString(),
                 isForm: true,
@@ -149,26 +154,17 @@ export default {
                 this.files = []
             }
 
-            send_data = {
-                ...send_data,
-                id,
-                file: null,
-                content: this.form.message
+            if (el.innerHTML.trim() !== '') {
+                send_data = {
+                    ...send_data,
+                    id,
+                    file: null,
+                    content: this.form.message
+                }
+                this.$emitter.emit('chat_message_added', send_data);
+                el.innerHTML = ""
+                this.form.reset();
             }
-            this.$emitter.emit('chat_message_added', send_data);
-            // this.$emitter.emit('chat_message_added', {
-            //     id: 'msg_' + date.getTime(),
-            //     content: this.form.message,
-            //     created_at: date.toISOString(),
-            //     isForm: true,
-            //     sender: {
-            //         id: usePage().props.value?.auth?.id,
-            //         name: usePage().props.value?.auth?.name,
-            //         profile_img: usePage().props.value?.auth_profile_image,
-            //     }
-            // })
-            el.innerHTML = ""
-            this.form.reset();
             setTimeout(() => {
                 el.focus()
             }, 100)

@@ -1,5 +1,5 @@
 <template>
-    <div class="centerBox"  v-if="is_auth_friend">
+    <div class="centerBox" >
         <template v-if="active_channel_id">
 <!--            <ChatMessageItem-->
 <!--                :channel_id="this.active_channel_id"-->
@@ -54,13 +54,10 @@
 
             <!--message form-->
             <div class="chat-box-tray">
-                <MessageForm></MessageForm>
+                <MessageForm :is_auth_friend="is_auth_friend"></MessageForm>
             </div>
         </template>
         <h3 v-else class="text-secondary text-center mt-5">No chat selected!</h3>
-    </div>
-    <div class="centerBox" ref="chatContainer2" v-else>
-        <h3 class="text-secondary text-center mt-5">This user isn’t in your friend list send request to send a message</h3>
     </div>
 </template>
 
