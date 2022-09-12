@@ -10,7 +10,7 @@
     </div>
 
     <div v-if="is_auth_friend"
-        class="demo6 form-control"
+        class="form-control demo6"
         id="message-text"
         ref="textInput"
         @keydown.enter.prevent.exact="submit"
@@ -89,7 +89,7 @@ export default {
         addEmoji(url) {
             const el = this.$refs.textInput
             this.removeExtraLine()
-            el.innerHTML += ` <img src="${url}" class="emoji-icon" />`
+            el.innerHTML += ` <img style="max-height: 24px; margin: 0px;" src="${url}" class="emoji-icon" />`
             this.cursorToEnd()
         },
         newLine() {
