@@ -31,7 +31,7 @@ createInertiaApp({
         VueApp.config.globalProperties.$emitter = emitter;
         VueApp.config.globalProperties.$echo = new Echo({
             broadcaster: 'pusher',
-            authEndpoint: process.env.MIX_BASE_URL + "/broadcasting/auth",
+            authEndpoint: process.env.MIX_BASE_URL + "broadcasting/auth",
             key: process.env.MIX_PUSHER_APP_KEY,
             wsHost: window.location.hostname,
             wssPort: 6001,
