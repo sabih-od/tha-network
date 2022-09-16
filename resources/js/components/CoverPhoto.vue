@@ -6,6 +6,9 @@
             <i class="fas fa-edit"></i>
             Edit Cover Photo
         </div>
+        <div style="max">
+            <avataaars></avataaars>
+        </div>
 <!--        <img :src="asset('images/cover-photo.jpg')" class="w-100" alt="">-->
         <img :src="profile_cover" class="w-100" alt="">
         <div class="container-fluid">
@@ -68,6 +71,7 @@ import {useToast} from "vue-toastification";
 import {Inertia} from "@inertiajs/inertia";
 import utils from "../mixins/utils";
 import UserInfo from "./UserInfo";
+import Avataaars from 'vuejs-avataaars/src/Avataaars';
 
 export default {
     name: "CoverPhoto",
@@ -76,7 +80,8 @@ export default {
         SendInviteModal,
         Link,
         ImageUploadingProgress,
-        UserInfo
+        UserInfo,
+        Avataaars
     },
     computed: {
         errors: () => usePage().props.value?.errors ?? null,

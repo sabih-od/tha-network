@@ -9,41 +9,32 @@
         </div>
     </div>
 
-    <div v-if="is_auth_friend"
-        class="form-control demo6"
-        id="message-text"
-        ref="textInput"
-        @keydown.enter.prevent.exact="submit"
-        @keyup.ctrl.enter.prevent="newLine"
-        :disabled="this.form.processing"
-        :contenteditable="!this.form.processing"
-    ></div>
+    <div class="d-flex commentBox">
+        <div v-if="is_auth_friend"
+             class="form-control demo6"
+             id="message-text"
+             ref="textInput"
+             @keydown.enter.prevent.exact="submit"
+             @keyup.ctrl.enter.prevent="newLine"
+             :disabled="this.form.processing"
+             :contenteditable="!this.form.processing"
+        ></div>
 
-<!--        <input type="text" placeholder="Type your message here..." class="demo6" id="message-text" data-to="11"-->
-<!--               ref="textInput"-->
-<!--               v-model="this.form.message"-->
-<!--               @keydown.enter.prevent.exact="submit"-->
-<!--               @keyup.ctrl.enter.prevent="newLine"-->
-<!--               :disabled="this.form.processing">-->
+        <EmojiButton v-if="is_auth_friend" ref="emojiComponent" @select-emoji="addEmoji"/>
 
-        <!--                            <Emojionearea-->
-    <!--                                :search="false"-->
-    <!--                            ></Emojionearea>-->
-    <EmojiButton v-if="is_auth_friend" ref="emojiComponent" @select-emoji="addEmoji"/>
+        <div v-if="is_auth_friend" class="papr-clp" id="post-image">
+            <i class="far fa-paperclip"></i>
+            <input type="file" name="file" id="msgfile" accept="image/*, video/*, audio/*" @change.prevent="filesSelect($event, files, renderedFiles)"
+                   multiple>
+        </div>
 
-    <div v-if="is_auth_friend" class="papr-clp" id="post-image">
-        <i class="far fa-paperclip"></i>
-        <input type="file" name="file" id="msgfile" accept="image/*, video/*, audio/*" @change.prevent="filesSelect($event, files, renderedFiles)"
-               multiple>
-    </div>
+        <button v-if="is_auth_friend" class="btn btn-default text-white" id="send_message" @click="submit">
+            <i class="fa fa-paper-plane"></i>
+        </button>
 
-
-    <button v-if="is_auth_friend" class="btn btn-default text-white" id="send_message" @click="submit">
-        <i class="fa fa-paper-plane"></i>
-    </button>
-
-    <div v-else class="centerBox text-center" ref="chatContainer2" style="width: 100%;">
-        <h3 class="text-secondary text-center mt-3">This user isn’t in your friend list. Send request to send a message</h3>
+        <div v-else class="centerBox text-center" ref="chatContainer2" style="width: 100%;">
+            <h3 class="text-secondary text-center mt-3">This user isn’t in your friend list. Send request to send a message</h3>
+        </div>
     </div>
 </template>
 
@@ -239,5 +230,12 @@ export default {
     outline: 0;
     box-shadow: none;
     overflow-y: auto;
+}
+
+.commentBox{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width:100%;
 }
 </style>

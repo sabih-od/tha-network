@@ -1843,6 +1843,7 @@ footer .links li a:hover {
     overflow: hidden;
     border-radius: 5px;
     border: 1px solid #f1f3f8;
+    height: 100%;
 }
 
 .messangerSec .profile-image {
@@ -2054,14 +2055,15 @@ footer .links li a:hover {
     align-items: baseline;
     padding: 10px 42px 10px 0;
     align-items: center;
-    /* position: absolute; */
-    /* bottom: 0; */
+    flex-direction: column;
     left: 0;
     gap: 1rem;
     width: 100%;
     border-bottom: 1px solid #f1f3f8;
-    height: 117px;
-    position: relative;
+    position: absolute;
+    /* height: 350px; */
+    bottom: 0;
+    width: 100%;
 }
 
 .messangerSec .chat-box-tray input {
@@ -2395,7 +2397,8 @@ footer .links li a:hover {
 
 .mainDashboard {
     /* padding: 40px 50px; */
-    /* height: 100%; */
+    height: calc(100vh - 120px);
+    display: flex;
 }
 
 .emojionearea.demo6.emojionearea-inline {
@@ -2404,3 +2407,13 @@ footer .links li a:hover {
 }
 
 /* END: Messanger CSS */
+
+.centerBox {
+    position: relative;
+    height: 100%;
+}
+
+.slctlft.descriptnbg {
+    width: 100%;
+    height: 100%;
+}
