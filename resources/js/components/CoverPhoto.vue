@@ -6,9 +6,9 @@
             <i class="fas fa-edit"></i>
             Edit Cover Photo
         </div>
-        <div style="max">
-            <avataaars></avataaars>
-        </div>
+<!--        <div style="max">-->
+<!--            <avataaars></avataaars>-->
+<!--        </div>-->
 <!--        <img :src="asset('images/cover-photo.jpg')" class="w-100" alt="">-->
         <img :src="profile_cover" class="w-100" alt="">
         <div class="container-fluid">
