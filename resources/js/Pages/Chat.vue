@@ -17,13 +17,11 @@
 
     <div class="mainDashboard">
         <div class="slctlft descriptnbg">
-            <div class="">
-                <div class="row messangerSec">
-                    <ChatListing></ChatListing>
+            <div class="row messangerSec">
+                <ChatListing></ChatListing>
 
-                    <div class="col-md-9 col-sm-9 p-0 dse" id="chatbox">
-                        <ChatMessages></ChatMessages>
-                    </div>
+                <div class="col-md-9 col-sm-9 p-0 dse" id="chatbox">
+                    <ChatMessages></ChatMessages>
                 </div>
             </div>
         </div>
