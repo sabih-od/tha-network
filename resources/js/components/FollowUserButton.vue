@@ -1,7 +1,7 @@
 <template>
 <!--    <a v-if="isFollowable" href="#" @click.prevent="follow" class="themeBtn">{{ buttonText }}</a>-->
-    <Link v-if="!request_sent && is_followed" :href="$route('userProfile', user_id)" class="nav-icons"><i class="fal fa-user"></i></Link>
-    <a v-if="!request_sent && !is_followed" href="#" class="nav-icons" @click.prevent="follow"><i class="fal fa-user-plus"></i></a>
+    <Link v-if="!request_sent && is_followed_by_auth" :href="$route('userProfile', user_id)" class="nav-icons"><i class="fal fa-user"></i></Link>
+    <a v-if="!request_sent && !is_followed_by_auth" href="#" class="nav-icons" @click.prevent="follow"><i class="fal fa-user-plus"></i></a>
     <a v-if="request_sent" href="#" class="nav-icons" @click.prevent="follow"><i class="fal fa-check"></i></a>
 </template>
 
@@ -25,6 +25,7 @@ export default {
             default: false
         },
         is_followed: false,
+        is_followed_by_auth: false,
         request_sent: '',
         request_received: ''
     },
