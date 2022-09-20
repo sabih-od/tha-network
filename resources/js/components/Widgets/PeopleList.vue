@@ -22,7 +22,7 @@
                     <a href="#">Connect</a>
                 </h3>
             </div>
-            <FollowUserButton v-if="!isMe(user.id)" :user_id="user.id" :is_followed="user.is_followed" :request_sent="user.request_sent" :request_received="user.request_received" @update_is_followed="user.is_followed = !user.is_followed"></FollowUserButton>
+            <FollowUserButton v-if="!isMe(user.id)" :user_id="user.id" :is_followed_by_auth="user.is_followed_by_auth" :is_followed="user.is_followed" :request_sent="user.request_sent" :request_received="user.request_received" @update_is_followed="user.is_followed = !user.is_followed"></FollowUserButton>
 <!--            <a href="#" class="nav-icons"><i class="fal fa-comments"></i></a>-->
         </div>
 

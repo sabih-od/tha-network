@@ -243,6 +243,7 @@ trait UserData
                 $item->has_blocked = $item->hasBlocked($auth_user);
                 $item->profile_img = $item->getFirstMediaUrl('profile_image') ?? null;
                 $item->is_followed = $item->isFollowedBy(User::find($user_id));
+                $item->is_followed_by_auth = $item->isFollowedBy(User::find($auth_user->id));
                 return $item;
             });
     }
