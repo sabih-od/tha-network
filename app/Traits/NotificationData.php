@@ -12,7 +12,7 @@ trait NotificationData
         return Notification::where([
             ['user_id', Auth::id()],
             ['viewed', 0]
-        ])->count();
+        ])->groupBy('sender_id')->count();
     }
 
     protected function unreadNotifications()
@@ -20,7 +20,7 @@ trait NotificationData
         return Notification::with('sender.profile')->where([
             ['user_id', Auth::id()],
             ['viewed', 0]
-        ])->orderBy('created_at', 'DESC')->get();
+        ])->orderBy('created_at', 'DESC')->groupBy('sender_id')->get();
     }
 
     protected function readNotifications()
@@ -28,6 +28,6 @@ trait NotificationData
         return Notification::with('sender.profile')->where([
             ['user_id', Auth::id()],
             ['viewed', 1]
-        ])->limit(8)->orderBy('created_at', 'DESC')->get();
+        ])->limit(8)->orderBy('created_at', 'DESC')->groupBy('sender_id')->get();
     }
 }

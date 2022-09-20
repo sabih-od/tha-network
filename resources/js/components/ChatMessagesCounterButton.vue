@@ -95,6 +95,17 @@ export default {
                         ...this.notifications,
                         ...(res.props?.unread_notifications ?? [])
                     ];
+                    let map = new Map();
+                    // this.notifications.forEach((item, i) => {
+                    //     const value = item.sender_id;
+                    //     if (map.has(value)) {
+                    //         map.get(value).push(i);
+                    //     } else {
+                    //         map.set(value, [i])
+                    //     }
+                    // });
+                    // this.notifications = this.notifications.filter((item, i) => map.get(item.sender_id).length === 1);
+
                     this.read_notifications = [
                         ...this.read_notifications,
                         ...(res.props?.read_notifications ?? [])
