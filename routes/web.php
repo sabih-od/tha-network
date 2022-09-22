@@ -27,7 +27,7 @@ use Inertia\Inertia;
 });*/
 
 Route::get('/temp', function() {
-//    dd('asd');
+    last_active('960a4577-cc8f-4e31-849f-b402aec1c9b0');
 });
 
 Route::get('get/redis', function () {

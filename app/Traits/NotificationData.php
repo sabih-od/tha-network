@@ -17,17 +17,33 @@ trait NotificationData
 
     protected function unreadNotifications()
     {
-        return Notification::with('sender.profile')->where([
+        $notifications = Notification::with('sender.profile')->where([
             ['user_id', Auth::id()],
             ['viewed', 0]
         ])->orderBy('created_at', 'DESC')->groupBy('sender_id')->get();
+
+        $notifications = $notifications->toArray();
+        $noti_arr = [];
+        foreach ($notifications as $notification) {
+            $notification['last_activity_readable'] = last_active($notification['sender_id']);
+            array_push($noti_arr, $notification);
+        }
+        return $noti_arr;
     }
 
     protected function readNotifications()
     {
-        return Notification::with('sender.profile')->where([
+        $notifications = Notification::with('sender.profile')->where([
             ['user_id', Auth::id()],
             ['viewed', 1]
         ])->limit(8)->orderBy('created_at', 'DESC')->groupBy('sender_id')->get();
+
+        $notifications = $notifications->toArray();
+        $noti_arr = [];
+        foreach ($notifications as $notification) {
+            $notification['last_activity_readable'] = last_active($notification['sender_id']);
+            array_push($noti_arr, $notification);
+        }
+        return $noti_arr;
     }
 }

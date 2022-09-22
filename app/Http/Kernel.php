@@ -39,6 +39,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             HandleInertiaRequests::class,
+            \DivineOmega\LaravelLastActivity\Http\Middleware\LastActivity::class,
         ],
 
         'api' => [
