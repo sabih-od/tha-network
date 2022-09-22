@@ -37,7 +37,7 @@
                             <Link href="#" @click.prevent="chatWithProfile(notification.sender.id)"><img :src="asset('images/user1.jpg')" class="rounded-circle" alt=""></Link>
                             <h3>
                                 {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
-                                <a href="#">Active 30m ago</a>
+                                <a href="#">{{ notification.last_activity_readable }}</a>
                             </h3>
                         </div>
                     </div>
@@ -52,7 +52,7 @@
                             <Link href="#" @click.prevent="chatWithProfile(notification.sender.id)"><img :src="asset('images/user1.jpg')" class="rounded-circle" alt=""></Link>
                             <h3>
                                 {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
-                                <a href="#">Active 30m ago</a>
+                                <a href="#">{{ notification.last_activity_readable }}</a>
                             </h3>
                         </div>
                     </div>

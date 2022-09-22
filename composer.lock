@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e8c876ebfca71259f46c216511991fe",
+    "content-hash": "dbe7f23c53448506eec655939dceae0d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -417,6 +417,63 @@
                 "source": "https://github.com/dflydev/dflydev-dot-access-data/tree/v3.0.1"
             },
             "time": "2021-08-13T13:06:58+00:00"
+        },
+        {
+            "name": "divineomega/laravel-last-activity",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/DivineOmega/laravel-last-activity.git",
+                "reference": "5722d5ca5bf48b6a849c53676bf5ed72177a2a39"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/DivineOmega/laravel-last-activity/zipball/5722d5ca5bf48b6a849c53676bf5ed72177a2a39",
+                "reference": "5722d5ca5bf48b6a849c53676bf5ed72177a2a39",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^5.6|^6|^7|^8",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^3.8"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "DivineOmega\\LaravelLastActivity\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DivineOmega\\LaravelLastActivity\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "Jordan Hall",
+                    "email": "jordan@hall05.co.uk"
+                }
+            ],
+            "description": "Stores the last activity time of users within your Laravel application",
+            "support": {
+                "issues": "https://github.com/DivineOmega/laravel-last-activity/issues",
+                "source": "https://github.com/DivineOmega/laravel-last-activity/tree/v1.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/DivineOmega",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-01-27T21:59:32+00:00"
         },
         {
             "name": "doctrine/cache",
