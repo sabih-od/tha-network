@@ -219,4 +219,14 @@ export default {
 
 <style scoped>
 
+.dropdown button {
+    background: transparent;
+    border: none;
+    font-size: 1.25rem;
+    padding: 1rem 0.25rem 0;
+}
+
+/*.mesg-bx .videoImg{*/
+/*    width: 50%;*/
+/*}*/
 </style>
