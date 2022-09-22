@@ -238,4 +238,11 @@ export default {
     gap: 1rem;
     width:100%;
 }
+
+.render-img-con img{
+    border: 1px solid #ddd;
+    width: 700px !important;
+    height: 160px;
+    object-fit: cover;
+}
 </style>

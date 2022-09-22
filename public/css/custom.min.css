@@ -2340,6 +2340,7 @@ footer .links li a:hover {
 .bluebg .mesgHfs {
     padding-left: 0;
     margin-right: 20px;
+    max-width: 50%;
 }
 
 .chatHead h6 {
@@ -2416,4 +2417,8 @@ footer .links li a:hover {
 .slctlft.descriptnbg {
     width: 100%;
     height: 100%;
+}
+
+.chatSec .row:last-child {
+    margin-bottom: 3rem;
 }
