@@ -65,6 +65,15 @@ class LoginController extends Controller
         return Inertia::render('Auth/Login');
     }
 
+    protected function authenticated(Request $request, $user)
+    {
+        if ( $user->role_id == 1 ) {
+            return redirect()->route('dashboard');
+        }
+
+        return redirect('/');
+    }
+
     /*public function login(Request $request)
     {
         $this->validateLogin($request);
