@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\WebResponses;
 use App\Models\Network;
+use App\Models\Referral;
 use App\Models\SendInvitation;
 use App\Models\User;
 use App\Models\UserInvitation;
@@ -234,6 +235,12 @@ class InvitationCode extends Controller
                     'user_id' => Auth::id()
                 ]);
             }
+
+            //Create referral
+            Referral::create([
+                'user_id' => Auth::id(),
+                'email' => $data['email']
+            ]);
 
 
             return WebResponses::success(

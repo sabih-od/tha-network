@@ -92,4 +92,9 @@ class User extends Authenticatable implements HasMedia
     public function getProfileImageAttribute() {
         return $this->getFirstMediaUrl('profile_image');
     }
+
+    public function completed_referrals()
+    {
+        return $this->hasMany(Referral::class)->where('status', true);
+    }
 }
