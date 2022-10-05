@@ -144,4 +144,10 @@ export default {
     height: 50px;
     object-fit: cover;
 }
+.dropdown button {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    padding: 0;
+}
 </style>

@@ -6,6 +6,7 @@ use App\Helpers\WebResponses;
 use App\Http\Controllers\Controller;
 use App\Models\Network;
 use App\Models\NetworkMember;
+use App\Models\Referral;
 use App\Models\SendInvitation;
 use App\Models\UserInvitation;
 use App\Providers\RouteServiceProvider;
@@ -67,7 +68,8 @@ class RegisterController extends Controller
         //checking for inviter info as well
         else if (session()->has('inviter_id')) {
             return Inertia::render('Auth/Register', [
-                'inviter_id' => session()->get('inviter_id')
+                'inviter_id' => session()->get('inviter_id'),
+                'email' => 'asd'
             ]);
         }
         else
@@ -175,10 +177,11 @@ class RegisterController extends Controller
 
         //if user was invited by link: add to their friend list
         if(session()->has('inviter_id')) {
-            $check = User::where('id', session()->get('inviter_id'))->get();
+            $inviter_id = session()->get('inviter_id');
+            $check = User::where('id', $inviter_id)->get();
             if(count($check) > 0) {
 //                $inviter = $check[0];
-                $inviter = User::find(session()->get('inviter_id'));
+                $inviter = User::find($inviter_id);
                 $user = User::find($user->id);
 
 
@@ -198,6 +201,17 @@ class RegisterController extends Controller
                     'user_id' =>  $inviter->id,
                     'network_id' => $new_network->id,
                 ]);
+
+                //complete referral if present
+                $referral = Referral::where([
+                    'user_id' => $inviter_id,
+                    'email' => $request->email,
+                    'status' => false,
+                ])->first();
+
+                if($referral) {
+                    $referral->update(['status' => true]);
+                }
 
                 session()->remove('inviter_id');
             }

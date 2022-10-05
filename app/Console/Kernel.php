@@ -16,6 +16,14 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+
+//        $schedule->call(function (){
+//            dump('here');
+//        })->everyMinute();
+
+        //last week's rankings
+        $schedule->call(function () {last_weeks_rankings();})->weeklyOn(1, '23:30');
+//        $schedule->command('migrate')->daily()->at('22:21');
     }
 
     /**

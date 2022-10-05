@@ -27,7 +27,7 @@ use Inertia\Inertia;
 });*/
 
 Route::get('/temp', function() {
-    last_active('960a4577-cc8f-4e31-849f-b402aec1c9b0');
+    last_weeks_rankings();
 });
 
 Route::get('get/redis', function () {
@@ -40,8 +40,28 @@ Route::get('del/redis', function () {
     dd(\Illuminate\Support\Facades\Redis::del('test:key'));
 });
 
-require "auth.php";
+//ADMIN LOGIN
+Route::get('/admin/login', function () {
+    return view('admin.auth.login');
+})->middleware('guest')->name('admin.login');
 
+Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('admin')->group(function () {
+    //Dashboard
+    Route::get('dashboard', 'AdminController@dashboard')->name('dashboard');
+
+    //setting
+    Route::match(['get', 'post'], '/settings', 'SettingController@index')->name('settings');
+
+    //goal
+    Route::match(['get', 'post'], '/goals', 'GoalController@index')->name('admin.goals');
+
+    // Customer
+    Route::resource('customers', 'CustomersController');
+    Route::delete('/customers/destroy/{id}', 'CustomersController@destroy')->name('customers.destroy');
+});
+
+//Inertia routes
+require "auth.php";
 Route::group([
     'middleware' => ['auth', 'revalidate']
 ], function () {
