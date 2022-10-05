@@ -43,6 +43,8 @@ class InvitationCode extends Controller
                 'required',
                 'in:email,phone'
             ],
+        ],[
+            'email.unique' => 'This user is already registered on the website.'
         ]);
         try {
             $code = $this->generateUniqueCode();
@@ -216,6 +218,8 @@ class InvitationCode extends Controller
                 'max:255',
                 Rule::unique('users')->whereNull('deleted_at'),
             ]
+        ],[
+            'email.unique' => 'This user is already registered on the website.'
         ]);
 
         try {
