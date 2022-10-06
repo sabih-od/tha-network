@@ -34,6 +34,7 @@ class HomeController extends Controller
         return Inertia::render('Home', [
             'user' => Auth::user()->only('id', 'username', 'email', 'created_at') ?? null,
             'profile' => $profile,
+            'goals' => get_weekly_goals(),
             'posts' => Inertia::lazy(function () use ($request) {
                 $is_my_post = boolval($request->get('is_my_posts', 0));
                 return $this->getPostData($is_my_post);
