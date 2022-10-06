@@ -28,12 +28,12 @@ use Inertia\Inertia;
 
 Route::get('/temp', function() {
 //    dd(get_weekly_goals());
-    $users = \App\Models\User::where('role_id', 2)->get();
-    foreach ($users as $user) {
-        $rank = get_my_rank($user->id);
-        $user->remaining_referrals += $rank->target;
-        $user->save();
-    }
+//    $users = \App\Models\User::where('role_id', 2)->get();
+//    foreach ($users as $user) {
+//        $rank = get_my_rank($user->id);
+//        $user->remaining_referrals += $rank->target;
+//        $user->save();
+//    }
 });
 
 Route::get('get/redis', function () {
