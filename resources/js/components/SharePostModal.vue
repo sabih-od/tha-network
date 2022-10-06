@@ -7,17 +7,19 @@
                 <div class="modal-body p-0">
                     <h2>Share Post</h2>
 
-                    <PostMainData v-if="post" is-sharable :post="post"/>
+                    <div class="feedBox">
+                        <PostMainData v-if="post" is-sharable :post="post"/>
 
-                    <div class="form-group">
-                        <textarea v-model="form.content" class="form-control" rows="5"></textarea>
-                    </div>
+                        <div class="form-group">
+                            <textarea v-model="form.content" class="form-control" rows="5"></textarea>
+                        </div>
 
-                    <div class="d-flex">
-                        <button class="btn btn-danger ml-auto" @click.prevent="hide">Close</button>
-                        <button class="btn btn-success ml-2" @click.prevent="submit">
-                            {{ form.processing ? 'Sharing...' : 'Share' }}
-                        </button>
+                        <div class="d-flex">
+                            <button class="btn btn-danger ml-auto" @click.prevent="hide">Close</button>
+                            <button class="btn btn-success ml-2" @click.prevent="submit">
+                                {{ form.processing ? 'Sharing...' : 'Share' }}
+                            </button>
+                        </div>
                     </div>
 
                 </div>
@@ -92,5 +94,8 @@ export default {
 </script>
 
 <style scoped>
-
+.modal-body > h2 {
+    font-size: 1.75rem;
+    padding: 1rem 0 0 1rem;
+}
 </style>

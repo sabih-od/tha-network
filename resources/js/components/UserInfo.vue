@@ -2,24 +2,12 @@
     <div class="userInfo">
         <div class="profileImg">
             <img :src="asset('images/char-usr.png')" alt="">
-            <a class="btn_edit_avatar" hidden="true" style="width: 40px;
-            height: 40px;
-            background: #9f9090;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            position: absolute;
-            right: 2rem;
-            bottom: 1rem;
-            font-size: 1rem;
-            color: white;
-            z-index: 999;">
+            <a class="btn_edit_avatar" hidden="true">
                 <i class="fas fa-edit"></i>
             </a>
-<!--            <div class="filSet">-->
-<!--                <i class="fas fa-camera"></i><input type="file">-->
-<!--            </div>-->
+            <!--            <div class="filSet">-->
+            <!--                <i class="fas fa-camera"></i><input type="file">-->
+            <!--            </div>-->
         </div>
         <h2>{{ name }} <span>@{{ user?.username }}</span></h2>
     </div>
@@ -100,9 +88,28 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
 /*.profileImg > img {
     width: 200px;
     height: 200px;
 }*/
+.btn_edit_avatar {
+    position: absolute;
+    z-index: 99;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff !important;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 30px;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--primary) !important;
+    }
+}
 </style>

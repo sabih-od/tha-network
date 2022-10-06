@@ -4,7 +4,12 @@
             <Link replace :href="profile_link(post.user.id)" class="infoWrap">
                 <div class="userWrap"><img :src="profile_image(post?.user?.profile_img)" class="rounded-circle" alt="">
                 </div>
-                <h2>@{{ post.user.username }} <span>{{ $store.getters['Utils/fromNow'](post?.created_at) }}</span></h2>
+                <div class="userNameWrap">
+                    <h2>@{{ post.user.username }} <span>{{ $store.getters['Utils/fromNow'](post?.created_at) }}</span></h2>
+                    <span>-</span>
+                    <h6><i class="fas fa-smile"></i><span>Feeling Happy!</span></h6>
+                    <h5>at<span>LA, California</span></h5>
+                </div>
             </Link>
             <div v-if="isCreatedByMe && !isSharable" class="dropdown">
                 <button class="dropdown-toggle" type="button" id="feed-option" data-toggle="dropdown"
@@ -137,8 +142,8 @@ export default {
 }
 
 .img-fit {
-    object-fit: cover;
-    height: 300px;
+    object-fit: contain;
+    max-height: 300px;
 }
 
 .videoImg > span {
@@ -157,5 +162,35 @@ export default {
 
 .text-prewrap {
     white-space: pre-wrap;
+}
+
+.userNameWrap {
+    display: flex;
+    align-items: self-start;
+    gap: 0.25rem;
+}
+
+.userNameWrap h6 {
+    font-size: 0.75rem;
+    margin-top: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--primary);
+}
+
+.userNameWrap h5 {
+    font-size: 0.75rem;
+    font-weight: 300;
+    margin-top: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #000;
+}
+
+.userNameWrap h5 span{
+    font-weight: 600;
+    color: var(--primary);
 }
 </style>

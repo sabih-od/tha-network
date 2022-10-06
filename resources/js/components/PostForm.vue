@@ -20,8 +20,10 @@
 
             <!-- Video Preview -->
             <ul class="bottomList">
-                <li><a href="#" @click.prevent class="optBtn"><i class="fal fa-smile"></i> Feeling Activity</a></li>
-                <li><a href="#" @click.prevent class="optBtn"><i class="fas fa-map-marker-alt"></i>Location</a></li>
+                <li><a href="#" @click.prevent class="optBtn" data-toggle="modal" data-target="#activityModal"><i
+                    class="fal fa-smile"></i> Feeling Activity</a></li>
+                <li><a href="#" @click.prevent class="optBtn" data-toggle="modal" data-target="#locationModal"><i
+                    class="fas fa-map-marker-alt"></i>Location</a></li>
                 <li>
                     <a href="#" class="optBtn" @click.prevent="$refs.selMedia.click()">
                         <i class="fas fa-images"></i> Add Media
@@ -39,6 +41,172 @@
         <teleport v-if="form.progress" to="body">
             <ImageUploadingProgress :progress="form.progress.percentage"/>
         </teleport>
+    </div>
+    <div class="modal fade" id="activityModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="modal-header py-0">
+                    <form action="">
+                        <div class="form-group">
+                            <input type="text" placeholder="Search" class="form-control">
+                            <button><i class="fas fa-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row align-items-center">
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="modal-header py-0">
+                    <form action="">
+                        <div class="form-group">
+                            <input type="text" placeholder="Search" class="form-control">
+                            <button><i class="fas fa-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row align-items-center">
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="" @click.prevent class="activityCont">
+                                    <i class="fas fa-smile"></i>
+                                    <span>Feeling Happy!</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -146,7 +314,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .iconWrap {
     overflow: hidden;
 }
@@ -165,5 +333,91 @@ export default {
     border-radius: 50%;
     font-size: 12px;
     cursor: pointer;
+}
+
+#activityModal,
+#locationModal {
+    .modal-content {
+        padding: 3rem 0;
+
+        .modal-body {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .row {
+            gap: 1.25rem 0;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 11;
+        }
+    }
+
+    form {
+        width: 100%;
+
+        .form-group {
+            position: relative;
+
+            input {
+                outline: none;
+                box-shadow: none;
+                height: 40px;
+            }
+
+            button {
+                position: absolute;
+                top: 0;
+                right: 0;
+                background: var(--primary);
+                border: none;
+                color: #fff;
+                height: 40px;
+                width: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0;
+                outline: none;
+                box-shadow: none;
+            }
+        }
+    }
+
+    .activityCont {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        background: rgba(255, 255, 255, 0.15);
+        justify-content: center;
+        border-radius: 10px;
+        padding: 0.5rem 0;
+        box-shadow: 0 0 15px #ddd;
+        cursor: pointer;
+
+        i {
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+
+        span {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #000;
+        }
+
+        &:hover {
+            background: var(--primary);
+
+            i,
+            span {
+                color: #fff;
+            }
+        }
+    }
 }
 </style>
