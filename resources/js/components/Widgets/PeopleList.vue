@@ -14,10 +14,10 @@
         </form>
         <div class="userList" v-for="user in peoples">
             <div class="userInfo">
-                <Link :href="$route('userProfile', user.id)"><img :src="asset('images/user1.jpg')" class="rounded-circle" alt=""></Link>
+                <Link :href="$route('userProfile', user.id)"><img :src="user.profile_img ? user.profile_img : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
                 <h3>
                     <Link :href="$route('userProfile', user.id)">
-                        <strong>{{user.profile.first_name +' '+ user.profile.last_name}}</strong>
+                        <strong>{{user.profile ? user.profile.first_name +' '+ user.profile.last_name : ''}}</strong>
                     </Link>
                     <a href="#">Connect</a>
                 </h3>

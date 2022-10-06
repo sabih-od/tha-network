@@ -71,19 +71,19 @@ class User extends Authenticatable implements HasMedia
         'email_verified_at' => 'datetime',
     ];
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::created(function ($query) {
-            //assign rank and target to the new member (if role = user)
-            if($query->role_id == 2) {
-                $rank = get_my_rank($query->id);
-                $query->remaining_referrals += $rank->target;
-                $query->save();
-            }
-        });
-    }
+//    public static function boot()
+//    {
+//        parent::boot();
+//
+//        static::created(function ($query) {
+//            //assign rank and target to the new member (if role = user)
+//            if($query->role_id == 2) {
+//                $rank = get_my_rank($query->id);
+//                $query->remaining_referrals += $rank->target;
+//                $query->save();
+//            }
+//        });
+//    }
 
     public function profile()
     {

@@ -67,7 +67,7 @@
                     </div>
 
                     <div class="btn-group gap1">
-                        <button type="submit" class="themeBtn" onclick="window.location.href='login.php">Save</button>
+                        <button type="submit" class="themeBtn" onclick="window.location.href='login.php'">Save</button>
                         <button class="themeBtn discard">Discard Changes</button>
                     </div>
                 </div>

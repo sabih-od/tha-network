@@ -68,7 +68,7 @@ export default {
                     preserveScroll: true,
                     preserveState: true,
                     onSuccess: () => {
-                        this.form.user_id = null
+                        this.channelForm.user_id = null
                     },
                     onError: () => {
                         this.$store.dispatch('Utils/showErrorMessages')

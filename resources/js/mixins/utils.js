@@ -12,7 +12,7 @@ export default {
             const img = usePage().props.value?.auth_profile_image
             if (img !== '' && img !== null)
                 return img
-            return this.asset('images/small-character.jpg')
+            return this.asset('images/char-usr.png')
         },
         profile_link() {
             return (id) => {
@@ -23,7 +23,7 @@ export default {
             return (image) => {
                 if (image !== '' && image)
                     return image
-                return this.asset('images/small-character.jpg')
+                return this.asset('images/char-usr.png')
             }
         }
     },

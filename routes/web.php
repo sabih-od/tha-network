@@ -27,6 +27,7 @@ use Inertia\Inertia;
 });*/
 
 Route::get('/temp', function() {
+    dd(\Illuminate\Support\Facades\Auth::user()->getProfileImageAttribute());
 //    dd(get_weekly_goals());
 //    $users = \App\Models\User::where('role_id', 2)->get();
 //    foreach ($users as $user) {

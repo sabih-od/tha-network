@@ -138,18 +138,26 @@ class ProfileController extends Controller
     public function profileImgUpload(Request $request)
     {
         $request->validate([
-            'file' => ['required', 'image', 'max:5120'],
+            'file' => ['required_without:url', 'image', 'max:5120'],
+            'url' => ['required_without:file'],
         ]);
 
         try {
             $user = Auth::user();
             if ($user) {
                 $user->clearMediaCollection('profile_image');
-                $user
-                    ->addMediaFromRequest('file')
-                    ->toMediaCollection('profile_image');
+                if($request->has('url')) {
+                    $user
+                        ->addMediaFromUrl($request->get('url'))
+                        ->toMediaCollection('profile_image');
+                } else {
+                    $user
+                        ->addMediaFromRequest('file')
+                        ->toMediaCollection('profile_image');
+                }
             }
-            return redirect(url()->previous(true))->with('success', "Change image successfully!");
+//            return redirect(url()->previous(true))->with('success', "Change image successfully!");
+            return WebResponses::success('Avatar updated successfully!');
         } catch (\Exception $e) {
             return redirect(url()->previous(true))->with('error', $e->getMessage());
         }

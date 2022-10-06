@@ -2,7 +2,7 @@
     <div :class="{'shared-post': isSharable}">
         <div class="df aic jcsb mb-3 w-100">
             <Link replace :href="profile_link(post.user.id)" class="infoWrap">
-                <div class="userWrap"><img :src="profile_image(post?.user?.profile_img)" class="rounded-circle" alt="">
+                <div class="userWrap"><img :src="profile_image(post?.user?.profile_image)" class="rounded-circle" alt="">
                 </div>
                 <div class="userNameWrap">
                     <h2>@{{ post.user.username }} <span>{{ $store.getters['Utils/fromNow'](post?.created_at) }}</span></h2>

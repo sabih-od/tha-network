@@ -157,6 +157,10 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
+        $rank = get_my_rank($user->id);
+        $user->remaining_referrals += $rank->target;
+        $user->save();
+
         $user->profile()->create([
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
