@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Uuids;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -40,6 +41,7 @@ class User extends Authenticatable implements HasMedia
         'email',
         'password',
         'role_id',
+        'remaining_referrals',
     ];
 
     /**
@@ -69,6 +71,20 @@ class User extends Authenticatable implements HasMedia
         'email_verified_at' => 'datetime',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($query) {
+            //assign rank and target to the new member (if role = user)
+            if($query->role_id == 2) {
+                $rank = get_my_rank($query->id);
+                $query->remaining_referrals += $rank->target;
+                $query->save();
+            }
+        });
+    }
+
     public function profile()
     {
         return $this->hasOne(UserProfile::class);
@@ -96,5 +112,14 @@ class User extends Authenticatable implements HasMedia
     public function completed_referrals()
     {
         return $this->hasMany(Referral::class)->where('status', true);
+    }
+
+    public function completed_referrals_this_week()
+    {
+        //write start/end week ceiling/floor conditions (id necessary)
+        return $this->hasMany(Referral::class)
+            ->where('status', true)
+            ->whereDate('updated_at', '>=', Carbon::now()->startofWeek())
+            ->whereDate('updated_at', '<=', Carbon::now()->endofWeek());
     }
 }

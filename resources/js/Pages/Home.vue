@@ -48,7 +48,7 @@
                 <div class="col-md-3">
                     <a href="#" @click.prevent="myPost" class="btnDesign postBtn mb-4 w-100 text-center">{{ myPostText }}</a>
 
-                    <WeeklyGoals/>
+                    <WeeklyGoals :goals="goals" />
 
                     <NewMembersList/>
 
@@ -95,6 +95,7 @@ export default {
     props: {
         user: Object,
         profile: Object,
+        goals: Object,
     },
     computed: {
         myPostText() {
