@@ -59,6 +59,15 @@
             </div>
         </div>
     </section>
+    <div class="notifyPopup">
+        <div class="notiBody">
+            <p>Nice to see you still here. Or have you just clicked back here after forgetting what this tab was? Oops</p>
+        </div>
+        <div class="notiFooter">
+            <button><i class="fas fa-check"></i><span>Ok</span></button>
+            <button><i class="fas fa-times"></i><span>Close</span></button>
+        </div>
+    </div>
 </template>
 
 <script>

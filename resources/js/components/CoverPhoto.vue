@@ -1,66 +1,72 @@
 <template>
     <!-- Begin: Cover Section -->
     <section class="bg-grey cover-photo pt-0 pb-5">
-        <div class="filSet changePhoto" hidden="true" v-if="!$store.state.Profile.is_another" style="background-color: #d3cbcb;">
-            <input type="file" class="form-control" @change.prevent="imageChange" style="position: relative; border: 1px solid red!important;">
+        <div class="filSet changePhoto" hidden="true" v-if="!$store.state.Profile.is_another">
+            <input type="file" class="form-control" @change.prevent="imageChange"
+                   style="border: 1px solid red!important;">
             <i class="fas fa-edit"></i>
-            Edit Cover Photo
         </div>
-<!--        <div style="max">-->
-<!--            <avataaars></avataaars>-->
-<!--        </div>-->
-<!--        <img :src="asset('images/cover-photo.jpg')" class="w-100" alt="">-->
+        <!--        <div style="max">-->
+        <!--            <avataaars></avataaars>-->
+        <!--        </div>-->
+        <!--        <img :src="asset('images/cover-photo.jpg')" class="w-100" alt="">-->
         <img :src="profile_cover" class="w-100" alt="">
         <div class="container-fluid">
             <div class="topWrap">
                 <div class="row aic">
                     <div class="col-md-6">
                         <UserInfo/>
-                        <!--                        <div class="userInfo">
-                                                    <div class="profileImg">
-                                                        <img src="images/char-usr.png" alt="">
-                                                        &lt;!&ndash; <div class="filSet">
-                                                            <i class="fas fa-camera"></i><input type="file">
-                                                        </div> &ndash;&gt;
-                                                    </div>
-                                                    <h2>John Smith <span>@johnsmith22</span></h2>
-                                                </div>-->
                     </div>
                     <div class="col-md-6">
                         <a href="#" class="awardWrap profilePage">
                             <img :src="asset('images/cup.png')" alt="">
                         </a>
                         <div class="btn-group">
-<!--                            <a href="#" class="themeBtn">Message</a>-->
-                            <button v-if="!edit_profile_active" class="themeBtn btn_invite" @click.prevent="inviteModal()">Invite</button>
-<!--                            <a v-if="!edit_profile_active" href="#" @click="$emitter.emit('chat-with-profile')" class="themeBtn btn_message">Message</a>-->
-                            <Link v-if="!edit_profile_active" :href="$route('chatIndex')" class="themeBtn btn_message" data-profile="asd" @click.prevent="chatWithProfile()">Message</Link>
-                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_add_friend" data-profile="asd" @click.prevent="addFriend()"><i class="fa fa-plus" aria-hidden="true"></i>Add Friend</Link>
-                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_unfriend" data-profile="asd" @click.prevent="unfriend()">Unfriend</Link>
-                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_block" data-profile="asd" @click.prevent="block()">Block</Link>
-                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_accept_request" data-profile="asd" @click.prevent="acceptRequest()">Accept Request</Link>
-                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_reject_request" data-profile="asd" @click.prevent="rejectRequest()">Reject Request</Link>
+                            <!--                            <a href="#" class="themeBtn">Message</a>-->
+                            <button v-if="!edit_profile_active" class="themeBtn btn_invite"
+                                    @click.prevent="inviteModal()">Invite
+                            </button>
+                            <!--                            <a v-if="!edit_profile_active" href="#" @click="$emitter.emit('chat-with-profile')" class="themeBtn btn_message">Message</a>-->
+                            <Link v-if="!edit_profile_active" :href="$route('chatIndex')" class="themeBtn btn_message"
+                                  data-profile="asd" @click.prevent="chatWithProfile()">Message
+                            </Link>
+                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_add_friend"
+                                  data-profile="asd" @click.prevent="addFriend()"><i class="fa fa-plus"
+                                                                                     aria-hidden="true"></i>Add Friend
+                            </Link>
+                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_unfriend" data-profile="asd"
+                                  @click.prevent="unfriend()">Unfriend
+                            </Link>
+                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_block" data-profile="asd"
+                                  @click.prevent="block()">Block
+                            </Link>
+                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_accept_request"
+                                  data-profile="asd" @click.prevent="acceptRequest()">Accept Request
+                            </Link>
+                            <Link v-if="!edit_profile_active" href="#" class="themeBtn btn_reject_request"
+                                  data-profile="asd" @click.prevent="rejectRequest()">Reject Request
+                            </Link>
                             <!--hidden button to go to chat-->
-<!--                            <Link :href="$route('chatIndex')" hidden ref="hiddenChatButton"></Link>-->
+                            <!--                            <Link :href="$route('chatIndex')" hidden ref="hiddenChatButton"></Link>-->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-            <teleport to="body">
-                <SendInviteModal/>
-            </teleport>
+        <teleport to="body">
+            <SendInviteModal/>
+        </teleport>
     </section>
     <!-- END: Cover Section -->
-<!--    <div class="coverPhoto">-->
-<!--        <div class="filSet changePhoto" v-if="$store.state.Profile.is_another">-->
-<!--            <i class="fas fa-camera"></i><input type="file" @change.prevent="imageChange">-->
-<!--        </div>-->
-<!--        <img :src="profile_cover" alt="">-->
-<!--        <teleport v-if="form.progress" to="body">-->
-<!--            <ImageUploadingProgress :progress="form.progress.percentage"/>-->
-<!--        </teleport>-->
-<!--    </div>-->
+    <!--    <div class="coverPhoto">-->
+    <!--        <div class="filSet changePhoto" v-if="$store.state.Profile.is_another">-->
+    <!--            <i class="fas fa-camera"></i><input type="file" @change.prevent="imageChange">-->
+    <!--        </div>-->
+    <!--        <img :src="profile_cover" alt="">-->
+    <!--        <teleport v-if="form.progress" to="body">-->
+    <!--            <ImageUploadingProgress :progress="form.progress.percentage"/>-->
+    <!--        </teleport>-->
+    <!--    </div>-->
 </template>
 
 <script>
@@ -104,8 +110,7 @@ export default {
                 chat_type: 'individual',
                 user_id: null
             }),
-            friendRequestForm: useForm({
-            })
+            friendRequestForm: useForm({})
         }
     },
     methods: {
@@ -272,5 +277,21 @@ export default {
 
 .coverPhoto img {
     width: 100%;
+}
+
+.filSet.changePhoto {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--primary);
+    padding: 0.5rem .75rem;
+    border-radius: 100%;
+    color: #fff;
+    border-top-right-radius: 0;
+}
+
+.filSet.changePhoto input {
+    z-index: 1;
+    cursor: pointer;
 }
 </style>
