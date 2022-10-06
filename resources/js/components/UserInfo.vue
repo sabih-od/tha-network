@@ -1,8 +1,8 @@
 <template>
     <div class="userInfo">
         <div class="profileImg">
-            <img :src="asset('images/char-usr.png')" alt="">
-            <a class="btn_edit_avatar" hidden="true">
+            <img :src="auth_image" alt="">
+            <a class="btn_edit_avatar" @click.prevent="showAvatarModal()" hidden="true">
                 <i class="fas fa-edit"></i>
             </a>
             <!--            <div class="filSet">-->
@@ -10,24 +10,16 @@
             <!--            </div>-->
         </div>
         <h2>{{ name }} <span>@{{ user?.username }}</span></h2>
+        <teleport to="body">
+            <CreateAvatar/>
+        </teleport>
     </div>
-    <!--    <div class="userInfo">
-            <div class="profileImg">
-                <img :src="profile_img" alt="">
-                <div class="filSet" v-if="!$store.state.Profile.is_another">
-                    <i class="fas fa-camera"></i><input type="file" @change.prevent="imageChange">
-                </div>
-            </div>
-            <h2>{{ user?.name ?? '' }} <span>{{ user?.email ?? '' }}</span></h2>
-            <teleport v-if="form.progress" to="body">
-                <ImageUploadingProgress :progress="form.progress.percentage"/>
-            </teleport>
-        </div>-->
 </template>
 
 <script>
 import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {useToast} from 'vue-toastification'
+import CreateAvatar from './CreateAvatar'
 import ImageUploadingProgress from "./ImageUploadingProgress";
 import {Inertia} from "@inertiajs/inertia";
 import utils from "../mixins/utils";
@@ -35,7 +27,7 @@ import utils from "../mixins/utils";
 export default {
     name: "UserInfo",
     mixins: [utils],
-    components: {ImageUploadingProgress},
+    components: {ImageUploadingProgress, CreateAvatar},
     computed: {
         user() {
             const page = usePage().component.value
@@ -83,6 +75,9 @@ export default {
             } else {
                 _this.form.file = null
             }
+        },
+        showAvatarModal() {
+            $('.modal_create_avatar').modal('show');
         }
     }
 }

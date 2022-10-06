@@ -16,7 +16,7 @@ trait UserData
     protected function getFollowsData(Request $request, $user_id = null, $limit = 10)
     {
         $user_id = $user_id ?? Auth::id();
-        $query = User::select('id', 'email', 'username')
+        $query = User::select('id', 'email', 'username')->where('role_id', 2)
             ->where(function ($q1) use ($user_id) {
                 $q1->whereHas('followings', function ($q) use ($user_id) {
                     $q->where('following_id', $user_id);
@@ -109,7 +109,7 @@ trait UserData
 
     protected function getPeoplesData(Request $request)
     {
-        $query = User::select('id', 'email', 'username');
+        $query = User::select('id', 'email', 'username', 'role_id')->where('role_id', 2);
 
         if (!is_null($request->get('search'))) {
             $query->where(function ($q) use ($request) {
@@ -124,6 +124,7 @@ trait UserData
 
         return $query
             ->with('profile')
+            ->where('role_id', 2)
             ->latest()
             ->simplePaginate(5)
             ->through(function ($item, $key) {
@@ -138,7 +139,7 @@ trait UserData
     protected function getNewMembersData(Request $request)
     {
         $start_of_week = Carbon::now()->startOfWeek();
-        $query = User::select('id', 'email', 'username');
+        $query = User::select('id', 'email', 'username')->where('role_id', 2);
 
         if (!is_null($request->get('search'))) {
             $query->where(function ($q) use ($request) {
@@ -174,7 +175,7 @@ trait UserData
     protected function getFriendsData(Request $request)
     {
         $user_id = $request->has('user_id') ? $request->get('user_id') : Auth::id();
-        $query = User::select('id', 'email', 'username');
+        $query = User::select('id', 'email', 'username')->where('role_id', 2);
 
         if (!is_null($request->get('search'))) {
             $query->where(function ($q) use ($request) {
@@ -215,7 +216,7 @@ trait UserData
         foreach ($network_members as $network_member) {
             array_push($network_member_ids, $network_member->user_id);
         }
-        $query = User::select('id', 'email', 'username');
+        $query = User::select('id', 'email', 'username')->where('role_id', 2);
 
         if (!is_null($request->get('search'))) {
             $query->where(function ($q) use ($request) {
@@ -255,7 +256,7 @@ trait UserData
         foreach ($friend_requests as $friend_request) {
             array_push($friend_request_user_ids, $friend_request->user_id);
         }
-        $query = User::select('id', 'email', 'username');
+        $query = User::select('id', 'email', 'username')->where('role_id', 2);
 
         if (!is_null($request->get('search'))) {
             $query->where(function ($q) use ($request) {

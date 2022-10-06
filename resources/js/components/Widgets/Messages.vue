@@ -34,7 +34,7 @@
                 <div class="tab-pane fade show active" id="one-pane" role="tabpanel" aria-labelledby="one-tab">
                     <div class="userList" v-for="notification in unread_notifications">
                         <div class="userInfo">
-                            <Link href="#" @click.prevent="chatWithProfile(notification.sender.id)"><img :src="asset('images/user1.jpg')" class="rounded-circle" alt=""></Link>
+                            <Link href="#" @click.prevent="chatWithProfile(notification.sender.id)"><img :src="notification.sender.profile_image ? notification.sender.profile_image : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
                             <h3>
                                 {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
                                 <a href="#">{{ notification.last_activity_readable }}</a>
@@ -49,7 +49,7 @@
                 <div class="tab-pane fade" id="two-pane" role="tabpanel" aria-labelledby="two-tab">
                     <div class="userList" v-for="notification in read_notifications">
                         <div class="userInfo">
-                            <Link href="#" @click.prevent="chatWithProfile(notification.sender.id)"><img :src="asset('images/user1.jpg')" class="rounded-circle" alt=""></Link>
+                            <Link href="#" @click.prevent="chatWithProfile(notification.sender.id)"><img :src="notification.sender.profile_image ? notification.sender.profile_image : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
                             <h3>
                                 {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
                                 <a href="#">{{ notification.last_activity_readable }}</a>
@@ -64,10 +64,10 @@
                 <div class="tab-pane fade" id="three-pane" role="tabpanel" aria-labelledby="three-tab">
                     <div class="userList" v-for="user in peoples" :ref="'fr_' + user.id">
                         <div class="userInfo">
-                            <Link :href="$route('userProfile', user.id)"><img :src="asset('images/user1.jpg')" class="rounded-circle" alt=""></Link>
+                            <Link :href="$route('userProfile', user.id)"><img :src="user.profile_image ? user.profile_image : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
                             <h3>
                                 <Link :href="$route('userProfile', user.id)">
-                                    <strong>{{user.profile.first_name +' '+ user.profile.last_name}}</strong>
+                                    <strong>{{user.profile ? user.profile.first_name +' '+ user.profile.last_name : ''}}</strong>
                                 </Link>
                                 <a href="#">Connect</a>
                             </h3>
