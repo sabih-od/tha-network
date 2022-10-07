@@ -22,7 +22,7 @@
             <ul class="bottomList">
                 <li><a href="#" @click.prevent class="optBtn" data-toggle="modal" data-target="#activityModal"><i
                     class="fal fa-smile"></i> Feeling Activity</a></li>
-                <li><a href="#" @click.prevent class="optBtn" data-toggle="modal" data-target="#locationModal"><i
+                <li><a href="#" @click.prevent="populate_location" class="optBtn"><i
                     class="fas fa-map-marker-alt"></i>Location</a></li>
                 <li>
                     <a href="#" class="optBtn" @click.prevent="$refs.selMedia.click()">
@@ -224,7 +224,8 @@ export default {
         return {
             form: useForm({
                 content: "",
-                files: []
+                files: [],
+                location: null
             }),
             renderedFiles: []
         }
@@ -309,6 +310,22 @@ export default {
             e.preventDefault()
             _.remove(this.form.files, {fileInd})
             _.remove(this.renderedFiles, {fileInd})
+        },
+        async populate_location() {
+            this.form.location = await this.getUserLocation();
+            (useToast()).success('Location Added Successfully!');
+        },
+        async getUserLocation() {
+            return new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    resolve(JSON.stringify({
+                        longitude: position.coords.longitude,
+                        latitude: position.coords.latitude
+                    }))
+                }, err => {
+                    reject(err)
+                })
+            })
         }
     }
 }

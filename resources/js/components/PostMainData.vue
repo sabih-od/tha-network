@@ -8,7 +8,7 @@
                     <h2>@{{ post.user.username }} <span>{{ $store.getters['Utils/fromNow'](post?.created_at) }}</span></h2>
                     <span>-</span>
                     <h6><i class="fas fa-smile"></i><span>Feeling Happy!</span></h6>
-                    <h5>at<span>LA, California</span></h5>
+                    <h5 v-if="post.location">at<span>LA, California</span></h5>
                 </div>
             </Link>
             <div v-if="isCreatedByMe && !isSharable" class="dropdown">
