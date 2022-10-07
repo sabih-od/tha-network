@@ -13,6 +13,7 @@ class PostController extends Controller
 {
     public function store(Request $request)
     {
+//        dd($request->all());
         $data = $request->validate([
             'content' => ['required', 'string'],
             'files' => ['nullable', 'max:5'],
@@ -51,11 +52,15 @@ class PostController extends Controller
                         $fail(":attribute must be 10 megabytes or less.");
                     }
                 }
-            }]
+            }],
+            'location' => 'sometimes'
         ]);
 
         try {
-            $post = Auth::user()->posts()->create(['content' => $data['content']]);
+            $post = Auth::user()->posts()->create([
+                'content' => $data['content'],
+                'location' => $data['location']
+            ]);
             if (isset($data['files'])) {
                 $post->addMultipleMediaFromRequest(['files'])->each(function ($fileAdder) {
                     $fileAdder->toMediaCollection('post_upload');
