@@ -103,10 +103,14 @@ export default {
     props: {
         user: Object,
         profile: Object,
+        profile_image: Object,
     },
     mounted() {
         this.$store.commit('Profile/setIsAnother', true)
         this.$store.commit('Profile/setProfile', this.profile)
+
+        //change profile image
+        this.$emitter.emit('user-profile-image-on', this.profile_image);
 
         this.friends_count = usePage().props.value?.friends_count;
         this.network_count = usePage().props.value?.network_count;
@@ -159,6 +163,9 @@ export default {
 
         //invite button behaviour
         $('.btn_invite').prop('hidden', false);
+
+        //change profile image back to auth user
+        this.$emitter.emit('user-profile-image-off');
     }
 }
 </script>
