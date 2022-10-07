@@ -263,6 +263,7 @@ class ProfileController extends Controller
 //                'is_blocked_by_user' => $is_blocked_by_user,
 //                'has_blocked' => $auth->hasBlocked($user),
                 'profile' => $user->profile ?? null,
+                'profile_image' => $user->getProfileImageAttribute() ?? null,
 //                'profile_image' => $this->profileImg($user, 'profile_image'),
                 'profile_cover' => $this->profileImg($user, 'profile_cover'),
                 'posts' => Inertia::lazy(function () use ($user) {

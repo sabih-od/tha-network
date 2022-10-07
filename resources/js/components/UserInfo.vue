@@ -1,7 +1,7 @@
 <template>
     <div class="userInfo">
         <div class="profileImg">
-            <img :src="auth_image" alt="">
+            <img :src="temp_profile_image" alt="">
             <a class="btn_edit_avatar" @click.prevent="showAvatarModal()" hidden="true">
                 <i class="fas fa-edit"></i>
             </a>
@@ -48,8 +48,20 @@ export default {
         return {
             form: useForm({
                 file: null
-            })
+            }),
+            temp_profile_image: this.auth_image,
         }
+    },
+    mounted() {
+        this.temp_profile_image = this.auth_image;
+
+        let _t = this;
+        this.$emitter.on('user-profile-image-on', function(profile_image) {
+            _t.temp_profile_image = profile_image;
+        });
+        this.$emitter.on('user-profile-image-off', function() {
+            _t.temp_profile_image = _t.auth_image;
+        });
     },
     watch: {
         errors(val) {
