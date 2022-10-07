@@ -63,7 +63,7 @@ export default {
             return (this.commentData.replies_count > 0 ? `(${this.commentData.replies_count}) ` : '') + replyText
         },
         profile_image() {
-            return this.comment.user.profile_img ?? this.$store.getters['Utils/public_asset']('images/small-character.jpg')
+            return this.comment.user.profile_image ?? this.$store.getters['Utils/public_asset']('images/char-usr.png')
         },
         is_delete_able() {
             if (this.$page.props?.auth?.id && this.comment?.user?.id)

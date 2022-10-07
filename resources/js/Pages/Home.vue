@@ -29,7 +29,7 @@
 <!--                                <p class="ml-4">See More Details...</p>-->
 <!--                            </li>-->
                         </ul>
-                        <a href="#" class="btnDesign">Edit Info Details</a>
+                        <Link class="btnDesign" replace :href="$route('editProfileForm')">Edit Info Details</Link>
                     </div>
                 </div>
                 <!-- Left Section -->
@@ -83,7 +83,7 @@ import NewMembersList from "../components/Widgets/NewMembersList";
 import Messages from "../components/Widgets/Messages";
 import ProfileLayout from "../Layouts/ProfileLayout";
 import PostsList from "../components/PostsList";
-import {usePage} from "@inertiajs/inertia-vue3";
+import {Link, usePage} from "@inertiajs/inertia-vue3";
 
 export default {
     name: "Home",
