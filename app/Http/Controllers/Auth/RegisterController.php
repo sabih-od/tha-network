@@ -158,7 +158,7 @@ class RegisterController extends Controller
         ]);
 
         $rank = get_my_rank($user->id);
-        $user->remaining_referrals += $rank->target;
+        $user->remaining_referrals = intval($user->remaining_referrals) + intval($rank->target);
         $user->save();
 
         $user->profile()->create([
@@ -207,14 +207,15 @@ class RegisterController extends Controller
                 ]);
 
                 //complete referral if present
-                $referral = Referral::where([
+                $referral = Referral::with('user')->where([
                     'user_id' => $inviter_id,
                     'email' => $request->email,
                     'status' => false,
                 ])->first();
-
                 if($referral) {
                     $referral->update(['status' => true]);
+                    $inviter->remaining_referrals = $inviter->remaining_referrals - 1;
+                    $inviter->save();
                 }
 
                 session()->remove('inviter_id');

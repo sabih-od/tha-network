@@ -43,8 +43,8 @@ function get_my_rank($id = null) {
     return Goal::where('target', '>', $user->completed_referrals->count())->orderBy('target', 'ASC')->first();
 }
 
-function get_referrals_by_day($date) {
-    return Referral::where('status', true)->where('user_id', Auth::id())->whereDate('updated_at', $date)->get()->count();
+function get_referrals_by_day($date, $id = null) {
+    return Referral::where('status', true)->where('user_id', $id ?? Auth::id())->whereDate('updated_at', $date)->get()->count();
 }
 
 function get_weekly_goals($id = null) {
@@ -54,7 +54,7 @@ function get_weekly_goals($id = null) {
     $end_of_this_month = (Carbon::now())->endOfMonth();
     $weeks_remaining = $today->diffInWeeks($end_of_this_month) + 1;
 
-    $weekly_goals = $user->remaining_referrals / $weeks_remaining;
+    $weekly_goals = intval($user->remaining_referrals / $weeks_remaining);
     $referrals_made = $user->completed_referrals_this_week()->count();
     $remaining_goals = $weekly_goals - $referrals_made;
 
@@ -66,13 +66,13 @@ function get_weekly_goals($id = null) {
     $saturday = $friday->copy()->addDay();
     $sunday = $saturday->copy()->addDay();
     $weekly_list = [
-        ['day' => ucfirst('monday'), 'count' => get_referrals_by_day($monday)],
-        ['day' => ucfirst('tuesday'), 'count' => get_referrals_by_day($tuesday)],
-        ['day' => ucfirst('wednesday'), 'count' => get_referrals_by_day($wednesday)],
-        ['day' => ucfirst('thursday'), 'count' => get_referrals_by_day($thursday)],
-        ['day' => ucfirst('friday'), 'count' => get_referrals_by_day($friday)],
-        ['day' => ucfirst('saturday'), 'count' => get_referrals_by_day($saturday)],
-        ['day' => ucfirst('sunday'), 'count' => get_referrals_by_day($sunday)],
+        ['day' => ucfirst('monday'), 'count' => get_referrals_by_day($monday, $id)],
+        ['day' => ucfirst('tuesday'), 'count' => get_referrals_by_day($tuesday, $id)],
+        ['day' => ucfirst('wednesday'), 'count' => get_referrals_by_day($wednesday, $id)],
+        ['day' => ucfirst('thursday'), 'count' => get_referrals_by_day($thursday, $id)],
+        ['day' => ucfirst('friday'), 'count' => get_referrals_by_day($friday, $id)],
+        ['day' => ucfirst('saturday'), 'count' => get_referrals_by_day($saturday, $id)],
+        ['day' => ucfirst('sunday'), 'count' => get_referrals_by_day($sunday, $id)],
     ];
 
     return [

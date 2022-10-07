@@ -33,7 +33,7 @@ export default {
     },
     computed: {
         profile_img() {
-            return this.reply.user?.profile_img ?? this.$store.getters['Utils/public_asset']('images/small-character.jpg')
+            return this.reply.user?.profile_image ?? this.$store.getters['Utils/public_asset']('images/char-usr.png')
         },
         is_delete_able() {
             if (this.$page.props?.auth?.id && this.reply?.user?.id)
