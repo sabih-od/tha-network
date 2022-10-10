@@ -20,8 +20,8 @@
 
             <!-- Video Preview -->
             <ul class="bottomList">
-                <li><a href="#" @click.prevent class="optBtn" data-toggle="modal" data-target="#activityModal"><i
-                    class="fal fa-smile"></i> Feeling Activity</a></li>
+                <li><a href="#" @click.prevent="showFeelingModal" class="optBtn"><i
+                    :class="form.feeling_icon ?? 'fal fa-smile'"></i> Feeling {{ form.feeling_text ?? 'Activity' }}</a></li>
                 <li><a href="#" @click.prevent="populate_location" class="optBtn"><i
                     class="fas fa-map-marker-alt"></i>Location</a></li>
                 <li>
@@ -42,7 +42,7 @@
             <ImageUploadingProgress :progress="form.progress.percentage"/>
         </teleport>
     </div>
-    <div class="modal fade" id="activityModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade activityModal" id="activityModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -59,64 +59,10 @@
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row align-items-center">
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
+                            <div class="col-sm-6" v-for="item in feelings">
+                                <a href="" @click.prevent="setFormEmoji(item)" class="activityCont">
+                                    <i :class="item.icon"></i>
+                                    <span>Feeling {{ item.text }}</span>
                                 </a>
                             </div>
                         </div>
@@ -142,64 +88,10 @@
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row align-items-center">
-                            <div class="col-sm-6">
+                            <div class="col-sm-6" v-for="item in feelings">
                                 <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="" @click.prevent class="activityCont">
-                                    <i class="fas fa-smile"></i>
-                                    <span>Feeling Happy!</span>
+                                    <i :class="item.icon"></i>
+                                    <span>{{ item.text }}</span>
                                 </a>
                             </div>
                         </div>
@@ -225,9 +117,53 @@ export default {
             form: useForm({
                 content: "",
                 files: [],
-                location: null
+                location: null,
+                feeling_text: null,
+                feeling_icon: null
             }),
-            renderedFiles: []
+            renderedFiles: [],
+            feelings: [
+                {
+                    text: 'Happy',
+                    icon: 'fas fa-smile'
+                },
+                {
+                    text: 'Blessed',
+                    icon: 'fas fa-smile'
+                },
+                {
+                    text: 'Loved',
+                    icon: 'fas fa-grin-hearts'
+                },
+                {
+                    text: 'Sad',
+                    icon: 'fas fa-sad-tear'
+                },
+                {
+                    text: 'Lovely',
+                    icon: 'fas fa-kiss-wink-heart'
+                },
+                {
+                    text: 'Thankful',
+                    icon: 'fas fa-laugh'
+                },
+                {
+                    text: 'Excited',
+                    icon: 'fas fa-grin-stars'
+                },
+                {
+                    text: 'In Love',
+                    icon: 'fas fa-grin-hearts'
+                },
+                {
+                    text: 'Crazy',
+                    icon: 'fas fa-grin-tongue-wink'
+                },
+                {
+                    text: 'Grateful',
+                    icon: 'fas fa-laugh-beam'
+                },
+            ]
         }
     },
     methods: {
@@ -326,6 +262,14 @@ export default {
                     reject(err)
                 })
             })
+        },
+        showFeelingModal() {
+            $('.activityModal').modal('show');
+        },
+        setFormEmoji(item) {
+            this.form.feeling_text = item.text;
+            this.form.feeling_icon = item.icon;
+            $('.activityModal').modal('hide');
         }
     }
 }

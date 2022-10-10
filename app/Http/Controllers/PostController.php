@@ -53,13 +53,17 @@ class PostController extends Controller
                     }
                 }
             }],
-            'location' => 'sometimes'
+            'location' => 'sometimes',
+            'feeling_text' => 'sometimes',
+            'feeling_icon' => 'sometimes'
         ]);
 
         try {
             $post = Auth::user()->posts()->create([
                 'content' => $data['content'],
-                'location' => $data['location']
+                'location' => $data['location'],
+                'feeling_text' => $data['feeling_text'],
+                'feeling_icon' => $data['feeling_icon']
             ]);
             if (isset($data['files'])) {
                 $post->addMultipleMediaFromRequest(['files'])->each(function ($fileAdder) {

@@ -17,7 +17,9 @@ class Post extends Model implements HasMedia
     protected $fillable = [
         'post_id',
         'content',
-        'location'
+        'location',
+        'feeling_text',
+        'feeling_icon'
     ];
 
     protected $hidden = [
