@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\AfterRegistrationAppPromotion;
+use App\Events\ReferralCompleted;
 use App\Helpers\WebResponses;
 use App\Http\Controllers\Controller;
 use App\Models\Network;
 use App\Models\NetworkMember;
+use App\Models\Notification;
 use App\Models\Referral;
 use App\Models\SendInvitation;
 use App\Models\UserInvitation;
@@ -216,11 +219,38 @@ class RegisterController extends Controller
                     $referral->update(['status' => true]);
                     $inviter->remaining_referrals = $inviter->remaining_referrals - 1;
                     $inviter->save();
+
+                    //send referral completion notification
+                    $string = $request->first_name . ' ' . $request->last_name . " just joined your network!! Congratulations, Keep up the good work!!!";
+                    $notification = Notification::create([
+                        'user_id' => $inviter->id,
+                        'notifiable_type' => 'App\Models\User',
+                        'notifiable_id' => $inviter->id,
+                        'body' => $string,
+                        'sender_id' => $inviter->id
+                    ]);
+
+                    event(new ReferralCompleted($inviter->id, $string, 'App\Models\User', $notification->id));
                 }
+
+                //subtract from user's remaining referrals
+                $referral->user->remaining_referrals = $referral->user->remaining_referrals - 1;
+                $referral->user->save();
 
                 session()->remove('inviter_id');
             }
         }
+
+        //notification(s) after registration
+        $string = "Now that you are a member and have completed setting up your account, please go to your App store and download the APP!! Let’s get started making some CASH!!!";
+        $notification = Notification::create([
+            'user_id' => $user->id,
+            'notifiable_type' => 'App\Models\User',
+            'notifiable_id' => $user->id,
+            'body' => $string,
+            'sender_id' => $user->id
+        ]);
+        event(new AfterRegistrationAppPromotion($user->id, $string, 'App\Models\User', $notification->id));
 
         $this->guard()->login($user);
 
