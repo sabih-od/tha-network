@@ -257,7 +257,7 @@ class InvitationCode extends Controller
                 'sender_id' => Auth::id()
             ]);
 
-            event(new ReferralSent(Auth::id(), $string, 'App\Models\User', $notification->id));
+            event(new ReferralSent(Auth::id(), $string, 'App\Models\User', $notification->id, User::with('profile')->find(Auth::id())));
 
 
             return WebResponses::success(

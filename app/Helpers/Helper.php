@@ -2,6 +2,7 @@
 
 use App\Events\NoNotificationForTheDay;
 use App\Events\NoReferralsForTheDay;
+use App\Events\UnableToMeetWeeklyGoal;
 use App\Events\WeeklyRankingNotification;
 use App\Models\Goal;
 use App\Models\Notification;
@@ -109,7 +110,7 @@ function last_weeks_rankings() {
     }
     $string .= "Congratulations And Keep The Momentum Going!!!";
 
-    $users = User::where('role_id', 2)->get();
+    $users = User::with('profile')->where('role_id', 2)->get();
     foreach ($users as $user) {
         $notification = Notification::create([
             'user_id' => $user->id,
@@ -119,14 +120,14 @@ function last_weeks_rankings() {
             'sender_id' => $user->id
         ]);
 
-        event(new WeeklyRankingNotification($user->id, $string, 'App\Models\User', $notification->id));
+        event(new WeeklyRankingNotification($user->id, $string, 'App\Models\User', $notification->id, $user));
     }
 
     return $string;
 }
 
 function unable_to_meet_weekly_goal() {
-    $users = User::where('role_id', 2)->get();
+    $users = User::with('profile')->where('role_id', 2)->get();
     foreach ($users as $user) {
         $today = Carbon::now();
         $end_of_this_month = (Carbon::now())->endOfMonth();
@@ -146,13 +147,13 @@ function unable_to_meet_weekly_goal() {
                 'sender_id' => $user->id
             ]);
 
-            event(new WeeklyRankingNotification($user->id, $string, 'App\Models\User', $notification->id));
+            event(new UnableToMeetWeeklyGoal($user->id, $string, 'App\Models\User', $notification->id, $user));
         }
     }
 }
 
 function no_notification_for_the_day() {
-    $users = User::where('role_id', 2)->get();
+    $users = User::with('profile')->where('role_id', 2)->get();
     foreach ($users as $user) {
         $today = Carbon::now();
         $end_of_this_month = (Carbon::now())->endOfMonth();
@@ -170,7 +171,7 @@ function no_notification_for_the_day() {
                 'sender_id' => $user->id
             ]);
 
-            event(new NoReferralsForTheDay($user->id, $string, 'App\Models\User', $notification->id));
+            event(new NoReferralsForTheDay($user->id, $string, 'App\Models\User', $notification->id, $user));
         }
     }
 }
