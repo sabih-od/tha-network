@@ -1,13 +1,14 @@
 <template>
 <!--  to view video in full screen add fullScreen class -->
-<!--  to view video in minimize screen add minimize class -->
-    <figure class="introVideo fullScreen">
+<!--  to view video in minimize screen add minimized class -->
+    <figure :class="video_classes" :style="video_Styling">
         <video autoplay muted>
             <source :src="asset('video/introVideo.mp4')">
         </video>
         <div class="videoControllers">
-            <button id="minimize" class="themeBtn"><i class="fas fa-compress-arrows-alt"></i><span>Minimize</span></button>
-            <button id="skip" class="themeBtn"><i class="far fa-forward"></i><span>Skip</span></button>
+            <button id="minimize" class="themeBtn" v-if="video_classes == 'introVideo fullScreen'" @click.prevent="minimizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Minimize</span></button>
+            <button id="minimize" class="themeBtn" v-if="video_classes == 'introVideo minimize'" @click.prevent="maximizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Maximize</span></button>
+            <button id="skip" class="themeBtn" @click.prevent="skipVideo"><i class="far fa-forward"></i><span>Skip</span></button>
         </div>
     </figure>
     <section class="loginSection">
@@ -171,7 +172,9 @@ export default {
             }),
             codeForm: useForm('codeForm', {
                 code: ''
-            })
+            }),
+            video_classes: 'introVideo fullScreen',
+            video_Styling: ''
         }
     },
     methods: {
@@ -198,7 +201,16 @@ export default {
                     this.showErrorMessage()
                 }
             })
-        }
+        },
+        minimizeVideo() {
+            this.video_classes = 'introVideo minimized';
+        },
+        maximizeVideo() {
+            this.video_classes = 'introVideo fullScreen';
+        },
+        skipVideo() {
+            this.video_Styling = 'display: none;';
+        },
     }
 }
 
