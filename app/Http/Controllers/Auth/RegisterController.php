@@ -188,7 +188,7 @@ class RegisterController extends Controller
             $check = User::with('profile')->where('id', $inviter_id)->get();
             if(count($check) > 0) {
 //                $inviter = $check[0];
-                $inviter = User::find($inviter_id);
+                $inviter = User::with('profile')->find($inviter_id);
                 $user = User::with('profile')->find($user->id);
 
 
