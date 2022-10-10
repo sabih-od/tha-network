@@ -1,4 +1,15 @@
 <template>
+<!--  to view video in full screen add fullScreen class -->
+<!--  to view video in minimize screen add minimize class -->
+    <figure class="introVideo fullScreen">
+        <video autoplay muted>
+            <source :src="asset('video/introVideo.mp4')">
+        </video>
+        <div class="videoControllers">
+            <button id="minimize" class="themeBtn"><i class="fas fa-compress-arrows-alt"></i><span>Minimize</span></button>
+            <button id="skip" class="themeBtn"><i class="far fa-forward"></i><span>Skip</span></button>
+        </div>
+    </figure>
     <section class="loginSection">
         <div class="loginWrap">
             <div class="row mx-0 no-gutters">
@@ -190,6 +201,7 @@ export default {
         }
     }
 }
+
 </script>
 
 <style scoped>
