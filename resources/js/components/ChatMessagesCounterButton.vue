@@ -75,7 +75,7 @@ export default {
     },
     methods: {
         addNotification(data) {
-            alert('new notif');
+            console.log('data', data);
             this.notifications = [
                 ...this.notifications,
                 data
