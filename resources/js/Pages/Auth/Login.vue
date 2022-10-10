@@ -1,6 +1,6 @@
 <template>
 <!--  to view video in full screen add fullScreen class -->
-<!--  to view video in minimize screen add minimize class -->
+<!--  to view video in minimize screen add minimized class -->
     <figure :class="video_classes" :style="video_Styling">
         <video autoplay muted>
             <source :src="asset('video/introVideo.mp4')">
@@ -203,7 +203,7 @@ export default {
             })
         },
         minimizeVideo() {
-            this.video_classes = 'introVideo minimize';
+            this.video_classes = 'introVideo minimized';
         },
         maximizeVideo() {
             this.video_classes = 'introVideo fullScreen';
