@@ -7,7 +7,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvitationCode;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PusherController;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -29,12 +31,14 @@ use Inertia\Inertia;
 Route::get('/temp', function() {
 //    dd(\Illuminate\Support\Facades\Auth::user()->getProfileImageAttribute());
 //    dd(get_weekly_goals());
-    $users = \App\Models\User::where('role_id', 2)->get();
-    foreach ($users as $user) {
-        $rank = get_my_rank($user->id);
-        $user->remaining_referrals = intval($user->remaining_referrals) + intval($rank->target);
-        $user->save();
-    }
+//    $users = \App\Models\User::where('role_id', 2)->get();
+//    foreach ($users as $user) {
+//        $rank = get_my_rank($user->id);
+//        $user->remaining_referrals = intval($user->remaining_referrals) + intval($rank->target);
+//        $user->save();
+//    }
+
+    last_weeks_rankings();
 });
 
 Route::get('get/redis', function () {

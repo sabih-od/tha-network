@@ -1,6 +1,10 @@
 <?php
 
+use App\Events\NoNotificationForTheDay;
+use App\Events\NoReferralsForTheDay;
+use App\Events\WeeklyRankingNotification;
 use App\Models\Goal;
+use App\Models\Notification;
 use App\Models\Referral;
 use App\Models\User;
 use Carbon\Carbon;
@@ -105,7 +109,70 @@ function last_weeks_rankings() {
     }
     $string .= "Congratulations And Keep The Momentum Going!!!";
 
+    $users = User::where('role_id', 2)->get();
+    foreach ($users as $user) {
+        $notification = Notification::create([
+            'user_id' => $user->id,
+            'notifiable_type' => 'App\Models\User',
+            'notifiable_id' => $user->id,
+            'body' => $string,
+            'sender_id' => $user->id
+        ]);
+
+        event(new WeeklyRankingNotification($user->id, $string, 'App\Models\User', $notification->id));
+    }
+
     return $string;
+}
+
+function unable_to_meet_weekly_goal() {
+    $users = User::where('role_id', 2)->get();
+    foreach ($users as $user) {
+        $today = Carbon::now();
+        $end_of_this_month = (Carbon::now())->endOfMonth();
+        $weeks_remaining = $today->diffInWeeks($end_of_this_month) + 1;
+
+        $weekly_goals = intval($user->remaining_referrals / $weeks_remaining);
+        $referrals_made = $user->completed_referrals_this_week()->count();
+
+        if($referrals_made < $weekly_goals) {
+            $string = "You did not meet your weekly goal this week, but better luck next week!! ";
+
+            $notification = Notification::create([
+                'user_id' => $user->id,
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $user->id,
+                'body' => $string,
+                'sender_id' => $user->id
+            ]);
+
+            event(new WeeklyRankingNotification($user->id, $string, 'App\Models\User', $notification->id));
+        }
+    }
+}
+
+function no_notification_for_the_day() {
+    $users = User::where('role_id', 2)->get();
+    foreach ($users as $user) {
+        $today = Carbon::now();
+        $end_of_this_month = (Carbon::now())->endOfMonth();
+        $weeks_remaining = $today->diffInWeeks($end_of_this_month) + 1;
+        $weekly_goals = intval($user->remaining_referrals / $weeks_remaining);
+
+        if($user->completed_referrals_today()->count() == 0 && $user->completed_referrals_this_week()->count() < $weekly_goals) {
+            $string = "Hi, you haven’t sent any referrals today, you’re (".$weekly_goals.") referrals away from completing your weekly goal!!";
+
+            $notification = Notification::create([
+                'user_id' => $user->id,
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $user->id,
+                'body' => $string,
+                'sender_id' => $user->id
+            ]);
+
+            event(new NoReferralsForTheDay($user->id, $string, 'App\Models\User', $notification->id));
+        }
+    }
 }
 
 function addOrdinalNumberSuffix($num) {

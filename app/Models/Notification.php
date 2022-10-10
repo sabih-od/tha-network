@@ -15,7 +15,9 @@ class Notification extends Model
         'user_id',
         'body',
         'viewed',
-        'sender_id'
+        'sender_id',
+        'notifiable_type',
+        'notifiable_id'
     ];
 
     public function user()

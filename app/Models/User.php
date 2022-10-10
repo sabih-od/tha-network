@@ -122,4 +122,12 @@ class User extends Authenticatable implements HasMedia
             ->whereDate('updated_at', '>=', Carbon::now()->startofWeek())
             ->whereDate('updated_at', '<=', Carbon::now()->endofWeek());
     }
+
+    public function completed_referrals_today()
+    {
+        //write start/end week ceiling/floor conditions (id necessary)
+        return $this->hasMany(Referral::class)
+            ->where('status', true)
+            ->whereDate('updated_at', Carbon::today());
+    }
 }

@@ -22,8 +22,11 @@ class Kernel extends ConsoleKernel
 //        })->everyMinute();
 
         //last week's rankings
-        $schedule->call(function () {last_weeks_rankings();})->weeklyOn(1, '23:30');
-//        $schedule->command('migrate')->daily()->at('22:21');
+        $schedule->call(function () {last_weeks_rankings();})->weeklyOn(1, '07:00');
+        //unable to meet weekly goal
+        $schedule->call(function () {unable_to_meet_weekly_goal();})->weeklyOn(7, '23:59');
+        //no referrals for the day
+        $schedule->call(function () {no_notification_for_the_day();})->dailyAt('23:59');
     }
 
     /**

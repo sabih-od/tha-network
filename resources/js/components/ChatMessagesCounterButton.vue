@@ -5,10 +5,13 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="profileDropDown">
             <span v-if="notifications.length == 0" class="dropdown-item">No new messages</span>
-            <Link v-else v-for="notification in notifications" class="dropdown-item" replace @click.prevent="chatWithProfile(notification.sender.id)">New message from
-                <strong>
-                    {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
+            <Link v-else v-for="notification in notifications" class="dropdown-item" replace @click.prevent="chatWithProfile(notification.sender.id)">
+                <strong v-if='notification.sender_id != user.id'>
+                    New message from {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
                 </strong>
+                <p v-else style="white-space: pre; font-size: 14px;" v-html="notification.body">
+
+                </p>
             </Link>
         </div>
     </div>
@@ -45,6 +48,26 @@ export default {
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('NewNotification', this.addNotification);
 
+        //after registration app promotion
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('AfterRegistrationAppPromotion', this.addNotification);
+
+        //weekly notification
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('WeeklyRankingNotification', this.addNotification);
+
+        //unable to meet weekly goal notification
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('UnableToMeetWeeklyGoal', this.addNotification);
+
+        //no referrals for the day
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('NoReferralsForTheDay', this.addNotification);
+
+        //referrals sent
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('ReferralSent', this.addNotification);
+
         this.fetchNotificationData();
 
         this.$emitter.on('request_for_notifications', this.sendNotificationData);
@@ -52,6 +75,7 @@ export default {
     },
     methods: {
         addNotification(data) {
+            alert('new notif');
             this.notifications = [
                 ...this.notifications,
                 data

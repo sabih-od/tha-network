@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ReferralSent;
 use App\Helpers\WebResponses;
 use App\Models\Network;
+use App\Models\Notification;
 use App\Models\Referral;
 use App\Models\SendInvitation;
 use App\Models\User;
@@ -208,7 +210,6 @@ class InvitationCode extends Controller
     }
 
     public function sendInvitation(Request $request) {
-//        dd($request->username);
         $data = $request->validate([
             'email' => [
                 'required',
@@ -245,6 +246,18 @@ class InvitationCode extends Controller
                 'user_id' => Auth::id(),
                 'email' => $data['email']
             ]);
+
+            //send referral creation notification
+            $string = "Great Job! Your Referral was sent!! Keep up the good work!!! ";
+            $notification = Notification::create([
+                'user_id' => Auth::id(),
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => Auth::id(),
+                'body' => $string,
+                'sender_id' => Auth::id()
+            ]);
+
+            event(new ReferralSent(Auth::id(), $string, 'App\Models\User', $notification->id));
 
 
             return WebResponses::success(
