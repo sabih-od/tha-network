@@ -11,7 +11,7 @@ trait PostData
     protected function getPostData($auth = false, $another_user = null)
     {
         $auth_user = Auth::user();
-        $query = Post::select('id', 'content', 'location', 'user_id', 'created_at', 'post_id')
+        $query = Post::select('id', 'content', 'location', 'feeling_text', 'feeling_icon', 'user_id', 'created_at', 'post_id')
             ->with([
                 'user' => function ($q) {
                     $q->select('id', 'username');

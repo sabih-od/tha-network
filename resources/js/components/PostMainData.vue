@@ -6,8 +6,8 @@
                 </div>
                 <div class="userNameWrap">
                     <h2>@{{ post.user.username }} <span>{{ $store.getters['Utils/fromNow'](post?.created_at) }}</span></h2>
-                    <span>-</span>
-                    <h6><i class="fas fa-smile"></i><span>Feeling Happy!</span></h6>
+                    <span v-if="post.feeling_text && post.feeling_icon">-</span>
+                    <h6 v-if="post.feeling_text && post.feeling_icon"><i :class="post.feeling_icon"></i><span>Feeling {{ post.feeling_text }}!</span></h6>
                     <h5 v-if="post.location">at<span>LA, California</span></h5>
                 </div>
             </Link>
