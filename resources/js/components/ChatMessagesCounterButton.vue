@@ -68,6 +68,10 @@ export default {
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('ReferralSent', this.addNotification);
 
+        //referrals completed
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('ReferralCompleted', this.addNotification);
+
         this.fetchNotificationData();
 
         this.$emitter.on('request_for_notifications', this.sendNotificationData);
