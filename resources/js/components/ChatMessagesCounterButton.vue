@@ -6,7 +6,7 @@
         <div class="dropdown-menu" aria-labelledby="profileDropDown">
             <span v-if="notifications.length == 0" class="dropdown-item">No new messages</span>
             <Link v-else v-for="notification in notifications" class="dropdown-item" replace @click.prevent="chatWithProfile(notification.sender.id)">
-                <strong v-if='notification.sender_id != user.id'>
+                <strong v-if='notification.sender.id != user.id'>
                     New message from {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
                 </strong>
                 <p v-else style="white-space: pre; font-size: 14px;" v-html="notification.body">
