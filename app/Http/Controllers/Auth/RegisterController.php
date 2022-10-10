@@ -185,11 +185,11 @@ class RegisterController extends Controller
         //if user was invited by link: add to their friend list
         if(session()->has('inviter_id')) {
             $inviter_id = session()->get('inviter_id');
-            $check = User::where('id', $inviter_id)->get();
+            $check = User::with('profile')->where('id', $inviter_id)->get();
             if(count($check) > 0) {
 //                $inviter = $check[0];
                 $inviter = User::find($inviter_id);
-                $user = User::find($user->id);
+                $user = User::with('profile')->find($user->id);
 
 
                 //$user->follow($inviter);
@@ -230,7 +230,7 @@ class RegisterController extends Controller
                         'sender_id' => $inviter->id
                     ]);
 
-                    event(new ReferralCompleted($inviter->id, $string, 'App\Models\User', $notification->id));
+                    event(new ReferralCompleted($inviter->id, $string, 'App\Models\User', $notification->id, $inviter));
                 }
 
                 //subtract from user's remaining referrals
@@ -250,7 +250,7 @@ class RegisterController extends Controller
             'body' => $string,
             'sender_id' => $user->id
         ]);
-        event(new AfterRegistrationAppPromotion($user->id, $string, 'App\Models\User', $notification->id));
+        event(new AfterRegistrationAppPromotion($user->id, $string, 'App\Models\User', $notification->id, User::with('profile')->find($user->id)));
 
         $this->guard()->login($user);
 
