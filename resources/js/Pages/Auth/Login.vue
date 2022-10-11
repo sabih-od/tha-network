@@ -2,7 +2,7 @@
 <!--  to view video in full screen add fullScreen class -->
 <!--  to view video in minimize screen add minimized class -->
     <figure :class="video_classes" :style="video_Styling">
-        <video autoplay muted>
+        <video autoplay id="video_element">
             <source :src="asset('video/introVideo.mp4')">
         </video>
         <div class="videoControllers">
@@ -161,6 +161,11 @@ export default {
         // console.log('-------------------------------');
         this.isCode = params['send-code'] && params['send-code'] == 'success';
         // this.isCode = window.location.search.indexOf('send-code=success') > -1
+
+        let _t = this;
+        $('#video_element').on('ended', function() {
+            _t.skipVideo();
+        });
     },
     data() {
         return {

@@ -2,6 +2,7 @@
     <div class="dropdown nav-icons">
         <a class="dropdown-toggle" type="button" id="profileDropDown" data-toggle="dropdown" aria-expanded="false">
             <i class="fal fa-bell"></i>
+            <span v-if="notifications.length > 0" class="button__badge"></span>
         </a>
         <div class="dropdown-menu" aria-labelledby="profileDropDown">
             <span v-if="notifications.length == 0" class="dropdown-item">No new messages</span>
@@ -165,5 +166,19 @@ export default {
 </script>
 
 <style scoped>
+    .button__badge {
+        background-color: #fa3e3e;
+        border-radius: 2px;
+        color: white;
 
+        padding: 1px 3px;
+        font-size: 10px;
+
+        position: absolute; /* Position the badge within the relatively positioned button */
+        top: 0;
+        right: 0;
+
+        min-width: 10px;
+        min-height: 10px;
+    }
 </style>

@@ -42,6 +42,10 @@ function get_eloquent_user($id = null) {
     return User::find($id ?? Auth::id());
 }
 
+function get_eloquent_users($id = null) {
+    return User::with('profile')->where('role_id', 2)->get();
+}
+
 function get_my_rank($id = null) {
     $user = get_eloquent_user($id);
 
@@ -110,7 +114,7 @@ function last_weeks_rankings() {
     }
     $string .= "Congratulations And Keep The Momentum Going!!!";
 
-    $users = User::with('profile')->where('role_id', 2)->get();
+    $users = get_eloquent_users();
     foreach ($users as $user) {
         $notification = Notification::create([
             'user_id' => $user->id,
@@ -127,7 +131,7 @@ function last_weeks_rankings() {
 }
 
 function unable_to_meet_weekly_goal() {
-    $users = User::with('profile')->where('role_id', 2)->get();
+    $users = get_eloquent_users();
     foreach ($users as $user) {
         $today = Carbon::now();
         $end_of_this_month = (Carbon::now())->endOfMonth();
@@ -152,8 +156,8 @@ function unable_to_meet_weekly_goal() {
     }
 }
 
-function no_notification_for_the_day() {
-    $users = User::with('profile')->where('role_id', 2)->get();
+function no_referrals_for_the_day() {
+    $users = get_eloquent_users();
     foreach ($users as $user) {
         $today = Carbon::now();
         $end_of_this_month = (Carbon::now())->endOfMonth();

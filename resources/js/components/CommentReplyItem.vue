@@ -8,7 +8,8 @@
             </Link>
             <p>{{ reply.comment }}</p>
             <ul>
-                <li><a href="#">Like</a></li>
+<!--                <li><a href="#">Like</a></li>-->
+                <ReplyLikeButton :reply="reply"></ReplyLikeButton>
                 <li v-if="is_delete_able">
                     <a href="#" @click.prevent="deleteReply(reply.id)" class="text-danger">Delete</a>
                 </li>
@@ -24,10 +25,11 @@
 import {Inertia} from "@inertiajs/inertia";
 import {useToast} from "vue-toastification";
 import {usePage, Link} from "@inertiajs/inertia-vue3";
+import ReplyLikeButton from "./ReplyLikeButton";
 
 export default {
     name: "CommentReplyItem",
-    components: {Link},
+    components: {Link, ReplyLikeButton},
     props: {
         reply: Object
     },

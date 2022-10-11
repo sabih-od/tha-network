@@ -2,8 +2,8 @@
     <header class="wow fadeInDown" data-wow-delay="0.5s" style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInDown;">
         <div class="container-fluid">
             <nav class="navbar navbar-expand-lg">
-                <Link class="navbar-brand" :href="$route('home')">
-                    <img src="images/logo.png" alt="logo">
+                <Link replace class="navbar-brand" :href="$route('home')">
+                    <img :src="asset('images/logo.png')" alt="logo">
                 </Link>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -13,9 +13,9 @@
                 <form class="searchBar">
                     <input type="search" placeholder="Search for creators, inspiration, projects..." name="search" v-model="search" @keyup.prevent="initateSearch()" autocomplete="off">
                     <!-- <button type="submit"><i class="fal fa-search"></i></button> -->
-                    <div class="expandSearch">
+                    <div class="expandSearch" ref="expand_search_visibility">
                         <p v-if="loading" class="text-secondary px-3">Please wait...</p>
-                        <Link v-for="user in peoples" :href="$route('userProfile', user.id)"><p>{{user.username}}</p></Link>
+                        <Link v-for="user in peoples" @click.prevent="goToProfile()" :href="$route('userProfile', user.id)"><p>{{user.profile? user.profile?.first_name + ' ' + user.profile?.last_name : ''}}</p></Link>
                     </div>
                 </form>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -27,8 +27,11 @@
                             <!--                            <Link :href="$route('chatIndex')" replace><i class="fal fa-comments"></i> <span>5</span></Link>-->
                             <Link :href="$route('chatIndex')" class="nav-icons"><i class="fal fa-comment-lines"></i></Link>
                         </li>
+<!--                        <li>-->
+<!--                            <a class="nav-icons" href="#"><i class="fal fa-bell"></i></a>-->
+<!--                        </li>-->
                         <li>
-                            <a class="nav-icons" href="#"><i class="fal fa-bell"></i></a>
+                            <ChatMessagesCounterButton/>
                         </li>
                         <li>
                             <a class="nav-icons" href="#"><i class="fal fa-user"></i></a>
@@ -44,17 +47,20 @@
 </template>
 
 <script>
-import ChatSearchForm from "./ChatSearchForm";
-import {Link} from '@inertiajs/inertia-vue3'
+import {Link, usePage} from '@inertiajs/inertia-vue3'
 import HeaderProfileMenu from "./HeaderProfileMenu";
+import utils from "../mixins/utils";
+import ChatMessagesCounterButton from "./ChatMessagesCounterButton";
 import ProfileImageIconRounded from "./ProfileImageIconRounded";
 import Chat from "../Pages/Chat";
 
 export default {
     name: "ChatHeader",
+    mixins: [utils],
     components: {
         Link,
-        HeaderProfileMenu
+        HeaderProfileMenu,
+        ChatMessagesCounterButton
     },
     computed: {
         cover_image() {
@@ -93,6 +99,11 @@ export default {
                     this.loading = false
                 })
             }, 600);
+        },
+        goToProfile() {
+            this.search = '';
+            this.peoples = [];
+            $('.expandSearch').slideUp('slow');
         },
         onChatActiveUserData(data) {
             this.chatSelect = data

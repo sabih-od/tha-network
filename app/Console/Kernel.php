@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
         //unable to meet weekly goal
         $schedule->call(function () {unable_to_meet_weekly_goal();})->weeklyOn(7, '23:59');
         //no referrals for the day
-        $schedule->call(function () {no_notification_for_the_day();})->dailyAt('23:59');
+        $schedule->call(function () {no_referrals_for_the_day();})->dailyAt('23:59');
     }
 
     /**

@@ -6,10 +6,11 @@ use App\Traits\Uuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Overtrue\LaravelLike\Traits\Likeable;
 
 class Comment extends Model
 {
-    use HasFactory, Uuids, SoftDeletes;
+    use HasFactory, Uuids, SoftDeletes, Likeable;
 
     protected $fillable = [
         'user_id',

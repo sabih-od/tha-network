@@ -2,8 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CommentLiked;
+use App\Events\CommentOnPost;
+use App\Events\PostLiked;
+use App\Events\PostShared;
+use App\Events\ReplyLiked;
+use App\Events\ReplyOnComment;
 use App\Models\Comment;
+use App\Models\Notification;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -87,10 +95,27 @@ class PostController extends Controller
         ]);
 
         try {
+            $post = Post::find($data['post_id']);
+            $auth = User::with('profile')->find(Auth::id());
+            $target = $post->user();
             Auth::user()->posts()->create([
                 'post_id' => $data['post_id'],
                 'content' => $data['content']
             ]);
+
+            //notification when post shared
+            if($auth->id != $target->id) {
+                $string = ($auth->profile->first_name . ' ' . $auth->profile->last_name) . " shared your post.";
+                $notification = Notification::create([
+                    'user_id' => $target->id,
+                    'notifiable_type' => 'App\Models\User',
+                    'notifiable_id' => $target->id,
+                    'body' => $string,
+                    'sender_id' => $target->id
+                ]);
+                event(new PostShared($target->id, $string, 'App\Models\User', $notification->id, $target));
+            }
+
 
             return redirect(url()->previous(true))->with('success', 'Post shared successfully!');
         } catch (\Exception $e) {
@@ -106,11 +131,95 @@ class PostController extends Controller
         try {
             $user = Auth::user();
             $post = Post::find($request->post_id);
+            $auth = User::with('profile')->find($user->id);
+            $target = $post->user();
 
             $user->toggleLike($post);
 
             $isLike = $user->hasLiked($post) ? 'liked' : 'unliked';
+
+            //notification when post liked
+            if($auth->id != $target->id) {
+                $string = ($auth->profile->first_name . ' ' . $auth->profile->last_name) . " has liked your post.";
+                $notification = Notification::create([
+                    'user_id' => $target->id,
+                    'notifiable_type' => 'App\Models\User',
+                    'notifiable_id' => $target->id,
+                    'body' => $string,
+                    'sender_id' => $target->id
+                ]);
+                event(new PostLiked($target->id, $string, 'App\Models\User', $notification->id, $target));
+            }
+
             return redirect(url()->previous(true))->with('success', "Post $isLike successfully!");
+        } catch (\Exception $e) {
+            return redirect(url()->previous(true))->with('error', $e->getMessage());
+        }
+    }
+
+    public function commentLikeToggle(Request $request)
+    {
+        $request->validate([
+            'comment_id' => ['required', 'string', Rule::exists('comments', 'id')->whereNull('deleted_at')],
+        ]);
+        try {
+            $user = Auth::user();
+            $comment = Comment::find($request->comment_id);
+            $auth = User::with('profile')->find($user->id);
+            $target = $comment->user();
+
+            $user->toggleLike($comment);
+
+            $isLike = $user->hasLiked($comment) ? 'liked' : 'unliked';
+
+            //notification when like on comment
+            if($auth->id != $target->id) {
+                $string = ($auth->profile->first_name . ' ' . $auth->profile->last_name) . " liked your comment.";
+                $notification = Notification::create([
+                    'user_id' => $target->id,
+                    'notifiable_type' => 'App\Models\User',
+                    'notifiable_id' => $target->id,
+                    'body' => $string,
+                    'sender_id' => $target->id
+                ]);
+                event(new CommentLiked($target->id, $string, 'App\Models\User', $notification->id, $target));
+            }
+
+            return redirect(url()->previous(true))->with('success', "Comment $isLike successfully!");
+        } catch (\Exception $e) {
+            return redirect(url()->previous(true))->with('error', $e->getMessage());
+        }
+    }
+
+    public function replyLikeToggle(Request $request)
+    {
+        $request->validate([
+            'reply_id' => ['required', 'string', Rule::exists('comments', 'id')->whereNull('deleted_at')],
+        ]);
+        try {
+            $user = Auth::user();
+            $reply = Comment::find($request->reply_id);
+            $auth = User::with('profile')->find($user->id);
+            $target = $reply->user();
+
+            $user->toggleLike($reply);
+
+            $isLike = $user->hasLiked($reply) ? 'liked' : 'unliked';
+
+            //notification when like on reply
+            if($auth->id != $target->id) {
+                $string = ($auth->profile->first_name . ' ' . $auth->profile->last_name) . " liked your reply.";
+                $notification = Notification::create([
+                    'user_id' => $target->id,
+                    'notifiable_type' => 'App\Models\User',
+                    'notifiable_id' => $target->id,
+                    'body' => $string,
+                    'sender_id' => $target->id
+                ]);
+                event(new ReplyLiked($target->id, $string, 'App\Models\User', $notification->id, $target));
+            }
+
+            return redirect(url()->previous(true))->with('success', "Reply $isLike successfully!");
         } catch (\Exception $e) {
             return redirect(url()->previous(true))->with('error', $e->getMessage());
         }
@@ -125,11 +234,27 @@ class PostController extends Controller
         try {
             $user = Auth::user();
             $post = Post::find($request->post_id);
+            $auth = User::with('profile')->find($user->id);
+            $target = $post->user();
 
             $post->comments()->create([
                 'user_id' => $user->id,
                 'comment' => $request->comment
             ]);
+
+            //notification when comment on post
+            if($auth->id != $target->id) {
+                $string = ($auth->profile->first_name . ' ' . $auth->profile->last_name) . " commented on your post.";
+                $notification = Notification::create([
+                    'user_id' => $target->id,
+                    'notifiable_type' => 'App\Models\User',
+                    'notifiable_id' => $target->id,
+                    'body' => $string,
+                    'sender_id' => $target->id
+                ]);
+                event(new CommentOnPost($target->id, $string, 'App\Models\User', $notification->id, $target));
+            }
+
 
             return redirect(url()->previous(true))->with('success', "Comment posted successfully!");
         } catch (\Exception $e) {
@@ -173,11 +298,26 @@ class PostController extends Controller
         try {
             $user = Auth::user();
             $comment = Comment::find($request->comment_id);
+            $auth = User::with('profile')->find($user->id);
+            $target = $comment->user();
 
             $comment->replies()->create([
                 'user_id' => $user->id,
                 'comment' => $request->reply
             ]);
+
+            //notification when reply on comment
+            if($auth->id != $target->id) {
+                $string = ($auth->profile->first_name . ' ' . $auth->profile->last_name) . " replied to your comment.";
+                $notification = Notification::create([
+                    'user_id' => $target->id,
+                    'notifiable_type' => 'App\Models\User',
+                    'notifiable_id' => $target->id,
+                    'body' => $string,
+                    'sender_id' => $target->id
+                ]);
+                event(new ReplyOnComment($target->id, $string, 'App\Models\User', $notification->id, $target));
+            }
 
             return redirect(url()->previous(true))->with('success', "Reply posted successfully!");
         } catch (\Exception $e) {

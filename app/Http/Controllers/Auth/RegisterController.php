@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Events\AfterRegistrationAppPromotion;
+use App\Events\RankPromoted;
 use App\Events\ReferralCompleted;
 use App\Helpers\WebResponses;
 use App\Http\Controllers\Controller;
@@ -217,8 +218,24 @@ class RegisterController extends Controller
                 ])->first();
                 if($referral) {
                     $referral->update(['status' => true]);
+                    //rank check
+                    $prev_rank = get_my_rank($inviter->id);
                     $inviter->remaining_referrals = $inviter->remaining_referrals - 1;
                     $inviter->save();
+                    $new_rank = get_my_rank($inviter->id);
+
+                    //notification if rank changed
+                    if($new_rank->target > $prev_rank->target || $new_rank->target != $prev_rank->target) {
+                        $string = "Congratulations, you've been promoted to the next rank keep up the good work!!!";
+                        $notification = Notification::create([
+                            'user_id' => $inviter->id,
+                            'notifiable_type' => 'App\Models\User',
+                            'notifiable_id' => $inviter->id,
+                            'body' => $string,
+                            'sender_id' => $inviter->id
+                        ]);
+                        event(new RankPromoted($inviter->id, $string, 'App\Models\User', $notification->id, $inviter));
+                    }
 
                     //send referral completion notification
                     $string = $request->first_name . ' ' . $request->last_name . " just joined your network!! Congratulations, Keep up the good work!!!";

@@ -9,7 +9,9 @@
                 </Link>
                 <p>{{ comment.comment }}</p>
                 <ul>
-                    <li><a href="#">Like</a></li>
+<!--                    <li><a href="#">Like</a></li>-->
+                    <CommentLikeButton :comment="comment"></CommentLikeButton>
+
                     <li><a href="#" @click.prevent="repliesToggle"
                            class="replyBtn">{{ repliesCount }}</a></li>
                     <li v-if="is_delete_able"><a href="#" class="text-danger"
@@ -40,6 +42,7 @@
 <script>
 import ReplyForm from "./ReplyForm";
 import CommentReplyItem from "./CommentReplyItem";
+import CommentLikeButton from "./CommentLikeButton";
 import _ from "lodash";
 import {Inertia} from "@inertiajs/inertia";
 import {useToast} from "vue-toastification";
@@ -52,6 +55,7 @@ export default {
     components: {
         ReplyForm,
         CommentReplyItem,
+        CommentLikeButton,
         Link
     },
     computed: {

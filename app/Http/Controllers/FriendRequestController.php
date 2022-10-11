@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\FriendRequestAccepted;
+use App\Events\FriendRequestReceived;
 use App\Helpers\WebResponses;
 use App\Models\FriendRequest;
+use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +36,17 @@ class FriendRequestController extends Controller
                 'target_id' => $target_id,
             ]);
 
+            //friend request notification
+            $string = ($auth->profile->first_name . ' ' . $auth->profile->last_name) . " has sent you a friend request.";
+            $notification = Notification::create([
+                'user_id' => $target_id,
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $target_id,
+                'body' => $string,
+                'sender_id' => $target_id
+            ]);
+            event(new FriendRequestReceived($target_id, $string, 'App\Models\User', $notification->id, $target));
+
             if($request->has('redirect')) {
                 return WebResponses::success('Request Sent Successfully!');
             }
@@ -59,6 +73,17 @@ class FriendRequestController extends Controller
             $auth->follow($target);
             $target->follow($auth);
             $check[0]->delete();
+
+            //friend request notification
+            $string = ($auth->profile->first_name . ' ' . $auth->profile->last_name) . " has accepted your friend request.";
+            $notification = Notification::create([
+                'user_id' => $target_id,
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $target_id,
+                'body' => $string,
+                'sender_id' => $target_id
+            ]);
+            event(new FriendRequestAccepted($target_id, $string, 'App\Models\User', $notification->id, $target));
 
             if($request->has('redirect')) {
                 return back()->with('success', 'Added to friend list!');
