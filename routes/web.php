@@ -106,6 +106,12 @@ Route::group([
     // Post Like
     Route::post('post/like', [PostController::class, 'postLikeToggle'])
         ->name('postLikeToggle');
+    // Comment Like
+    Route::post('comment/like', [PostController::class, 'commentLikeToggle'])
+        ->name('commentLikeToggle');
+    // Reply Like
+    Route::post('reply/like', [PostController::class, 'replyLikeToggle'])
+        ->name('replyLikeToggle');
 
     // User follow/unfollow
     Route::post('user/follow', [ProfileController::class, 'userFollowToggle'])

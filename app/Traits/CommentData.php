@@ -11,6 +11,7 @@ trait CommentData
 {
     protected function getCommentData($post_id)
     {
+        $auth_user = Auth::user();
         $post = Post::find($post_id);
 
         if (is_null($post))
@@ -24,7 +25,8 @@ trait CommentData
             }])
             ->withCount('replies')
             ->simplePaginate(5)
-            ->through(function ($item, $key) {
+            ->through(function ($item, $key) use($auth_user) {
+                $auth_user->attachLikeStatus($item);
                 unset(
                     $item->user_id,
                     $item->commentable_id,
@@ -37,6 +39,7 @@ trait CommentData
 
     protected function getReplyData($comment_id)
     {
+        $auth_user = Auth::user();
         $comment = Comment::find($comment_id);
 
         if (is_null($comment))
@@ -49,7 +52,8 @@ trait CommentData
                 $q->select('id', 'username');
             }])
             ->simplePaginate(5)
-            ->through(function ($item, $key) {
+            ->through(function ($item, $key) use($auth_user) {
+                $auth_user->attachLikeStatus($item);
                 unset(
                     $item->user_id,
                     $item->commentable_id,
