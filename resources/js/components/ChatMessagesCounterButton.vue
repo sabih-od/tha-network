@@ -8,7 +8,7 @@
         <!--notifications-->
         <div class="dropdown-menu" aria-labelledby="profileDropDown">
             <span v-if="notifications.length == 0" class="dropdown-item">No new messages</span>
-            <Link v-if="notifications.length != 0" v-for="notification in notifications" class="dropdown-item" replace @click.prevent="notification.sender.id != user.id ? chatWithProfile(notification.sender.id) : ''">
+            <Link v-else v-for="notification in notifications" class="dropdown-item" replace @click.prevent="notification.sender.id != user.id ? chatWithProfile(notification.sender.id) : ''">
                 <strong v-if='notification.sender.id != user.id'>
                     New message from {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
                 </strong>
@@ -16,7 +16,7 @@
 
                 </p>
             </Link>
-            <Link v-if="notifications.length != 0" v-else class="dropdown-item" replace @click.prevent="clearNotifications()" style="color: blue;">
+            <Link v-if="notifications.length != 0" class="dropdown-item" replace @click.prevent="clearNotifications()" style="color: blue;">
                 Mark all as read
             </Link>
         </div>
