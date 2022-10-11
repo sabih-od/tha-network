@@ -5,6 +5,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvitationCode;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PusherController;
@@ -151,6 +152,9 @@ Route::group([
     // Notification routes
     Route::post('channel-notification-viewed/{id}', [ChannelController::class, 'viewedNotification'])
         ->name('channelNotificationViewed');
+    Route::post('clear-notifications', [NotificationController::class, 'clearNotifications'])
+        ->name('clearNotifications');
+
 
     // Friend Request routes
     Route::get('send-request/{target_id}', [FriendRequestController::class, 'sendRequest'])
