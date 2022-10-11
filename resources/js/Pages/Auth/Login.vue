@@ -2,7 +2,7 @@
 <!--  to view video in full screen add fullScreen class -->
 <!--  to view video in minimize screen add minimized class -->
     <figure :class="video_classes" :style="video_Styling">
-        <video autoplay id="video_element">
+        <video autoplay muted controls id="video_element">
             <source :src="asset('video/introVideo.mp4')">
         </video>
         <div class="videoControllers">
