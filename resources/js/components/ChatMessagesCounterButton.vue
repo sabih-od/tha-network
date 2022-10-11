@@ -1,12 +1,14 @@
 <template>
     <div class="dropdown nav-icons">
+        <!--bell icon and badge-->
         <a class="dropdown-toggle" type="button" id="profileDropDown" data-toggle="dropdown" aria-expanded="false">
             <i class="fal fa-bell"></i>
             <span v-if="notifications.length > 0" class="button__badge"></span>
         </a>
+        <!--notifications-->
         <div class="dropdown-menu" aria-labelledby="profileDropDown">
             <span v-if="notifications.length == 0" class="dropdown-item">No new messages</span>
-            <Link v-else v-for="notification in notifications" class="dropdown-item" replace @click.prevent="chatWithProfile(notification.sender.id)">
+            <Link v-if="notifications.length != 0" v-for="notification in notifications" class="dropdown-item" replace @click.prevent="notification.sender.id != user.id ? chatWithProfile(notification.sender.id) : ''">
                 <strong v-if='notification.sender.id != user.id'>
                     New message from {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
                 </strong>
@@ -14,13 +16,18 @@
 
                 </p>
             </Link>
+            <Link v-if="notifications.length != 0" v-else class="dropdown-item" replace @click.prevent="clearNotifications()" style="color: blue;">
+                Mark all as read
+            </Link>
         </div>
+
     </div>
 </template>
 
 <script>
 import {Link, useForm, usePage} from '@inertiajs/inertia-vue3'
 import {Inertia} from "@inertiajs/inertia";
+import {useToast} from "vue-toastification";
 
 export default {
     name: "ChatMessagesCounterButton",
@@ -160,6 +167,18 @@ export default {
         sendNotificationData() {
             this.$emitter.emit('unread_notifications_updated', this.notifications);
             this.$emitter.emit('read_notifications_updated', this.read_notifications);
+        },
+        clearNotifications() {
+            Inertia.post(this.$route('clearNotifications'), {}, {
+                replace: true,
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: () => {
+                    this.notifications = [];
+                    this.fetchNotificationData();
+                    (useToast()).success('Notifications have been cleared');
+                },
+            })
         }
     }
 }
