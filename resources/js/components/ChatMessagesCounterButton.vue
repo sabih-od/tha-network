@@ -60,6 +60,10 @@ export default {
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('AfterRegistrationAppPromotion', this.addNotification);
 
+        //lets set weekly goals
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('SetWeeklyGoal', this.addNotification);
+
         //weekly notification
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('WeeklyRankingNotification', this.addNotification);

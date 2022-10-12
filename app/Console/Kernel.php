@@ -21,6 +21,10 @@ class Kernel extends ConsoleKernel
 //            dump('here');
 //        })->everyMinute();
 
+        //monthly add goals
+        $schedule->call(function () {monthly_add_goals();})->monthlyOn(1, '00:00');
+        //set weekly goal
+        $schedule->call(function () {set_weekly_goal();})->weeklyOn(1, '00:00');
         //last week's rankings
         $schedule->call(function () {last_weeks_rankings();})->weeklyOn(1, '07:00');
         //unable to meet weekly goal
