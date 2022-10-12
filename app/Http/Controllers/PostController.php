@@ -97,7 +97,7 @@ class PostController extends Controller
         try {
             $post = Post::find($data['post_id']);
             $auth = User::with('profile')->find(Auth::id());
-            $target = $post->user();
+            $target = $post->user;
             Auth::user()->posts()->create([
                 'post_id' => $data['post_id'],
                 'content' => $data['content']
@@ -132,7 +132,7 @@ class PostController extends Controller
             $user = Auth::user();
             $post = Post::find($request->post_id);
             $auth = User::with('profile')->find($user->id);
-            $target = $post->user();
+            $target = $post->user;
 
             $user->toggleLike($post);
 
@@ -166,7 +166,7 @@ class PostController extends Controller
             $user = Auth::user();
             $comment = Comment::find($request->comment_id);
             $auth = User::with('profile')->find($user->id);
-            $target = $comment->user();
+            $target = $comment->user;
 
             $user->toggleLike($comment);
 
@@ -200,7 +200,7 @@ class PostController extends Controller
             $user = Auth::user();
             $reply = Comment::find($request->reply_id);
             $auth = User::with('profile')->find($user->id);
-            $target = $reply->user();
+            $target = $reply->user;
 
             $user->toggleLike($reply);
 
@@ -235,7 +235,7 @@ class PostController extends Controller
             $user = Auth::user();
             $post = Post::find($request->post_id);
             $auth = User::with('profile')->find($user->id);
-            $target = $post->user();
+            $target = $post->user;
 
             $post->comments()->create([
                 'user_id' => $user->id,
@@ -299,7 +299,7 @@ class PostController extends Controller
             $user = Auth::user();
             $comment = Comment::find($request->comment_id);
             $auth = User::with('profile')->find($user->id);
-            $target = $comment->user();
+            $target = $comment->user;
 
             $comment->replies()->create([
                 'user_id' => $user->id,
