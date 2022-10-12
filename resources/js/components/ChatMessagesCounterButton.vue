@@ -76,9 +76,37 @@ export default {
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('ReferralSent', this.addNotification);
 
-        //referrals completed
+        //referrals completed and a new connection is added to your connections
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('ReferralCompleted', this.addNotification);
+
+        //When a user send you friend request.
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('FriendRequestReceived', this.addNotification);
+        //When a friend request is accepted.
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('FriendRequestAccepted', this.addNotification);
+        //When a user likes your post.
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('PostLiked', this.addNotification);
+        //When a user comment on your post
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('CommentOnPost', this.addNotification);
+        //When a user replies to your comment.
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('ReplyOnComment', this.addNotification);
+        //When a user likes your comment.
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('CommentLiked', this.addNotification);
+        //When a user likes your reply.
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('ReplyLiked', this.addNotification);
+        //When a user shares your post.
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('PostSahred', this.addNotification);
+        //When you have been promoted to the next grade
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('RankPromoted', this.addNotification);
 
         this.fetchNotificationData();
 
