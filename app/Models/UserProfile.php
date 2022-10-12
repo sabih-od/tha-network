@@ -16,5 +16,6 @@ class UserProfile extends Model
         'phone',
         'social_security_number',
         'marital_status',
+        'gender',
     ];
 }

@@ -31,6 +31,16 @@
                     <option value="married">Married</option>
                     <option value="single">Single</option>
                 </select>
+
+                <label for="bio">Gender</label>
+                <select
+                    id="gender"
+                    v-model="form.gender"
+                    class="form-control"
+                    :readonly="!isEdit">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
             </div>
         </div>
     </form>
@@ -46,7 +56,8 @@ export default {
             isEdit: false,
             form: useForm({
                 bio: usePage().props.value?.profile?.bio,
-                marital_status: usePage().props.value?.profile?.marital_status
+                marital_status: usePage().props.value?.profile?.marital_status,
+                gender: usePage().props.value?.profile?.gender
             })
         }
     },

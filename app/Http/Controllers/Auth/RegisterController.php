@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Events\AfterRegistrationAppPromotion;
 use App\Events\RankPromoted;
 use App\Events\ReferralCompleted;
+use App\Events\SetWeeklyGoal;
 use App\Helpers\WebResponses;
 use App\Http\Controllers\Controller;
 use App\Models\Network;
@@ -170,7 +171,19 @@ class RegisterController extends Controller
             'last_name' => $data['last_name'],
             'phone' => $data['phone'],
             'social_security_number' => $data['social_security_number'],
+            'gender' => $data['gender'],
         ]);
+
+        //notification: lets set weekly goal
+        $string = "Hi let’s set your weekly goal";
+        $notification = Notification::create([
+            'user_id' => $user->id,
+            'notifiable_type' => 'App\Models\User',
+            'notifiable_id' => $user->id,
+            'body' => $string,
+            'sender_id' => $user->id
+        ]);
+        event(new SetWeeklyGoal($user->id, $string, 'App\Models\User', $notification->id, $user));
 
         return $user;
     }

@@ -29,6 +29,16 @@
                                                class="form-control">
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="lname">Gender</label>
+                                        <select id="gender" v-model="form.gender" class="form-control">
+                                            <option value="">Select Gender</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col-md-12">
                                     <div class="form-group mb-1">
                                         <label for="username">UserName</label>
@@ -166,6 +176,7 @@ export default {
             form: useForm({
                 first_name: '',
                 last_name: '',
+                gender: '',
                 username: '',
                 email: '',
                 phone: '',
