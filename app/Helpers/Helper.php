@@ -2,6 +2,7 @@
 
 use App\Events\NoNotificationForTheDay;
 use App\Events\NoReferralsForTheDay;
+use App\Events\SetWeeklyGoal;
 use App\Events\UnableToMeetWeeklyGoal;
 use App\Events\WeeklyRankingNotification;
 use App\Models\Goal;
@@ -11,6 +12,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+
 function last_active($user_id) {
     $user = \App\Models\User::find($user_id);
     $last_activity = Carbon::parse($user->last_activity);
@@ -54,6 +56,15 @@ function get_my_rank($id = null) {
 
 function get_referrals_by_day($date, $id = null) {
     return Referral::where('status', true)->where('user_id', $id ?? Auth::id())->whereDate('updated_at', $date)->get()->count();
+}
+
+function monthly_add_goals() {
+    $users = get_eloquent_users();
+    foreach ($users as $user) {
+        $rank = get_my_rank($user->id);
+        $user->remaining_referrals = intval($user->remaining_referrals) + intval($rank->target);
+        $user->save();
+    }
 }
 
 function get_weekly_goals($id = null) {
@@ -105,6 +116,10 @@ function last_weeks_rankings() {
         ->orderBy('total', 'DESC')
         ->take(3)
         ->get();
+
+    if(count($referrals) == 0) {
+        return '';
+    }
 
     $string = "WOW, Last week was a Great Week for the following members" . "\r\n";
 
@@ -177,6 +192,22 @@ function no_referrals_for_the_day() {
 
             event(new NoReferralsForTheDay($user->id, $string, 'App\Models\User', $notification->id, $user));
         }
+    }
+}
+
+function set_weekly_goal() {
+    $users = get_eloquent_users();
+    foreach ($users as $user) {
+        $string = "Hi let’s set your weekly goal";
+        $notification = Notification::create([
+            'user_id' => $user->id,
+            'notifiable_type' => 'App\Models\User',
+            'notifiable_id' => $user->id,
+            'body' => $string,
+            'sender_id' => $user->id
+        ]);
+
+        event(new SetWeeklyGoal($user->id, $string, 'App\Models\User', $notification->id, $user));
     }
 }
 
