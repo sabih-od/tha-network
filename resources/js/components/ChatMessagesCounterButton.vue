@@ -107,7 +107,7 @@ export default {
             .listen('ReplyLiked', this.addNotification);
         //When a user shares your post.
         this.$echo.private('App.Models.User.' + this.user.id)
-            .listen('PostSahred', this.addNotification);
+            .listen('PostShared', this.addNotification);
         //When you have been promoted to the next grade
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('RankPromoted', this.addNotification);
