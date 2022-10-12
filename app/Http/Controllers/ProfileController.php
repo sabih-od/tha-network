@@ -63,10 +63,11 @@ class ProfileController extends Controller
     {
         $v_rules = [];
 
-        if ($request->has('bio') || $request->has('marital_status'))
+        if ($request->has('bio') || $request->has('marital_status') || $request->has('gender'))
             $v_rules = [
                 'bio' => ['required', 'string', 'max:1000'],
                 'marital_status' => ['required', 'in:married,single'],
+                'gender' => ['required', 'in:Male,Female'],
             ];
         elseif (
             $request->has('first_name') &&
