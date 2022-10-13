@@ -20,7 +20,8 @@ trait NotificationData
         $notifications = Notification::with('sender.profile')->where([
             ['user_id', Auth::id()],
             ['viewed', 0]
-        ])->orderBy('created_at', 'DESC')->groupBy('sender_id')->get();
+//        ])->orderBy('created_at', 'DESC')->groupBy('sender_id')->get();
+        ])->orderBy('created_at', 'DESC')->get();
 
         $notifications = $notifications->toArray();
         $noti_arr = [];
@@ -36,7 +37,8 @@ trait NotificationData
         $notifications = Notification::with('sender.profile')->where([
             ['user_id', Auth::id()],
             ['viewed', 1]
-        ])->limit(8)->orderBy('created_at', 'DESC')->groupBy('sender_id')->get();
+//        ])->limit(8)->orderBy('created_at', 'DESC')->groupBy('sender_id')->get();
+        ])->limit(8)->orderBy('created_at', 'DESC')->get();
 
         $notifications = $notifications->toArray();
         $noti_arr = [];

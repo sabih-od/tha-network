@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Events\AfterRegistrationAppPromotion;
+use App\Events\NewMemberSignup;
 use App\Events\RankPromoted;
 use App\Events\ReferralCompleted;
 use App\Events\SetWeeklyGoal;
@@ -192,7 +193,6 @@ class RegisterController extends Controller
 //    override function
     public function register(Request $request)
     {
-//        return User::find(session()->get('inviter_id'));
         $this->validator($request->all())->validate();
 
         event(new Registered($user = $this->create($request->all())));
@@ -272,6 +272,16 @@ class RegisterController extends Controller
             }
         }
 
+        //notification(s) after registration
+        $string = "Welcome To Tha Network Let’s get to work sending Referrals, but first Let’s Create a Profile Page!!";
+        $notification = Notification::create([
+            'user_id' => $user->id,
+            'notifiable_type' => 'App\Models\User',
+            'notifiable_id' => $user->id,
+            'body' => $string,
+            'sender_id' => $user->id
+        ]);
+        event(new NewMemberSignup($user->id, $string, 'App\Models\User', $notification->id, User::with('profile')->find($user->id)));
         //notification(s) after registration
         $string = "Now that you are a member and have completed setting up your account, please go to your App store and download the APP!! Let’s get started making some CASH!!!";
         $notification = Notification::create([

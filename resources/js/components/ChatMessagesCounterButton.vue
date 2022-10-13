@@ -56,6 +56,10 @@ export default {
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('NewNotification', this.addNotification);
 
+        //new member signup
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('NewMemberSignup', this.addNotification);
+
         //after registration app promotion
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('AfterRegistrationAppPromotion', this.addNotification);
