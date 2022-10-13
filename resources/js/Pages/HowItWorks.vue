@@ -149,7 +149,7 @@
 
         <section class="planSec">
             <div class="container">
-                <div class="row aic">
+                <div class="row">
                     <div class="col-md-6">
                         <div class="planImgs">
                             <img :src="asset('images/plan1.jpg')" class="plan1" alt="">
@@ -161,7 +161,51 @@
                     </div>
                     <div class="col-md-6">
                         <h2 class="secHeading mb-4">OUR MEMBERSHIP PLAN PAYS!</h2>
+                        <h6>
+                            List of forecasted membership fee increases along with member earnings for each Level.
+                        </h6>
+                        <ul>
+                            <li>
+                                <p>
+                                    At the start of the business, membership will cost $29.99.  Members will receive $10 for referrals.
+                                </p>
+                            </li>
+                            <li>
+                                <p>
+                                    At Level 2 after there are a total of 500,000 members the new membership price will increase to $59.99 for new members joining.  Members will receive $15 per referral at this level.
+                                </p>
+                            </li>
+                            <li>
+                                <p>
+                                    At level 3 and after 2,000,000 members the membership fee will increase to $99.99 and the member will earn $25 per referral.
+                                </p>
+                            </li>
+                            <li>
+                                <p>
+                                    At Level 4 after 5,000,000 members the membership fee will increase to $159.99 and the member will earn $50 per referral at this level.
+                                </p>
+                            </li>
+                            <li>
+                                <p>
+                                    At Level 5 after 7,000,000 members the membership fee will increase to $299.99 and the member will earn $100 per referral at this level.
+                                </p>
+                            </li>
+                            <li>
+                                <p>
+                                    At Level 6 after 10,000,000 members the membership fee will increase to $399.99 and the member will earn $150 per referral at this level.
+                                </p>
+                            </li>
+                            <li>
+                                <p>
+                                    Next levels will depend on the traffic on the site.  If the demand becomes greater, the membership price will increase to meet the demand.  Notifications will be sent to member’s when the levels change and there will be a site maintenance pause on the site to accommodate the change.
+                                </p>
+                            </li>
+                            <h6>As a member on the network you will always pay your original membership fee, only new members will be required to pay membership fees at the level they join.  All member's will benefit from the referral fee increases for each level.</h6>
+                        </ul>
                         <a href="login.php" class="themeBtn">Join Us</a>
+                    </div>
+                    <div class="col-12">
+
                     </div>
                 </div>
             </div>

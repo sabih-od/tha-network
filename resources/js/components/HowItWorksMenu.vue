@@ -28,6 +28,9 @@
                             <a class="nav-link" href="#">Membership Benefits</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" :href="this.$route('about')">About Us</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="#">Terms & Conditions</a>
                         </li>
                         <li class="nav-item">
