@@ -3,20 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use App\Models\ThaPayment;
+use App\Models\User;
 use App\Models\UserInvitation;
 use App\Traits\StripePayment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class HowItWorks extends Controller
 {
     use StripePayment;
 
-    private $amount = 29.99;
+    private $amount;
 
     public function __construct()
     {
-        $this->middleware('is.validate.code');
+        $this->amount = count(User::where('role_id', 2)->get()) < 5000 ? 29.99 : 59.95;
+        $this->middleware('is.validate.code')->except('monthlySuccessPayment');
     }
 
     public function show()
@@ -63,6 +67,30 @@ class HowItWorks extends Controller
             ]);
         }
 
+        session()->put('tha_payment_amount', $this->amount);
+
         return redirect()->route('registerForm');
+    }
+
+    public function monthlySuccessPayment(Request $request)
+    {
+        //create tha-payment log
+        ThaPayment::create([
+            'user_id' => Auth::id(),
+            'amount' => $this->amount,
+        ]);
+
+        session()->put('monthly_payment_flash', 'Your monthly subscription payment has been made!');
+
+        return redirect()->route('editProfileForm');
+    }
+
+    private function profileImg($user, $collection)
+    {
+        $img = null;
+        if ($user) {
+            $img = $user->getFirstMedia($collection)->original_url ?? null;
+        }
+        return $img;
     }
 }

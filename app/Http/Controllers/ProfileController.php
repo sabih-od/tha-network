@@ -7,6 +7,7 @@ use App\Models\FriendRequest;
 use App\Models\User;
 use App\Traits\CommentData;
 use App\Traits\PostData;
+use App\Traits\StripePayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -16,7 +17,7 @@ use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
-    use PostData, CommentData;
+    use PostData, CommentData, StripePayment;
 
     public function show(Request $request)
     {
@@ -43,16 +44,32 @@ class ProfileController extends Controller
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());
         }
     }
+    private $amount;
+
+    public function __construct()
+    {
+        $this->amount = count(User::where('role_id', 2)->get()) < 5000 ? 29.99 : 59.95;
+    }
 
     public function edit()
     {
         try {
             $user = Auth::user();
+            //generate client secret (if user decides to pay for month)
+            $clientSecret = $this->generateClientSecret($this->amount);
+            //monthly_payment_flash (when user has made monthly subscription payment)
+            $monthly_payment_flash = session()->has('monthly_payment_flash') ? session()->get('monthly_payment_flash') : null;
+            //check for if user has made monthly payment or not
+            $has_made_monthly_payment = has_made_monthly_payment();
+            session()->remove('monthly_payment_flash');
             return Inertia::render('EditProfile', [
                 'user' => $user->only('name', 'email', 'created_at') ?? null,
                 'profile' => $user->profile ?? null,
 //                'profile_image' => $this->profileImg($user, 'profile_image'),
-                'profile_cover' => $this->profileImg($user, 'profile_cover')
+                'profile_cover' => $this->profileImg($user, 'profile_cover'),
+                'client_secret' => $clientSecret,
+                'monthly_payment_flash' => $monthly_payment_flash,
+                'has_made_monthly_payment' => $has_made_monthly_payment
             ]);
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());
@@ -234,11 +251,11 @@ class ProfileController extends Controller
             $auth_user = Auth::user();
 //            dd(count($user->network->members));
 
-        if (is_null($user) || $user->hasBlocked($auth_user))
-            return redirect()->route('home')->with('error', "Invalid user id!");
+            if (is_null($user) || $user->hasBlocked($auth_user))
+                return redirect()->route('home')->with('error', "Invalid user id!");
 
-        if($id == Auth::id())
-            return redirect()->route('profile')->with('error', "Invalid user id!");
+            if($id == Auth::id())
+                return redirect()->route('profile')->with('error', "Invalid user id!");
 
         //request sent check
             $request_sent_check = FriendRequest::where('user_id', Auth::id())->where('target_id', $id)->get();
@@ -282,8 +299,7 @@ class ProfileController extends Controller
                 },
                 'friends_count' => count($user->followers),
                 'network_count' => $user->network()->exists() ? count($user->network->members) : 0,
-                'user_is_blocked' => $auth_user->hasBlocked($user)
-
+                'user_is_blocked' => $auth_user->hasBlocked($user),
             ]);
         } catch (\Exception $e) {
             return redirect()->route('home')->with('error', $e->getMessage());

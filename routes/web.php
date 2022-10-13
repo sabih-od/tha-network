@@ -4,6 +4,7 @@ use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FriendRequestController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HowItWorks;
 use App\Http\Controllers\InvitationCode;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
@@ -169,6 +170,10 @@ Route::group([
         ->name('block');
     Route::get('unblock/{target_id}', [FriendRequestController::class, 'unblock'])
         ->name('unblock');
+
+    //Monthly payment route
+    Route::get('monthly-success-payment', [HowItWorks::class, 'monthlySuccessPayment'])
+        ->name('monthlySuccessPayment');
 });
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

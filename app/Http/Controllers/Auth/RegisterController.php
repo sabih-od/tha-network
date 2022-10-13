@@ -13,6 +13,7 @@ use App\Models\NetworkMember;
 use App\Models\Notification;
 use App\Models\Referral;
 use App\Models\SendInvitation;
+use App\Models\ThaPayment;
 use App\Models\UserInvitation;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
@@ -281,6 +282,13 @@ class RegisterController extends Controller
             'sender_id' => $user->id
         ]);
         event(new AfterRegistrationAppPromotion($user->id, $string, 'App\Models\User', $notification->id, User::with('profile')->find($user->id)));
+
+        //create tha-payment log
+        ThaPayment::create([
+            'user_id' => $user->id,
+            'amount' => session()->get('tha_payment_amount'),
+        ]);
+        session()->remove('tha_payment_amount');
 
         $this->guard()->login($user);
 
