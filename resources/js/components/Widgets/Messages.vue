@@ -143,16 +143,40 @@ export default {
                 ...this.unread_notifications,
                 ...notifications
             ];
+            this.unread_notifications = this.removeDuplicates(this.unread_notifications);
+            this.unread_notifications = this.removeNotificationsFromSelf(this.unread_notifications);
         },
         populateReadNotifications(notifications) {
             this.read_notifications = [
                 ...this.read_notifications,
                 ...notifications
             ];
+            this.read_notifications = this.removeDuplicates(this.read_notifications);
+            this.read_notifications = this.removeNotificationsFromSelf(this.read_notifications);
         },
         chatWithProfile(sender_id) {
             this.$emitter.emit('request_chat_with_profile', sender_id);
         },
+        removeDuplicates(data) {
+            let new_data = [];
+            let used_ids = [];
+            data.forEach((item) => {
+                if(!used_ids.includes(item.sender_id)) {
+                    new_data.push(item);
+                    used_ids.push(item.sender_id);
+                }
+            });
+            return new_data;
+        },
+        removeNotificationsFromSelf(data) {
+            let new_data = [];
+            data.forEach((item) => {
+                if(item.sender_id != this.user.id) {
+                    new_data.push(item);
+                }
+            });
+            return new_data;
+        }
     }
 }
 </script>
