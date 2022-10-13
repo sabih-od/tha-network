@@ -23,7 +23,7 @@
 
                             <li><i class="fas fa-heart" v-if="profile?.marital_status"></i> {{ profile?.marital_status }}</li>
                             <li><i class="fas fa-clock"></i> Joined {{ new Date(user.created_at).toLocaleString('en-us',{month:'short', year:'numeric'}) }}</li>
-                            <li><i class="fas fa-bullseye-arrow"></i> Weekly Goal 500 Person</li>
+                            <li><i class="fas fa-bullseye-arrow"></i> Weekly Goal {{ goals.weekly_goals }} Referral(s)</li>
 <!--                            <li><img :src="asset('images/followers.png')" alt=""> Followed by 2,838 people</li>-->
 <!--                            <li>-->
 <!--                                <p class="ml-4">See More Details...</p>-->
