@@ -19,38 +19,6 @@
                         <form @submit.prevent="submit">
                             <h3 class="text-secondary" v-if="mountLoading">Please wait...</h3>
                             <div id="payment-element"></div>
-                            <!--                            <div class="row">
-                                                            <div class="col-md-12">
-                                                                <div class="form-group">
-                                                                    <label for="cardname">Name on Card</label>
-                                                                    <input type="text" name="cardname" placeholder="" class="form-control">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-12">
-                                                                <div class="form-group">
-                                                                    <label for="cardNo">Card Number</label>
-                                                                    <input type="text" name="cardNo" placeholder="" class="form-control">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group mb-2">
-                                                                    <label for="expireDate">Expiration Date</label>
-                                                                    <input type="text" name="expireDate" placeholder="MM / YY" class="form-control">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <label for="cvv">CVV Code</label>
-                                                                    <input type="text" name="cvv" placeholder="" class="form-control">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-12">
-                                                                <div class="form-group">
-                                                                    <label for="zipCode">Billing Zipcode</label>
-                                                                    <input type="text" name="zipCode" placeholder="" class="form-control">
-                                                                </div>
-                                                            </div>
-                                                        </div>-->
                             <template v-if="!mountLoading">
                                 <button type="submit" class="themeBtn mt-3">
                                     {{ formLoading ? 'Please wait...' : 'CONFIRM PAYMENT' }}

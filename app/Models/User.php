@@ -105,6 +105,11 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(Comment::class);
     }
 
+    public function tha_payments()
+    {
+        return $this->hasMany(ThaPayment::class);
+    }
+
     public function getProfileImageAttribute() {
         return $this->getFirstMediaUrl('profile_image');
     }

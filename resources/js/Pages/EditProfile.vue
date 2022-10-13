@@ -14,57 +14,11 @@
 
                     <PasswordUpdate/>
 
-                    <div class="edit-card">
-                        <div class="df aic jcsb mb-2">
-                            <h2>Payment Method</h2>
-                            <div class="df aic gap1">
-                                <img src="images/payment2.png" alt="">
-                                <a href="#" class="editProBtn">Edit</a>
-                            </div>
-                        </div>
-                        <form class="cardWrap" action="login.php">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="cardName">Name on Card</label>
-                                        <input type="text" name="cardName" class="form-control"
-                                               placeholder="John Smith">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="cardNo">Card Number</label>
-                                        <input type="text" name="cardNo" class="form-control"
-                                               placeholder="123 456 7890 789 1234">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="zipcode">Billing Zipcode</label>
-                                        <input type="text" name="zipcode" class="form-control" placeholder="007788">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="expiry">Expiration date</label>
-                                        <input type="text" name="expiry" class="form-control"
-                                               placeholder="123 456 7890 789 1234">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="cvv">CVV Code</label>
-                                        <input type="password" name="cvv" class="form-control" placeholder="****">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="df aic jcsb">
-                                <a href="#" class="payBtn">Add another payment card</a>
-                                <a href="#" class="payBtn" data-toggle="modal" data-target="#attentionModal">stop
-                                    recurring payments </a>
-                            </div>
-                        </form>
-                    </div>
+                    <MonthlyPayment
+                        :client_secret="client_secret"
+                        :monthly_payment_flash="monthly_payment_flash"
+                        :has_made_monthly_payment="has_made_monthly_payment"
+                    ></MonthlyPayment>
 
                     <div class="btn-group gap1">
                         <button type="submit" class="themeBtn" onclick="window.location.href='login.php'">Save</button>
@@ -236,6 +190,7 @@ import BioUpdate from "../components/Forms/BioUpdate";
 import InfoUpdate from "../components/Forms/InfoUpdate";
 import AddressUpdate from "../components/Forms/AddressUpdate";
 import PasswordUpdate from "../components/Forms/PasswordUpdate";
+import MonthlyPayment from "../components/MonthlyPayment";
 
 export default {
     name: "EditProfile",
@@ -249,12 +204,16 @@ export default {
         Link,
         ProfileLeftSide,
         FormLoading,
-        CoverPhoto
+        CoverPhoto,
+        MonthlyPayment
     },
     layout: ProfileLayout,
     props: {
         user: Object,
-        profile: Object
+        profile: Object,
+        client_secret: String,
+        monthly_payment_flash: String,
+        has_made_monthly_payment: Boolean
     },
     computed: {
         userProfile() {

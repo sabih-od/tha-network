@@ -8,6 +8,7 @@ use App\Events\WeeklyRankingNotification;
 use App\Models\Goal;
 use App\Models\Notification;
 use App\Models\Referral;
+use App\Models\ThaPayment;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -221,4 +222,14 @@ function addOrdinalNumberSuffix($num) {
         }
     }
     return $num.'th';
+}
+
+function has_made_monthly_payment($id = null) {
+    $user = get_eloquent_user($id);
+    $start_of_month = (Carbon::now())->startOfMonth();
+    $end_of_month = (Carbon::now())->endOfMonth();
+
+    $payment = ThaPayment::where('user_id', $user->id)->whereDate('created_at', '>=', $start_of_month)->whereDate('created_at', '<=', $end_of_month)->first();
+
+    return (bool)$payment;
 }
