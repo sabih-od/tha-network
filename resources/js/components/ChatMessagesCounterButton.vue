@@ -30,9 +30,11 @@
 import {Link, useForm, usePage} from '@inertiajs/inertia-vue3'
 import {Inertia} from "@inertiajs/inertia";
 import {useToast} from "vue-toastification";
+import utils from "../mixins/utils";
 
 export default {
     name: "ChatMessagesCounterButton",
+    mixins: [utils],
     components: {
         Link
     },
@@ -55,6 +57,7 @@ export default {
         }
     },
     mounted() {
+        let _t = this;
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('NewNotification', this.addNotification);
 
@@ -84,7 +87,9 @@ export default {
 
         //referrals sent
         this.$echo.private('App.Models.User.' + this.user.id)
-            .listen('ReferralSent', this.addNotification);
+            .listen('ReferralSent', function (data) {
+                _t.addNotification(data, this.$store.getters['Utils/public_asset']('images/notifications/ReferralSent.png'))
+            });
 
         //referrals completed and a new connection is added to your connections
         this.$echo.private('App.Models.User.' + this.user.id)
@@ -132,13 +137,18 @@ export default {
         this.$emitter.on('request_chat_with_profile', this.requestChatWithProfile);
     },
     methods: {
-        addNotification(data) {
+        addNotification(data, img = null) {
             console.log('data', data);
             this.notifications = [
                 ...this.notifications,
                 data
             ]
             this.$emitter.emit('unread_notifications_updated', this.notifications);
+
+            //show popup notification
+            if(img){
+                this.$emitter.emit('show_image_notification', img, data.body);
+            }
         },
         chatWithProfile(profile_id) {
             this.$store.commit('Chat/setActiveUserId', profile_id);

@@ -2652,13 +2652,17 @@ img.rounded-circle {
 .notifyPopup {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    right: -500px;
     max-width: 450px;
     background: #fff;
     padding: 1rem;
     box-shadow: 0 0 15px #ddd;
     border-radius: 20px;
     width: 100%;
+    transition: all 0.4s ease-in-out;
+}
+.notifyPopup.show{
+    right: 20px;
 }
 
 .notifyPopup .notiBody {
