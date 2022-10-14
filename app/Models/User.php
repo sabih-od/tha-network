@@ -55,7 +55,9 @@ class User extends Authenticatable implements HasMedia
         'media',
         'deleted_at',
         'updated_at',
-        'email_verified_at'
+        'email_verified_at',
+        'suspended_on',
+        'closed_on'
     ];
 
     protected $appends = [

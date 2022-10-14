@@ -31,16 +31,9 @@ use Inertia\Inertia;
 });*/
 
 Route::get('/temp', function() {
-//    dd(\Illuminate\Support\Facades\Auth::user()->getProfileImageAttribute());
-//    dd(get_weekly_goals());
-//    $users = \App\Models\User::where('role_id', 2)->get();
-//    foreach ($users as $user) {
-//        $rank = get_my_rank($user->id);
-//        $user->remaining_referrals = intval($user->remaining_referrals) + intval($rank->target);
-//        $user->save();
-//    }
-
-    last_weeks_rankings();
+//    $joined_networks_ids = NetworkMember::where('user_id', \Illuminate\Support\Facades\Auth::id())->pluck('network_id');
+//    $joined_networks_owner_ids = Network::whereIn('id', $joined_networks_ids)->pluck('user_id');
+//    dd($joined_networks_owner_ids);
 });
 
 Route::get('get/redis', function () {
@@ -76,7 +69,18 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
 //Inertia routes
 require "auth.php";
 Route::group([
-    'middleware' => ['auth', 'revalidate']
+    'middleware' => ['auth', 'revalidate', 'closure']
+], function () {;
+    Route::get('edit-profile', [ProfileController::class, 'edit'])
+        ->name('editProfileForm');
+    Route::post('edit-profile', [ProfileController::class, 'update'])
+        ->name('updateProfile');
+    //Monthly payment route
+    Route::get('monthly-success-payment', [HowItWorks::class, 'monthlySuccessPayment'])
+        ->name('monthlySuccessPayment');
+});
+Route::group([
+    'middleware' => ['auth', 'revalidate', 'suspension', 'closure']
 ], function () {
     // home page
     Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -84,10 +88,6 @@ Route::group([
     // profile routes
     Route::get('profile', [ProfileController::class, 'show'])
         ->name('profile');
-    Route::get('edit-profile', [ProfileController::class, 'edit'])
-        ->name('editProfileForm');
-    Route::post('edit-profile', [ProfileController::class, 'update'])
-        ->name('updateProfile');
     Route::post('profile-image-upload', [ProfileController::class, 'profileImgUpload'])
         ->name('profileImgUpload');
     Route::post('profile-cover-upload', [ProfileController::class, 'profileCoverUpload'])
@@ -170,10 +170,6 @@ Route::group([
         ->name('block');
     Route::get('unblock/{target_id}', [FriendRequestController::class, 'unblock'])
         ->name('unblock');
-
-    //Monthly payment route
-    Route::get('monthly-success-payment', [HowItWorks::class, 'monthlySuccessPayment'])
-        ->name('monthlySuccessPayment');
 });
 
 Route::get('/about', function () {

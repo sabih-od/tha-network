@@ -70,5 +70,7 @@ class Kernel extends HttpKernel
         'is.validate.code' => \App\Http\Middleware\IsValidateCode::class,
         'is.client.secret' => \App\Http\Middleware\IsClientSecret::class,
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        'suspension' => \App\Http\Middleware\SuspensionCheck::class,
+        'closure' => \App\Http\Middleware\ClosureCheck::class,
     ];
 }
