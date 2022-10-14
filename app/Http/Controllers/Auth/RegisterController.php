@@ -168,6 +168,12 @@ class RegisterController extends Controller
         $user->remaining_referrals = intval($user->remaining_referrals) + intval($rank->target);
         $user->save();
 
+        //create avatar based on gender
+        $avatar_url = $data['gender'] == 'Male' ? public_path('images/male-avatar.png') : public_path('images/female-avatar.png');
+        $user
+            ->addMedia($avatar_url)
+            ->toMediaCollection('profile_image');
+        //create profile
         $user->profile()->create([
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
@@ -262,11 +268,12 @@ class RegisterController extends Controller
                     ]);
 
                     event(new ReferralCompleted($inviter->id, $string, 'App\Models\User', $notification->id, $inviter));
+
+                    //subtract from user's remaining referrals
+                    $referral->user->remaining_referrals = $referral->user->remaining_referrals - 1;
+                    $referral->user->save();
                 }
 
-                //subtract from user's remaining referrals
-                $referral->user->remaining_referrals = $referral->user->remaining_referrals - 1;
-                $referral->user->save();
 
                 session()->remove('inviter_id');
             }
