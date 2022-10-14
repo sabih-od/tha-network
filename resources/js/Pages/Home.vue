@@ -133,6 +133,7 @@ export default {
     mounted() {
         let _t = this;
         this.$emitter.on('show_image_notification', function (img, text) {
+            console.log(text);
             _t.showNotification(img, text);
         });
         //hide message button
