@@ -147,7 +147,7 @@ export default {
 
             //show popup notification
             if(img){
-                this.$emitter.emit('show_image_notification', img, data.body);
+                this.$emitter.emit('show_image_notification', {img: img, text: data.body});
             }
         },
         chatWithProfile(profile_id) {
