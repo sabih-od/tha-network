@@ -80,7 +80,7 @@ section {
 }
 
 p {
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 400;
     line-height: 1.8;
     color: #828288;
@@ -119,7 +119,6 @@ h4,
 h5,
 h6,
 p {
-    /* font-family: "Montserrat", sans-serif; */
     font-family: "Poppins", sans-serif;
 }
 
@@ -856,7 +855,7 @@ footer .links li a:hover {
 }
 
 .topWrap {
-    margin: -5rem 0 0rem;
+    margin: 1rem 0 0;
 }
 
 .topWrap .btn-group {
@@ -903,8 +902,10 @@ footer .links li a:hover {
 }
 
 .profileImg img {
-    margin-top: -2.75rem;
     border-radius: 50%;
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
 }
 
 .filSet input {
@@ -944,11 +945,9 @@ footer .links li a:hover {
     place-items: center;
     border-radius: 50%;
     margin-left: auto;
-    margin-top: -9rem;
 }
 
 .awardWrap.profilePage {
-    margin-top: -5rem;
 }
 
 .cardWrap {
@@ -1203,10 +1202,11 @@ footer .links li a:hover {
     font-size: 14px;
     width: 100%;
     font-weight: 500;
-    color: #505050;
+    color: #fff;
     line-height: 1;
     padding: 1em;
     position: relative;
+    background: var(--primary);
 }
 
 .postBox .topList li a input {
@@ -1224,8 +1224,6 @@ footer .links li a:hover {
 }
 
 .postBox .topList li a:hover {
-    color: var(--white);
-    background-color: var(--primary);
 }
 
 .postBox .topList li a:hover img {
@@ -1745,7 +1743,7 @@ footer .links li a:hover {
 }
 
 .feedBox .comntBox h2 {
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: var(--black);
     font-weight: 600;
     margin: 0;
@@ -1755,7 +1753,7 @@ footer .links li a:hover {
 .feedBox .comntBox ul {
     display: flex;
     gap: 1rem;
-    margin-top: 0.5rem;
+    margin-top: 0;
     align-items: center;
 }
 
@@ -1803,12 +1801,12 @@ footer .links li a:hover {
     color: var(--white);
     font-size: 1.125rem;
     border-radius: 50%;
-    border: 1px solid var(--black);
-    background-color: var(--black);
+    border: 1px solid var(--primary);
+    background-color: var(--primary);
 }
 
 .commentInput button:hover {
-    color: var(--black);
+    color: var(--primary);
     background-color: var(--white);
 }
 
@@ -1852,7 +1850,7 @@ footer .links li a:hover {
       border-radius: 40px;*/
     width: 40px;
     height: 40px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 100%;
 }
 
@@ -1860,12 +1858,12 @@ footer .links li a:hover {
     overflow-y: auto;
     border: 1px solid #eee;
     width: 100%;
-    height: 770px;
+    height: 700px;
     transition: ease all 0.5s;
 }
 
 .chat-panel .row {
-    margin: 0 0 20px;
+    margin: 0;
 }
 
 .messangerSec .settings-tray {
@@ -1981,7 +1979,7 @@ footer .links li a:hover {
 }
 
 .messangerSec .friend-drawer--onhover:hover {
-    background: #f6f6f6;
+    background: #ddd;
     cursor: pointer;
 }
 
@@ -2052,16 +2050,13 @@ footer .links li a:hover {
 .messangerSec .chat-box-tray {
     background: #fff;
     display: flex;
-    align-items: baseline;
     padding: 10px 42px 10px 0;
     align-items: center;
     flex-direction: column;
     left: 0;
     gap: 1rem;
-    width: 100%;
     border-bottom: 1px solid #f1f3f8;
     position: absolute;
-    /* height: 350px; */
     bottom: 0;
     width: 100%;
 }
@@ -2111,6 +2106,8 @@ footer .links li a:hover {
     overflow: hidden;
     position: relative;
     background-color: #fff;
+    flex-direction: column;
+    height: 100%;
 }
 
 .insideSearch .input-group .searchBtn,
@@ -2321,6 +2318,7 @@ footer .links li a:hover {
     width: 60px;
     height: 60px;
     border-radius: 100%;
+    object-fit: contain;
 }
 
 .mesgHfs h5 {
@@ -2515,4 +2513,192 @@ img.rounded-circle {
 
 .introVideo.minimized button:hover span {
     opacity: 1;
+}
+
+.main-slider .content:hover * {
+    color: #fff !important;
+}
+
+.abtSec .row + .row {
+    margin-top: 3rem;
+}
+
+.abtSec h2 {
+    font-size: 2.5rem;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.abtSec p {
+    color: #000;
+    text-transform: initial;
+    font-weight: 500;
+    line-height: 1.8;
+}
+
+.abtSec p span {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+.abtSec h4 {
+    font-size: 2.5rem;
+    color: var(--primary);
+}
+
+.abtSec ul li + li {
+    margin-top: 1.5rem;
+}
+
+.abtSec ul li {
+    font-weight: 500;
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    line-height: 1.8;
+}
+
+.abtSec ul li i,
+.abtSec ul li span.colored {
+    color: var(--primary);
+}
+
+.abtSec ul {
+    margin-top: 2rem;
+}
+
+.overlayCont {
+    margin: 9.375rem 0;
+    background: var(--primary);
+    position: relative;
+}
+
+.overlayCont .content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.overlayCont .content h2 {
+    color: #fff;
+    font-size: 5.4375rem;
+    margin: 0;
+}
+
+.overlayCont .content p {
+    color: #fff;
+    font-size: 1.6875rem;
+    margin: 0;
+}
+
+.termsSec h2 {
+    margin: 1rem 0 0;
+}
+
+.termsSec p, .termsSec li {
+    display: block;
+    width: 100%;
+    font-size: 1rem;
+    color: #828288;
+    line-height: 1.8;
+    font-weight: 500;
+}
+
+.termsSec li + li {
+    margin-top: 1rem;
+}
+
+.modal_create_avatar .btnCont {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.fieldsBox {
+    padding: 2rem 1rem;
+    max-height: 650px;
+    overflow: auto;
+}
+
+.avatarImg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    position: unset !important;
+}
+
+.fieldsBox label {
+    text-transform: capitalize;
+}
+
+.messangerSec .chat-box-tray .render-img-wrapper {
+    max-height: 250px;
+    overflow-y: auto;
+    border-top: 1px solid #ddd;
+    width: 100%;
+}
+
+.dropdown-menu {
+    right: 0 !important;
+    left: unset;
+    width: 300px;
+}
+
+.notifyPopup {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    max-width: 450px;
+    background: #fff;
+    padding: 1rem;
+    box-shadow: 0 0 15px #ddd;
+    border-radius: 20px;
+    width: 100%;
+}
+
+.notifyPopup .notiBody {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.notifyPopup .notiBody * {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.notifyPopup .notiFooter {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 1rem;
+}
+
+.notifyPopup .notiFooter button {
+    background: var(--primary);
+    border: none;
+    padding: 0.5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #fff;
+    border-radius: 10px;
+}
+
+.notifyPopup .notiImgCont img {
+    height: 400px;
+    width: 100%;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 10px 10px 0 0;
+}
+
+.notifyPopup .notiImgCont {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1rem;
 }

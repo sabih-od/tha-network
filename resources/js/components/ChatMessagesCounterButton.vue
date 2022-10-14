@@ -8,15 +8,17 @@
         <!--notifications-->
         <div class="dropdown-menu" aria-labelledby="profileDropDown">
             <span v-if="notifications.length == 0" class="dropdown-item">No new messages</span>
-            <Link v-else v-for="notification in notifications" class="dropdown-item" replace @click.prevent="notification.sender.id != user.id ? chatWithProfile(notification.sender.id) : ''">
+            <Link v-else v-for="notification in notifications" class="dropdown-item" replace
+                  @click.prevent="notification.sender.id != user.id ? chatWithProfile(notification.sender.id) : ''">
                 <strong v-if='notification.sender.id != user.id'>
-                    New message from {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
+                    New message from
+                    {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
                 </strong>
-                <p v-else style="white-space: pre; font-size: 14px;" v-html="notification.body">
+                <p v-else v-html="notification.body">
 
                 </p>
             </Link>
-            <Link v-if="notifications.length != 0" class="dropdown-item" replace @click.prevent="clearNotifications()" style="color: blue;">
+            <Link v-if="notifications.length != 0" class="dropdown-item" replace @click.prevent="clearNotifications()">
                 Mark all as read
             </Link>
         </div>
@@ -152,9 +154,7 @@ export default {
         },
         fetchNotificationData() {
             let url = this.$store.getters['Utils/baseUrl'];
-            Inertia.get(url, {
-
-            }, {
+            Inertia.get(url, {}, {
                 replace: true,
                 preserveScroll: true,
                 preserveState: true,
@@ -221,19 +221,53 @@ export default {
 </script>
 
 <style scoped>
-    .button__badge {
-        background-color: #fa3e3e;
-        border-radius: 2px;
-        color: white;
+.button__badge {
+    background-color: #fa3e3e;
+    border-radius: 2px;
+    color: white;
 
-        padding: 1px 3px;
-        font-size: 10px;
+    padding: 1px 3px;
+    font-size: 10px;
 
-        position: absolute; /* Position the badge within the relatively positioned button */
-        top: 0;
-        right: 0;
+    position: absolute; /* Position the badge within the relatively positioned button */
+    top: 0;
+    right: 0;
 
-        min-width: 10px;
-        min-height: 10px;
-    }
+    min-width: 10px;
+    min-height: 10px;
+}
+
+
+.dropdown-menu {
+    right: 0 !important;
+    left: unset;
+    width: 300px;
+}
+
+.dropdown-menu .dropdown-item {
+    white-space: initial !important;
+    background: #ddd;
+}
+
+.dropdown-menu .dropdown-item + .dropdown-item {
+    margin-top: 0.5rem;
+}
+
+.dropdown-menu .dropdown-item * {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.dropdown-menu .dropdown-item:hover *{
+    color: #fff;
+}
+
+.dropdown-menu .dropdown-item:last-of-type{
+    background: transparent;
+}
+
+.dropdown-menu .dropdown-item:last-of-type:hover{
+    color: #000;
+}
 </style>

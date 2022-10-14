@@ -176,14 +176,24 @@ Route::group([
         ->name('monthlySuccessPayment');
 });
 
+Route::get('/work', function () {
+    return Inertia::render('HowItWorks');
+})->name('work');
+
 Route::get('/about', function () {
     return Inertia::render('About');
 })->name('about');
+
 Route::get('/privacy', function () {
     return Inertia::render('Privacy');
 })->name('privacy');
+
 Route::get('/terms', function () {
     return Inertia::render('Terms');
 })->name('terms');
+
+Route::get('/benefits', function () {
+    return Inertia::render('Benifits');
+})->name('benefits');
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

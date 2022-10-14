@@ -11,7 +11,7 @@
                     <span class="fa fa-bars"></span>
                 </button>
                 <form class="searchBar">
-                    <input type="search" placeholder="Search for creators, inspiration, projects..." name="search" v-model="search" @keyup.prevent="initateSearch()" autocomplete="off">
+                    <input type="search" placeholder="Search" name="search" v-model="search" @keyup.prevent="initateSearch()" autocomplete="off">
                     <!-- <button type="submit"><i class="fal fa-search"></i></button> -->
                     <div class="expandSearch" ref="expand_search_visibility">
                         <p v-if="loading" class="text-secondary px-3">Please wait...</p>
