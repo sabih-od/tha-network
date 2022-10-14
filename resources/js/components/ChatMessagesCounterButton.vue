@@ -147,6 +147,7 @@ export default {
 
             //show popup notification
             if(img){
+                consle.log('img: ', img)
                 this.$emitter.emit('show_image_notification', img, data.body);
             }
         },
