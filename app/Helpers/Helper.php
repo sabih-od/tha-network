@@ -1,11 +1,14 @@
 <?php
 
-use App\Events\NoNotificationForTheDay;
+use App\Events\NetworkMemberClosure;
 use App\Events\NoReferralsForTheDay;
+use App\Events\PaymentNotMade;
 use App\Events\SetWeeklyGoal;
 use App\Events\UnableToMeetWeeklyGoal;
 use App\Events\WeeklyRankingNotification;
 use App\Models\Goal;
+use App\Models\Network;
+use App\Models\NetworkMember;
 use App\Models\Notification;
 use App\Models\Referral;
 use App\Models\ThaPayment;
@@ -232,4 +235,73 @@ function has_made_monthly_payment($id = null) {
     $payment = ThaPayment::where('user_id', $user->id)->whereDate('created_at', '>=', $start_of_month)->whereDate('created_at', '<=', $end_of_month)->first();
 
     return (bool)$payment;
+}
+
+function payment_not_made() {
+    $users = get_eloquent_users();
+    foreach ($users as $user) {
+        if(!has_made_monthly_payment($user->id)) {
+            $string = "Hi, we have not received your monthly membership payment.\r\n
+            Update your payment information before the 7th of the month.\r\n
+            If you do not update your payment by the 7th at 11:59 pm central time your membership will be suspended for 7 days.\r\n
+            You will not receive payments until you update your payment information.\r\n
+            Once payment is received your membership status will be updated and payments will continue in the next billing cycle.\r\n
+            If your payment is not received by 11:59 pm on the 14th day of delinquency your account will be closed and you will lose all of your Network Members!!!\r\n
+            Please update your account before the 14th of the month!!!!!";
+            $notification = Notification::create([
+                'user_id' => $user->id,
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $user->id,
+                'body' => $string,
+                'sender_id' => $user->id
+            ]);
+
+            event(new PaymentNotMade($user->id, $string, 'App\Models\User', $notification->id, $user));
+        }
+    }
+}
+
+function suspend_accounts() {
+    $users = get_eloquent_users();
+    foreach ($users as $user) {
+        if(!has_made_monthly_payment($user->id)) {
+            if(is_null($user->suspended_on)) {
+                $user->suspended_on = Carbon::today();
+                $user->save();
+            }
+        }
+    }
+}
+
+function close_accounts() {
+    $users = get_eloquent_users();
+    foreach ($users as $user) {
+        if(!has_made_monthly_payment($user->id)) {
+            //close account
+            if(is_null($user->suspended_on)) {
+                $user->closed_on = Carbon::today();
+                $user->save();
+            }
+
+            //get what networks the user is member of
+            $joined_networks_ids = NetworkMember::where('user_id', $user->id)->pluck('network_id');
+            //get owners of those networks
+            $joined_networks_owner_ids = Network::whereIn('id', $joined_networks_ids)->pluck('user_id');
+            //send notification to owners
+            foreach ($joined_networks_owner_ids as $target_id) {
+                $string = $user->profile->first_name . ' ' . $user->profile->last_name . " account has been closed.";
+                $target = User::with('profile')->find($target_id);
+                $notification = Notification::create([
+                    'user_id' => $target->id,
+                    'notifiable_type' => 'App\Models\User',
+                    'notifiable_id' => $target->id,
+                    'body' => $string,
+                    'sender_id' => $target->id
+                ]);
+
+                event(new NetworkMemberClosure($target->id, $string, 'App\Models\User', $notification->id, $target));
+            }
+
+        }
+    }
 }

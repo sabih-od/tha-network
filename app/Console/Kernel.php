@@ -31,6 +31,15 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {unable_to_meet_weekly_goal();})->weeklyOn(7, '23:59');
         //no referrals for the day
         $schedule->call(function () {no_referrals_for_the_day();})->dailyAt('23:59');
+        // payment not made
+        $dates = [2, 4, 6, 8, 10, 12, 14];
+        foreach ($dates as $date) {
+            $schedule->call(function () {payment_not_made();})->monthlyOn($date, '00:00');
+        }
+        // suspend accounts
+        $schedule->call(function () {suspend_accounts();})->monthlyOn(7, '00:00');
+        // close accounts
+        $schedule->call(function () {close_accounts();})->monthlyOn(14, '00:00');
     }
 
     /**

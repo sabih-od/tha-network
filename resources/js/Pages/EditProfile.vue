@@ -2,17 +2,17 @@
     <section class="bg-grey editProfile pt-0">
         <div class="container">
             <div class="row jcc">
-                <div class="col-md-10">
+                <div class="col-md-10" v-if="has_made_monthly_payment">
                     <h2>Personal Information</h2>
                 </div>
                 <div class="col-md-10">
-                    <BioUpdate/>
+                    <BioUpdate v-if="has_made_monthly_payment" />
 
-                    <InfoUpdate/>
+                    <InfoUpdate v-if="has_made_monthly_payment" />
 
-                    <AddressUpdate/>
+                    <AddressUpdate v-if="has_made_monthly_payment" />
 
-                    <PasswordUpdate/>
+                    <PasswordUpdate v-if="has_made_monthly_payment" />
 
                     <MonthlyPayment
                         :client_secret="client_secret"
@@ -20,7 +20,7 @@
                         :has_made_monthly_payment="has_made_monthly_payment"
                     ></MonthlyPayment>
 
-                    <div class="btn-group gap1">
+                    <div class="btn-group gap1" v-if="has_made_monthly_payment">
                         <button type="submit" class="themeBtn" onclick="window.location.href='login.php'">Save</button>
                         <button class="themeBtn discard">Discard Changes</button>
                     </div>

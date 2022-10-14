@@ -88,6 +88,14 @@ export default {
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('ReferralCompleted', this.addNotification);
 
+        //payment not made
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('PaymentNotMade', this.addNotification);
+
+        //network member closure
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('NetworkMemberClosure', this.addNotification);
+
         //When a user send you friend request.
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('FriendRequestReceived', this.addNotification);

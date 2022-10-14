@@ -80,6 +80,11 @@ class HowItWorks extends Controller
             'amount' => $this->amount,
         ]);
 
+        //remove suspension
+        $user = User::find(Auth::id());
+        $user->suspended_on = null;
+        $user->save();
+
         session()->put('monthly_payment_flash', 'Your monthly subscription payment has been made!');
 
         return redirect()->route('editProfileForm');
