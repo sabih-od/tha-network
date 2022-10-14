@@ -59,13 +59,17 @@
             </div>
         </div>
     </section>
-    <div class="notifyPopup">
+    <div :class="notification_modal.class">
+        <div class="notiImgCont">
+            <figure>
+                <img :src="notification_modal.img" alt="">
+            </figure>
+        </div>
         <div class="notiBody">
-            <p>Nice to see you still here. Or have you just clicked back here after forgetting what this tab was? Oops</p>
+            <p v-html="notification_modal.text"></p>
         </div>
         <div class="notiFooter">
-            <button><i class="fas fa-check"></i><span>Ok</span></button>
-            <button><i class="fas fa-times"></i><span>Close</span></button>
+            <button @click.prevent="hideNotification"><i class="fas fa-check"></i><span>Ok</span></button>
         </div>
     </div>
 </template>
@@ -119,9 +123,18 @@ export default {
             // flash_error: this.$page.props?.flash?.error ?? null,
             friends_count: null,
             network_count: null,
+            notification_modal: {
+                text: 'Nice to see you still here. Or have you just clicked back here after forgetting what this tab was? Oops',
+                img: this.$store.getters['Utils/public_asset']('images/benefit2.jpg'),
+                class: 'notifyPopup'
+            }
         }
     },
     mounted() {
+        let _t = this;
+        this.$emitter.on('show_image_notification', function (img, text) {
+            _t.showNotification(img, text);
+        });
         //hide message button
         $('.btn_message').prop('hidden', true);
         $('.btn_add_friend').prop('hidden', true);
@@ -148,6 +161,14 @@ export default {
         myPost() {
             this.is_my_posts = !this.is_my_posts
             this.$emitter.emit('my-post-loading', this.is_my_posts)
+        },
+        showNotification(img, text) {
+            this.notification_modal.img = img;
+            this.notification_modal.text = text;
+            this.notification_modal.class = 'notifyPopup show';
+        },
+        hideNotification() {
+            this.notification_modal.class = 'notifyPopup'
         }
     }
 }

@@ -13,20 +13,20 @@
 <!--            </div>-->
 
             <!--header-->
-            <div class="settings-tray">
-                <div class="row jhnmsngr">
-                    <div class="col-sm-10">
-                        <div class="chatHead">
-                            <h6>{{active_user_name}}</h6>
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <span class="settings-tray--right"> </span>
-                    </div>
-                </div>
-            </div>
 
             <div class="chat-panel">
+                <div class="settings-tray">
+                    <div class="row jhnmsngr">
+                        <div class="col-sm-10">
+                            <div class="chatHead">
+                                <h6>{{active_user_name}}</h6>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <span class="settings-tray--right"> </span>
+                        </div>
+                    </div>
+                </div>
                 <!--messages-->
                 <div class="chatSec" ref="chatContainer">
                     <ChatMessageItem
@@ -50,12 +50,12 @@
                         </div>
                     </div>
                 </div>
+                <!--message form-->
+                <div class="chat-box-tray">
+                    <MessageForm :is_auth_friend="is_auth_friend"></MessageForm>
+                </div>
             </div>
 
-            <!--message form-->
-            <div class="chat-box-tray">
-                <MessageForm :is_auth_friend="is_auth_friend"></MessageForm>
-            </div>
         </template>
         <h3 v-else class="text-secondary text-center mt-5">No chat selected!</h3>
     </div>

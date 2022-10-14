@@ -8,15 +8,17 @@
         <!--notifications-->
         <div class="dropdown-menu" aria-labelledby="profileDropDown">
             <span v-if="notifications.length == 0" class="dropdown-item">No new messages</span>
-            <Link v-else v-for="notification in notifications" class="dropdown-item" replace @click.prevent="notification.sender.id != user.id ? chatWithProfile(notification.sender.id) : ''">
+            <Link v-else v-for="notification in notifications" class="dropdown-item" replace
+                  @click.prevent="notification.sender.id != user.id ? chatWithProfile(notification.sender.id) : ''">
                 <strong v-if='notification.sender.id != user.id'>
-                    New message from {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
+                    New message from
+                    {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
                 </strong>
-                <p v-else style="white-space: pre; font-size: 14px;" v-html="notification.body">
+                <p v-else v-html="notification.body">
 
                 </p>
             </Link>
-            <Link v-if="notifications.length != 0" class="dropdown-item" replace @click.prevent="clearNotifications()" style="color: blue;">
+            <Link v-if="notifications.length != 0" class="dropdown-item" replace @click.prevent="clearNotifications()">
                 Mark all as read
             </Link>
         </div>
@@ -28,9 +30,11 @@
 import {Link, useForm, usePage} from '@inertiajs/inertia-vue3'
 import {Inertia} from "@inertiajs/inertia";
 import {useToast} from "vue-toastification";
+import utils from "../mixins/utils";
 
 export default {
     name: "ChatMessagesCounterButton",
+    mixins: [utils],
     components: {
         Link
     },
@@ -53,6 +57,7 @@ export default {
         }
     },
     mounted() {
+        let _t = this;
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('NewNotification', this.addNotification);
 
@@ -82,7 +87,9 @@ export default {
 
         //referrals sent
         this.$echo.private('App.Models.User.' + this.user.id)
-            .listen('ReferralSent', this.addNotification);
+            .listen('ReferralSent', function (data) {
+                _t.addNotification(data, this.$store.getters['Utils/public_asset']('images/notifications/ReferralSent.png'))
+            });
 
         //referrals completed and a new connection is added to your connections
         this.$echo.private('App.Models.User.' + this.user.id)
@@ -130,13 +137,18 @@ export default {
         this.$emitter.on('request_chat_with_profile', this.requestChatWithProfile);
     },
     methods: {
-        addNotification(data) {
+        addNotification(data, img = null) {
             console.log('data', data);
             this.notifications = [
                 ...this.notifications,
                 data
             ]
             this.$emitter.emit('unread_notifications_updated', this.notifications);
+
+            //show popup notification
+            if(img){
+                this.$emitter.emit('show_image_notification', img, data.body);
+            }
         },
         chatWithProfile(profile_id) {
             this.$store.commit('Chat/setActiveUserId', profile_id);
@@ -160,9 +172,7 @@ export default {
         },
         fetchNotificationData() {
             let url = this.$store.getters['Utils/baseUrl'];
-            Inertia.get(url, {
-
-            }, {
+            Inertia.get(url, {}, {
                 replace: true,
                 preserveScroll: true,
                 preserveState: true,
@@ -229,19 +239,53 @@ export default {
 </script>
 
 <style scoped>
-    .button__badge {
-        background-color: #fa3e3e;
-        border-radius: 2px;
-        color: white;
+.button__badge {
+    background-color: #fa3e3e;
+    border-radius: 2px;
+    color: white;
 
-        padding: 1px 3px;
-        font-size: 10px;
+    padding: 1px 3px;
+    font-size: 10px;
 
-        position: absolute; /* Position the badge within the relatively positioned button */
-        top: 0;
-        right: 0;
+    position: absolute; /* Position the badge within the relatively positioned button */
+    top: 0;
+    right: 0;
 
-        min-width: 10px;
-        min-height: 10px;
-    }
+    min-width: 10px;
+    min-height: 10px;
+}
+
+
+.dropdown-menu {
+    right: 0 !important;
+    left: unset;
+    width: 300px;
+}
+
+.dropdown-menu .dropdown-item {
+    white-space: initial !important;
+    background: #ddd;
+}
+
+.dropdown-menu .dropdown-item + .dropdown-item {
+    margin-top: 0.5rem;
+}
+
+.dropdown-menu .dropdown-item * {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.dropdown-menu .dropdown-item:hover *{
+    color: #fff;
+}
+
+.dropdown-menu .dropdown-item:last-of-type{
+    background: transparent;
+}
+
+.dropdown-menu .dropdown-item:last-of-type:hover{
+    color: #000;
+}
 </style>

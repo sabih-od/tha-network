@@ -3,16 +3,16 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Send Invitation</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Send Invitation</h5>
                 </div>
                 <div class="modal-body">
-                    <h5 class="modal-title" id="exampleModalLabel"><small>Send invitations to people to join your network</small></h5>
+                    <h5><small>Send invitations to people to join your network</small></h5>
                     <form @submit.prevent="submit">
                         <div class="form-group">
                             <input class="form-control" placeholder="Email" v-model="form.email" :disabled="form.processing">
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary form-control">
+                            <button type="submit" class="themeBtn">
                                 {{ form.processing ? 'Please wait...' : 'Send' }}
                             </button>
                         </div>
@@ -115,5 +115,11 @@ export default {
 </script>
 
 <style scoped>
+.modal-header {
+    background: var(--primary);
+}
 
+.modal-title {
+    color: #fff;
+}
 </style>

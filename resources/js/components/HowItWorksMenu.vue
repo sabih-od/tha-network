@@ -22,22 +22,22 @@
                     </ul>
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="#">How It Works</a>
+                            <a class="nav-link" :href="this.$route('work')">How It Works</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Membership Benefits</a>
+                            <a class="nav-link" :href="this.$route('benefits')">Membership Benefits</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" :href="this.$route('about')">About Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Terms & Conditions</a>
+                            <a class="nav-link" :href="this.$route('terms')">Terms & Conditions</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Privacy Policy</a>
+                            <a class="nav-link" :href="this.$route('privacy')">Privacy Policy</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Contact Us</a>
+                            <a class="nav-link" :href="this.$route('about')">Contact Us</a>
                         </li>
                     </ul>
                 </div>
