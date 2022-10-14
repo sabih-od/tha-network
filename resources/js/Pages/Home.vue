@@ -59,7 +59,7 @@
             </div>
         </div>
     </section>
-    <div :class="notification_modal.class">
+    <div :class="notification_modal.class" style="z-index: 999;">
         <div class="notiImgCont">
             <figure>
                 <img :src="notification_modal.img" alt="">
@@ -124,8 +124,8 @@ export default {
             friends_count: null,
             network_count: null,
             notification_modal: {
-                text: 'Nice to see you still here. Or have you just clicked back here after forgetting what this tab was? Oops',
-                img: this.$store.getters['Utils/public_asset']('images/benefit2.jpg'),
+                text: '',
+                img: '',
                 class: 'notifyPopup'
             }
         }
@@ -133,7 +133,6 @@ export default {
     mounted() {
         let _t = this;
         this.$emitter.on('show_image_notification', function ({img, text}) {
-            console.log(text);
             _t.showNotification(img, text);
         });
         //hide message button

@@ -63,27 +63,39 @@ export default {
 
         //new member signup
         this.$echo.private('App.Models.User.' + this.user.id)
-            .listen('NewMemberSignup', this.addNotification);
+            .listen('NewMemberSignup', function (data) {
+                _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/NewMemberSignup.png'))
+            });
 
         //after registration app promotion
         this.$echo.private('App.Models.User.' + this.user.id)
-            .listen('AfterRegistrationAppPromotion', this.addNotification);
+            .listen('AfterRegistrationAppPromotion', function (data) {
+                _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/AfterRegistrationAppPromotion.png'))
+            });
 
         //lets set weekly goals
         this.$echo.private('App.Models.User.' + this.user.id)
-            .listen('SetWeeklyGoal', this.addNotification);
+            .listen('SetWeeklyGoal', function (data) {
+                _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/SetWeeklyGoal.png'))
+            });
 
         //weekly notification
         this.$echo.private('App.Models.User.' + this.user.id)
-            .listen('WeeklyRankingNotification', this.addNotification);
+            .listen('WeeklyRankingNotification', function (data) {
+                _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/WeeklyRankingNotification.png'))
+            });
 
         //unable to meet weekly goal notification
         this.$echo.private('App.Models.User.' + this.user.id)
-            .listen('UnableToMeetWeeklyGoal', this.addNotification);
+            .listen('UnableToMeetWeeklyGoal', function (data) {
+                _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/UnableToMeetWeeklyGoal.png'))
+            });
 
         //no referrals for the day
         this.$echo.private('App.Models.User.' + this.user.id)
-            .listen('NoReferralsForTheDay', this.addNotification);
+            .listen('NoReferralsForTheDay', function (data) {
+            _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/NoReferralsForTheDay.png'))
+        });
 
         //referrals sent
         this.$echo.private('App.Models.User.' + this.user.id)
@@ -93,15 +105,21 @@ export default {
 
         //referrals completed and a new connection is added to your connections
         this.$echo.private('App.Models.User.' + this.user.id)
-            .listen('ReferralCompleted', this.addNotification);
+            .listen('ReferralCompleted', function (data) {
+                _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/ReferralCompleted.png'))
+            });
 
         //payment not made
         this.$echo.private('App.Models.User.' + this.user.id)
-            .listen('PaymentNotMade', this.addNotification);
+            .listen('PaymentNotMade', function (data) {
+                _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/PaymentNotMade.png'))
+            });
 
         //network member closure
         this.$echo.private('App.Models.User.' + this.user.id)
-            .listen('NetworkMemberClosure', this.addNotification);
+            .listen('NetworkMemberClosure', function (data) {
+                _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/NetworkMemberClosure.png'))
+            });
 
         //When a user send you friend request.
         this.$echo.private('App.Models.User.' + this.user.id)
