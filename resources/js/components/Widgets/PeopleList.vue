@@ -3,7 +3,7 @@
         <div class="df aic jcsb mb-3">
             <h2 v-if="page_type != 'UserProfile'" class="m-0">People In My Network</h2>
             <h2 v-if="page_type == 'UserProfile'" class="m-0">Prople In user's network </h2>
-            <a href="#" class="viewBtn">See all</a>
+            <a href="#" @click.prevent="seeAll()" class="viewBtn">{{ all ? 'Collapse' : 'See all' }}</a>
         </div>
         <form action="">
             <div class="searchlist">
@@ -61,7 +61,8 @@ export default {
             search: '',
             peoples: [],
             debounce: null,
-            user_id: null
+            user_id: null,
+            all: false
         }
     },
     mounted() {
@@ -80,7 +81,8 @@ export default {
                     only: ['network_members'],
                     params: {
                         search: this.search,
-                        user_id: this.user_id
+                        user_id: this.user_id,
+                        all: this.all
                     }
                 }).then(res => {
                     this.peoples = res?.network_members?.data.filter(element => element.has_blocked == false) ?? []
@@ -88,6 +90,10 @@ export default {
                     // this.loading = false
                 })
             }, 600);
+        },
+        seeAll() {
+            this.all = !this.all;
+            this.initateSearch();
         }
     }
 }
