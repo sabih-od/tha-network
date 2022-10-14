@@ -88,7 +88,7 @@ export default {
         //referrals sent
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('ReferralSent', function (data) {
-                _t.addNotification(data, this.$store.getters['Utils/public_asset']('images/notifications/ReferralSent.png'))
+                _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/ReferralSent.png'))
             });
 
         //referrals completed and a new connection is added to your connections
