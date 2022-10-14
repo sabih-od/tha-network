@@ -233,7 +233,7 @@ trait UserData
             ->with('profile')
             ->whereIn('id', $network_member_ids)
             ->where('id', '!=', $user_id)
-            ->simplePaginate(8)
+            ->simplePaginate($request->all == "true" ? 99999999 : 8)
             ->through(function ($item, $key) use($user_id) {
                 $item->auth_id = $user_id;
                 $auth_user = Auth::user();

@@ -1,4 +1,14 @@
 <template>
+    <figure :class="video_classes" :style="video_Styling">
+        <video autoplay muted controls id="video_element">
+            <source :src="asset('video/introVideo.mp4')">
+        </video>
+        <div class="videoControllers">
+            <button id="minimize" class="themeBtn" v-if="video_classes == 'introVideo fullScreen'" @click.prevent="minimizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Minimize</span></button>
+            <button id="minimize" class="themeBtn" v-if="video_classes == 'introVideo minimized'" @click.prevent="maximizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Maximize</span></button>
+            <button id="skip" class="themeBtn" @click.prevent="skipVideo"><i class="far fa-forward"></i><span>Skip</span></button>
+        </div>
+    </figure>
     <section class="loginSection create-profile">
         <div class="loginWrap">
             <div class="row mx-0 no-gutters">
@@ -53,6 +63,8 @@ export default {
             stripe: null,
             mountLoading: true,
             formLoading: false,
+            video_classes: 'introVideo fullScreen',
+            video_Styling: ''
         }
     },
     mounted() {
@@ -96,6 +108,15 @@ export default {
                 (useToast()).error("An unexpected error occurred.");
             }
             this.formLoading = false
+        },
+        minimizeVideo() {
+            this.video_classes = 'introVideo minimized';
+        },
+        maximizeVideo() {
+            this.video_classes = 'introVideo fullScreen';
+        },
+        skipVideo() {
+            this.video_Styling = 'display: none;';
         }
     }
 }

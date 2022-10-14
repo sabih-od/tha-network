@@ -6,7 +6,10 @@
                 <div class="col-md-3">
                     <div class="cardWrap">
                         <h2>About</h2>
-                        <p class="text-pre-wrap">{{ bio }}</p>
+
+                        <p class="text-pre-wrap"><strong>Bio: </strong>{{ bio }}</p>
+                        <p class="text-pre-wrap"><strong>Gender: </strong>{{ profile.gender }}</p>
+                        <p class="text-pre-wrap"><strong>Marital Status: </strong>{{ profile.marital_status }}</p>
                         <a href="#" @click.prevent class="btnDesign">See more</a>
                     </div>
 
