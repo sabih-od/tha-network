@@ -1,10 +1,12 @@
 <template>
     <div v-if="renderedFiles.length > 0" class="render-img-wrapper">
-        <div class="row mx-2">
-            <div class="col-md-2 position-relative render-img-con" v-for="(file, ind) in renderedFiles" :key="ind">
-                <img v-if="file.type === 'image'" :src="file.source" class="img-fluid w-100" alt="">
-                <i class="fas fa-times delete-icon"
-                   @click.prevent="removeFile($event, file.fileInd, files, renderedFiles)"></i>
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-2 position-relative render-img-con" v-for="(file, ind) in renderedFiles" :key="ind">
+                    <img v-if="file.type === 'image'" :src="file.source" class="img-fluid w-100" alt="">
+                    <i class="fas fa-times delete-icon"
+                       @click.prevent="removeFile($event, file.fileInd, files, renderedFiles)"></i>
+                </div>
             </div>
         </div>
     </div>
@@ -241,8 +243,8 @@ export default {
 
 .render-img-con img{
     border: 1px solid #ddd;
-    width: 700px !important;
+    /*width: 700px !important;*/
     height: 160px;
-    object-fit: cover;
+    object-fit: contain;
 }
 </style>
