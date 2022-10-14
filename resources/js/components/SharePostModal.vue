@@ -15,8 +15,8 @@
                         </div>
 
                         <div class="d-flex">
-                            <button class="btn btn-danger ml-auto" @click.prevent="hide">Close</button>
-                            <button class="btn btn-success ml-2" @click.prevent="submit">
+                            <button class="themeBtn ml-auto" @click.prevent="hide">Close</button>
+                            <button class="themeBtn ml-2" @click.prevent="submit">
                                 {{ form.processing ? 'Sharing...' : 'Share' }}
                             </button>
                         </div>
@@ -97,5 +97,7 @@ export default {
 .modal-body > h2 {
     font-size: 1.75rem;
     padding: 1rem 0 0 1rem;
+    background: var(--primary);
+    color: #fff;
 }
 </style>

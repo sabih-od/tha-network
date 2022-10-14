@@ -147,7 +147,7 @@ export default {
 
             //show popup notification
             if(img){
-                console.log('img: ', img)
+                console.log('data.body: ', data.body)
                 this.$emitter.emit('show_image_notification', img, data.body);
             }
         },
