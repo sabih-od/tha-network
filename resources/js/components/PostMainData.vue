@@ -135,8 +135,8 @@ export default {
 
 <style scoped>
 .shared-post {
-    border: 2px solid #e7e7e7;
-    padding: 15px;
+    /*border: 2px solid #e7e7e7;*/
+    padding: 0 0 15px;
     border-radius: 10px;
     margin-bottom: 15px;
 }
