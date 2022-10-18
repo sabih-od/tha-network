@@ -126,7 +126,7 @@ Route::group([
     // Post comment
     Route::post('post/comment', [PostController::class, 'postCommentStore'])
         ->name('postCommentStore');
-    Route::delete('post/comment/delete', [PostController::class, 'postCommentDelete'])
+    Route::post('post/comment/delete', [PostController::class, 'postCommentDelete'])
         ->name('postCommentDelete');
     // Comment reply
     Route::post('comment/reply', [PostController::class, 'commentReplyStore'])

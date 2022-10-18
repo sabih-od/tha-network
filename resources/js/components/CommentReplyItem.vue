@@ -53,8 +53,7 @@ export default {
             if (this.loading) return;
 
             Inertia.post(this.$route('postCommentDelete'), {
-                id,
-                _method: 'delete'
+                id
             }, {
                 replace: true,
                 preserveState: true,
