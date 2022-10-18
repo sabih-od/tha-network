@@ -164,7 +164,7 @@ export default {
             this.$emitter.emit('unread_notifications_updated', this.notifications);
 
             //show popup notification
-            if(img){
+            if(img != null){
                 this.$emitter.emit('show_image_notification', {img: img, text: data.body});
             }
         },
