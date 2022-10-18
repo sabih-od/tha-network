@@ -138,7 +138,7 @@ class RegisterController extends Controller
             'password' => [
                 'required',
                 'string',
-                Password::min(8)/*->mixedCase()*/,
+                Password::min(8)->mixedCase()->numbers()->symbols(),
                 'confirmed'
             ],
             'social_security_number' => [
