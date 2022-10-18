@@ -157,6 +157,7 @@ export default {
     methods: {
         addNotification(data, img = null) {
             console.log('data', data);
+            console.log('img', img);
             this.notifications = [
                 ...this.notifications,
                 data
@@ -164,7 +165,7 @@ export default {
             this.$emitter.emit('unread_notifications_updated', this.notifications);
 
             //show popup notification
-            if(img != null && img != {}){
+            if(img){
                 this.$emitter.emit('show_image_notification', {img: img, text: data.body});
             }
         },
