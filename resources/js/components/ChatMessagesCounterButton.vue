@@ -157,6 +157,7 @@ export default {
     methods: {
         addNotification(data, img = null) {
             console.log('data', data);
+            console.log('image', image);
             this.notifications = [
                 ...this.notifications,
                 data
