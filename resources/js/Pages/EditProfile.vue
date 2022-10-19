@@ -20,9 +20,17 @@
                         :has_made_monthly_payment="has_made_monthly_payment"
                     ></MonthlyPayment>
 
+                    <CloseAccountModal></CloseAccountModal>
+
                     <div class="btn-group gap1" v-if="has_made_monthly_payment">
                         <button type="submit" class="themeBtn" onclick="window.location.href='login.php'">Save</button>
                         <button class="themeBtn discard">Discard Changes</button>
+                    </div>
+
+                    <br />
+                    <br />
+                    <div class="btn-group gap1">
+                        <button @click.prevent="closeAccountModal()" type="button" class="dangerBtn">CLOSE MY ACCOUNT</button>
                     </div>
                 </div>
 
@@ -191,6 +199,7 @@ import InfoUpdate from "../components/Forms/InfoUpdate";
 import AddressUpdate from "../components/Forms/AddressUpdate";
 import PasswordUpdate from "../components/Forms/PasswordUpdate";
 import MonthlyPayment from "../components/MonthlyPayment";
+import CloseAccountModal from "../components/CloseAccountModal";
 
 export default {
     name: "EditProfile",
@@ -205,7 +214,8 @@ export default {
         ProfileLeftSide,
         FormLoading,
         CoverPhoto,
-        MonthlyPayment
+        MonthlyPayment,
+        CloseAccountModal
     },
     layout: ProfileLayout,
     props: {
@@ -301,7 +311,10 @@ export default {
                     })
                 }
             })
-        }
+        },
+        closeAccountModal() {
+            $('.modal_close_account').modal('show');
+        },
     }
 }
 </script>

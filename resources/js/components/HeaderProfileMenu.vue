@@ -7,7 +7,7 @@
             <Link class="dropdown-item" replace :href="$route('profile')">How others see your profile</Link>
             <Link class="dropdown-item" replace :href="$route('editProfileForm')">Edit Profile</Link>
             <div class="dropdown-divider"></div>
-            <Link :href="$route('logout')" method="post" replace :headers="logoutHeaders"
+            <Link @click="hasLoggedOut()" :href="$route('logout')" method="post" replace :headers="logoutHeaders"
                   class="dropdown-item">Logout
             </Link>
         </div>
@@ -51,6 +51,11 @@ export default {
             }
         }
     },
+    methods: {
+        hasLoggedOut() {
+            this.$store.commit('Misc/setHasLoggedOut', true);
+        }
+    }
 }
 </script>
 

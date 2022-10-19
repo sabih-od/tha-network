@@ -154,18 +154,19 @@ export default {
         const params = new Proxy(new URLSearchParams(window.location.search), {
             get: (searchParams, prop) => searchParams.get(prop),
         });
-        // console.log('-------------------------------');
-        // console.log(params['send-code']);
-        // console.log(params['send-code'] == 'success');
-        // console.log('send-code=success' in window.location.href);
-        // console.log('-------------------------------');
+
         this.isCode = params['send-code'] && params['send-code'] == 'success';
-        // this.isCode = window.location.search.indexOf('send-code=success') > -1
 
         let _t = this;
         $('#video_element').on('ended', function() {
             _t.skipVideo();
         });
+
+        //stop video if recently logged out
+        if(this.$store.getters['Misc/hasLoggedOut']) {
+            this.skipVideo();
+            this.$store.commit('Misc/setHasLoggedOut', false);
+        }
     },
     data() {
         return {

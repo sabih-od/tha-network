@@ -46,7 +46,7 @@ class HomeController extends Controller
                 return $this->getReplyData($request->comment_id ?? null);
             }),
             'profile_cover' => $this->profileImg(Auth::user(), 'profile_cover'),
-            'friends_count' => count(Auth::user()->followers),
+            'friends_count' => count(Auth::user()->followers) - 1,
             'network_count' => Auth::user()->network()->exists() ? count(Auth::user()->network->members) : 0,
         ]);
     }

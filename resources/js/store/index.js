@@ -6,6 +6,7 @@ import HttpUtils from "./HttpUtils";
 import Chat from "./Chat";
 import Channel from "./Channel";
 import Notification from "./Notification";
+import Misc from "./Misc";
 
 export default createStore({
     modules: {
@@ -16,5 +17,6 @@ export default createStore({
         Chat,
         Channel,
         Notification,
+        Misc,
     }
 })
