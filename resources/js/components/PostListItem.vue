@@ -9,7 +9,7 @@
             <li>
                 <LikeButton :post="post"/>
             </li>
-            <li><a href="#"><i class="fal fa-comment-dots"></i></a></li>
+            <li><a href="#" @click.prevent="inputFocus(post)"><i class="fal fa-comment-dots"></i></a></li>
             <li><a href="#" @click.prevent="sharePost(post)"><i class="fal fa-share-alt"></i></a></li>
 <!--            <li class="ml-auto"><a href="#"><i class="fal fa-bookmark"></i></a></li>-->
         </ul>
@@ -20,12 +20,12 @@
                 </a>
             </li>
             <li>
-                <p v-html="recentLikes"></p>
+                <span v-html="recentLikes"></span>
             </li>
         </ul>
 
         <CommentWrapper ref="commentWrapperRef" :post="post"/>
-        <CommentForm :post_id="post?.id"/>
+        <CommentForm :post_id="post?.id" ref="commentFormRef"/>
     </div>
 </template>
 
@@ -63,7 +63,7 @@ export default {
             }
             const remainingCount = `<b>${this.post?.likers_count - lists.length}</b>`
             const appendText = this.post?.likers_count > lists.length ? ' and ' + remainingCount : ''
-            return `<p>Liked by ${lists.join(this.post?.likers_count > 2 ? ', ' : ' and ') + appendText}</p>`
+            return `<span>Liked by ${lists.join(this.post?.likers_count > 2 ? ', ' : ' and ') + appendText}</span>`
         }
     },
     mounted() {
@@ -98,6 +98,9 @@ export default {
             // this.$refs.sharePostModalRef.show(post)
             // this.$store.dispatch('SharePostModal/showModal', post)
             this.$emitter.emit('share-post-modal', post)
+        },
+        inputFocus(post){
+            this.$refs.commentFormRef.focusInput()
         }
     }
 }

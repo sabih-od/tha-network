@@ -1,5 +1,6 @@
 <template>
-    <li><a @click.prevent="commentLike()" href="#" :style="comment?.has_liked ? 'color: #00a2f5;' : ''" :class="{'active': comment?.has_liked}">{{ comment?.has_liked ? 'Unlike' : 'Like' }}</a></li>
+    <li><a @click.prevent="commentLike()" href="#" :style="comment?.has_liked ? 'color: #00a2f5;' : ''"
+           :class="{'active': comment?.has_liked}">{{ comment?.has_liked ? 'Unlike' : 'Like' }}</a></li>
 </template>
 
 <script>

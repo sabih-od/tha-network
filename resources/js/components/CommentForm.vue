@@ -50,6 +50,9 @@ export default {
                     }
                 })
         },
+        focusInput() {
+            this.$refs.refInput.focus();
+        }
     }
 }
 </script>
