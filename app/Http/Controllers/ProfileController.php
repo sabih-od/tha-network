@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NetworkMemberClosure;
 use App\Helpers\WebResponses;
 use App\Models\FriendRequest;
+use App\Models\Network;
+use App\Models\NetworkMember;
+use App\Models\Notification;
 use App\Models\User;
 use App\Traits\CommentData;
 use App\Traits\PostData;
 use App\Traits\StripePayment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -37,7 +42,7 @@ class ProfileController extends Controller
                 }),
                 'profile_image' => $this->profileImg($user, 'profile_image'),
                 'profile_cover' => $this->profileImg($user, 'profile_cover'),
-                'friends_count' => count($user->followers),
+                'friends_count' => count($user->followers) - 1,
                 'network_count' => $user->network()->exists() ? count($user->network->members) : 0
             ]);
         } catch (\Exception $e) {
@@ -297,7 +302,7 @@ class ProfileController extends Controller
                     $auth = User::find(Auth::id());
                     return $auth->isFollowing($user) || $auth->isFollowedBy($user);
                 },
-                'friends_count' => count($user->followers),
+                'friends_count' => count($user->followers) - 1,
                 'network_count' => $user->network()->exists() ? count($user->network->members) : 0,
                 'user_is_blocked' => $auth_user->hasBlocked($user),
             ]);
@@ -313,5 +318,39 @@ class ProfileController extends Controller
             $img = $user->getFirstMedia($collection)->original_url ?? null;
         }
         return $img;
+    }
+
+    public function closeMyAccount(Request $request)
+    {
+        try {
+            $user = User::find(Auth::id());
+            $user->closed_on = Carbon::today();
+            $user->save();
+
+            //get what networks the user is member of
+            $joined_networks_ids = NetworkMember::where('user_id', $user->id)->pluck('network_id');
+            //get owners of those networks
+            $joined_networks_owner_ids = Network::whereIn('id', $joined_networks_ids)->pluck('user_id');
+            //send notification to owners
+            foreach ($joined_networks_owner_ids as $target_id) {
+                $string = $user->profile->first_name . ' ' . $user->profile->last_name . " account has been closed.";
+                $target = User::with('profile')->find($target_id);
+                $notification = Notification::create([
+                    'user_id' => $target->id,
+                    'notifiable_type' => 'App\Models\User',
+                    'notifiable_id' => $target->id,
+                    'body' => $string,
+                    'sender_id' => $target->id
+                ]);
+
+                event(new NetworkMemberClosure($target->id, $string, 'App\Models\User', $notification->id, $target));
+            }
+
+            Auth::logout();
+
+            return redirect()->route('login');
+        } catch (\Exception $e) {
+            return WebResponses::exception($e->getMessage());
+        }
     }
 }

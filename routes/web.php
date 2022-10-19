@@ -170,6 +170,10 @@ Route::group([
         ->name('block');
     Route::get('unblock/{target_id}', [FriendRequestController::class, 'unblock'])
         ->name('unblock');
+
+    // Close My Account
+    Route::post('close-my-account', [ProfileController::class, 'closeMyAccount'])
+        ->name('closeMyAccount');
 });
 
 Route::get('/work', function () {
