@@ -86,6 +86,32 @@
                 </div>
                 <div class="row aic">
                     <div class="col-md-6">
+                        <figure :class="video_classes" :style="video_Styling">
+                            <video autoplay muted controls id="video_element">
+                                <source :src="asset('video/introVideo.mp4')">
+                            </video>
+                            <div class="videoControllers">
+                                <button id="minimize" class="themeBtn" v-if="video_classes == 'introVideo fullScreen'" @click.prevent="minimizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Minimize</span></button>
+                                <button id="minimize" class="themeBtn" v-if="video_classes == 'introVideo minimized'" @click.prevent="maximizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Maximize</span></button>
+                                <button id="skip" class="themeBtn" @click.prevent="skipVideo"><i class="far fa-forward"></i><span>Skip</span></button>
+                            </div>
+                        </figure>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Membership Benefits</h3>
+                        <p>Once you become a member the Sky is the Limit in your earning potential. We have developed
+                            this site to help everyone earn extra cash while also donating a portion of the sites
+                            proceeds to charities. Enjoy a full network of
+                            people to chat with, share information with, send daily post, and brag about the number of
+                            members in your Network!!! Earn Financial Freedom!! Membership has never been this
+                            great!!!!</p>
+                        <p>Have fun, keep the invites coming, build your network!!!</p>
+                        <p>Become a member today!!!!</p>
+                        <a href="login.php" class="themeBtn">Join Us</a>
+                    </div>
+                </div>
+                <div class="row aic">
+                    <div class="col-md-6">
                         <figure><img :src="asset('images/benefit1.jpg')" alt=""></figure>
                     </div>
                     <div class="col-md-6">
@@ -249,6 +275,7 @@
 <script>
 import HowItWorksMenu from "../components/HowItWorksMenu";
 import utils from "../mixins/utils";
+import {useForm} from "@inertiajs/inertia-vue3";
 
 export default {
     name: "HowItWorks",
@@ -260,7 +287,27 @@ export default {
         inviter: Object
     },
     mounted() {
-
+        let _t = this;
+        $('#video_element').on('ended', function() {
+            _t.skipVideo();
+        });
+    },
+    data() {
+        return {
+            video_classes: 'introVideo fullScreen',
+            video_Styling: ''
+        }
+    },
+    methods: {
+        minimizeVideo() {
+            this.video_classes = 'introVideo minimized';
+        },
+        maximizeVideo() {
+            this.video_classes = 'introVideo fullScreen';
+        },
+        skipVideo() {
+            this.video_Styling = 'display: none;';
+        }
     }
 }
 </script>

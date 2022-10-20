@@ -169,9 +169,10 @@ class RegisterController extends Controller
         $user->save();
 
         //create avatar based on gender
-        $avatar_url = $data['gender'] == 'Male' ? public_path('images/male-avatar.png') : public_path('images/female-avatar.png');
+        $avatar_url = $data['gender'] == 'Male' ? public_path('images/avatars/male-avatar.png') : public_path('images/avatars/female-avatar.png');
         $user
             ->addMedia($avatar_url)
+            ->preservingOriginal()
             ->toMediaCollection('profile_image');
         //create profile
         $user->profile()->create([
@@ -183,7 +184,7 @@ class RegisterController extends Controller
         ]);
 
         //notification: lets set weekly goal
-        $string = "Hi let’s set your weekly goal";
+        $string = "Your Weekly goals has been set. Complete your goals to get promoted to the next grade";
         $notification = Notification::create([
             'user_id' => $user->id,
             'notifiable_type' => 'App\Models\User',

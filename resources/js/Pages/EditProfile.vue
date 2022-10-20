@@ -23,7 +23,7 @@
                     <CloseAccountModal></CloseAccountModal>
 
                     <div class="btn-group gap1" v-if="has_made_monthly_payment">
-                        <button type="submit" class="themeBtn" onclick="window.location.href='login.php'">Save</button>
+                        <button type="submit" class="themeBtn" @click.prevent="showWeeklyGoalNotification()">Save</button>
                         <button class="themeBtn discard">Discard Changes</button>
                     </div>
 
@@ -37,151 +37,20 @@
             </div>
         </div>
     </section>
-    <!--    <Main>
-            <section>
-                <CoverPhoto/>
-                <div class="container">
-                    <div class="topWrap">
-                        <div class="row aic">
-                            <div class="col-md-6">
-                                <UserInfo/>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="btn-group">
-                                    <a href="#" @click.prevent class="themeBtn">personal chat group</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <ProfileLeftSide/>
-                        <div class="col-md-9">
-                            <div class="profile-wrap">
-                                <form @submit.prevent="submit">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group" :class="{'mb-0': form.errors.name}">
-                                                <label>Name</label>
-                                                <input type="text" v-model="form.name" placeholder="John"
-                                                       class="form-control">
-                                            </div>
-                                            <p v-if="form.errors.name" class="small text-danger text-right">{{
-                                                    form.errors.name
-                                                }}</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label>Email</label>
-                                                <input type="email" placeholder="johnsmith88@gmail.com"
-                                                       class="form-control" :value="form.email" readonly>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group" :class="{'mb-0': form.errors.phone}">
-                                                <label>Phone</label>
-                                                <input type="text" v-model="form.phone" placeholder="123 456 7890"
-                                                       class="form-control">
-                                            </div>
-                                            <p v-if="form.errors.phone" class="small text-danger text-right">{{
-                                                    form.errors.phone
-                                                }}</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group" :class="{'mb-0': form.errors.gender}">
-                                                <label>Gender</label>
-                                                <select v-model="form.gender" class="form-control">
-                                                    <option v-for="(item, ind) in genders" :key="ind" :value="item">{{
-                                                            item
-                                                        }}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                            <p v-if="form.errors.gender" class="small text-danger text-right">{{
-                                                    form.errors.gender
-                                                }}</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group" :class="{'mb-0': form.errors.dob}">
-                                                <label>Date Of Brith</label>
-                                                <input type="date" v-model="form.dob" placeholder="03-05-1995"
-                                                       class="form-control">
-                                            </div>
-                                            <p v-if="form.errors.dob" class="small text-danger text-right">{{
-                                                    form.errors.dob
-                                                }}</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group" :class="{'mb-0': form.errors.marital_status}">
-                                                <label>Marital Status</label>
-                                                <select name="marital" v-model="form.marital_status" class="form-control">
-                                                    <option v-for="(item, ind) in marital_statuses" :key="ind"
-                                                            :value="item">{{
-                                                            item
-                                                        }}
-                                                    </option>
-                                                </select>
-                                            </div>
-                                            <p v-if="form.errors.marital_status" class="small text-danger text-right">{{
-                                                    form.errors.marital_status
-                                                }}</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group" :class="{'mb-0': form.errors.country_of_residence}">
-                                                <label>Country of Residence</label>
-                                                <input type="text" v-model="form.country_of_residence" placeholder="USA"
-                                                       class="form-control">
-                                            </div>
-                                            <p v-if="form.errors.country_of_residence" class="small text-danger text-right">
-                                                {{
-                                                    form.errors.country_of_residence
-                                                }}</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group" :class="{'mb-0': form.errors.city}">
-                                                <label>City</label>
-                                                <input type="text" v-model="form.city" placeholder="New York"
-                                                       class="form-control">
-                                            </div>
-                                            <p v-if="form.errors.city" class="small text-danger text-right">{{
-                                                    form.errors.city
-                                                }}</p>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="form-group" :class="{'mb-0': form.errors.bio}">
-                                                <label>Bio</label>
-                                                <textarea v-model="form.bio" placeholder="Enter Bio"
-                                                          class="form-control"></textarea>
-                                            </div>
-                                            <p v-if="form.errors.bio" class="small text-danger text-right">{{
-                                                    form.errors.bio
-                                                }}</p>
-                                        </div>
-
-                                        <div class="col-md-12">
-                                            <div class="form-group" :class="{'mb-0': form.errors.personal_links}">
-                                                <label>Personal Links</label>
-                                                <textarea v-model="form.personal_links" placeholder="Personal Links"
-                                                          class="form-control"></textarea>
-                                            </div>
-                                            <p v-if="form.errors.personal_links" class="small text-danger text-right">{{
-                                                    form.errors.personal_links
-                                                }}</p>
-                                        </div>
-
-                                        <div class="col-md-12 text-center">
-                                            <button class="themeBtn">UPDATE PROFILE</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <teleport v-if="form.processing" to="body">
-                <FormLoading/>
-            </teleport>
-        </Main>-->
+    <div :class="notification_modal.class" style="z-index: 999;">
+        <div class="notiImgCont">
+            <figure>
+                <img :src="notification_modal.img" alt="">
+            </figure>
+        </div>
+        <div class="notiBody">
+            <p v-html="notification_modal.text"></p>
+        </div>
+        <div class="notiFooter">
+            <Link v-if="notification_modal.redirect_url != '#'" @click.prevent="notification_modal.on_click" :href="notification_modal.redirect_url"><i class="fas fa-check"></i><span>Ok</span></Link>
+            <button v-else @click.prevent="hideNotification()"><i class="fas fa-check"></i><span>Ok</span></button>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -239,7 +108,7 @@ export default {
                 }
             }
             return data
-        }
+        },
     },
     data() {
         return {
@@ -266,7 +135,14 @@ export default {
                 'Divorced',
                 'Widowed',
                 'Complicated'
-            ]
+            ],
+            notification_modal: {
+                text: '',
+                img: '',
+                class: 'notifyPopup',
+                redirect_url: "#",
+                on_click: this.hideNotification
+            }
         }
     },
     mounted() {
@@ -282,6 +158,12 @@ export default {
         $('.btn_unfriend').prop('hidden', true);
         $('.btn_block').prop('hidden', true);
         $('.btn_invite').prop('hidden', true);
+
+        //show notification if user just paid
+        let _t = this;
+        this.$emitter.on('payment_made', function() {
+            _t.showPaymentMadeNotification();
+        });
 
     },
     unmounted() {
@@ -314,6 +196,51 @@ export default {
         },
         closeAccountModal() {
             $('.modal_close_account').modal('show');
+        },
+        showNotification(img, text, redirect_url = "#", on_click = this.hideNotification) {
+            this.notification_modal.img = img;
+            this.notification_modal.text = text;
+            this.notification_modal.redirect_url = redirect_url;
+            this.notification_modal.on_click = on_click;
+            this.notification_modal.class = 'notifyPopup show';
+        },
+        hideNotification() {
+            this.notification_modal.class = 'notifyPopup'
+        },
+        showWeeklyGoalNotification() {
+            //if newly registered - profile completed (SetWeeklyGoal)
+            if(this.$store.getters['Misc/isNewlyRegistered']) {
+                let img = this.$store.getters['Utils/public_asset']('images/notifications/SetWeeklyGoal.png');
+                let text = 'Your Weekly goals has been set. Complete your goals to get promoted to the next grade';
+                this.showNotification(img, text);
+
+                let _t = this;
+                setTimeout(function() {
+                    _t.showPromotionNotification();
+                }, 4000);
+            }
+        },
+        showPromotionNotification() {
+            this.hideNotification();
+
+            //AfterRegistrationAppPromotion
+            let img = this.$store.getters['Utils/public_asset']('images/notifications/AfterRegistrationAppPromotion.png');
+            let text = 'Now that you are a member and have completed setting up your account, please go to your App store and download the APP!! Let’s get started making some CASH!!!';
+            this.showNotification(img, text);
+
+            //set newly registered back to false (flow ended)
+            this.$store.commit('Misc/setIsNewlyRegistered', false);
+        },
+        showPaymentMadeNotification() {
+            this.hideNotification();
+
+            //PaymentMade
+            let img = this.$store.getters['Utils/public_asset']('images/notifications/PaymentMade.png');
+            let text = 'Your payment of $29.99 was made for your membership with THA NETWORK on (Date of Payment) Thanks for your Payment!! ';
+            this.showNotification(img, text);
+
+            //set newly registered back to false (flow ended)
+            this.$store.commit('Misc/setIsNewlyRegistered', false);
         },
     }
 }

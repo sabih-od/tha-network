@@ -102,58 +102,20 @@
             </div>
         </div>
     </section>
-    <!--    <section class="loginSection">
-            <div class="loginWrap">
-                <div class="row align-items-center mx-0 no-gutters">
-                    <div class="col-md-7">
-                        <figure><img src="images/loginImg.png" alt=""></figure>
-                    </div>
-
-                    <div class="col-md-5">
-                        <div class="contentWrap">
-                            <a href="#"><img src="images/logo.png" alt="logo"></a>
-                            <h2>Sign up</h2>
-                            <form @submit.prevent="submit">
-                                <div class="form-group" :class="{'mb-0': errors.name}">
-                                    <i class="fas fa-user"></i>
-                                    <input type="text" placeholder="Full Name" v-model="form.name" class="form-control">
-                                </div>
-                                <p v-if="errors.name" class="small text-danger">{{ errors.name }}</p>
-
-                                <div class="form-group" :class="{'mb-0': errors.email}">
-                                    <i class="fas fa-user"></i>
-                                    <input type="email" v-model="form.email" placeholder="Email Adress"
-                                           class="form-control">
-                                </div>
-                                <p v-if="errors.email" class="small text-danger">{{ errors.email }}</p>
-
-                                <div class="form-group" :class="{'mb-0': errors.password}">
-                                    <i class="fas fa-lock-open-alt"></i>
-                                    <input type="password" v-model="form.password" placeholder="Password"
-                                           class="form-control">
-                                </div>
-                                <p v-if="errors.password" class="small text-danger">{{ errors.password }}</p>
-
-                                <div class="form-group" :class="{'mb-0': errors.password_confirmation}">
-                                    <i class="fas fa-lock-open-alt"></i>
-                                    <input type="password" v-model="form.password_confirmation"
-                                           placeholder="Confirm Password" class="form-control">
-                                </div>
-                                <p v-if="errors.password_confirmation" class="small text-danger">
-                                    {{ errors.password_confirmation }}</p>
-
-                                <button type="submit">Sign Up</button>
-                                <div class="df jcc aic">
-                                    <p>Already Have an Account?
-                                        <Link :href="$route('loginForm')" replace>Sign In</Link>
-                                    </p>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>-->
+    <div :class="notification_modal.class" style="z-index: 999;">
+        <div class="notiImgCont">
+            <figure>
+                <img :src="notification_modal.img" alt="">
+            </figure>
+        </div>
+        <div class="notiBody">
+            <p v-html="notification_modal.text"></p>
+        </div>
+        <div class="notiFooter">
+            <Link v-if="notification_modal.redirect_url != '#'" @click.prevent="notification_modal.on_click" :href="notification_modal.redirect_url"><i class="fas fa-check"></i><span>Ok</span></Link>
+            <button v-else @click.prevent="hideNotification()"><i class="fas fa-check"></i><span>Ok</span></button>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -170,6 +132,7 @@ export default {
     },
     mounted() {
         console.log(this.inviter_id);
+        this.showPaymentMadeNotification();
     },
     data() {
         return {
@@ -184,11 +147,23 @@ export default {
                 password_confirmation: '',
                 social_security_number: '',
                 inviter_id: this.inviter
-            })
+            }),
+            notification_modal: {
+                text: '',
+                img: '',
+                class: 'notifyPopup',
+                redirect_url: "#",
+                on_click: this.hideNotification
+            }
         }
     },
     methods: {
         submit() {
+            //change state var for newly registered account
+            this.$store.commit('Misc/setIsNewlyRegistered', true);
+            // alert('first', this.$store.getters['Misc/isNewlyRegistered']);
+
+            //register
             this.form.post(this.$route('register'), {
                 replace: true,
                 onSuccess: () => {
@@ -198,7 +173,28 @@ export default {
                     this.$store.dispatch('Utils/showErrorMessages')
                 }
             })
-        }
+        },
+        showNotification(img, text, redirect_url = "#", on_click = this.hideNotification) {
+            this.notification_modal.img = img;
+            this.notification_modal.text = text;
+            this.notification_modal.redirect_url = redirect_url;
+            this.notification_modal.on_click = on_click;
+            this.notification_modal.class = 'notifyPopup show';
+        },
+        hideNotification() {
+            this.notification_modal.class = 'notifyPopup'
+        },
+        showPaymentMadeNotification() {
+            this.hideNotification();
+
+            //PaymentMade
+            let img = this.$store.getters['Utils/public_asset']('images/notifications/PaymentMade.png');
+            let text = 'Your payment of $29.99 was made for your membership with THA NETWORK on (Date of Payment) Thanks for your Payment!! ';
+            this.showNotification(img, text);
+
+            //set newly registered back to false (flow ended)
+            this.$store.commit('Misc/setIsNewlyRegistered', false);
+        },
     }
 }
 </script>

@@ -69,7 +69,7 @@
             <p v-html="notification_modal.text"></p>
         </div>
         <div class="notiFooter">
-            <button @click.prevent="hideNotification"><i class="fas fa-check"></i><span>Ok</span></button>
+            <Link @click.prevent="hideNotification" :href="notification_modal.redirect_url"><i class="fas fa-check"></i><span>Ok</span></Link>
         </div>
     </div>
 </template>
@@ -93,6 +93,7 @@ export default {
     name: "Home",
     mixins: [utils],
     components: {
+        Link,
         Messages,
         NewMembersList,
         WeeklyGoals,
@@ -126,15 +127,26 @@ export default {
             notification_modal: {
                 text: '',
                 img: '',
-                class: 'notifyPopup'
+                class: 'notifyPopup',
+                redirect_url: "#"
             }
         }
     },
     mounted() {
+        //show popup notification
         let _t = this;
-        this.$emitter.on('show_image_notification', function ({img, text}) {
-            _t.showNotification(img, text);
+        this.$emitter.on('show_image_notification', function ({img, text, redirect_url = "#"}) {
+            _t.showNotification(img, text, redirect_url);
         });
+
+        //if newly registered (NewMemberSignup)
+        if(this.$store.getters['Misc/isNewlyRegistered']) {
+            let img = _t.$store.getters['Utils/public_asset']('images/notifications/NewMemberSignup.png');
+            let text = 'Welcome To Tha Network Let’s get to work sending Referrals, but first Let’s Create a Profile Page!!';
+            _t.showNotification(img, text, _t.$route('editProfileForm'));
+        }
+
+
         //hide message button
         $('.btn_message').prop('hidden', true);
         $('.btn_add_friend').prop('hidden', true);
@@ -162,9 +174,10 @@ export default {
             this.is_my_posts = !this.is_my_posts
             this.$emitter.emit('my-post-loading', this.is_my_posts)
         },
-        showNotification(img, text) {
+        showNotification(img, text, redirect_url = "#") {
             this.notification_modal.img = img;
             this.notification_modal.text = text;
+            this.notification_modal.redirect_url = redirect_url;
             this.notification_modal.class = 'notifyPopup show';
         },
         hideNotification() {
