@@ -2,13 +2,13 @@
     <div class="cardWrap">
         <div class="df aic jcsb mb-3">
             <h2 class="m-0">Messages</h2>
-            <a href="#" class="editBtn"><i class="fal fa-edit"></i></a>
+            <Link :href="$route('chatIndex')" class="editBtn"><i class="fal fa-edit"></i></Link>
         </div>
         <form action="">
             <div class="searchlist">
                 <i class="fal fa-search"></i>
                 <input type="search" placeholder="Search messages" name="search" v-model="search" @keyup.prevent="fetchFriendRequests()" autocomplete="off">
-                <button><i class="fal fa-sliders-h"></i></button>
+                <Link :href="$route('chatIndex')"><i class="fal fa-sliders-h"></i></Link>
             </div>
         </form>
         <div class="msgList">
