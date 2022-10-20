@@ -34,7 +34,7 @@
                             <ChatMessagesCounterButton/>
                         </li>
                         <li>
-                            <a class="nav-icons" href="#"><i class="fal fa-user"></i></a>
+                            <Link class="nav-icons" :href="$route('profile')"><i class="fal fa-user"></i></Link>
                         </li>
                         <li>
                             <HeaderProfileMenu/>

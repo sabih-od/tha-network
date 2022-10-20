@@ -42,7 +42,7 @@ class ProfileController extends Controller
                 }),
                 'profile_image' => $this->profileImg($user, 'profile_image'),
                 'profile_cover' => $this->profileImg($user, 'profile_cover'),
-                'friends_count' => count($user->followers) - 1,
+                'friends_count' => count($user->followers),
                 'network_count' => $user->network()->exists() ? count($user->network->members) : 0
             ]);
         } catch (\Exception $e) {
@@ -302,7 +302,7 @@ class ProfileController extends Controller
                     $auth = User::find(Auth::id());
                     return $auth->isFollowing($user) || $auth->isFollowedBy($user);
                 },
-                'friends_count' => count($user->followers) - 1,
+                'friends_count' => count($user->followers),
                 'network_count' => $user->network()->exists() ? count($user->network->members) : 0,
                 'user_is_blocked' => $auth_user->hasBlocked($user),
             ]);

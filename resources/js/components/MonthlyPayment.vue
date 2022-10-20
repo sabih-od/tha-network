@@ -60,11 +60,11 @@ export default {
         //when successful monthly payment
         if(this.monthly_payment_flash) {
             setTimeout(() => {
-                (useToast()).success(this.monthly_payment_flash);
+                // (useToast()).success(this.monthly_payment_flash);
+                this.$emitter.emit('payment_made');
             }, 4000);
         }
 
-        console.log(this.client_secret, document.head.querySelector('#stripe-js'))
         if (!document.head.querySelector('#stripe-js')) {
             const scriptTag = document.createElement('script')
             scriptTag.src = 'https://js.stripe.com/v3/'
