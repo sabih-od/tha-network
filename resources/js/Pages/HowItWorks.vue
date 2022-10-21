@@ -84,18 +84,21 @@
                         <h2 class="secHeading">Our Benefits</h2>
                     </div>
                 </div>
-                <div class="row aic">
-                    <div class="col-md-6">
-                        <figure :class="video_classes" :style="video_Styling">
-                            <video autoplay muted controls id="video_element">
-                                <source :src="asset('video/introVideo.mp4')">
-                            </video>
-                            <div class="videoControllers">
-                                <button id="minimize" class="themeBtn" v-if="video_classes == 'introVideo fullScreen'" @click.prevent="minimizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Minimize</span></button>
-                                <button id="minimize" class="themeBtn" v-if="video_classes == 'introVideo minimized'" @click.prevent="maximizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Maximize</span></button>
-                                <button id="skip" class="themeBtn" @click.prevent="skipVideo"><i class="far fa-forward"></i><span>Skip</span></button>
-                            </div>
-                        </figure>
+                <div class="row">
+                    <div class="col-md-6 d-flex">
+                        <div class="videoBox">
+                            <figure :class="video_classes" :style="video_Styling">
+                                <video autoplay muted controls id="video_element">
+                                    <source :src="asset('video/introVideo.mp4')">
+                                </video>
+                                <div class="videoControllers">
+                                    <button id="minimize" class="themeBtn"
+                                            v-if="video_classes == 'introVideo fullScreen'"
+                                            @click.prevent="togglePictureInPicture"><i class="fal fa-photo-video"></i><span>Picture in Picture</span>
+                                    </button>
+                                </div>
+                            </figure>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <h3>Membership Benefits</h3>
@@ -193,40 +196,52 @@
                         <ul>
                             <li>
                                 <p>
-                                    At the start of the business, membership will cost $29.99.  Members will receive $10 for referrals.
+                                    At the start of the business, membership will cost $29.99. Members will receive $10
+                                    for referrals.
                                 </p>
                             </li>
                             <li>
                                 <p>
-                                    At Level 2 after there are a total of 500,000 members the new membership price will increase to $59.99 for new members joining.  Members will receive $15 per referral at this level.
+                                    At Level 2 after there are a total of 500,000 members the new membership price will
+                                    increase to $59.99 for new members joining. Members will receive $15 per referral at
+                                    this level.
                                 </p>
                             </li>
                             <li>
                                 <p>
-                                    At level 3 and after 2,000,000 members the membership fee will increase to $99.99 and the member will earn $25 per referral.
+                                    At level 3 and after 2,000,000 members the membership fee will increase to $99.99
+                                    and the member will earn $25 per referral.
                                 </p>
                             </li>
                             <li>
                                 <p>
-                                    At Level 4 after 5,000,000 members the membership fee will increase to $159.99 and the member will earn $50 per referral at this level.
+                                    At Level 4 after 5,000,000 members the membership fee will increase to $159.99 and
+                                    the member will earn $50 per referral at this level.
                                 </p>
                             </li>
                             <li>
                                 <p>
-                                    At Level 5 after 7,000,000 members the membership fee will increase to $299.99 and the member will earn $100 per referral at this level.
+                                    At Level 5 after 7,000,000 members the membership fee will increase to $299.99 and
+                                    the member will earn $100 per referral at this level.
                                 </p>
                             </li>
                             <li>
                                 <p>
-                                    At Level 6 after 10,000,000 members the membership fee will increase to $399.99 and the member will earn $150 per referral at this level.
+                                    At Level 6 after 10,000,000 members the membership fee will increase to $399.99 and
+                                    the member will earn $150 per referral at this level.
                                 </p>
                             </li>
                             <li>
                                 <p>
-                                    Next levels will depend on the traffic on the site.  If the demand becomes greater, the membership price will increase to meet the demand.  Notifications will be sent to member’s when the levels change and there will be a site maintenance pause on the site to accommodate the change.
+                                    Next levels will depend on the traffic on the site. If the demand becomes greater,
+                                    the membership price will increase to meet the demand. Notifications will be sent to
+                                    member’s when the levels change and there will be a site maintenance pause on the
+                                    site to accommodate the change.
                                 </p>
                             </li>
-                            <h6>As a member on the network you will always pay your original membership fee, only new members will be required to pay membership fees at the level they join.  All member's will benefit from the referral fee increases for each level.</h6>
+                            <h6>As a member on the network you will always pay your original membership fee, only new
+                                members will be required to pay membership fees at the level they join. All member's
+                                will benefit from the referral fee increases for each level.</h6>
                         </ul>
                         <a href="login.php" class="themeBtn">Join Us</a>
                     </div>
@@ -276,6 +291,10 @@
 import HowItWorksMenu from "../components/HowItWorksMenu";
 import utils from "../mixins/utils";
 import {useForm} from "@inertiajs/inertia-vue3";
+import gsap from 'gsap'
+import {Draggable} from "gsap/Draggable";
+
+gsap.registerPlugin(Draggable);
 
 export default {
     name: "HowItWorks",
@@ -288,25 +307,40 @@ export default {
     },
     mounted() {
         let _t = this;
-        $('#video_element').on('ended', function() {
-            _t.skipVideo();
+        $('#video_element').on('ended', function () {
+            // _t.skipVideo();
         });
     },
     data() {
         return {
             video_classes: 'introVideo fullScreen',
-            video_Styling: ''
+            text_classes: 'hide',
+            video_Styling: '',
+            gridWidth: screen.availWidth,
+            gridHeight: screen.availHeight
         }
     },
     methods: {
         minimizeVideo() {
-            this.video_classes = 'introVideo minimized';
+            this.togglePictureInPicture()
         },
-        maximizeVideo() {
-            this.video_classes = 'introVideo fullScreen';
-        },
-        skipVideo() {
-            this.video_Styling = 'display: none;';
+        async togglePictureInPicture(event) {
+            const video = document.getElementById("video_element");
+            const togglePipButton = document.getElementById("minimize");
+            try {
+                if (video !== document.pictureInPictureElement) {
+                    await video.requestPictureInPicture();
+                    togglePipButton.textContent = "Exit Pip Mode";
+                }
+                else {
+                    await document.exitPictureInPicture();
+                    togglePipButton.textContent = "Enable Pip Mode";
+                }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                togglePipButton.disabled = false; //enable toggle at last
+            }
         }
     }
 }
@@ -314,4 +348,28 @@ export default {
 
 <style scoped>
 
+.introVideo {
+    position: unset;
+    height: 100%;
+}
+
+.introVideo .videoControllers {
+    right: 1rem;
+}
+
+.introVideo .videoControllers button {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.introVideo.minimized button span {
+    white-space: nowrap;
+    right: 0;
+}
+
+.videoBox {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background-color: #ddd;
+}
 </style>
