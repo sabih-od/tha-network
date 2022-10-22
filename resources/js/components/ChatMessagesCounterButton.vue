@@ -9,14 +9,15 @@
         <div class="dropdown-menu" aria-labelledby="profileDropDown">
             <span v-if="notifications.length == 0" class="dropdown-item">No new messages</span>
             <Link v-else v-for="notification in notifications" class="dropdown-item" replace
-                  @click.prevent="notification.sender.id != user.id ? chatWithProfile(notification.sender.id) : ''">
-                <strong v-if='notification.sender.id != user.id'>
+                  @click.prevent="notification.post_id != null ? (this.fetchPostOnTop(notification.post_id)) : (!notification.body.includes('friend request') && notification.sender.id != user.id ? chatWithProfile(notification.sender.id) : '')"
+                  :href="notification.body.includes('friend request') ? $route('userProfile', notification.sender_id) : '#'">
+                <p v-if="notification.body" v-html="notification.body">
+
+                </p>
+                <strong v-else>
                     New message from
                     {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
                 </strong>
-                <p v-else v-html="notification.body">
-
-                </p>
             </Link>
             <Link v-if="notifications.length != 0" class="dropdown-item" replace @click.prevent="clearNotifications()">
                 Mark all as read
@@ -252,6 +253,15 @@ export default {
                     (useToast()).success('Notifications have been cleared');
                 },
             })
+        },
+        fetchPostOnTop(post_id) {
+            let _t = this;
+            setTimeout(function() {
+                _t.$emitter.emit('fetch_post_on_top', post_id);
+            }, 3000);
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#ref_post_list_item0").offset().top
+            }, 2000);
         }
     }
 }

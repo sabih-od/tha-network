@@ -291,10 +291,7 @@
 import HowItWorksMenu from "../components/HowItWorksMenu";
 import utils from "../mixins/utils";
 import {useForm} from "@inertiajs/inertia-vue3";
-import gsap from 'gsap'
-import {Draggable} from "gsap/Draggable";
 
-gsap.registerPlugin(Draggable);
 
 export default {
     name: "HowItWorks",

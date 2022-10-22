@@ -13,6 +13,7 @@ class Notification extends Model
 
     protected $fillable = [
         'user_id',
+        'post_id',
         'body',
         'viewed',
         'sender_id',
@@ -23,6 +24,11 @@ class Notification extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function post()
+    {
+        return $this->belongsTo(Post::class);
     }
 
     public function sender()
