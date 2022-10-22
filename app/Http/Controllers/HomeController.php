@@ -37,7 +37,8 @@ class HomeController extends Controller
             'goals' => get_weekly_goals(),
             'posts' => Inertia::lazy(function () use ($request) {
                 $is_my_post = boolval($request->get('is_my_posts', 0));
-                return $this->getPostData($is_my_post);
+                $post_id = $request->get('post_id');
+                return $this->getPostData($is_my_post, null, $post_id, );
             }),
             'comments' => Inertia::lazy(function () use ($request) {
                 return $this->getCommentData($request->post_id ?? null);

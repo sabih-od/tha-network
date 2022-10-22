@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 trait PostData
 {
-    protected function getPostData($auth = false, $another_user = null)
+    protected function getPostData($auth = false, $another_user = null, $post_id = null)
     {
         $auth_user = Auth::user();
         $query = Post::select('id', 'content', 'location', 'feeling_text', 'feeling_icon', 'user_id', 'created_at', 'post_id')
@@ -21,12 +21,15 @@ trait PostData
                 }
             ])
             ->withCount('likers', 'comments')
+            ->when($post_id, function($q) use($post_id) {
+                return $q->where('id', '!=', $post_id);
+            })
             ->latest();
 
         if ($auth || !is_null($another_user))
             $query = $query->where('user_id', $auth ? $auth_user->id : $another_user->id);
 
-        return $query
+        $query = $query
             ->simplePaginate(5)
             ->through(function ($item, $key) use ($auth_user) {
                 // add media in item
@@ -87,5 +90,66 @@ trait PostData
                 }
                 return $item;
             });
+
+//        dd($query);
+        if(!is_null($post_id)) {
+            $post = Post::select('id', 'content', 'location', 'feeling_text', 'feeling_icon', 'user_id', 'created_at', 'post_id')
+                ->with([
+                    'user' => function ($q) {
+                        $q->select('id', 'username');
+                    },
+                    'sharedPost' => function ($q) {
+                        $q->select('id', 'content', 'user_id', 'created_at');
+                    }
+                ])
+                ->withCount('likers', 'comments')
+                ->find($post_id);
+
+            $post->getMedia('post_upload');
+            $files = [];
+            foreach ($post->media as $media) {
+                $files[] = [
+                    'mime_type' => $media->mime_type,
+                    'url' => $media->original_url,
+                ];
+            }
+            $post->media_items = $files;
+
+            $auth_user->attachLikeStatus($post);
+
+            $likers = $post->likers()->latest()->simplePaginate(3);
+            $r_likers = [];
+            foreach ($likers as $user) {
+                $r_likers[] = $user->only('id', 'username', 'profile_image');
+            }
+            $post->recent_likes = $r_likers;
+
+            // share post data
+            if ($post->sharedPost) {
+                $post->sharedPost->getMedia('post_upload');
+                $s_files = [];
+                foreach ($post->sharedPost->media as $media) {
+                    $s_files[] = [
+                        'mime_type' => $media->mime_type,
+                        'url' => $media->original_url,
+                    ];
+                }
+                $post->sharedPost->media_items = $s_files;
+                // add profile image in item
+                if ($post->sharedPost->user) {
+                    unset(
+                        $post->sharedPost->user->created_at,
+                        $post->sharedPost->user->deleted_at,
+                        $post->sharedPost->user->email_verified_at,
+                        $post->sharedPost->user->updated_at
+                    );
+                }
+            }
+
+            $query->prepend($post);
+        }
+
+
+        return $query;
     }
 }

@@ -111,7 +111,8 @@ class PostController extends Controller
                     'notifiable_type' => 'App\Models\User',
                     'notifiable_id' => $target->id,
                     'body' => $string,
-                    'sender_id' => $target->id
+                    'sender_id' => $target->id,
+                    'post_id' => $post->id
                 ]);
                 event(new PostShared($target->id, $string, 'App\Models\User', $notification->id, $target));
             }
@@ -139,16 +140,19 @@ class PostController extends Controller
             $isLike = $user->hasLiked($post) ? 'liked' : 'unliked';
 
             //notification when post liked
-            if($auth->id != $target->id) {
-                $string = ($auth->profile->first_name . ' ' . $auth->profile->last_name) . " has liked your post.";
-                $notification = Notification::create([
-                    'user_id' => $target->id,
-                    'notifiable_type' => 'App\Models\User',
-                    'notifiable_id' => $target->id,
-                    'body' => $string,
-                    'sender_id' => $target->id
-                ]);
-                event(new PostLiked($target->id, $string, 'App\Models\User', $notification->id, $target));
+            if($isLike == 'liked') {
+                if($auth->id != $target->id) {
+                    $string = ($auth->profile->first_name . ' ' . $auth->profile->last_name) . " has liked your post.";
+                    $notification = Notification::create([
+                        'user_id' => $target->id,
+                        'notifiable_type' => 'App\Models\User',
+                        'notifiable_id' => $target->id,
+                        'body' => $string,
+                        'sender_id' => $target->id,
+                        'post_id' => $post->id
+                    ]);
+                    event(new PostLiked($target->id, $string, 'App\Models\User', $notification->id, $target));
+                }
             }
 
             return redirect(url()->previous(true))->with('success', "Post $isLike successfully!");
@@ -167,22 +171,26 @@ class PostController extends Controller
             $comment = Comment::find($request->comment_id);
             $auth = User::with('profile')->find($user->id);
             $target = $comment->user;
+            $post = Post::findOrFail($comment->commentable_id);
 
             $user->toggleLike($comment);
 
             $isLike = $user->hasLiked($comment) ? 'liked' : 'unliked';
 
             //notification when like on comment
-            if($auth->id != $target->id) {
-                $string = ($auth->profile->first_name . ' ' . $auth->profile->last_name) . " liked your comment.";
-                $notification = Notification::create([
-                    'user_id' => $target->id,
-                    'notifiable_type' => 'App\Models\User',
-                    'notifiable_id' => $target->id,
-                    'body' => $string,
-                    'sender_id' => $target->id
-                ]);
-                event(new CommentLiked($target->id, $string, 'App\Models\User', $notification->id, $target));
+            if($isLike == 'liked') {
+                if($auth->id != $target->id) {
+                    $string = ($auth->profile->first_name . ' ' . $auth->profile->last_name) . " liked your comment.";
+                    $notification = Notification::create([
+                        'user_id' => $target->id,
+                        'notifiable_type' => 'App\Models\User',
+                        'notifiable_id' => $target->id,
+                        'body' => $string,
+                        'sender_id' => $target->id,
+                        'post_id' => $post->id
+                    ]);
+                    event(new CommentLiked($target->id, $string, 'App\Models\User', $notification->id, $target));
+                }
             }
 
             return redirect(url()->previous(true))->with('success', "Comment $isLike successfully!");
@@ -201,22 +209,27 @@ class PostController extends Controller
             $reply = Comment::find($request->reply_id);
             $auth = User::with('profile')->find($user->id);
             $target = $reply->user;
+            $parent_comment = Comment::findOrFail($reply->commentable_id);
+            $post = Post::findOrFail($parent_comment->commentable_id);
 
             $user->toggleLike($reply);
 
             $isLike = $user->hasLiked($reply) ? 'liked' : 'unliked';
 
             //notification when like on reply
-            if($auth->id != $target->id) {
-                $string = ($auth->profile->first_name . ' ' . $auth->profile->last_name) . " liked your reply.";
-                $notification = Notification::create([
-                    'user_id' => $target->id,
-                    'notifiable_type' => 'App\Models\User',
-                    'notifiable_id' => $target->id,
-                    'body' => $string,
-                    'sender_id' => $target->id
-                ]);
-                event(new ReplyLiked($target->id, $string, 'App\Models\User', $notification->id, $target));
+            if($isLike == 'liked') {
+                if($auth->id != $target->id) {
+                    $string = ($auth->profile->first_name . ' ' . $auth->profile->last_name) . " liked your reply.";
+                    $notification = Notification::create([
+                        'user_id' => $target->id,
+                        'notifiable_type' => 'App\Models\User',
+                        'notifiable_id' => $target->id,
+                        'body' => $string,
+                        'sender_id' => $target->id,
+                        'post_id' => $post->id
+                    ]);
+                    event(new ReplyLiked($target->id, $string, 'App\Models\User', $notification->id, $target));
+                }
             }
 
             return redirect(url()->previous(true))->with('success', "Reply $isLike successfully!");
@@ -250,7 +263,8 @@ class PostController extends Controller
                     'notifiable_type' => 'App\Models\User',
                     'notifiable_id' => $target->id,
                     'body' => $string,
-                    'sender_id' => $target->id
+                    'sender_id' => $target->id,
+                    'post_id' => $post->id,
                 ]);
                 event(new CommentOnPost($target->id, $string, 'App\Models\User', $notification->id, $target));
             }
@@ -300,6 +314,7 @@ class PostController extends Controller
             $comment = Comment::find($request->comment_id);
             $auth = User::with('profile')->find($user->id);
             $target = $comment->user;
+            $post = Post::findOrFail($comment->commentable_id);
 
             $comment->replies()->create([
                 'user_id' => $user->id,
@@ -314,7 +329,8 @@ class PostController extends Controller
                     'notifiable_type' => 'App\Models\User',
                     'notifiable_id' => $target->id,
                     'body' => $string,
-                    'sender_id' => $target->id
+                    'sender_id' => $target->id,
+                    'post_id' => $post->id,
                 ]);
                 event(new ReplyOnComment($target->id, $string, 'App\Models\User', $notification->id, $target));
             }

@@ -1,9 +1,11 @@
 <template>
     <div>
         <PostListItem
-            v-for="post in posts"
+            v-for="(post, index) in posts"
             :post="post"
-            :key="post.id"/>
+            :key="post.id"
+            :id="'ref_post_list_item' + index"
+        />
         <h3 v-if="loading" class="text-secondary mb-5 text-center">Loading...</h3>
         <h3 v-if="!loading && posts.length < 1" class="text-secondary my-5 text-center">No posts at the moment!</h3>
         <teleport to="body">
@@ -42,6 +44,11 @@ export default {
         this.$emitter.on('my-post-loading', (val) => {
             this.loadPosts(null, val)
         })
+
+        let _t = this;
+        this.$emitter.on('fetch_post_on_top', function(post_id) {
+            _t.loadPosts(null, false, post_id);
+        })
     },
     unmounted() {
         window.removeEventListener('scroll', this.listener)
@@ -53,7 +60,7 @@ export default {
         this.$emitter.off('my-post-loading')
     },
     methods: {
-        loadPosts(url = null, is_my_posts = false) {
+        loadPosts(url = null, is_my_posts = false, post_id = null) {
             if (this.loading) return;
 
             let isLoadMore = !!(url)
@@ -66,7 +73,8 @@ export default {
                 url: url,
                 only: ['posts'],
                 params: {
-                    is_my_posts: is_my_posts ? 1 : 0
+                    is_my_posts: is_my_posts ? 1 : 0,
+                    post_id: post_id
                 }
             }).then(res => {
                 this.next_page_url = res?.posts?.next_page_url ?? null
