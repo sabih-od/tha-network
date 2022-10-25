@@ -115,7 +115,8 @@ class InvitationCode extends Controller
             return WebResponses::success(
                 null,
                 null,
-                route('howItWorks')
+                //route('howItWorks')
+                route('paymentShow')
             );
         } catch (\Exception $e) {
             return WebResponses::exception($e->getMessage());
