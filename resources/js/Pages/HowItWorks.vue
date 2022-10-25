@@ -92,9 +92,12 @@
                                     <source :src="asset('video/introVideo.mp4')">
                                 </video>
                                 <div class="videoControllers">
-                                    <button id="minimize" class="themeBtn"
-                                            v-if="video_classes == 'introVideo fullScreen'"
-                                            @click.prevent="togglePictureInPicture"><i class="fal fa-photo-video"></i><span>Picture in Picture</span>
+                                    <button id="minmize" class="themeBtn"
+                                            v-if="video_classes === 'introVideo fullScreen'"
+                                            @click.prevent="minimizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Minimize</span>
+                                    </button>
+                                    <button id="pip" class="themeBtn"
+                                            @click.prevent="togglePictureInPicture"><i class="fal fa-photo-video"></i><span>Enable Picture in Picture Mode</span>
                                     </button>
                                 </div>
                             </figure>
@@ -267,12 +270,11 @@
                             <li><a href="#">Contact Us</a></li>
                         </ul>
                         <ul class="list-unstyled footerSocial">
-                            <li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
-                            <li><a href="#" target="_blank"><i class="fab fa-youtube"></i></a></li>
-                            <li><a href="#" target="_blank"><img :src="asset('images/simple-tiktok.png')" alt=""></a>
-                            </li>
-                            <li><a href="#" target="_blank"><i class="fab fa-instagram"></i></a></li>
+                            <li><a href="https://www.facebook.com/Tha-Network-150057600527324/" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="https://twitter.com/ThaNetwork4" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                            <li><a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" target="_blank"><i class="fab fa-youtube"></i></a></li>
+                            <li><a href="https://www.tiktok.com/@_thanetwork_?lang=en" target="_blank"><img :src="asset('images/simple-tiktok.png')" alt=""></a></li>
+                            <li><a href="https://www.instagram.com/_thanetwork_/" target="_blank"><i class="fab fa-instagram"></i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -319,19 +321,23 @@ export default {
     },
     methods: {
         minimizeVideo() {
-            this.togglePictureInPicture()
+            this.video_classes = 'introVideo columned';
         },
         async togglePictureInPicture(event) {
             const video = document.getElementById("video_element");
-            const togglePipButton = document.getElementById("minimize");
+            const togglePipButton = document.getElementById("pip");
+
+            if(this.video_classes === 'introVideo fullScreen'){
+                this.video_classes = 'introVideo columned';
+            }
             try {
                 if (video !== document.pictureInPictureElement) {
                     await video.requestPictureInPicture();
-                    togglePipButton.textContent = "Exit Pip Mode";
+                    togglePipButton.textContent = "Disable Picture in Picture Mode";
                 }
                 else {
                     await document.exitPictureInPicture();
-                    togglePipButton.textContent = "Enable Pip Mode";
+                    togglePipButton.textContent = "Enable Picture in Picture Mode";
                 }
             } catch (error) {
                 console.log(error);
@@ -345,7 +351,7 @@ export default {
 
 <style scoped>
 
-.introVideo {
+.introVideo.columned {
     position: unset;
     height: 100%;
 }

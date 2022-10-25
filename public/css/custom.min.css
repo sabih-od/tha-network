@@ -854,6 +854,7 @@ footer .links li a:hover {
     width: 3.125rem;
     font-size: 1.5rem;
     color: #9098ac;
+    border: none;
 }
 
 .dropdown.nav-icons button {
@@ -2694,7 +2695,8 @@ img.rounded-circle {
 
 .notifyPopup .notiBody * {
     margin: 0;
-    font-size: 0.875rem;
+    font-size: 1.125rem;
+    font-weight: 500;
 }
 
 .notifyPopup .notiFooter {
@@ -2704,7 +2706,7 @@ img.rounded-circle {
     gap: 1rem;
 }
 
-.notifyPopup .notiFooter button {
+.notifyPopup .notiFooter a {
     background: var(--primary);
     border: none;
     padding: 0.5rem 2rem;
@@ -2716,9 +2718,9 @@ img.rounded-circle {
 }
 
 .notifyPopup .notiImgCont img {
-    height: 400px;
+    height: 300px;
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
     object-position: top;
     border-radius: 10px 10px 0 0;
 }
@@ -2726,4 +2728,8 @@ img.rounded-circle {
 .notifyPopup .notiImgCont {
     border-bottom: 1px solid #ddd;
     padding-bottom: 1rem;
+}
+
+.dropdown-item {
+    white-space: initial;
 }
