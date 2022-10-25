@@ -176,7 +176,7 @@ Route::group([
         ->name('closeMyAccount');
 });
 
-Route::get('/work', function () {
+Route::get('/home', function () {
     return Inertia::render('HowItWorks');
 })->name('work');
 

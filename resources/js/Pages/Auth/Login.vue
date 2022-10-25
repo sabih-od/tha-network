@@ -89,51 +89,6 @@
             </div>
         </div>
     </section>
-    <!--    <section class="loginSection">
-            <div class="loginWrap">
-                <div class="row align-items-center mx-0 no-gutters">
-                    <div class="col-md-7">
-                        <figure><img src="images/loginImg.png" alt=""></figure>
-                    </div>
-
-                    <div class="col-md-5">
-                        <div class="contentWrap">
-                            <a href="#"><img src="images/logo.png" alt="logo"></a>
-                            <h2>Login <span>Login to Continue</span></h2>
-                            <form @submit.prevent="submit">
-                                <div class="form-group" :class="{'mb-0': errors.email}">
-                                    <i class="fas fa-user"></i>
-                                    <input type="email" v-model="form.email" placeholder="Email Address"
-                                           class="form-control">
-                                </div>
-                                <p v-if="errors.email" class="small text-danger">{{ errors.email }}</p>
-
-                                <div class="form-group" :class="{'mb-0': errors.password}">
-                                    <i class="fas fa-lock-open-alt"></i>
-                                    <input type="password" v-model="form.password" placeholder="Password"
-                                           class="form-control">
-                                </div>
-                                <p v-if="errors.password" class="small text-danger">{{ errors.password }}</p>
-                                <button type="submit">LOGIN</button>
-                                <div class="df jcsb aic">
-                                    <div class="form-group form-check mb-0">
-                                        <input type="checkbox" class="form-check-input" v-model="form.remember"
-                                               id="saveUser">
-                                        <label class="form-check-label" for="saveUser">Save User</label>
-                                    </div>
-                                    <a href="forgot-password.php">Forgot your password?</a>
-                                </div>
-                                <div class="df jcc aic mt-5">
-                                    <p>Don't Have an Account?
-                                        <Link :href="$route('registerForm')" replace>Sign Up</Link>
-                                    </p>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>-->
 </template>
 
 <script>
