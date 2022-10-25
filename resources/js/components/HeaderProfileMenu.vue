@@ -6,6 +6,7 @@
         <div class="dropdown-menu" aria-labelledby="profileDropDown">
             <Link class="dropdown-item" replace :href="$route('profile')">How others see your profile</Link>
             <Link class="dropdown-item" replace :href="$route('editProfileForm')">Edit Profile</Link>
+            <Link class="dropdown-item">Introduction</Link>
             <div class="dropdown-divider"></div>
             <Link @click="hasLoggedOut()" :href="$route('logout')" method="post" replace :headers="logoutHeaders"
                   class="dropdown-item">Logout

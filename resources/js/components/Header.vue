@@ -20,8 +20,19 @@
                 </form>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navIconsList ml-auto">
-                        <li>
-                            <a class="nav-icons" href="#"><i class="fal fa-headset"></i></a>
+                        <li class="dropdown">
+                            <button class="dropdown-toggle nav-icons" type="button" id="support" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fal fa-headset"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="support">
+                                <Link class="dropdown-item">
+                                    <p>
+                                        If you need assistance or need to report another member, contact us at
+                                        <a href="">support@thanetwork.org</a>
+                                    </p>
+                                </Link>
+                            </div>
+<!--                            <a class="nav-icons" href="#"><i class="fal fa-headset"></i></a>-->
                         </li>
                         <li>
 <!--                            <Link :href="$route('chatIndex')" replace><i class="fal fa-comments"></i> <span>5</span></Link>-->

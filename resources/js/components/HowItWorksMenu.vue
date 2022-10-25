@@ -39,6 +39,9 @@
                         <li class="nav-item">
                             <a class="nav-link" :href="this.$route('about')">Contact Us</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" :href="this.$route('login')">Login</a>
+                        </li>
                     </ul>
                 </div>
             </nav>

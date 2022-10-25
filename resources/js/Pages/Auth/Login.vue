@@ -1,16 +1,16 @@
 <template>
 <!--  to view video in full screen add fullScreen class -->
 <!--  to view video in minimize screen add minimized class -->
-    <figure :class="video_classes" :style="video_Styling">
-        <video autoplay muted controls id="video_element">
-            <source :src="asset('video/introVideo.mp4')">
-        </video>
-        <div class="videoControllers">
-            <button id="minimize" class="themeBtn" v-if="video_classes == 'introVideo fullScreen'" @click.prevent="minimizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Minimize</span></button>
-            <button id="minimize" class="themeBtn" v-if="video_classes == 'introVideo minimized'" @click.prevent="maximizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Maximize</span></button>
-            <button id="skip" class="themeBtn" @click.prevent="skipVideo"><i class="far fa-forward"></i><span>Skip</span></button>
-        </div>
-    </figure>
+<!--    <figure :class="video_classes" :style="video_Styling">-->
+<!--        <video autoplay muted controls id="video_element">-->
+<!--            <source :src="asset('video/introVideo.mp4')">-->
+<!--        </video>-->
+<!--        <div class="videoControllers">-->
+<!--            <button id="minimize" class="themeBtn" v-if="video_classes == 'introVideo fullScreen'" @click.prevent="minimizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Minimize</span></button>-->
+<!--            <button id="minimize" class="themeBtn" v-if="video_classes == 'introVideo minimized'" @click.prevent="maximizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Maximize</span></button>-->
+<!--            <button id="skip" class="themeBtn" @click.prevent="skipVideo"><i class="far fa-forward"></i><span>Skip</span></button>-->
+<!--        </div>-->
+<!--    </figure>-->
     <section class="loginSection">
         <div class="loginWrap">
             <div class="row mx-0 no-gutters">
