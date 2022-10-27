@@ -15,10 +15,10 @@
                     <ul class="list-unstyled socialIo">
                         <li><a href="mailto:support@thannetwork.org"><i class="fas fa-envelope"></i><span>Support@thannetwork.org</span></a>
                         </li>
-                        <li class="ml-auto"><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
-                        <li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
-                        <li><a href="#" target="_blank"><i class="fab fa-instagram"></i></a></li>
-                        <li><a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
+                        <li class="ml-auto"><a href="https://www.facebook.com/Tha-Network-150057600527324/" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                        <li><a href="https://twitter.com/ThaNetwork4" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                        <li><a href="https://www.instagram.com/_thanetwork_/" target="_blank"><i class="fab fa-instagram"></i></a></li>
+<!--                        <li><a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>-->
                     </ul>
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item active">
