@@ -93,11 +93,11 @@
                                 </video>
                                 <div class="videoControllers">
                                     <button id="minmize" class="themeBtn"
-                                            v-if="video_classes === 'introVideo fullScreen'"
+                                            v-if="video_classes === 'introVideo minimized'"
                                             @click.prevent="minimizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Minimize</span>
                                     </button>
                                     <button id="pip" class="themeBtn"
-                                            @click.prevent="togglePictureInPicture"><i class="fal fa-photo-video"></i><span>Enable Picture in Picture Mode</span>
+                                            @click.prevent="togglePictureInPicture"><i class="fal fa-photo-video"></i><span>PIP Mode</span>
                                     </button>
                                 </div>
                             </figure>
@@ -327,17 +327,17 @@ export default {
             const video = document.getElementById("video_element");
             const togglePipButton = document.getElementById("pip");
 
-            if(this.video_classes === 'introVideo fullScreen'){
+            if(this.video_classes === 'introVideo minimized'){
                 this.video_classes = 'introVideo columned';
             }
             try {
                 if (video !== document.pictureInPictureElement) {
                     await video.requestPictureInPicture();
-                    togglePipButton.textContent = "Disable Picture in Picture Mode";
+                    // togglePipButton.textContent = "Disable Picture in Picture Mode";
                 }
                 else {
                     await document.exitPictureInPicture();
-                    togglePipButton.textContent = "Enable Picture in Picture Mode";
+                    // togglePipButton.textContent = "Enable Picture in Picture Mode";
                 }
             } catch (error) {
                 console.log(error);

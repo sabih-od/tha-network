@@ -288,7 +288,9 @@ export default {
 .dropdown-menu {
     right: 0 !important;
     left: unset;
-    width: 300px;
+    width: 550px;
+    max-height: 70vh;
+    overflow: auto;
 }
 
 .dropdown-menu .dropdown-item {
