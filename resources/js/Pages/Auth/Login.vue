@@ -65,15 +65,7 @@
                                             </p>
                                         </span>
                                     </div>
-                                    <div class="form-check mb-3 getText terms_wrapper m-auto" style="padding-bottom: 0px;">
-                                        <input type="checkbox" class="form-check-input" v-model="form.agree_terms" id="agree_terms">
-                                        <span>
-                                            <p>
-                                                I agree with the <a href="#" @click.prevent="showTerms" replace>Terms & Conditions</a> of the website
-                                            </p>
-                                        </span>
-                                    </div>
-                                    <button type="submit" class="themeBtn" :disabled="form.processing && !form.agree_terms">
+                                    <button type="submit" class="themeBtn" :disabled="form.processing">
                                         {{ form.processing ? 'Please wait...' : 'LOGIN' }}
                                     </button>
                                 </form>
@@ -106,7 +98,6 @@
 import {useForm, Link} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
 import utils from "../../mixins/utils";
-import TermsModal from "../../components/TermsModal";
 
 export default {
     name: "Login",
@@ -116,7 +107,6 @@ export default {
     },
     components: {
         Link,
-        TermsModal
     },
     mounted() {
         const params = new Proxy(new URLSearchParams(window.location.search), {
@@ -142,8 +132,7 @@ export default {
             form: useForm('loginForm', {
                 email: "",
                 password: "",
-                remember: false,
-                agree_terms: false
+                remember: false
             }),
             codeForm: useForm('codeForm', {
                 code: ''
@@ -155,12 +144,7 @@ export default {
     methods: {
         submit() {
             if (this.form.processing) return;
-            if(!this.form.agree_terms) {
-                $('.terms_wrapper').css('background-color', '#FFFF00');
-                return;
-            } else {
-                $('.terms_wrapper').css('background-color', 'transparent');
-            }
+
             this.form.post(this.$route('login'), {
                 replace: true,
                 onSuccess: () => {
@@ -191,9 +175,6 @@ export default {
         },
         skipVideo() {
             this.video_Styling = 'display: none;';
-        },
-        showTerms() {
-            $('.modal_terms').modal('show');
         }
     }
 }
