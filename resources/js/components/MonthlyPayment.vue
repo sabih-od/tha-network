@@ -5,6 +5,7 @@
                 This month's subscription payment
                 <h6 v-if="!has_made_monthly_payment" style="color:red;">{{ monthNames[new Date().getMonth()]+' Payment Due' }}</h6>
                 <h6 v-if="has_made_monthly_payment" style="color:green;">{{ monthNames[new Date().getMonth()]+' Payment Clear' }}</h6>
+                <h6 style="font-weight: 100; color: #817373; font-size: 14px;">Users must need to provide their payment details for receiving their referral payments.</h6>
             </h4>
             <div class="df aic gap1">
                 <img src="images/payment2.png" alt="">
