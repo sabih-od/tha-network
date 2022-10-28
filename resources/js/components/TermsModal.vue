@@ -8,19 +8,19 @@
                 <div class="modal-body">
                     <p>Due to California having the strictest online membership laws. Let's make sure to include the following disclosure on the payment page with an acknowledgement check field which state that I agree and acknowledge the terms disclosed. An automated email receipt of the disclosure should be sent to the new member along with a welcome to the network message.</p>
 
-                    <p>
-                        <strong>As a member of ThaNetwork each member's payment method will incur a monthly membership fee of $29.99 for the life of the member's membership. Monthly payments will be deducted from the member's payment method on the 1st day of each month. A member may end their membership at any time by cancelling the membership from the member's Profile Edit page. If you understand and agree with the terms, acknowledge this agreement by selecting the box below.</strong>
-                        (I agree and acknowledge to the recurring terms listed above)
-                    </p>
+<!--                    <p>-->
+<!--                        <strong>As a member of ThaNetwork each member's payment method will incur a monthly membership fee of $29.99 for the life of the member's membership. Monthly payments will be deducted from the member's payment method on the 1st day of each month. A member may end their membership at any time by cancelling the membership from the member's Profile Edit page. If you understand and agree with the terms, acknowledge this agreement by selecting the box below.</strong>-->
+<!--                        (I agree and acknowledge to the recurring terms listed above)-->
+<!--                    </p>-->
 
-                    <h5 style="text-decoration: underline;">Requirements</h5>
-                    <ol>
-                        <li>When a member joins ThaNetwork, a payment receipt will be sent to the member's personal email address each time a payment is deducted from the member's payment method, and when payments are made to the member.</li>
-                        <li>Membership payments will be made deducted on the 1st of each month. When new member's join they must be a member for 30days before the first automated payment is deducted from the member's payment method.</li>
-                        <li>Membership payments will be credited to each member's account on the 15th of each month. New referral payment credit will not be paid until the new member has been a member for 30 days.</li>
-                        <li>When a new member joins ThaNetwork, the referring member will not receive payment until the payment has been processed. Once the payment is processed the funds will be credited to the member's account and the member will receive an email and notification of receiving payment with the new member's name and username included in the message.</li>
-                        <li>If a member cancels their membership they will not receive a refund, and if the member has referred member's in their personal network they will no longer receive payments for those members. The payments will go to the company</li>
-                    </ol>
+<!--                    <h5 style="text-decoration: underline;">Requirements</h5>-->
+<!--                    <ol>-->
+<!--                        <li>When a member joins ThaNetwork, a payment receipt will be sent to the member's personal email address each time a payment is deducted from the member's payment method, and when payments are made to the member.</li>-->
+<!--                        <li>Membership payments will be made deducted on the 1st of each month. When new member's join they must be a member for 30days before the first automated payment is deducted from the member's payment method.</li>-->
+<!--                        <li>Membership payments will be credited to each member's account on the 15th of each month. New referral payment credit will not be paid until the new member has been a member for 30 days.</li>-->
+<!--                        <li>When a new member joins ThaNetwork, the referring member will not receive payment until the payment has been processed. Once the payment is processed the funds will be credited to the member's account and the member will receive an email and notification of receiving payment with the new member's name and username included in the message.</li>-->
+<!--                        <li>If a member cancels their membership they will not receive a refund, and if the member has referred member's in their personal network they will no longer receive payments for those members. The payments will go to the company</li>-->
+<!--                    </ol>-->
 
                     <p>
                         <strong>California State Law for Recurring Online Membership Payments</strong>
@@ -55,6 +55,17 @@
                             that are as easy to use as the method the consumer used to sign up for the subscription.
                         </li>
                     </ul>
+
+                    <p>As a member of ThaNetwork each member's payment method will incur a monthly membership fee of $29.99 for the life of the member's membership.  Monthly payments will be deducted from the member's payment method on the 1st day of each month.  A member may end their membership at any time by canceling the membership from the member's Profile Edit page.  If you understand and agree with the terms, acknowledge this agreement by selecting the box below.     (I agree and acknowledge to the recurring terms listed above)</p>
+
+                    <h5 style="text-decoration: underline;">Requirements</h5>
+                    <ol>
+                        <li>When a member joins ThaNetwork, a payment receipt will be sent to the member's personal email address each time a payment is deducted from the member's payment method, and when payments are made to the member.</li>
+                        <li>Membership payments will be made deducted on the 1st of each month.  When new member's join they must be a member for 30days before the first automated payment is deducted from the member's payment method.</li>
+                        <li>Membership payments will be credited to each member's account on the 15th of each month.  New referral payment credit will not be paid until the new member has been a member for 30 days.</li>
+                        <li>When a new member joins ThaNetwork, the referring member will not receive payment until the payment has been processed.  Once the payment is processed the funds will be credited to the member's account and the member will receive an email and notification of receiving payment with the new member's name and username included in the message.</li>
+                        <li>If a member cancels their membership they will not receive a refund, and if the member has referred member's in their personal network they will no longer receive payments for those members.  The payments will go to the company.</li>
+                    </ol>
                 </div>
             </div>
         </div>
