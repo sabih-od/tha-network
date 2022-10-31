@@ -74,7 +74,9 @@ class ProfileController extends Controller
                 'profile_cover' => $this->profileImg($user, 'profile_cover'),
                 'client_secret' => $clientSecret,
                 'monthly_payment_flash' => $monthly_payment_flash,
-                'has_made_monthly_payment' => $has_made_monthly_payment
+                'has_made_monthly_payment' => $has_made_monthly_payment,
+                'stripe_account_id' => $user->stripe_account_id,
+                'paypal_account_details' => $user->paypal_account_details,
             ]);
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());
