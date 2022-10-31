@@ -2080,6 +2080,7 @@ footer .links li a:hover {
     position: absolute;
     bottom: 0;
     width: 100%;
+    height: 250px;
 }
 
 .messangerSec .chat-box-tray input {
@@ -2439,7 +2440,7 @@ footer .links li a:hover {
 }
 
 .chatSec .row:last-child {
-    margin-bottom: 3rem;
+    margin-bottom: 280px;
 }
 
 .userList .userInfo a img {
@@ -2732,4 +2733,15 @@ img.rounded-circle {
 
 .dropdown-item {
     white-space: initial;
+}
+
+.notiCont {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.notiCont figure img {
+    border-radius: 100%;
+    background: #fff;
 }
