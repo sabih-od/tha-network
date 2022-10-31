@@ -42,6 +42,8 @@ class User extends Authenticatable implements HasMedia
         'password',
         'role_id',
         'remaining_referrals',
+        'stripe_account_id',
+        'paypal_account_details',
     ];
 
     /**

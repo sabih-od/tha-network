@@ -10,10 +10,12 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PusherController;
+use App\Http\Controllers\StripeController;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Stripe\StripeClient;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +36,29 @@ Route::get('/temp', function() {
 //    $joined_networks_ids = NetworkMember::where('user_id', \Illuminate\Support\Facades\Auth::id())->pluck('network_id');
 //    $joined_networks_owner_ids = Network::whereIn('id', $joined_networks_ids)->pluck('user_id');
 //    dd($joined_networks_owner_ids);
-});
+    $stripe = new StripeClient("sk_test_lUp78O7PgN08WC9UgNRhOCnr");
+
+    $expressAccount = $stripe->accounts->create(['type' => 'express']);
+
+    //get account_id
+    session()->put('account_id', $expressAccount->id);
+    dump("Account_id" . session()->get('account_id'));
+
+    $getLink = $stripe->accountLinks->create([
+        'account' => $expressAccount->id,
+        'refresh_url' => route('temp'),
+        'return_url' => route('temp2'),
+        'type' => 'account_onboarding',
+    ]);
+
+    dd($getLink);
+    return $getLink;
+})->name('temp');
+Route::get('/temp2', function (Request $request) {
+    $stripe = new StripeClient("sk_test_lUp78O7PgN08WC9UgNRhOCnr");
+    $stripe_account = $stripe->accounts->retrieve(session()->get('account_id'));
+    dd($stripe_account);
+})->name('temp2');;
 
 Route::get('get/redis', function () {
     dd(\Illuminate\Support\Facades\Redis::get('test:key'));
@@ -174,6 +198,12 @@ Route::group([
     // Close My Account
     Route::post('close-my-account', [ProfileController::class, 'closeMyAccount'])
         ->name('closeMyAccount');
+
+    //connect stripe
+    Route::get('connect-stripe', [StripeController::class, 'connectAccount'])
+        ->name('connect-stripe');
+    Route::post('connect-paypal', [StripeController::class, 'connectPaypalAccount'])
+        ->name('connect-paypal');
 });
 
 Route::get('/home', function () {

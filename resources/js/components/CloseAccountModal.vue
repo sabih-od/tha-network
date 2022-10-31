@@ -29,7 +29,7 @@ import {useToast} from "vue-toastification";
 import utils from "../mixins/utils";
 
 export default {
-    name: "SendInviteModal",
+    name: "CloseAccountModal",
     mixins: [utils],
     components: {
         PostMainData

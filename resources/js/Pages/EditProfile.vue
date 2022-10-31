@@ -22,6 +22,32 @@
 
                     <CloseAccountModal></CloseAccountModal>
 
+                    <h3>Payment Accounts Settings</h3>
+                    <div class="row">
+                        <div class="col-md-6" v-if="has_made_monthly_payment">
+                            <h4>Stripe</h4>
+
+                            <!--badge-->
+                            <span :class="'badge badge-pill badge-' + (this.stripe_account_id ? 'success' : 'danger')">{{ this.stripe_account_id ? 'Connected' : 'Not Connected' }}</span>
+                            <br />
+
+                            <!--button-->
+                            <button type="button" class="btn btn-success btn-sm" @click.prevent="connectStripeAccount()">{{ this.stripe_account_id ? 'Reconnect' : 'Connect' }}</button>
+                        </div>
+                        <div class="col-md-6" v-if="has_made_monthly_payment">
+                            <h4>Paypal</h4>
+
+                            <!--badge-->
+                            <span :class="'badge badge-pill badge-' + (this.paypal_account_details ? 'success' : 'danger')">{{ this.paypal_account_details ? 'Connected' : 'Not Connected' }}</span>
+                            <input class="form-control" type="email" placeholder="Paypal Email" v-model="paypalForm.paypal_account_details">
+                            <br />
+
+                            <!--button-->
+                            <button type="button" class="btn btn-success btn-sm" @click.prevent="connectPaypalAccount()">Connect</button>
+                        </div>
+                    </div>
+                    <br />
+
                     <div class="btn-group gap1" v-if="has_made_monthly_payment">
                         <button type="submit" class="themeBtn" @click.prevent="showWeeklyGoalNotification()">Save</button>
                         <button class="themeBtn discard">Discard Changes</button>
@@ -92,7 +118,9 @@ export default {
         profile: Object,
         client_secret: String,
         monthly_payment_flash: String,
-        has_made_monthly_payment: Boolean
+        has_made_monthly_payment: Boolean,
+        stripe_account_id: String,
+        paypal_account_details: String
     },
     computed: {
         userProfile() {
@@ -123,6 +151,9 @@ export default {
                 city: this.profile?.city ?? '',
                 bio: this.profile?.bio ?? '',
                 personal_links: this.profile?.personal_links ?? ''
+            }),
+            paypalForm: useForm({
+                paypal_account_details: this.paypal_account_details
             }),
             genders: [
                 'Male',
@@ -242,6 +273,47 @@ export default {
             //set newly registered back to false (flow ended)
             this.$store.commit('Misc/setIsNewlyRegistered', false);
         },
+        connectStripeAccount() {
+            Inertia.get(this.$route('connect-stripe'), {
+
+            }, {
+                replace: true,
+                preserveScroll: true,
+                preserveState: true,
+                onStart: () => {
+                    console.log('starting');
+                },
+                onSuccess: res => {
+                    console.log('res: ', res.props.v_data);
+                    window.location.replace(res.props?.v_data);
+                },
+                onFinish: () => {
+
+                },
+            })
+        },
+        connectPaypalAccount() {
+            if(!this.paypalForm.paypal_account_details)
+                return
+
+            this.paypalForm.post(this.$route('connect-paypal'), {
+                replace: true,
+                preserveState: true,
+                preserveScroll: true,
+                onStart: () => {
+                    this.loading = true
+                },
+                onSuccess: visit => {
+                    this.form.reset();
+                },
+                onError: () => {
+
+                },
+                onFinish: () => {
+                    this.$store.dispatch('Utils/showErrorMessages');
+                }
+            })
+        }
     }
 }
 </script>

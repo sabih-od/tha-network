@@ -11,13 +11,19 @@
             <Link v-else v-for="notification in notifications" class="dropdown-item" replace
                   @click.prevent="notification.post_id != null ? (this.fetchPostOnTop(notification.post_id)) : (!notification.body.includes('friend request') && notification.sender.id != user.id ? chatWithProfile(notification.sender.id) : '')"
                   :href="notification.body.includes('friend request') ? $route('userProfile', notification.sender_id) : '#'">
-                <p v-if="notification.body" v-html="notification.body">
+                <div class="notiCont">
+                    <figure>
+                        <!--                        <img :src="asset('images/small-character.jpg')" alt="">-->
+                        <img :src="auth_image" alt="">
+                    </figure>
+                    <p v-if="notification.body" v-html="notification.body">
 
-                </p>
-                <strong v-else>
-                    New message from
-                    {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
-                </strong>
+                    </p>
+                    <strong v-else>
+                        New message from
+                        {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
+                    </strong>
+                </div>
             </Link>
             <Link v-if="notifications.length != 0" class="dropdown-item" replace @click.prevent="clearNotifications()">
                 Mark all as read
@@ -95,8 +101,8 @@ export default {
         //no referrals for the day
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('NoReferralsForTheDay', function (data) {
-            _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/NoReferralsForTheDay.png'))
-        });
+                _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/NoReferralsForTheDay.png'))
+            });
 
         //referrals sent
         this.$echo.private('App.Models.User.' + this.user.id)
@@ -154,6 +160,7 @@ export default {
 
         this.$emitter.on('request_for_notifications', this.sendNotificationData);
         this.$emitter.on('request_chat_with_profile', this.requestChatWithProfile);
+
     },
     methods: {
         addNotification(data, img = null) {
@@ -166,7 +173,7 @@ export default {
 
             //show popup notification
             console.log('imgcheck', img != {});
-            if(img != {}){
+            if (img != {}) {
                 this.$emitter.emit('show_image_notification', {img: img, text: data.body});
             }
         },
@@ -256,7 +263,7 @@ export default {
         },
         fetchPostOnTop(post_id) {
             let _t = this;
-            setTimeout(function() {
+            setTimeout(function () {
                 _t.$emitter.emit('fetch_post_on_top', post_id);
             }, 3000);
             $([document.documentElement, document.body]).animate({
@@ -299,24 +306,29 @@ export default {
 }
 
 .dropdown-menu .dropdown-item + .dropdown-item {
-    margin-top: 0.5rem;
+    margin-top: 0.125rem;
 }
 
-.dropdown-menu .dropdown-item * {
+.dropdown-menu .dropdown-item p {
     margin: 0;
     font-size: 0.875rem;
     font-weight: 500;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    width: calc(100% - 40px);
 }
 
-.dropdown-menu .dropdown-item:hover *{
+.dropdown-menu .dropdown-item:hover p {
     color: #fff;
 }
 
-.dropdown-menu .dropdown-item:last-of-type{
+.dropdown-menu .dropdown-item:last-of-type {
     background: transparent;
 }
 
-.dropdown-menu .dropdown-item:last-of-type:hover{
+.dropdown-menu .dropdown-item:last-of-type:hover {
     color: #000;
 }
 </style>

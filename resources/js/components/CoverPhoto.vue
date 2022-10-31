@@ -290,6 +290,12 @@ export default {
     border-top-right-radius: 0;
 }
 
+
+.filSet.changePhoto + img {
+    max-height: 550px;
+    width: 100%;
+    object-fit: cover;
+}
 .filSet.changePhoto input {
     z-index: 1;
     cursor: pointer;

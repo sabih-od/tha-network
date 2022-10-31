@@ -2,33 +2,17 @@
 
 namespace App\Traits;
 
-use Stripe\PaymentIntent;
-use Stripe\Stripe;
 use Stripe\StripeClient;
 
-trait StripePayment
+trait StripeTrait
 {
-    public function generateClientSecret($amount = 0)
-    {
-        Stripe::setApiKey('sk_test_lUp78O7PgN08WC9UgNRhOCnr');
-
-        try {
-            // Create a PaymentIntent with amount and currency
-            $paymentIntent = PaymentIntent::create([
-                'amount' => $amount * 100,
-                'currency' => 'usd',
-                'automatic_payment_methods' => [
-                    'enabled' => true,
-                ],
-            ]);
-
-            return $paymentIntent->client_secret;
-        } catch (\Exception $e) {
-            return $e;
-        }
-    }
-
-    public function createStripeClient($secret = "sk_test_lUp78O7PgN08WC9UgNRhOCnr")
+    /**
+     * Create Stripe Client
+     * @param $secret
+     * @return \Stripe\AccountLink
+     * @throws \Stripe\Exception\ApiErrorException
+     */
+    public function createStripeClient($secret)
     {
         $stripe = new StripeClient($secret);
 
@@ -37,7 +21,7 @@ trait StripePayment
         return $expressAccount;
     }
 
-    public function accountLink($secret = "sk_test_lUp78O7PgN08WC9UgNRhOCnr", $clientId)
+    public function accountLink($secret, $clientId)
     {
         $stripe = new StripeClient($secret);
 
@@ -50,16 +34,11 @@ trait StripePayment
         return $getLink;
     }
 
-    public function get_account($account_id)
-    {
-
-    }
-
 
     /**
      * @throws \Stripe\Exception\ApiErrorException
      */
-    public function stripeTransfer($secret = "sk_test_lUp78O7PgN08WC9UgNRhOCnr", $clientId, $amount)
+    public function stripeTransfer($secret, $clientId, $amount)
     {
         $stripe = new StripeClient($secret);
 
