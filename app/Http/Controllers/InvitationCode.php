@@ -178,7 +178,7 @@ class InvitationCode extends Controller
 
         // To send HTML mail, the Content-type header must be set
         $headers = 'MIME-Version: 1.0' . "\r\n";
-        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=utf8' . "\r\n";
 
         // Create email headers
         $headers .= 'From: ' . $from . "\r\n" .
@@ -188,7 +188,7 @@ class InvitationCode extends Controller
         // Compose a simple HTML email message
         $message = '<html><body>';
         $message .= '<p style="color:black;font-size:18px;">Hi,</p><br /><br />';
-        $message .= `<p style="color:black;font-size:18px;">You have been invited to join `.$name.`'s network. You can join by clicking on the invitation link below.</p><br /><br />`;
+        $message .= `<p style="color:black;font-size:18px;">You have been invited to join `.$name ?? $username.`'s network. You can join by clicking on the invitation link below.</p><br /><br />`;
         $message .= '<p style="color:black;font-size:18px;">Invitation Link: <a href="'.route('joinByInvite', $username).'">'.route('joinByInvite', $username).'</a></p><br /><br />';
         $message .= '<p style="color:black;font-size:18px;">Regards,</p><br />';
         $message .= '<p style="color:black;font-size:18px;">Team Tha Network</p><br />';
@@ -220,8 +220,8 @@ class InvitationCode extends Controller
                             </tr>
                             <tr>
                                 <td colspan="3" style="width: 50%">
-                                    <a href="#" style="font-size: 23px; color: #000; font-weight: 600; display: table; margin: auto">Invitation Link</a>
-                                    <span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code 12345</span>
+                                    <a href="'.route('joinByInvite', $username).'" style="font-size: 23px; color: #000; font-weight: 600; display: table; margin: auto">Invitation Link</a>
+                                    <!-- <span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code 12345</span> -->
                                 </td>
                             </tr>
                             <tr>
