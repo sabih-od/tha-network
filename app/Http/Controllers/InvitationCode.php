@@ -194,6 +194,67 @@ class InvitationCode extends Controller
         $message .= '<p style="color:black;font-size:18px;">Team Tha Network</p><br />';
         $message .= '</body></html>';
 
+        $html = `<html lang="en">
+                    <head>
+                        <meta charset="UTF-8" />
+                        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <title>The Network Membership Pays</title>
+                    </head>
+
+                    <body style="padding: 0; margin: 0" style="max-width: 1170px; margin: auto">
+                        <table style="width: 1140px; margin: 2rem auto; border-spacing: 0">
+                            <tr style="margin-bottom: 20px; width: 100%">
+                                <a href="#"><img src="logo.png" class="img-fluid" alt="" style="display: block; max-width: 250px; margin: auto" /></a>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="width: 50%">
+                                    <p style="color: #333; margin: 0 0 30px; line-height: 31px; font-size: 18px; text-align: center">
+                                        Welcome to ThaNetwork.org, `.$name.` invited you to join their network. To learn more about your Invitation click the link below or visit
+                                        <a href="https://thanetwork.org/login/" target="_blank">www.thanetwork.org</a> and login using the Invitation link below.
+                                    </p>
+                                    <!-- <p style="color: #333; margin: 10px 0; line-height: 26px">
+                                        <a href="`.route('joinByInvite', $username).`">Invitation Link</a>
+                                    </p> -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="width: 50%">
+                                    <a href="#" style="font-size: 23px; color: #000; font-weight: 600; display: table; margin: auto">Invitation Link</a>
+                                    <span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code 12345</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="width: 50%">
+                                    <h6 style="font-size: 25px; margin: 30px 0 30px; text-align: center">Join ThaNetwork Today</h6>
+                                    <a href="#" style="display: table; font-size: 22px; color: green; margin: auto">Because Membership Pays</a>
+                                    <span style="display: block; font-size: 20px; color: green; margin: 12px 0 0; text-align: center">$$$$$</span>
+                                    <img src="`.asset('images/notifications/PaymentMade.png').`" class="img-fluid" alt="img" style="display: table; margin: auto" />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3" style="width: 50%">
+                                    <p style="color: #333; margin: 30px 0 15px; line-height: 31px; font-size: 18px; text-align: center">To learn more about ThaNetwork follow us on our Social Media Platforms</p>
+                                    <!-- <p style="color: #333; margin: 10px 0; line-height: 26px">
+                                        <a href="#">Invitation Link</a>
+                                        Invitation Code 12345
+                                    </p> -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="width: 50%; text-align: center">
+                                    <a href="#" style="display: inline-block; margin: 0 6px">Facebook</a>
+                                    <a href="#" style="display: inline-block; margin: 0 6px">Twitter</a>
+                                    <a href="#" style="display: inline-block; margin: 0 6px">Youtube</a>
+                                    <a href="#" style="display: inline-block; margin: 0 6px">Tiktok</a>
+                                    <a href="#" style="display: inline-block; margin: 0 6px">Instagram</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </body>
+                </html>`;
+
         // Sending email
 //        Mail::send(
 //                 'mails.send-invitation-code-mail',
@@ -203,7 +264,7 @@ class InvitationCode extends Controller
 //                 }
 //             );
 
-        if (mail($to, $subject, $message, $headers)) {
+        if (mail($to, $subject, $html, $headers)) {
             return true;
         } else {
             return false;
