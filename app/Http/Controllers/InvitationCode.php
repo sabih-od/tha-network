@@ -186,13 +186,13 @@ class InvitationCode extends Controller
             'X-Mailer: PHP/' . phpversion();
 
         // Compose a simple HTML email message
-        $message = '<html><body>';
-        $message .= '<p style="color:black;font-size:18px;">Hi,</p><br /><br />';
-        $message .= `<p style="color:black;font-size:18px;">You have been invited to join `.$name ?? $username.`'s network. You can join by clicking on the invitation link below.</p><br /><br />`;
-        $message .= '<p style="color:black;font-size:18px;">Invitation Link: <a href="'.route('joinByInvite', $username).'">'.route('joinByInvite', $username).'</a></p><br /><br />';
-        $message .= '<p style="color:black;font-size:18px;">Regards,</p><br />';
-        $message .= '<p style="color:black;font-size:18px;">Team Tha Network</p><br />';
-        $message .= '</body></html>';
+//        $message = '<html><body>';
+//        $message .= '<p style="color:black;font-size:18px;">Hi,</p><br /><br />';
+//        $message .= `<p style="color:black;font-size:18px;">You have been invited to join `.$name ?? $username.`'s network. You can join by clicking on the invitation link below.</p><br /><br />`;
+//        $message .= '<p style="color:black;font-size:18px;">Invitation Link: <a href="'.route('joinByInvite', $username).'">'.route('joinByInvite', $username).'</a></p><br /><br />';
+//        $message .= '<p style="color:black;font-size:18px;">Regards,</p><br />';
+//        $message .= '<p style="color:black;font-size:18px;">Team Tha Network</p><br />';
+//        $message .= '</body></html>';
 
         $html = '<html lang="en">
                     <head>
@@ -213,9 +213,6 @@ class InvitationCode extends Controller
                                         Welcome to ThaNetwork.org, '.$name.' invited you to join their network. To learn more about your Invitation click the link below or visit
                                         <a href="https://thanetwork.org/login/" target="_blank">www.thanetwork.org</a> and login using the Invitation link below.
                                     </p>
-                                    <!-- <p style="color: #333; margin: 10px 0; line-height: 26px">
-                                        <a href="'.route('joinByInvite', $username).'">Invitation Link</a>
-                                    </p> -->
                                 </td>
                             </tr>
                             <tr>
@@ -229,7 +226,7 @@ class InvitationCode extends Controller
                                     <h6 style="font-size: 25px; margin: 30px 0 30px; text-align: center">Join ThaNetwork Today</h6>
                                     <a href="#" style="display: table; font-size: 22px; color: green; margin: auto">Because Membership Pays</a>
                                     <span style="display: block; font-size: 20px; color: green; margin: 12px 0 0; text-align: center">$$$$$</span>
-                                    <img src="'.asset('images/notifications/PaymentMade.png').'" class="img-fluid" alt="img" style="display: table; margin: auto" />
+                                    <img width="398" height="398" src="'.asset('images/notifications/PaymentMade.png').'" class="img-fluid" alt="img" style="display: table; margin: auto" />
                                 </td>
                             </tr>
 
@@ -254,15 +251,6 @@ class InvitationCode extends Controller
                         </table>
                     </body>
                 </html>';
-
-        // Sending email
-//        Mail::send(
-//                 'mails.send-invitation-code-mail',
-//                 ['code' => 'code'],
-//                 function ($message) use ($to) {
-//                     $message->to($to)->subject('Invitation Code!');
-//                 }
-//             );
 
         if (mail($to, $subject, $html, $headers)) {
             return true;
