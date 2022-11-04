@@ -63,7 +63,6 @@ export default {
             _t.temp_profile_image = _t.auth_image;
         });
         this.$emitter.on('avatar_updated', function(data) {
-            alert(data);
             _t.temp_profile_image = data;
         });
     },
