@@ -1792,10 +1792,12 @@ export default {
 
             this.form.post(this.$route('profileImgUpload'), {
                 replace: true,
-                onSuccess: () => {
+                onSuccess: (data) => {
                     this.$store.dispatch('Utils/showSuccessMessage')
                     $('.modal_create_avatar').modal('hide');
                     $('.modal_create_avatar').find('form').trigger('reset');
+
+                    this.$emitter.emit('avatar_updated', data.props.v_data);
                 },
                 onFinish: () => {
                     this.$store.dispatch('Utils/showErrorMessages').then(res => {

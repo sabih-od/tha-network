@@ -118,6 +118,12 @@ class User extends Authenticatable implements HasMedia
         return $this->getFirstMediaUrl('profile_image');
     }
 
+    public function get_profile_picture()
+    {
+        $check = $this->getMedia('profile_image')->first();
+        return $check ? $check->getUrl() : asset('images/avatars/male-avatar.png');
+    }
+
     public function completed_referrals()
     {
         return $this->hasMany(Referral::class)->where('status', true);

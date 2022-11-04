@@ -182,7 +182,10 @@ class ProfileController extends Controller
                 }
             }
 //            return redirect(url()->previous(true))->with('success', "Change image successfully!");
-            return WebResponses::success('Avatar updated successfully!');
+
+            $data = $user->get_profile_picture();
+
+            return WebResponses::success('Avatar updated successfully!', $data);
         } catch (\Exception $e) {
             return redirect(url()->previous(true))->with('error', $e->getMessage());
         }
