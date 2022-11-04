@@ -119,8 +119,8 @@
                                     Membership Pays
                                 </h2>
                                 <p>
-                                    You earn cash while doing the things you like without needing
-                                    to it behind a desk for an 8hr work day!
+                                    You earn cash while doing the things you like without needing to be behind a desk
+                                    for an 8hr work day!
                                 </p>
                             </div>
                         </div>
