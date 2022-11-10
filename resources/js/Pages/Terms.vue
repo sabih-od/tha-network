@@ -22,20 +22,10 @@
                         Terms of Service
                     </h2>
                     <p>
-                        Updated as of 10/8/2022
+                        Updated as of 11/6/2022
                     </p>
                     <p>
                         WE DO NOT CONDUCT CRIMINAL BACKGROUND CHECKS. PLEASE BE SAFE WHEN INTERACTING WITH USERS.
-                    </p>
-                    <p>
-                        California subscribers: You may cancel your subscription, without penalty or obligation, at any
-                        time prior to midnight of the third business day following the date you subscribed. Request a
-                        refund by contacting ThaNetwork at Support@thanetwork.org, Please include your name, email
-                        address, phone number, user name, and your referral code. In accordance with Cal. Civ. Code
-                        §1789.3, you may report complaints to the Complaint Assistance Unit of the Division of Consumer
-                        Services of the California Department of Consumer Affairs by contacting them in writing at
-                        Consumer Information Division, 1625 North Market Blvd., Suite N112 Sacramento, CA 95834, or by
-                        telephone at (800) 952-5210.
                     </p>
                     <p>
                         This Terms of Service Agreement (the "Agreement") controls your access and use of ThaNetwork. By
@@ -186,36 +176,41 @@
                     <p>
                         Each member will have an account which has a re-occurring membership fee and the fee will be
                         made upon initiation of membership and automatically withdrawn on the 1st of each month after
-                        initiation. Each member who uses the site and builds their personal network will receive payment
-                        for signing up each member on a monthly basis, for as long as that member continues their
-                        membership. Your membership payment will be withdrawn on the 1st of every month and your monthly
-                        earnings will be available to you on the 15th of each month. Payments for new members joining
-                        your network will be sent to each member after payments are processed and available for
-                        transfer. If your payment is rejected for any reason, we will send you notifications via email,
-                        text, and internal message from the site. If you have not paid your membership dues by the 7th
-                        of the month, your membership will be placed in a hold status until the 14th of the month. If
-                        payment is not received by the 14th your account will be closed, all network payments to you
-                        will discontinue, and the member will lose all network connections within the member’s personal
+                        initiation. CANCELLATION Any member may cancel their membership at any time, ThaNetwork will not
+                        give refunds when a membership is cancelled. All Members who cancel their account will lose all
+                        membership benefits to include the loss of monthly payments for referred members. Only Paid
+                        Members will earn payments for referrals made. Once the membership is cancelled, the member’s
+                        profile will be deleted.
+                        Each member who uses the site and builds their personal network will receive payment for signing
+                        up each member on a monthly basis, for as long as that member continues their membership. Your
+                        membership payment will be withdrawn on the 1st of every month and your monthly earnings will be
+                        available to you on the 15th of each month. Payments for new members joining your network will
+                        be sent to each member after payments are processed and available for transfer. If your
+                        recurring payment is rejected for any reason, we will send you notifications via email, text,
+                        and internal message from the site. If you have not paid your membership dues by the 7th of the
+                        month, your membership will be placed in a hold status until the 14th of the month. If payment
+                        is not received by the 14th your account will be closed, all network payments to you will
+                        discontinue, and the member will lose all network connections within the member’s personal
                         network. The only way you can become a member to the network again is if a member invites you
                         back or if you receive an invitation code from the company, either way you will have to start
                         from scratch to rebuild your network. The community is created for members to be able to help
                         each other meet their membership goals. Each member is responsible for inviting members to the
                         site if they desire to earn payment. If you do not invite any members, you will not earn
-                        payment. <u>ThaNetwork.org is not responsible for paying any member payment for just joining the
+                        payment. ThaNetwork.org is not responsible for paying any member payment for just joining the
                         site. Referral Payment is earned by getting others to join the site, if you do not refer anyone
-                        you will not receive Referral Compensation.</u> Each member may invite as many people as you
-                        like to join your network. This is not a multilevel marketing site; each member earns cash for
-                        making referrals and getting those referrals to join the member’s network. ThaNetwork has a
-                        simple philosophy, GET AS MANY PEOPLE to join your network to reap the benefits of fulfilling
-                        your earning goals. As the membership demand for the network grows, the cost to become a member
-                        and the member’s earnings will increase. Membership fee increases will only apply to new
-                        member’s joining the site. Each member’s original membership fee will never change for the life
-                        of the member’s membership. (Example) member joins and membership fee is $29.99 per month. Six
-                        months later the membership fee increases to $59.99. The membership fee increase will only apply
-                        to new members who join ThaNetwork. As membership fees increase each member who invites new
-                        members at the increased membership fee will earn more income for each member who joins the
-                        member’s network at the new rate. <u>List of forecasted membership fee increases along with
-                        member earnings for each increase.</u>
+                        you will not receive Referral Compensation. Each member may invite as many people as you like to
+                        join your network. This is not a multilevel marketing site; each member earns cash for making
+                        referrals and getting those referrals to join the member’s network. ThaNetwork has a simple
+                        philosophy, GET AS MANY PEOPLE to join your network to reap the benefits of fulfilling your
+                        earning goals. As the membership demand for the network grows, the cost to become a member and
+                        the member’s earnings will increase. Membership fee increases will only apply to new member’s
+                        joining the site. Each member’s original membership fee will never change for the life of the
+                        member’s membership. (Example) member joins and membership fee is $29.99 per month. Six months
+                        later the membership fee increases to $59.99. The membership fee increase will only apply to new
+                        members who join ThaNetwork. As membership fees increase each member who invites new members at
+                        the increased membership fee will earn more income for each member who joins the member’s
+                        network at the new rate. List of forecasted membership fee increases along with member earnings
+                        for each increase.
                     </p>
                     <ul>
                         <li>
@@ -423,14 +418,13 @@
                         L) Termination
                     </h2>
                     <p>
-                        Either party may terminate use of the Services with or without cause at any time and effective
-                        immediately upon written notice to the other party. The Company may terminate with or without
-                        cause at any time and effective immediately, at the Company’s sole discretion, including but not
-                        limited to Member's failure to conform with these terms and conditions of the Agreement. the
-                        Company shall not be liable to Member or any third party for termination of use of the Services
-                        or Services. Member's right to use the Services shall cease immediately. Member shall have no
-                        right and the Company will have no obligation thereafter to forward any unread or unsent
-                        messages to Member or any third party.
+                        Either party may terminate use of the Services at any time. The Company may terminate for lack
+                        of payment, and policy violations as stated in these terms and conditions of membership. The
+                        Company shall not be liable to Member or any third party for termination membership.
+                        Notifications will always be made to a member prior to termination of membership in an effort to
+                        allow the member to take the necessary action to resolve infractions, but if any violations of
+                        the law or harassment or safety to another member is presented, those infractions will be
+                        handled immediately with termination of membership.
                     </p>
                     <h2>
                         M) DISCLAIMERS OF WARRANTIES
@@ -500,14 +494,29 @@
                         <a href="">support@thanetwork.org.</a>
                     </p>
 
-                    <p>As a member of ThaNetwork each member's payment method will incur a monthly membership fee of $29.99 for the life of the member's membership.  Monthly payments will be deducted from the member's payment method on the 1st day of each month.  A member may end their membership at any time by canceling the membership from the member's Profile Edit page.  If you understand and agree with the terms, acknowledge this agreement by selecting the box below.     (I agree and acknowledge to the recurring terms listed above)</p>
+                    <p>As a member of ThaNetwork each member's payment method will incur a monthly membership fee of
+                        $29.99 for the life of the member's membership.  Monthly payments will be deducted from the
+                        member's payment method on the 1st day of each month.  A member may end their membership at any
+                        time by canceling the membership from the member's Profile Edit page.  If you understand and
+                        agree with the terms, acknowledge this agreement by selecting the box below.     (I agree and
+                        acknowledge to the recurring terms listed above)</p>
 
                     <h5 style="text-decoration: underline;">Requirements</h5>
-                    <p>When a member joins ThaNetwork, a payment receipt will be sent to the member's personal email address each time a payment is deducted from the member's payment method, and when payments are made to the member.</p>
-                    <p>Membership payments will be made deducted on the 1st of each month.  When new member's join they must be a member for 30days before the first automated payment is deducted from the member's payment method.</p>
-                    <p>Membership payments will be credited to each member's account on the 15th of each month.  New referral payment credit will not be paid until the new member has been a member for 30 days.</p>
-                    <p>When a new member joins ThaNetwork, the referring member will not receive payment until the payment has been processed.  Once the payment is processed the funds will be credited to the member's account and the member will receive an email and notification of receiving payment with the new member's name and username included in the message.</p>
-                    <p>If a member cancels their membership they will not receive a refund, and if the member has referred member's in their personal network they will no longer receive payments for those members.  The payments will go to the company.</p>
+                    <p>When a member joins ThaNetwork, a payment receipt will be sent to the member's personal email
+                        address each time a payment is deducted from the member's payment method, and when payments are
+                        made to the member.</p>
+                    <p>Membership payments will be made deducted on the 1st of each month.  When new member's join they
+                        must be a member for 30days before the first automated payment is deducted from the member's
+                        payment method.</p>
+                    <p>Membership payments will be credited to each member's account on the 15th of each month.  New
+                        referral payment credit will not be paid until the new member has been a member for 30 days.</p>
+                    <p>When a new member joins ThaNetwork, the referring member will not receive payment until the
+                        payment has been processed.  Once the payment is processed the funds will be credited to the
+                        member's account and the member will receive an email and notification of receiving payment with
+                        the new member's name and username included in the message.</p>
+                    <p>If a member cancels their membership they will not receive a refund, and if the member has
+                        referred member's in their personal network they will no longer receive payments for those
+                        members.  The payments will go to the company.</p>
                 </div>
             </div>
         </section>
@@ -517,6 +526,7 @@
 <script>
 import utils from "../mixins/utils";
 import HowItWorksMenu from "../components/HowItWorksMenu";
+
 export default {
     name: "Terms",
     mixins: [utils],
