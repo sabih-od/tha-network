@@ -8,7 +8,7 @@
         <form action="">
             <div class="searchlist">
                 <i class="fal fa-search"></i>
-                <input type="search" placeholder="Search messages" name="search" v-model="search" @keyup.prevent="initateSearch()" autocomplete="off">
+                <input type="search" placeholder="Search" name="search" v-model="search" @keyup.prevent="initateSearch()" autocomplete="off">
                 <Link :href="$route('chatIndex')"><i class="fal fa-sliders-h"></i></Link>
             </div>
         </form>

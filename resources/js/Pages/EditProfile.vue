@@ -5,6 +5,9 @@
                 <div class="col-md-10" v-if="has_made_monthly_payment">
                     <h2>Personal Information</h2>
                 </div>
+                <Link :href="$route('profile')" class="btn themeBtn mb-2" style="color: white;">
+                    <span><h5 class="m-auto">Back to profile</h5></span>
+                </Link>
                 <div class="col-md-10">
                     <BioUpdate v-if="has_made_monthly_payment" />
 

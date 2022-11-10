@@ -114,7 +114,7 @@ export default {
     computed: {
         myPostText() {
             if(this.is_my_posts)
-                return 'Go Back'
+                return 'View All Posts'
             return 'My Posts'
         }
     },

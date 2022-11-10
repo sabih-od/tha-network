@@ -2,7 +2,7 @@
     <header class="wow fadeInDown" data-wow-delay="0.5s" style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInDown;">
         <div class="container-fluid">
             <nav class="navbar navbar-expand-lg">
-                <Link replace class="navbar-brand" :href="$route('home')">
+                <Link replace class="navbar-brand" :href="$route('work')">
                     <img :src="asset('images/logo.png')" alt="logo">
                 </Link>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"

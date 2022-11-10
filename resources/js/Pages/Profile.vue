@@ -10,7 +10,7 @@
                         <p class="text-pre-wrap"><strong>Bio: </strong>{{ bio }}</p>
                         <p class="text-pre-wrap"><strong>Gender: </strong>{{ profile.gender }}</p>
                         <p class="text-pre-wrap"><strong>Marital Status: </strong>{{ profile.marital_status }}</p>
-                        <a href="#" @click.prevent class="btnDesign">See more</a>
+                        <Link :href="$route('editProfileForm')" class="btnDesign">See more </Link>
                     </div>
 
                     <PeopleList/>
@@ -52,7 +52,7 @@
                             <div class="profileAwards">
                                 <img src="images/connections.png" alt="">
                                 <h3>{{ network_count }}</h3>
-                                <p>Connections</p>
+                                <p>People in my network</p>
                             </div>
                         </div>
                     </div>
@@ -79,7 +79,7 @@ import ProfileLayout from "../Layouts/ProfileLayout";
 import PeopleList from "../components/Widgets/PeopleList";
 import PostListItem from "../components/PostListItem";
 import NewMembersList from "../components/Widgets/NewMembersList";
-import {usePage} from "@inertiajs/inertia-vue3";
+import {usePage, Link} from "@inertiajs/inertia-vue3";
 
 export default {
     name: "Profile",
@@ -88,7 +88,8 @@ export default {
         PostListItem,
         PeopleList,
         PostForm,
-        PostsList
+        PostsList,
+        Link
     },
     data() {
         return {

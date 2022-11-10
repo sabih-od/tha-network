@@ -38,9 +38,7 @@
                                 <img :src="asset('images/icon1.png')" alt="">
                             </div>
                             <div class="content">
-                                <h3>Register Account</h3>
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                    Ipsum has been king to understand unchanged.</p>
+                                <h3>Become a Member</h3>
                             </div>
                         </div>
                     </div>
@@ -53,8 +51,6 @@
                             </div>
                             <div class="content">
                                 <h3>Refer Friends</h3>
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                    Ipsum has been king to understand unchanged.</p>
                             </div>
                         </div>
                     </div>
@@ -67,8 +63,6 @@
                             </div>
                             <div class="content">
                                 <h3>Earn Cash</h3>
-                                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                    Ipsum has been king to understand unchanged.</p>
                             </div>
                         </div>
                     </div>
@@ -94,10 +88,13 @@
                                 <div class="videoControllers">
                                     <button id="minmize" class="themeBtn"
                                             v-if="video_classes === 'introVideo minimized'"
-                                            @click.prevent="minimizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Minimize</span>
+                                            @click.prevent="minimizeVideo"><i
+                                        class="fas fa-compress-arrows-alt"></i><span>Minimize</span>
                                     </button>
                                     <button id="pip" class="themeBtn"
-                                            @click.prevent="togglePictureInPicture"><i class="fal fa-photo-video"></i><span>PIP Mode</span>
+                                            v-if="video_classes === 'introVideo columned'"
+                                            @click.prevent="togglePictureInPicture"><i
+                                        class="fal fa-photo-video"></i><span>PIP Mode</span>
                                     </button>
                                 </div>
                             </figure>
@@ -193,63 +190,23 @@
                     </div>
                     <div class="col-md-6">
                         <h2 class="secHeading mb-4">OUR MEMBERSHIP PLAN PAYS!</h2>
-                        <h6>
-                            List of forecasted membership fee increases along with member earnings for each Level.
-                        </h6>
                         <ul>
                             <li>
                                 <p>
-                                    At the start of the business, membership will cost $29.99. Members will receive $10
-                                    for referrals.
+                                    As a member your membership payment will never change, but you will have the ability
+                                    to earn more cash when the site becomes More Popular!
                                 </p>
                             </li>
                             <li>
                                 <p>
-                                    At Level 2 after there are a total of 500,000 members the new membership price will
-                                    increase to $59.99 for new members joining. Members will receive $15 per referral at
-                                    this level.
+                                    Now is the time to become a member While Membership Rates are Inexpensive!!!!!!
                                 </p>
                             </li>
-                            <li>
-                                <p>
-                                    At level 3 and after 2,000,000 members the membership fee will increase to $99.99
-                                    and the member will earn $25 per referral.
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    At Level 4 after 5,000,000 members the membership fee will increase to $159.99 and
-                                    the member will earn $50 per referral at this level.
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    At Level 5 after 7,000,000 members the membership fee will increase to $299.99 and
-                                    the member will earn $100 per referral at this level.
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    At Level 6 after 10,000,000 members the membership fee will increase to $399.99 and
-                                    the member will earn $150 per referral at this level.
-                                </p>
-                            </li>
-                            <li>
-                                <p>
-                                    Next levels will depend on the traffic on the site. If the demand becomes greater,
-                                    the membership price will increase to meet the demand. Notifications will be sent to
-                                    member’s when the levels change and there will be a site maintenance pause on the
-                                    site to accommodate the change.
-                                </p>
-                            </li>
-                            <h6>As a member on the network you will always pay your original membership fee, only new
-                                members will be required to pay membership fees at the level they join. All member's
-                                will benefit from the referral fee increases for each level.</h6>
                         </ul>
+                        <p class="text-center">
+                            <strong>So What Are You Waiting For JOIN TODAY!!!</strong>
+                        </p>
                         <a href="login.php" class="themeBtn">Join Us</a>
-                    </div>
-                    <div class="col-12">
-
                     </div>
                 </div>
             </div>
@@ -270,11 +227,16 @@
                             <li><a href="#">Contact Us</a></li>
                         </ul>
                         <ul class="list-unstyled footerSocial">
-                            <li><a href="https://www.facebook.com/Tha-Network-150057600527324/" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="https://twitter.com/ThaNetwork4" target="_blank"><i class="fab fa-twitter"></i></a></li>
-                            <li><a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" target="_blank"><i class="fab fa-youtube"></i></a></li>
-                            <li><a href="https://www.tiktok.com/@_thanetwork_?lang=en" target="_blank"><img :src="asset('images/simple-tiktok.png')" alt=""></a></li>
-                            <li><a href="https://www.instagram.com/_thanetwork_/" target="_blank"><i class="fab fa-instagram"></i></a></li>
+                            <li><a href="https://www.facebook.com/Tha-Network-150057600527324/" target="_blank"><i
+                                class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="https://twitter.com/ThaNetwork4" target="_blank"><i class="fab fa-twitter"></i></a>
+                            </li>
+                            <li><a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" target="_blank"><i
+                                class="fab fa-youtube"></i></a></li>
+                            <li><a href="https://www.tiktok.com/@_thanetwork_?lang=en" target="_blank"><img
+                                :src="asset('images/simple-tiktok.png')" alt=""></a></li>
+                            <li><a href="https://www.instagram.com/_thanetwork_/" target="_blank"><i
+                                class="fab fa-instagram"></i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -292,7 +254,7 @@
 <script>
 import HowItWorksMenu from "../components/HowItWorksMenu";
 import utils from "../mixins/utils";
-import {useForm} from "@inertiajs/inertia-vue3";
+import {useForm, usePage} from "@inertiajs/inertia-vue3";
 
 
 export default {
@@ -327,15 +289,14 @@ export default {
             const video = document.getElementById("video_element");
             const togglePipButton = document.getElementById("pip");
 
-            if(this.video_classes === 'introVideo minimized'){
+            if (this.video_classes === 'introVideo minimized') {
                 this.video_classes = 'introVideo columned';
             }
             try {
                 if (video !== document.pictureInPictureElement) {
                     await video.requestPictureInPicture();
                     // togglePipButton.textContent = "Disable Picture in Picture Mode";
-                }
-                else {
+                } else {
                     await document.exitPictureInPicture();
                     // togglePipButton.textContent = "Enable Picture in Picture Mode";
                 }
