@@ -10,6 +10,10 @@
                     <form @submit.prevent="submit">
                         <div class="form-group">
                             <input class="form-control" placeholder="Email" v-model="form.email" :disabled="form.processing">
+
+<!--                            <div id="tags">-->
+<!--                                <input type="text" value="" placeholder="Add a tag" />-->
+<!--                            </div>-->
                         </div>
                         <div class="form-group">
                             <button type="submit" class="themeBtn">
@@ -70,6 +74,22 @@ export default {
             keyboard: false,
             backdrop: 'static'
         })
+
+        // TAGS BOX
+        $("#tags input").on({
+            focusout() {
+                var txt = this.value.replace(/[^a-z0-9@\+\-\.\#]/ig,''); // allowed characters
+                var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+                if(txt && regex.test(txt.toLowerCase())) $("<span/>", {text:txt.toLowerCase(), insertBefore:this});
+                this.value = "";
+            },
+            keyup(ev) {
+                if(/(,|Enter)/.test(ev.key)) $(this).focusout();
+            }
+        });
+        $("#tags").on("click", "span", function() {
+            $(this).remove();
+        });
         // this.$emitter.on('share-post-modal', (post) => {
         //     this.post = post
         //     this.form.post_id = post.id
@@ -121,5 +141,41 @@ export default {
 
 .modal-title {
     color: #fff;
+}
+
+#tags{
+    float:left;
+    border:1px solid #ccc;
+    padding:5px;
+    font-family:Arial;
+    overflow-wrap: anywhere;
+}
+#tags > span{
+    cursor:pointer;
+    display:block;
+    float:left;
+    color:#fff;
+    background:#789;
+    padding: 5px 25px 5px 5px;
+    margin: 4px 10px 4px 4px;
+}
+#tags > span:hover{
+    opacity:0.7;
+}
+#tags > span:after{
+    position:absolute;
+    content:"×";
+    border:1px solid;
+    padding:2px 5px;
+    margin-left:3px;
+    font-size:11px;
+    margin-right: 10px;
+}
+#tags > input{
+    background:#eee;
+    border:0;
+    margin:4px;
+    padding:7px;
+    width:auto;
 }
 </style>

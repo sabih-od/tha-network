@@ -40,7 +40,7 @@
                             <a class="nav-link" :href="this.$route('about')">Contact Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" :href="this.$route('login')">Login</a>
+                            <a class="nav-link" :href="this.$route('login')">{{ this.user ? 'Go Back To Profile' : 'Login' }}</a>
                         </li>
                     </ul>
                 </div>
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import {Link} from "@inertiajs/inertia-vue3";
+import {Link, usePage} from "@inertiajs/inertia-vue3";
 import utils from "../mixins/utils";
 
 export default {
@@ -58,7 +58,12 @@ export default {
     mixins: [utils],
     components: {
         Link
-    }
+    },
+    computed: {
+        user() {
+            return usePage().props.value?.auth ?? null
+        }
+    },
 }
 </script>
 

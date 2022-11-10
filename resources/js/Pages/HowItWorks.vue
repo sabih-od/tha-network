@@ -292,7 +292,7 @@
 <script>
 import HowItWorksMenu from "../components/HowItWorksMenu";
 import utils from "../mixins/utils";
-import {useForm} from "@inertiajs/inertia-vue3";
+import {useForm, usePage} from "@inertiajs/inertia-vue3";
 
 
 export default {

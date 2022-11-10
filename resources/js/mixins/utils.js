@@ -12,7 +12,11 @@ export default {
             const img = usePage().props.value?.auth_profile_image
             if (img !== '' && img !== null)
                 return img
-            return this.asset('images/char-usr.png')
+            if(user.profile.gender == 'Male') {
+                return this.asset('images/avatars/male-avatar.png')
+            } else {
+                return this.asset('images/avatars/female-avatar.png')
+            }
         },
         profile_link() {
             return (id) => {
@@ -25,6 +29,9 @@ export default {
                     return image
                 return this.asset('images/char-usr.png')
             }
+        },
+        user() {
+            return usePage().props.value?.auth ?? null
         }
     },
     methods: {

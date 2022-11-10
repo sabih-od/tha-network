@@ -24,7 +24,7 @@
                         <div class="btn-group">
                             <!--                            <a href="#" class="themeBtn">Message</a>-->
                             <button v-if="!edit_profile_active" class="themeBtn btn_invite"
-                                    @click.prevent="inviteModal()">Invite
+                                    @click.prevent="inviteModal()">Make a Referral
                             </button>
                             <!--                            <a v-if="!edit_profile_active" href="#" @click="$emitter.emit('chat-with-profile')" class="themeBtn btn_message">Message</a>-->
                             <Link v-if="!edit_profile_active" :href="$route('chatIndex')" class="themeBtn btn_message"
@@ -251,6 +251,9 @@ export default {
                     $('.btn_unfriend').prop('hidden', true);
                     $('.btn_add_friend').prop('hidden', false);
                     $('.btn_block').html(url.includes('unblock') ? 'Block' : 'Unblock');
+                    let route_slug = url.includes('unblock') ? 'block' : 'unblock';
+                    const block_url = this.$route(route_slug, usePage().props.value?.user.id);
+                    $('.btn_block').data('profile', block_url);
                     // this.$emit('deleted')
                     // this.$emitter.emit('chat_message_deleted', this.form.id)
                 },

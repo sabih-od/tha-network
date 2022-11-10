@@ -20,8 +20,8 @@
 
             <!-- Video Preview -->
             <ul class="bottomList">
-                <li><a href="#" @click.prevent="showFeelingModal" class="optBtn"><i
-                    :class="form.feeling_icon ?? 'fal fa-smile'"></i> Feeling {{ form.feeling_text ?? 'Activity' }}</a></li>
+<!--                <li><a href="#" @click.prevent="showFeelingModal" class="optBtn"><i-->
+<!--                    :class="form.feeling_icon ?? 'fal fa-smile'"></i> Feeling {{ form.feeling_text ?? 'Activity' }}</a></li>-->
 <!--                <li><a href="#" @click.prevent="populate_location" class="optBtn"><i-->
 <!--                    class="fas fa-map-marker-alt"></i>Location</a></li>-->
                 <li>

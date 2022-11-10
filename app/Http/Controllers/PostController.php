@@ -23,7 +23,7 @@ class PostController extends Controller
     {
 //        dd($request->all());
         $data = $request->validate([
-            'content' => ['required', 'string'],
+            'content' => ['nullable', 'string'],
             'files' => ['nullable', 'max:5'],
             'files.*.file' => [function ($attribute, $value, $fail) {
                 if (!$value) return;
