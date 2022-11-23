@@ -13,7 +13,7 @@
                         <div class="col-md-4">
                             <div class="content">
                                 <h3>Membership Pays</h3>
-                                <Link :href="$route('paymentShow')" class="themeBtn" replace>Join Us</Link>
+                                <Link v-if="!this.user" :href="$route('paymentShow')" class="themeBtn" replace>Join Us</Link>
                             </div>
                         </div>
                     </div>
@@ -81,6 +81,7 @@
                 <div class="row">
                     <div class="col-md-6 d-flex">
                         <div class="videoBox">
+                            <img v-if="video_classes.includes('minimized')" :src="asset('images/intro-placeholder.png')" alt="">
                             <figure :class="video_classes" :style="video_Styling">
                                 <video autoplay muted controls id="video_element">
                                     <source :src="asset('video/introVideo.mp4')">
@@ -91,11 +92,11 @@
                                             @click.prevent="minimizeVideo"><i
                                         class="fas fa-compress-arrows-alt"></i><span>Minimize</span>
                                     </button>
-                                    <button id="pip" class="themeBtn"
-                                            v-if="video_classes === 'introVideo columned'"
-                                            @click.prevent="togglePictureInPicture"><i
-                                        class="fal fa-photo-video"></i><span>PIP Mode</span>
-                                    </button>
+<!--                                    <button id="pip" class="themeBtn"-->
+<!--                                            v-if="video_classes === 'introVideo columned'"-->
+<!--                                            @click.prevent="togglePictureInPicture"><i-->
+<!--                                        class="fal fa-photo-video"></i><span>PIP Mode</span>-->
+<!--                                    </button>-->
                                 </div>
                             </figure>
                         </div>
@@ -271,6 +272,19 @@ export default {
         $('#video_element').on('ended', function () {
             // _t.skipVideo();
         });
+
+        // video columned if user is logged in
+        if(this.user) {
+            this.video_classes = 'introVideo columned';
+        }
+    },
+    computed: {
+        user() {
+            return usePage().props.value?.auth ?? null
+        },
+        asset() {
+            return url => this.$store.getters['Utils/public_asset'](url)
+        },
     },
     data() {
         return {

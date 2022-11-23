@@ -2509,7 +2509,7 @@ img.rounded-circle {
 
 .introVideo.minimized {
     inset: unset;
-    bottom: 10px;
+    bottom: 250px;
     right: 10px;
     width: 700px;
     height: 450px;
