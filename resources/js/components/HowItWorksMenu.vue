@@ -22,23 +22,23 @@
                         <li><a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" target="_blank"><i class="fab fa-youtube"></i></a></li>
                     </ul>
                     <ul class="navbar-nav ml-auto">
-                        <li :class="url === 'work'? 'nav-item active' : 'nav-item'">
+                        <li :class="page === 'HowItWorks' ? 'nav-item active' : 'nav-item'">
                             <a class="nav-link" :href="this.$route('work')">How It Works</a>
                         </li>
-                        <li :class="url === 'benefits'? 'nav-item active' : 'nav-item'">
+                        <li :class="page === 'Benifits'? 'nav-item active' : 'nav-item'">
                             <a class="nav-link" :href="this.$route('benefits')">Membership Benefits</a>
                         </li>
-                        <li :class="url === 'about'? 'nav-item active' : 'nav-item'">
+                        <li :class="page === 'About'? 'nav-item active' : 'nav-item'">
                             <a class="nav-link" :href="this.$route('about')">About Us</a>
                         </li>
-                        <li :class="url === 'terms'? 'nav-item active' : 'nav-item'">
+                        <li :class="page === 'Terms'? 'nav-item active' : 'nav-item'">
                             <a class="nav-link" :href="this.$route('terms')">Terms & Conditions</a>
                         </li>
-                        <li :class="url === 'privacy'? 'nav-item active' : 'nav-item'">
+                        <li :class="page === 'Privacy'? 'nav-item active' : 'nav-item'">
                             <a class="nav-link" :href="this.$route('privacy')">Privacy Policy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" :href="this.$route('about')">Contact Us</a>
+                        <li  :class="page === 'Contact'? 'nav-item active' : 'nav-item'">
+                            <a class="nav-link" :href="this.$route('contact')">Contact Us</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" :href="this.$route('login')">{{ this.user ? 'Go Back To Profile' : 'Login' }}</a>
@@ -66,6 +66,9 @@ export default {
     mixins: [utils],
     components: {
         Link
+    },
+    mounted() {
+        alert(this.page);
     },
     computed: {
         user() {

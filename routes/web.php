@@ -214,6 +214,10 @@ Route::get('/about', function () {
     return Inertia::render('About');
 })->name('about');
 
+Route::get('/contact', function () {
+    return Inertia::render('Contact');
+})->name('contact');
+
 Route::get('/privacy', function () {
     return Inertia::render('Privacy');
 })->name('privacy');
