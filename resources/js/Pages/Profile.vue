@@ -37,7 +37,7 @@
                         <div class="col-md-4">
                             <div class="profileAwards">
                                 <img src="images/ranking.png" alt="">
-                                <h3>10 <sup>th</sup></h3>
+                                <h3><sup>{{ level_details.level }}</sup></h3>
                                 <p>Rank</p>
                             </div>
                         </div>
@@ -101,7 +101,8 @@ export default {
     layout: ProfileLayout,
     props: {
         user: Object,
-        profile: Object
+        profile: Object,
+        level_details: Object,
     },
     mounted() {
         this.$store.commit('Profile/setIsAnother', false)
@@ -118,11 +119,8 @@ export default {
         this.network_count = usePage().props.value?.network_count;
         this.bio = this.profile.bio;
 
-        // posts listing initialize
-        // this.$store.commit('Post/setInitialUrl', this.$page.url)
-        // this.$store.commit('Post/setIsLoadMore', false)
-        // this.$store.commit('Post/setPosts', [])
-        // this.$store.dispatch('Post/loadPosts', this.$route('profile'))
+        //change level details
+        this.$emitter.emit('change_level_details', this.level_details);
     },
     unmounted() {
         $('.btn_message').prop('hidden', false);

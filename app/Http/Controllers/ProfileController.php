@@ -43,7 +43,8 @@ class ProfileController extends Controller
                 'profile_image' => $this->profileImg($user, 'profile_image'),
                 'profile_cover' => $this->profileImg($user, 'profile_cover'),
                 'friends_count' => count($user->followers),
-                'network_count' => $user->network()->exists() ? count($user->network->members) : 0
+                'network_count' => $user->network()->exists() ? count($user->network->members) : 0,
+                'level_details' => get_my_level($user->id)
             ]);
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());
@@ -310,6 +311,7 @@ class ProfileController extends Controller
                 'friends_count' => count($user->followers),
                 'network_count' => $user->network()->exists() ? count($user->network->members) : 0,
                 'user_is_blocked' => $auth_user->hasBlocked($user),
+                'level_details' => get_my_level($user->id)
             ]);
         } catch (\Exception $e) {
             return redirect()->route('home')->with('error', $e->getMessage());

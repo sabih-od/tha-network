@@ -49,6 +49,7 @@ class HomeController extends Controller
             'profile_cover' => $this->profileImg(Auth::user(), 'profile_cover'),
             'friends_count' => count(Auth::user()->followers),
             'network_count' => Auth::user()->network()->exists() ? count(Auth::user()->network->members) : 0,
+            'level_details' => get_my_level(Auth::user()->id)
         ]);
     }
 

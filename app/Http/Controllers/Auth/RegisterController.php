@@ -209,7 +209,6 @@ class RegisterController extends Controller
             $inviter_id = session()->get('inviter_id');
             $check = User::with('profile')->where('id', $inviter_id)->get();
             if(count($check) > 0) {
-//                $inviter = $check[0];
                 $inviter = User::with('profile')->find($inviter_id);
                 $user = User::with('profile')->find($user->id);
 
@@ -237,29 +236,20 @@ class RegisterController extends Controller
                     'email' => $request->email,
                     'status' => false,
                 ])->first();
+
                 if($referral) {
                     $referral->update(['status' => true]);
-                    //rank check
-                    $prev_rank = get_my_rank($inviter->id);
-                    $inviter->remaining_referrals = $inviter->remaining_referrals - 1;
-                    $inviter->save();
-                    $new_rank = get_my_rank($inviter->id);
+                }
 
-                    //notification if rank changed
-                    if($new_rank->target > $prev_rank->target || $new_rank->target != $prev_rank->target) {
-                        $string = "Congratulations, you've been promoted to the next rank keep up the good work!!!";
-                        $notification = Notification::create([
-                            'user_id' => $inviter->id,
-                            'notifiable_type' => 'App\Models\User',
-                            'notifiable_id' => $inviter->id,
-                            'body' => $string,
-                            'sender_id' => $inviter->id
-                        ]);
-                        event(new RankPromoted($inviter->id, $string, 'App\Models\User', $notification->id, $inviter));
-                    }
+                //rank check
+                $prev_rank = get_my_rank($inviter->id);
+                $inviter->remaining_referrals = $inviter->remaining_referrals - 1;
+                $inviter->save();
+                $new_rank = get_my_rank($inviter->id);
 
-                    //send referral completion notification
-                    $string = $request->first_name . ' ' . $request->last_name . " just joined your network!! Congratulations, Keep up the good work!!!";
+                //notification if rank changed
+                if($new_rank->target > $prev_rank->target || $new_rank->target != $prev_rank->target) {
+                    $string = "Congratulations, you've been promoted to the next rank keep up the good work!!!";
                     $notification = Notification::create([
                         'user_id' => $inviter->id,
                         'notifiable_type' => 'App\Models\User',
@@ -267,13 +257,24 @@ class RegisterController extends Controller
                         'body' => $string,
                         'sender_id' => $inviter->id
                     ]);
-
-                    event(new ReferralCompleted($inviter->id, $string, 'App\Models\User', $notification->id, $inviter));
-
-                    //subtract from user's remaining referrals
-                    $referral->user->remaining_referrals = $referral->user->remaining_referrals - 1;
-                    $referral->user->save();
+                    event(new RankPromoted($inviter->id, $string, 'App\Models\User', $notification->id, $inviter));
                 }
+
+                //send referral completion notification
+                $string = $request->first_name . ' ' . $request->last_name . " just joined your network!! Congratulations, Keep up the good work!!!";
+                $notification = Notification::create([
+                    'user_id' => $inviter->id,
+                    'notifiable_type' => 'App\Models\User',
+                    'notifiable_id' => $inviter->id,
+                    'body' => $string,
+                    'sender_id' => $inviter->id
+                ]);
+
+                event(new ReferralCompleted($inviter->id, $string, 'App\Models\User', $notification->id, $inviter));
+
+                //subtract from user's remaining referrals
+                $inviter->remaining_referrals = $inviter->remaining_referrals - 1;
+                $inviter->save();
 
 
                 session()->remove('inviter_id');

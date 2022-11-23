@@ -19,7 +19,7 @@
                     </div>
                     <div class="col-md-6">
                         <a href="#" class="awardWrap profilePage">
-                            <img :src="asset('images/cup.png')" alt="">
+                            <img :src="level_details.trophy" alt="">
                         </a>
                         <div class="btn-group">
                             <!--                            <a href="#" class="themeBtn">Message</a>-->
@@ -102,8 +102,10 @@ export default {
         }
     },
     mounted() {
-        // console.log(usePage().props.value.profile_cover);
-        // this.edit_profile_active = window.location.href.includes('edit-profile') ? true : false;
+        let _t = this;
+        this.$emitter.on('change_level_details', function(data) {
+            _t.level_details = data;
+        });
     },
     data() {
         return {
@@ -115,7 +117,8 @@ export default {
                 chat_type: 'individual',
                 user_id: null
             }),
-            friendRequestForm: useForm({})
+            friendRequestForm: useForm({}),
+            level_details: {}
         }
     },
     methods: {

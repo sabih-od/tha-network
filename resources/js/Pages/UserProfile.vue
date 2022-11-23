@@ -33,7 +33,7 @@
                         <div class="col-md-4">
                             <div class="profileAwards">
                                 <img :src="asset('images/ranking.png')" alt="">
-                                <h3>10 <sup>th</sup></h3>
+                                <h3><sup>{{ level_details.level }}</sup></h3>
                                 <p>Rank</p>
                             </div>
                         </div>
@@ -104,6 +104,7 @@ export default {
         user: Object,
         profile: Object,
         profile_image: Object,
+        level_details: Object,
     },
     mounted() {
         this.$store.commit('Profile/setIsAnother', true)
@@ -111,6 +112,9 @@ export default {
 
         //change profile image
         this.$emitter.emit('user-profile-image-on', this.profile_image);
+
+        //change level details
+        this.$emitter.emit('change_level_details', this.level_details);
 
         this.friends_count = usePage().props.value?.friends_count;
         this.network_count = usePage().props.value?.network_count;

@@ -58,6 +58,41 @@ function get_my_rank($id = null) {
     return Goal::where('target', '>', $user->completed_referrals->count())->orderBy('target', 'ASC')->first();
 }
 
+function get_my_level($id = null) {
+    $goal = get_my_rank($id);
+
+    switch ($goal->name) {
+        case 'Beginner':
+            $level = 'Bronze';
+            $trophy = asset('images/trophies/' . $level . '.png');
+            break;
+
+        case 'Amateur':
+            $level = 'Silver';
+            $trophy = asset('images/trophies/' . $level . '.png');
+            break;
+
+        case 'Expert':
+            $level = 'Gold';
+            $trophy = asset('images/trophies/' . $level . '.png');
+            break;
+
+        case 'THA King':
+            $level = 'Platinum';
+            $trophy = asset('images/trophies/' . $level . '.png');
+            break;
+
+        default:
+            $level = '';
+            $trophy = '';
+    }
+
+    return [
+        'level' => $level,
+        'trophy' => $trophy
+    ];
+}
+
 function get_referrals_by_day($date, $id = null) {
     return Referral::where('status', true)->where('user_id', $id ?? Auth::id())->whereDate('updated_at', $date)->get()->count();
 }

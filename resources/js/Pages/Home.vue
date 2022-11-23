@@ -110,6 +110,7 @@ export default {
         user: Object,
         profile: Object,
         goals: Object,
+        level_details: Object,
     },
     computed: {
         myPostText() {
@@ -158,6 +159,9 @@ export default {
 
         this.friends_count = usePage().props.value?.friends_count;
         this.network_count = usePage().props.value?.network_count;
+
+        //change level details
+        this.$emitter.emit('change_level_details', this.level_details);
     },
     unmounted() {
         //un-hide message button
