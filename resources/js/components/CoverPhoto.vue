@@ -23,6 +23,9 @@
                         </a>
                         <div class="btn-group">
                             <!--                            <a href="#" class="themeBtn">Message</a>-->
+                            <button v-if="!edit_profile_active" class="themeBtn btn_invite" :title="$route('joinByInvite', this.user.username)"
+                                    @click.prevent="copy_my_referral_link">Share your profile
+                            </button>
                             <button v-if="!edit_profile_active" class="themeBtn btn_invite"
                                     @click.prevent="inviteModal()">Make a Referral
                             </button>
@@ -94,11 +97,13 @@ export default {
         profile_cover() {
             return usePage().props.value?.profile_cover ?? this.$store.getters['Utils/public_asset']('images/cover-photo.jpg')
         },
+        user() {
+            return usePage().props.value?.auth ?? null
+        }
     },
     mounted() {
         // console.log(usePage().props.value.profile_cover);
         // this.edit_profile_active = window.location.href.includes('edit-profile') ? true : false;
-
     },
     data() {
         return {
@@ -264,6 +269,10 @@ export default {
                     window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
                 }
             })
+        },
+        copy_my_referral_link() {
+            navigator.clipboard.writeText(this.$route('joinByInvite', this.user.username));
+            (useToast()).success('Link Copied!');
         }
     }
 }

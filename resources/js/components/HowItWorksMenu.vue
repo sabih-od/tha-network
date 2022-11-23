@@ -67,9 +67,6 @@ export default {
     components: {
         Link
     },
-    mounted() {
-        alert(this.page);
-    },
     computed: {
         user() {
             return usePage().props.value?.auth ?? null
