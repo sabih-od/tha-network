@@ -9,11 +9,17 @@
                     <h5><small>Send invitations to people to join your network</small></h5>
                     <form @submit.prevent="submit">
                         <div class="form-group">
-                            <input class="form-control" placeholder="Email" v-model="form.email" :disabled="form.processing">
+<!--                            <input class="form-control" placeholder="Email" v-model="form.email" :disabled="form.processing">-->
+                            <input class="form-control email_inputs" placeholder="Email" v-for="(email_object, key) in email_objects" v-model="email_objects[key].content">
 
 <!--                            <div id="tags">-->
 <!--                                <input type="text" value="" placeholder="Add a tag" />-->
 <!--                            </div>-->
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-sm btn-success" @click="add_email_object">
+                                + Add email
+                            </button>
                         </div>
                         <div class="form-group">
                             <button type="submit" class="themeBtn">
@@ -35,6 +41,7 @@ import PostMainData from "./PostMainData";
 import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {useToast} from "vue-toastification";
 import utils from "../mixins/utils";
+import {Inertia} from "@inertiajs/inertia";
 
 export default {
     name: "SendInviteModal",
@@ -64,6 +71,11 @@ export default {
                 username: '',
                 name: ''
             }),
+            email_objects: [
+                {
+                    content: ''
+                }
+            ]
         }
     },
     mounted() {
@@ -76,12 +88,12 @@ export default {
         })
 
         // TAGS BOX
-        $("#tags input").on({
+        $(".email_inputs").on({
             focusout() {
                 var txt = this.value.replace(/[^a-z0-9@\+\-\.\#]/ig,''); // allowed characters
                 var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-                if(txt && regex.test(txt.toLowerCase())) $("<span/>", {text:txt.toLowerCase(), insertBefore:this});
-                this.value = "";
+                // if(txt && regex.test(txt.toLowerCase())) $("<span/>", {text:txt.toLowerCase(), insertBefore:this});
+                // this.value = "";
             },
             keyup(ev) {
                 if(/(,|Enter)/.test(ev.key)) $(this).focusout();
@@ -96,9 +108,6 @@ export default {
         //     this.show()
         // })
     },
-    unmounted() {
-        // this.$emitter.off('share-post-modal')
-    },
     methods: {
         show() {
             this.modal.show()
@@ -112,7 +121,16 @@ export default {
 
             this.form.username = this.user.username;
 
-            this.form.post(this.$route('sendInvitation'), {
+            const formData = new FormData();
+            formData.append('name', this.form.name);
+            formData.append('username', this.form.username);
+
+            this.email_objects.forEach(function(email_object) {
+                formData.append('emails[]', email_object.content);
+            });
+
+
+            Inertia.post(this.$route('sendInvitation'), formData, {
                 replace: true,
                 onSuccess: (response) => {
                     console.log(response);
@@ -120,8 +138,9 @@ export default {
                     (useToast()).options = {
                         "showDuration": "3000",
                     };
-                    (useToast()).success('The invitation has been sent.');
+                    (useToast()).success('The invitation(s) have been sent.');
                     this.hide();
+                    this.email_objects = [{content: ''}];
                     this.form.reset()
                     // this.showSuccessMessage()
                 },
@@ -130,6 +149,11 @@ export default {
                 }
             })
         },
+        add_email_object() {
+            this.email_objects.push({
+                content: ''
+            });
+        }
     }
 }
 </script>
