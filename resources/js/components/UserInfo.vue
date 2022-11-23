@@ -9,7 +9,7 @@
             <!--                <i class="fas fa-camera"></i><input type="file">-->
             <!--            </div>-->
         </div>
-        <h2>{{ name }} <span>@{{ user?.username }}</span></h2>
+        <h2>{{ name + '('+this.level_details.level+' level)'}} <span>@{{ user?.username }}</span></h2>
         <teleport to="body">
             <CreateAvatar/>
         </teleport>
@@ -50,6 +50,7 @@ export default {
                 file: null
             }),
             temp_profile_image: this.auth_image,
+            level_details: {}
         }
     },
     mounted() {
@@ -64,6 +65,10 @@ export default {
         });
         this.$emitter.on('avatar_updated', function(data) {
             _t.temp_profile_image = data;
+        });
+
+        this.$emitter.on('change_level_details', function(data) {
+            _t.level_details = data;
         });
     },
     watch: {

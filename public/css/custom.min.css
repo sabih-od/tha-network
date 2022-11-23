@@ -961,7 +961,7 @@ footer .links li a:hover {
 .awardWrap {
     width: 6.5rem;
     height: 6.5rem;
-    background: #1091ce;
+    /*background: #1091ce;*/
     display: grid;
     place-items: center;
     border-radius: 50%;
