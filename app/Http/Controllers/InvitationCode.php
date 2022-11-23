@@ -10,6 +10,7 @@ use App\Models\Referral;
 use App\Models\SendInvitation;
 use App\Models\User;
 use App\Models\UserInvitation;
+use App\Rules\EmailArray;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -309,25 +310,34 @@ class InvitationCode extends Controller
     }
 
     public function sendInvitation(Request $request) {
+//        dd($request->all());
         $data = $request->validate([
-            'email' => [
+            'emails' => [
                 'required',
-                'nullable',
-                'string',
-                'email',
-                'max:255',
-                Rule::unique('users')->whereNull('deleted_at'),
+                new EmailArray(),
+//                'nullable',
+//                'string',
+//                'email',
+//                'max:255',
+//                Rule::unique('users')->whereNull('deleted_at'),
             ]
-        ],[
-            'email.unique' => 'This user is already registered on the website.'
         ]);
 
         try {
             //register mail code if necessary
             //
 
-            if (!$this->invitationMailCode($data['email'], 'Tha Network - Invitation Code!', $request->username, $request->name))
-                return WebResponses::exception("Email not sent!");
+            foreach ($request->emails as $email) {
+                if (!$this->invitationMailCode($email, 'Tha Network - Invitation Code!', $request->username, $request->name))
+                    return WebResponses::exception("Emails not sent!");
+
+                //Create referral
+                Referral::create([
+                    'user_id' => Auth::id(),
+                    'email' => $email
+                ]);
+            }
+
 
 //            $route = route('loginForm', 'send-invite=success');
             session()->put('send-invite', 'success');
@@ -339,12 +349,6 @@ class InvitationCode extends Controller
                     'user_id' => Auth::id()
                 ]);
             }
-
-            //Create referral
-            Referral::create([
-                'user_id' => Auth::id(),
-                'email' => $data['email']
-            ]);
 
             //send referral creation notification
             $string = "Great Job! Your Referral was sent!! Keep up the good work!!! ";
