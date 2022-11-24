@@ -2501,7 +2501,7 @@ img.rounded-circle {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
+    gap: 1rem;\
     background: transparent;
     backdrop-filter: blur(5px);
     mix-blend-mode: difference;
