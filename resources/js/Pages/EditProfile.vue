@@ -25,7 +25,8 @@
 
                     <CloseAccountModal></CloseAccountModal>
 
-                    <h3>Payment Accounts Settings</h3>
+                    <h3>Referral Payment Options</h3>
+                    <h6>In order to receive Referral Payments you must include your Bank Checking account information, Stripe Account information, or Paypal Account information.  If this information is not provided, you will not be able to receive your referral payments.</h6>
                     <div class="row">
                         <div class="col-md-6">
                             <h4>Stripe</h4>

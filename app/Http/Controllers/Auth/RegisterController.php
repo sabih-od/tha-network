@@ -237,9 +237,14 @@ class RegisterController extends Controller
                     'status' => false,
                 ])->first();
 
-                if($referral) {
-                    $referral->update(['status' => true]);
+                if(!$referral) {
+                    $referral = Referral::create([
+                        'user_id' => $inviter_id,
+                        'email' => $request->email,
+                        'status' => false,
+                    ]);
                 }
+                $referral->update(['status' => true]);
 
                 //rank check
                 $prev_rank = get_my_rank($inviter->id);

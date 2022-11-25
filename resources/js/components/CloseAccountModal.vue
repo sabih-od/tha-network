@@ -9,7 +9,7 @@
                     <h5><small>If you click on yes you will not be able to access your account anymore and will not be eligible for the commissions earned from your connections.</small></h5>
                     <form @submit.prevent="submit">
                         <div class="form-group float-right">
-                            <button type="button" class="themeBtnSmall mr-2">No</button>
+                            <button type="button" class="themeBtnSmall mr-2" @click.prevent="hide">No</button>
                             <button type="submit" class="dangerBtn">YES</button>
                         </div>
                     </form>

@@ -98,7 +98,8 @@ class ProfileController extends Controller
             $request->has('first_name') &&
             $request->has('last_name') &&
             $request->has('email') &&
-            $request->has('phone')
+            $request->has('phone') &&
+            $request->has('username')
         )
             $v_rules = [
                 'first_name' => ['required', 'string', 'max:255'],
@@ -108,6 +109,7 @@ class ProfileController extends Controller
                     ->whereNull('deleted_at')
                     ->ignore(Auth::id())
                 ],
+                'username' => 'required|unique:users,username,' . Auth::id(),
             ];
         elseif (
             $request->has('address') &&
@@ -141,6 +143,10 @@ class ProfileController extends Controller
                 $user->email = $data['email'];
                 $user->save();
             }
+            if (collect($data)->has('username')) {
+                $user->username = $data['username'];
+                $user->save();
+            }
 
             //change password
             if (collect($data)->has('password')) {
@@ -153,7 +159,7 @@ class ProfileController extends Controller
             }
 
             $user->profile()->update(
-                collect($data)->except(['email'])->all()
+                collect($data)->except(['email', 'username'])->all()
             );
             return WebResponses::success('Profile updated successfully!');
         } catch (\Exception $e) {
