@@ -42,6 +42,14 @@
                                placeholder="+123-456-789">
                     </div>
                 </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="phone">Username</label>
+                        <input type="text" id="phone" v-model="form.username" class="form-control"
+                               :readonly="!isEdit"
+                               placeholder="Username">
+                    </div>
+                </div>
             </div>
         </div>
     </form>
@@ -60,6 +68,7 @@ export default {
                 last_name: usePage().props.value?.profile?.last_name,
                 phone: usePage().props.value?.profile?.phone,
                 email: usePage().props.value?.auth?.email,
+                username: usePage().props.value?.auth?.username,
             })
         }
     },

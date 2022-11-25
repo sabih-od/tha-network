@@ -3,7 +3,8 @@
         <div class="df aic jcsb mb-2">
             <h4>
                 This month's subscription payment
-                <h6 v-if="!has_made_monthly_payment" style="color:red;">{{ monthNames[new Date().getMonth()]+' Payment Due' }}</h6>
+<!--                <h6 v-if="!has_made_monthly_payment" style="color:red;">{{ monthNames[new Date().getMonth()]+' Payment Due' }}</h6>-->
+                <h6 v-if="!has_made_monthly_payment" style="color:red;">{{ 'Payment Due ' + this_months_first }}</h6>
                 <h6 v-if="has_made_monthly_payment" style="color:green;">{{ monthNames[new Date().getMonth()]+' Payment Clear' }}</h6>
                 <h6 style="font-weight: 100; color: #817373; font-size: 14px;">Users must need to provide their payment details for receiving their referral payments.</h6>
             </h4>
@@ -34,6 +35,19 @@ export default {
         client_secret: String,
         monthly_payment_flash: String,
         has_made_monthly_payment: Boolean
+    },
+    computed: {
+        this_months_first() {
+            let todays_date = new Date((new Date()).getFullYear(), (new Date()).getMonth(), 1);
+            let yyyy = todays_date.getFullYear();
+            let mm = todays_date.getMonth() + 1;
+            let dd = todays_date.getDate();
+
+            if (dd < 10) dd = '0' + dd;
+            if (mm < 10) mm = '0' + mm;
+
+            return mm + '/' + dd + '/' + yyyy;
+        },
     },
     data() {
         return {
