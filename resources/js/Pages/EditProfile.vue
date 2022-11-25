@@ -2,20 +2,20 @@
     <section class="bg-grey editProfile pt-0">
         <div class="container">
             <div class="row jcc">
-                <div class="col-md-10" v-if="has_made_monthly_payment">
+                <div class="col-md-10">
                     <h2>Personal Information</h2>
                 </div>
                 <Link :href="$route('profile')" class="btn themeBtn mb-2" style="color: white;">
                     <span><h5 class="m-auto">Back to profile</h5></span>
                 </Link>
                 <div class="col-md-10">
-                    <BioUpdate v-if="has_made_monthly_payment" />
+                    <BioUpdate />
 
-                    <InfoUpdate v-if="has_made_monthly_payment" />
+                    <InfoUpdate />
 
-                    <AddressUpdate v-if="has_made_monthly_payment" />
+                    <AddressUpdate />
 
-                    <PasswordUpdate v-if="has_made_monthly_payment" />
+                    <PasswordUpdate />
 
                     <MonthlyPayment
                         :client_secret="client_secret"
@@ -27,7 +27,7 @@
 
                     <h3>Payment Accounts Settings</h3>
                     <div class="row">
-                        <div class="col-md-6" v-if="has_made_monthly_payment">
+                        <div class="col-md-6">
                             <h4>Stripe</h4>
 
                             <!--badge-->
@@ -37,7 +37,7 @@
                             <!--button-->
                             <button type="button" class="btn btn-success btn-sm" @click.prevent="connectStripeAccount()">{{ this.stripe_account_id ? 'Reconnect' : 'Connect' }}</button>
                         </div>
-                        <div class="col-md-6" v-if="has_made_monthly_payment">
+                        <div class="col-md-6">
                             <h4>Paypal</h4>
 
                             <!--badge-->
@@ -51,7 +51,7 @@
                     </div>
                     <br />
 
-                    <div class="btn-group gap1" v-if="has_made_monthly_payment">
+                    <div class="btn-group gap1">
                         <button type="submit" class="themeBtn" @click.prevent="showWeeklyGoalNotification()">Save</button>
                         <button class="themeBtn discard">Discard Changes</button>
                     </div>
