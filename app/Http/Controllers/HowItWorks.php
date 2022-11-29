@@ -38,6 +38,11 @@ class HowItWorks extends Controller
         ]);
     }
 
+    public function stripePaymentShow()
+    {
+        return Inertia::render('StripePayment');
+    }
+
     public function successPayment(Request $request)
     {
         if ($request->payment_intent_client_secret != session('client-secret'))
@@ -64,6 +69,27 @@ class HowItWorks extends Controller
             $payment = $userInv->payment()->create([
                 'amount' => $this->amount,
                 'client_secret' => session('client-secret')
+            ]);
+        }
+
+        session()->put('tha_payment_amount', $this->amount);
+
+        return redirect()->route('registerForm');
+    }
+
+    public function stripeSuccessPayment(Request $request)
+    {
+        //checking for inviter in session
+        if (!session()->has('inviter_id'))
+            return redirect()->route('loginForm');
+
+        //if registered by following invitation link
+        if(session()->has('inviter_id')) {
+            $payment = Payment::create([
+                'amount' => $this->amount,
+                'client_secret' => session('client-secret'),
+                'payable_type' => 'App\Models\Payment',
+                'payable_id' => session()->get('inviter_id')
             ]);
         }
 

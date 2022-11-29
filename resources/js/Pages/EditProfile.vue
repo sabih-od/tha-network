@@ -21,6 +21,8 @@
                         :client_secret="client_secret"
                         :monthly_payment_flash="monthly_payment_flash"
                         :has_made_monthly_payment="has_made_monthly_payment"
+                        :stripe_checkout_session_id="stripe_checkout_session_id"
+                        :stripe_portal_session="stripe_portal_session"
                     ></MonthlyPayment>
 
                     <CloseAccountModal></CloseAccountModal>
@@ -124,7 +126,9 @@ export default {
         monthly_payment_flash: String,
         has_made_monthly_payment: Boolean,
         stripe_account_id: String,
-        paypal_account_details: String
+        paypal_account_details: String,
+        stripe_checkout_session_id: String,
+        stripe_portal_session: Object
     },
     computed: {
         userProfile() {

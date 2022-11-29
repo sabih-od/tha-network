@@ -44,6 +44,7 @@ class User extends Authenticatable implements HasMedia
         'remaining_referrals',
         'stripe_account_id',
         'paypal_account_details',
+        'stripe_checkout_session_id'
     ];
 
     /**
