@@ -11,15 +11,27 @@ use App\Models\SendInvitation;
 use App\Models\User;
 use App\Models\UserInvitation;
 use App\Rules\EmailArray;
+use App\Traits\StripePayment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use Stripe\Stripe;
 
 class InvitationCode extends Controller
 {
+    use StripePayment;
+
+    private $amount;
+
+    public function __construct()
+    {
+        $this->amount = count(User::where('role_id', 2)->get()) < 5000 ? 29.99 : 59.95;
+    }
+
     public function showInvitationCodeForm()
     {
         return Inertia::render('Auth/SignUpInvitation');
@@ -408,5 +420,121 @@ class InvitationCode extends Controller
         } catch (\ErrorException $e) {
             return WebResponses::exception($e->getMessage());
         }
+    }
+
+    public function createStripeCheckoutSession(Request $request)
+    {
+        try {
+            $request->validate([
+                'card_number' => 'required',
+                'exp_month' => 'required',
+                'exp_year' => 'required',
+                'cvc' => 'required',
+            ]);
+
+            $stripe = new \Stripe\StripeClient(
+                'sk_test_lUp78O7PgN08WC9UgNRhOCnr'
+            );
+
+            //create product
+            $product = $stripe->products->create([
+                'name' => 'THA Network monthly subscription',
+            ]);
+
+            //create price
+            $price = $stripe->prices->create([
+                'unit_amount' => $this->amount * 100,
+                'currency' => 'usd',
+                'recurring' => ['interval' => 'month'],
+                'product' => $product->id,
+            ]);
+
+            //create customer
+            $customer = $stripe->customers->create([
+                'name' => 'Tha network member',
+            ]);
+
+            //create payment method
+            $payment_method = $stripe->paymentMethods->create([
+                'type' => 'card',
+                'card' => [
+                    'number' => $request->card_number,
+                    'exp_month' => $request->exp_month,
+                    'exp_year' => $request->exp_year,
+                    'cvc' => $request->cvc,
+                ],
+            ]);
+
+            //attach payment method to customer
+            $payment_method = $stripe->paymentMethods->attach(
+                $payment_method->id,
+                [
+                    'customer' => $customer->id
+                ]
+            );
+
+            //update customer
+            $customer = $stripe->customers->update(
+                $customer->id,
+                [
+                    'invoice_settings' => [
+                        'default_payment_method' => $payment_method->id
+                    ]
+                ]
+            );
+
+            $subscription = $stripe->subscriptions->create([
+                'customer' => $customer->id,
+                'items' => [[
+                    'price' => $price->id,
+                ]],
+                'billing_cycle_anchor' => (Carbon::now())->addMonth(1)->startOfMonth()->timestamp
+            ]);
+
+
+            $checkout_session = $stripe->checkout->sessions->create([
+                'customer' => $customer->id,
+                'line_items' => [[
+                    'price' => $subscription->items->data[0]->plan->id,
+                    'quantity' => 1,
+                ]],
+    //            'subscription' => $subscription->id,
+                'mode' => 'subscription',
+                'success_url' => route('stripeSuccessPayment'),
+                'cancel_url' => route('login'),
+            ]);
+
+            //put checkout session id in session
+            session()->put('stripe_checkout_session_id', $checkout_session->id);
+
+            return Inertia::render('StripePayment', [
+                'checkout_session' => $checkout_session
+            ]);
+        } catch (\Exception $e) {
+            return Inertia::render('StripePayment', ['error' => $e->getMessage()]);
+            return redirect()->route('stripePaymentShow')->with('error', $e->getMessage());
+        }
+    }
+
+    public function createStripePortalSession(Request $request)
+    {
+        //set api key
+        Stripe::setApiKey('sk_test_lUp78O7PgN08WC9UgNRhOCnr');
+
+        $checkout_session = \Stripe\Checkout\Session::retrieve(Auth::user()->stripe_checkout_session_id);
+
+        // Authenticate your user.
+        $session = \Stripe\BillingPortal\Session::create([
+            'customer' => $checkout_session->customer,
+            'return_url' => route('editProfileForm'),
+        ]);
+
+        session()->put('stripe_portal_session', $session);
+
+        return redirect()->route('editProfileForm');
+
+        return Inertia::render('StripePayment', [
+            'checkout_session' => $checkout_session
+        ]);
     }
 }

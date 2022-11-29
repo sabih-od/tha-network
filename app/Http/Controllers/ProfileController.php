@@ -78,6 +78,8 @@ class ProfileController extends Controller
                 'has_made_monthly_payment' => $has_made_monthly_payment,
                 'stripe_account_id' => $user->stripe_account_id,
                 'paypal_account_details' => $user->paypal_account_details,
+                'stripe_checkout_session_id' => $user->stripe_checkout_session_id,
+                'stripe_portal_session' => session()->get('stripe_portal_session') ?? null,
             ]);
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());

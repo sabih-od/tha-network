@@ -23,14 +23,20 @@ Route::group(['middleware' => ['revalidate']], function () {
             ->name('sendInvitationCode');
         Route::post('verify-code', [InvitationCode::class, 'verifyCode'])
             ->name('verifyCode');
+        Route::post('create-stripe-checkout-session', [InvitationCode::class, 'createStripeCheckoutSession'])
+            ->name('createStripeCheckoutSession');
 
         // if user enter valid code
         Route::get('how-it-works', [HowItWorks::class, 'show'])
             ->name('howItWorks');
         Route::get('payment', [HowItWorks::class, 'paymentShow'])
             ->name('paymentShow');
+        Route::get('stripe-payment', [HowItWorks::class, 'stripePaymentShow'])
+            ->name('stripePaymentShow');
         Route::get('success-payment', [HowItWorks::class, 'successPayment'])
             ->name('successPayment')->middleware('is.client.secret');
+        Route::get('stripe-success-payment', [HowItWorks::class, 'stripeSuccessPayment'])
+            ->name('stripeSuccessPayment');
 
         // Register
         Route::get('create-profile', [RegisterController::class, 'showRegistrationForm'])

@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Stripe\Stripe;
 use Stripe\StripeClient;
 
 /*
@@ -204,6 +205,9 @@ Route::group([
         ->name('connect-stripe');
     Route::post('connect-paypal', [StripeController::class, 'connectPaypalAccount'])
         ->name('connect-paypal');
+    //stripe portal
+    Route::post('create-stripe-portal-session', [InvitationCode::class, 'createStripePortalSession'])
+        ->name('createStripePortalSession');
 });
 
 Route::get('/home', function () {

@@ -101,7 +101,7 @@ class RegisterController extends Controller
                         ->whereHas('payment')
                         ->whereNull('deleted_at')
                         ->exists();
-                    if (!$userInvitation || !(session()->has('inviter_id'))) {
+                    if (!$userInvitation && !(session()->has('inviter_id'))) {
                         session()->flush();
                         $fail("Invalid invitation id!");
                     }
@@ -162,6 +162,7 @@ class RegisterController extends Controller
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'stripe_checkout_session_id' => $data['stripe_checkout_session_id'] ?? null
         ]);
 
         $rank = get_my_rank($user->id);
@@ -202,7 +203,12 @@ class RegisterController extends Controller
     {
         $this->validator($request->all())->validate();
 
-        event(new Registered($user = $this->create($request->all())));
+        $req = $request->all();
+        if(session()->has('stripe_checkout_session_id')) {
+            $req['stripe_checkout_session_id'] = session()->get('stripe_checkout_session_id');
+        }
+
+        event(new Registered($user = $this->create($req)));
 
         //if user was invited by link: add to their friend list
         if(session()->has('inviter_id')) {

@@ -13,7 +13,8 @@
                         <div class="col-md-4">
                             <div class="content">
                                 <h3>Membership Pays</h3>
-                                <Link v-if="!this.user" :href="$route('paymentShow')" class="themeBtn" replace>Join Us</Link>
+                                <Link v-if="!this.user" :href="$route('stripePaymentShow')" class="themeBtn" replace>Join Us</Link>
+                                <Link v-else :href="$route('login')" class="themeBtn" replace>Go Back to Profile</Link>
                             </div>
                         </div>
                     </div>
@@ -111,7 +112,7 @@
                             great!!!!</p>
                         <p>Have fun, keep the invites coming, build your network!!!</p>
                         <p>Become a member today!!!!</p>
-                        <a href="login.php" class="themeBtn">Join Us</a>
+<!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
                     </div>
                 </div>
                 <div class="row aic">
@@ -128,7 +129,7 @@
                             great!!!!</p>
                         <p>Have fun, keep the invites coming, build your network!!!</p>
                         <p>Become a member today!!!!</p>
-                        <a href="login.php" class="themeBtn">Join Us</a>
+<!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
                     </div>
                 </div>
                 <div class="row aic frr">
@@ -145,7 +146,7 @@
                             is how much you could earn per month if
                             all your friends and followers joined your network. What are you waiting for JOIN
                             TODAY!!!</p>
-                        <a href="login.php" class="themeBtn">Join Us</a>
+<!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
                     </div>
                 </div>
                 <div class="row aic">
@@ -171,7 +172,7 @@
                                 when your referrals join Tha Network.
                             </li>
                         </ul>
-                        <a href="login.php" class="themeBtn">Join Us</a>
+<!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
                     </div>
                 </div>
             </div>
@@ -207,7 +208,7 @@
                         <p class="text-center">
                             <strong>So What Are You Waiting For JOIN TODAY!!!</strong>
                         </p>
-                        <a href="login.php" class="themeBtn">Join Us</a>
+<!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
                     </div>
                 </div>
             </div>

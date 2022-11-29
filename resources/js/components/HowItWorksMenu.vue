@@ -41,7 +41,7 @@
                             <a class="nav-link" :href="this.$route('contact')">Contact Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" :href="this.$route('login')">{{ this.user ? 'Go Back To Profile' : 'Login' }}</a>
+                            <Link class="nav-link" :href="this.$route('login')">{{ this.user ? 'Go Back To Profile' : 'Login' }}</Link>
                         </li>
 <!--                        <li :class="$Link === 'about'? 'nav-item active' : 'nav-item'">-->
 <!--                            <a class="nav-link" :href="this.$route('about')">Contact Us</a>-->
