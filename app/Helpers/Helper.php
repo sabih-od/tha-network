@@ -264,12 +264,21 @@ function addOrdinalNumberSuffix($num) {
 
 function has_made_monthly_payment($id = null) {
     $user = get_eloquent_user($id);
-    $start_of_month = (Carbon::now())->startOfMonth();
-    $end_of_month = (Carbon::now())->endOfMonth();
+    $stripe = new \Stripe\StripeClient(
+        'sk_test_lUp78O7PgN08WC9UgNRhOCnr'
+    );
 
-    $payment = ThaPayment::where('user_id', $user->id)->whereDate('created_at', '>=', $start_of_month)->whereDate('created_at', '<=', $end_of_month)->first();
+    $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
+    $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
+    return ($latest_invoice->status == "paid") && (Carbon::createFromTimestamp($latest_invoice->created)->isSameDay(Carbon::today()->startOfMonth()));
 
-    return (bool)$payment;
+
+//    $start_of_month = (Carbon::now())->startOfMonth();
+//    $end_of_month = (Carbon::now())->endOfMonth();
+//
+//    $payment = ThaPayment::where('user_id', $user->id)->whereDate('created_at', '>=', $start_of_month)->whereDate('created_at', '<=', $end_of_month)->first();
+//
+//    return (bool)$payment;
 }
 
 function payment_not_made() {
@@ -313,10 +322,10 @@ function close_accounts() {
     foreach ($users as $user) {
         if(!has_made_monthly_payment($user->id)) {
             //close account
-            if(is_null($user->suspended_on)) {
+//            if(is_null($user->suspended_on)) {
                 $user->closed_on = Carbon::today();
                 $user->save();
-            }
+//            }
 
             //get what networks the user is member of
             $joined_networks_ids = NetworkMember::where('user_id', $user->id)->pluck('network_id');
