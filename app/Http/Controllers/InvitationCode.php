@@ -483,58 +483,84 @@ class InvitationCode extends Controller
                 ]
             );
 
+//            dd(Carbon::createFromTimestamp(1672429211));
+
+            //create subscription
             $subscription = $stripe->subscriptions->create([
                 'customer' => $customer->id,
                 'items' => [[
                     'price' => $price->id,
                 ]],
-                'billing_cycle_anchor' => (Carbon::now())->addMonth(1)->startOfMonth()->timestamp
+//                'billing_cycle_anchor' => (Carbon::now())->timestamp,
+                'backdate_start_date' => (Carbon::today())->startOfMonth()->timestamp
             ]);
 
-
-            $checkout_session = $stripe->checkout->sessions->create([
-                'customer' => $customer->id,
-                'line_items' => [[
-                    'price' => $subscription->items->data[0]->plan->id,
-                    'quantity' => 1,
-                ]],
-    //            'subscription' => $subscription->id,
-                'mode' => 'subscription',
-                'success_url' => route('stripeSuccessPayment'),
-                'cancel_url' => route('login'),
-            ]);
+//            dd($subscription);
 
             //put checkout session id in session
-            session()->put('stripe_checkout_session_id', $checkout_session->id);
+            session()->put('stripe_checkout_session_id', $subscription->id);
 
-            return Inertia::render('StripePayment', [
-                'checkout_session' => $checkout_session
-            ]);
+            if($subscription)
+                return redirect()->route('stripeSuccessPayment');
+
+
+//            $checkout_session = $stripe->checkout->sessions->create([
+////                'customer' => $customer->id,
+//                'line_items' => [[
+////                    'price' => $subscription->items->data[0]->plan->id,
+//                    'price' => $price->id,
+//                    'quantity' => 1,
+//                ]],
+//                'mode' => 'subscription',
+//                'success_url' => route('stripeSuccessPayment'),
+//                'cancel_url' => route('login'),
+//            ]);
+//
+//            //put checkout session id in session
+//            session()->put('stripe_checkout_session_id', $checkout_session->id);
+//
+//            return Inertia::render('StripePayment', [
+//                'checkout_session' => $checkout_session
+//            ]);
         } catch (\Exception $e) {
             return Inertia::render('StripePayment', ['error' => $e->getMessage()]);
-            return redirect()->route('stripePaymentShow')->with('error', $e->getMessage());
         }
     }
 
     public function createStripePortalSession(Request $request)
     {
-        //set api key
-        Stripe::setApiKey('sk_test_lUp78O7PgN08WC9UgNRhOCnr');
+        try {
+            $stripe = new \Stripe\StripeClient(
+                'sk_test_lUp78O7PgN08WC9UgNRhOCnr'
+            );
 
-        $checkout_session = \Stripe\Checkout\Session::retrieve(Auth::user()->stripe_checkout_session_id);
+//            $checkout_session = $stripe->checkout->sessions->retrieve(Auth::user()->stripe_checkout_session_id);
+//
+//            //for later
+//            $subscription = $stripe->subscriptions->retrieve($checkout_session->subscription);
+//            $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
+//            dump("Paid status: " . ($latest_invoice->status == "paid"));
+//            dump(Carbon::createFromTimestamp($latest_invoice->created)->isSameDay(Carbon::today()->startOfMonth()));
+//            dd($latest_invoice);
+//            dd('done');
 
-        // Authenticate your user.
-        $session = \Stripe\BillingPortal\Session::create([
-            'customer' => $checkout_session->customer,
-            'return_url' => route('editProfileForm'),
-        ]);
+            $subscription = $stripe->subscriptions->retrieve(Auth::user()->stripe_checkout_session_id);
 
-        session()->put('stripe_portal_session', $session);
+            // Authenticate your user.
+            $session = $stripe->billingPortal->sessions->create([
+                'customer' => $subscription->customer,
+                'return_url' => route('editProfileForm'),
+            ]);
 
-        return redirect()->route('editProfileForm');
+            session()->put('stripe_portal_session', $session);
 
-        return Inertia::render('StripePayment', [
-            'checkout_session' => $checkout_session
-        ]);
+            return redirect()->route('editProfileForm');
+
+//        return Inertia::render('StripePayment', [
+//            'checkout_session' => $checkout_session
+//        ]);
+        } catch (\Exception $e) {
+            return redirect()->route('editProfileForm')->withErrors([$e->getMessage()]);
+        }
     }
 }

@@ -101,6 +101,11 @@ export default {
             if(nVal) {
                 window.location.href = this.stripe_portal_session.url;
             }
+        },
+        "$page.props": function(e) {
+            if(e.hasOwnProperty('errors') && e.errors.length > 0) {
+                (useToast()).error(e.errors[0]);
+            }
         }
     },
     methods: {
