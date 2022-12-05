@@ -412,7 +412,7 @@ function commission_distribution() {
 //            $client = PayPalClient::client();
             $response = $client->execute($request);
 
-            if ($response) {
+            if ($response && $response->statusCode && $response->statusCode == 201) {
                 $reward->is_paid = true;
                 $reward->save();
             }
