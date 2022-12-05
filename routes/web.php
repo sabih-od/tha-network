@@ -38,44 +38,45 @@ use Stripe\StripeClient;
 });*/
 
 Route::get('/temp', function () {
-//    $clientId = 'AcKwbyi3-LtcW9orYwnWecAHjTaU6SDpJ6JiVW6FIP3lO-9yY-DjWoPNoo6vTbfEW2Xitkmkiiz5O1le';
-//    $clientSecret = 'EJDE3UgCkon13N7w2VTZAJmlGhK3y5NTc_7mzxMwOCq11RsIiBLm44YW08ZHPHrkI4yHqLCfFhXUZbT0';
-//
-//
-//    $environment = new SandboxEnvironment($clientId, $clientSecret);
-//    $client = new PayPalHttpClient($environment);
-//    $request = new PayoutsPostRequest();
-//    $body = json_decode(
-//        '{
-//                "sender_batch_header":
-//                {
-//                  "email_subject": "SDK payouts test txn"
-//                },
-//                "items": [
-//                {
-//                  "recipient_type": "EMAIL",
-//                  "receiver": "abc@test.com",
-//                  "note": "Your 1$ payout",
-//                  "sender_item_id": "Test_txn_12",
-//                  "amount":
-//                  {
-//                    "currency": "USD",
-//                    "value": "'.(1.00).'"
-//                  }
-//                }]
-//              }',
-//        true);
-//    $request->body = $body;
-////    $client = PayPalClient::client();
-//    $response = $client->execute($request);
-//    print "Status Code: {$response->statusCode}\n";
-//    print "Status: {$response->result->batch_header->batch_status}\n";
-//    print "Batch ID: {$response->result->batch_header->payout_batch_id}\n";
-//    print "Links:\n";
-//    foreach ($response->result->links as $link) {
-//        print "\t{$link->rel}: {$link->href}\tCall Type: {$link->method}\n";
-//    }
-//    echo json_encode($response->result, JSON_PRETTY_PRINT), "\n";
+    $clientId = 'AQsOIcos3IlR_nj_XX8DqqOD4f1RTA1EssAauXpc-SIt8OkpAdlF1uojrW99dprmUsM5k5vZBpiiO64x';
+    $clientSecret = 'EH2mWYKo12SFfuvYCh-SehGexumnzHCijQ1Bg59FWFBeUIJtgU-BPRBzTHVPg6l-1ctEvDbJDZo3ksWk';
+
+
+    $environment = new SandboxEnvironment($clientId, $clientSecret);
+    $client = new PayPalHttpClient($environment);
+    $request = new PayoutsPostRequest();
+    $body = json_decode(
+        '{
+                "sender_batch_header":
+                {
+                  "email_subject": "SDK payouts test txn"
+                },
+                "items": [
+                {
+                  "recipient_type": "EMAIL",
+                  "receiver": "abc@test.com",
+                  "note": "Your 1$ payout",
+                  "sender_item_id": "Test_txn_12",
+                  "amount":
+                  {
+                    "currency": "USD",
+                    "value": "'.(1.00).'"
+                  }
+                }]
+              }',
+        true);
+    $request->body = $body;
+//    $client = PayPalClient::client();
+    $response = $client->execute($request);
+    dd($response);
+    print "Status Code: {$response->statusCode}\n";
+    print "Status: {$response->result->batch_header->batch_status}\n";
+    print "Batch ID: {$response->result->batch_header->payout_batch_id}\n";
+    print "Links:\n";
+    foreach ($response->result->links as $link) {
+        print "\t{$link->rel}: {$link->href}\tCall Type: {$link->method}\n";
+    }
+    echo json_encode($response->result, JSON_PRETTY_PRINT), "\n";
 })->name('temp');
 Route::get('/temp2', function (Request $request) {
     $stripe = new StripeClient("sk_test_lUp78O7PgN08WC9UgNRhOCnr");
