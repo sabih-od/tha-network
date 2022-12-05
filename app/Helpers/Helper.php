@@ -381,8 +381,8 @@ function commission_distribution() {
         }
 
         else if($reward->user->paypal_account_details) {
-            $clientId = 'AcKwbyi3-LtcW9orYwnWecAHjTaU6SDpJ6JiVW6FIP3lO-9yY-DjWoPNoo6vTbfEW2Xitkmkiiz5O1le';
-            $clientSecret = 'EJDE3UgCkon13N7w2VTZAJmlGhK3y5NTc_7mzxMwOCq11RsIiBLm44YW08ZHPHrkI4yHqLCfFhXUZbT0';
+            $clientId = 'AQsOIcos3IlR_nj_XX8DqqOD4f1RTA1EssAauXpc-SIt8OkpAdlF1uojrW99dprmUsM5k5vZBpiiO64x';
+            $clientSecret = 'EH2mWYKo12SFfuvYCh-SehGexumnzHCijQ1Bg59FWFBeUIJtgU-BPRBzTHVPg6l-1ctEvDbJDZo3ksWk';
 
 
             $environment = new SandboxEnvironment($clientId, $clientSecret);
