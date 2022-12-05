@@ -13,6 +13,7 @@ use App\Models\Network;
 use App\Models\NetworkMember;
 use App\Models\Notification;
 use App\Models\Referral;
+use App\Models\Reward;
 use App\Models\SendInvitation;
 use App\Models\ThaPayment;
 use App\Models\UserInvitation;
@@ -287,6 +288,11 @@ class RegisterController extends Controller
                 $inviter->remaining_referrals = $inviter->remaining_referrals - 1;
                 $inviter->save();
 
+                //create payout log
+                Reward::create([
+                    'user_id' => $inviter->id,
+                    'amount' => session()->get('tha_payment_amount') == 29.99 ? 19.99 : 39.99,
+                ]);
 
                 session()->remove('inviter_id');
             }

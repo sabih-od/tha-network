@@ -11,11 +11,15 @@ use App\Models\Network;
 use App\Models\NetworkMember;
 use App\Models\Notification;
 use App\Models\Referral;
+use App\Models\Reward;
 use App\Models\ThaPayment;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use PaypalPayoutsSDK\Core\PayPalHttpClient;
+use PaypalPayoutsSDK\Core\SandboxEnvironment;
+use PaypalPayoutsSDK\Payouts\PayoutsPostRequest;
 
 function last_active($user_id) {
     $user = \App\Models\User::find($user_id);
@@ -270,7 +274,8 @@ function has_made_monthly_payment($id = null) {
 
     $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
     $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
-    return ($latest_invoice->status == "paid") && (Carbon::createFromTimestamp($latest_invoice->created)->isSameDay(Carbon::today()->startOfMonth()));
+//    return ($latest_invoice->status == "paid") && (Carbon::createFromTimestamp($latest_invoice->created)->isSameDay(Carbon::today()->startOfMonth()));
+    return ($latest_invoice->status == "paid");
 
 
 //    $start_of_month = (Carbon::now())->startOfMonth();
@@ -346,6 +351,71 @@ function close_accounts() {
                 event(new NetworkMemberClosure($target->id, $string, 'App\Models\User', $notification->id, $target));
             }
 
+        }
+    }
+}
+
+function commission_distribution() {
+    $rewards = Reward::where('is_paid', false)->get();
+
+    foreach ($rewards as $reward) {
+        if($reward->user->stripe_account_id == null && $reward->user->paypal_account_details == null) {
+            continue;
+        }
+
+        if($reward->user->stripe_account_id) {
+            $stripe = new \Stripe\StripeClient(
+                'sk_test_lUp78O7PgN08WC9UgNRhOCnr'
+            );
+
+            $transfer = \Stripe\Transfer::create([
+                "amount" => $reward->amount * 100,
+                "currency" => "usd",
+                "destination" => $reward->user->stripe_account_id,
+            ]);
+
+            if ($transfer) {
+                $reward->is_paid = true;
+                $reward->save();
+            }
+        }
+
+        else if($reward->user->paypal_account_details) {
+            $clientId = 'AcKwbyi3-LtcW9orYwnWecAHjTaU6SDpJ6JiVW6FIP3lO-9yY-DjWoPNoo6vTbfEW2Xitkmkiiz5O1le';
+            $clientSecret = 'EJDE3UgCkon13N7w2VTZAJmlGhK3y5NTc_7mzxMwOCq11RsIiBLm44YW08ZHPHrkI4yHqLCfFhXUZbT0';
+
+
+            $environment = new SandboxEnvironment($clientId, $clientSecret);
+            $client = new PayPalHttpClient($environment);
+            $request = new PayoutsPostRequest();
+            $body = json_decode(
+                '{
+                "sender_batch_header":
+                {
+                  "email_subject": "SDK payouts test txn"
+                },
+                "items": [
+                {
+                  "recipient_type": "EMAIL",
+                  "receiver": "'.$reward->user->paypal_account_details.'",
+                  "note": "Your payout",
+                  "sender_item_id": "Test_txn_12",
+                  "amount":
+                  {
+                    "currency": "USD",
+                    "value": "'.($reward->amount).'"
+                  }
+                }]
+              }',
+                true);
+            $request->body = $body;
+//            $client = PayPalClient::client();
+            $response = $client->execute($request);
+
+            if ($response) {
+                $reward->is_paid = true;
+                $reward->save();
+            }
         }
     }
 }

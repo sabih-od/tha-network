@@ -41,6 +41,8 @@ class Kernel extends ConsoleKernel
 //        $schedule->call(function () {suspend_accounts();})->monthlyOn(7, '00:00');
         // close accounts
         $schedule->call(function () {close_accounts();})->monthlyOn(15, '00:00');
+        // commission distribution
+        $schedule->call(function () {commission_distribution();})->monthlyOn(15, '00:00');
     }
 
     /**
