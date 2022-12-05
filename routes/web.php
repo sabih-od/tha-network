@@ -15,6 +15,10 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use PaypalPayoutsSDK\Core\PayPalHttpClient;
+use PaypalPayoutsSDK\Core\SandboxEnvironment;
+use PaypalPayoutsSDK\Payouts\PayoutsPostRequest;
+use Sample\PayPalClient;
 use Stripe\Stripe;
 use Stripe\StripeClient;
 
@@ -33,27 +37,45 @@ use Stripe\StripeClient;
     return Inertia::render('Welcome');
 });*/
 
-Route::get('/temp', function() {
-//    $joined_networks_ids = NetworkMember::where('user_id', \Illuminate\Support\Facades\Auth::id())->pluck('network_id');
-//    $joined_networks_owner_ids = Network::whereIn('id', $joined_networks_ids)->pluck('user_id');
-//    dd($joined_networks_owner_ids);
-    $stripe = new StripeClient("sk_test_lUp78O7PgN08WC9UgNRhOCnr");
-
-    $expressAccount = $stripe->accounts->create(['type' => 'express']);
-
-    //get account_id
-    session()->put('account_id', $expressAccount->id);
-    dump("Account_id" . session()->get('account_id'));
-
-    $getLink = $stripe->accountLinks->create([
-        'account' => $expressAccount->id,
-        'refresh_url' => route('temp'),
-        'return_url' => route('temp2'),
-        'type' => 'account_onboarding',
-    ]);
-
-    dd($getLink);
-    return $getLink;
+Route::get('/temp', function () {
+//    $clientId = 'AcKwbyi3-LtcW9orYwnWecAHjTaU6SDpJ6JiVW6FIP3lO-9yY-DjWoPNoo6vTbfEW2Xitkmkiiz5O1le';
+//    $clientSecret = 'EJDE3UgCkon13N7w2VTZAJmlGhK3y5NTc_7mzxMwOCq11RsIiBLm44YW08ZHPHrkI4yHqLCfFhXUZbT0';
+//
+//
+//    $environment = new SandboxEnvironment($clientId, $clientSecret);
+//    $client = new PayPalHttpClient($environment);
+//    $request = new PayoutsPostRequest();
+//    $body = json_decode(
+//        '{
+//                "sender_batch_header":
+//                {
+//                  "email_subject": "SDK payouts test txn"
+//                },
+//                "items": [
+//                {
+//                  "recipient_type": "EMAIL",
+//                  "receiver": "abc@test.com",
+//                  "note": "Your 1$ payout",
+//                  "sender_item_id": "Test_txn_12",
+//                  "amount":
+//                  {
+//                    "currency": "USD",
+//                    "value": "'.(1.00).'"
+//                  }
+//                }]
+//              }',
+//        true);
+//    $request->body = $body;
+////    $client = PayPalClient::client();
+//    $response = $client->execute($request);
+//    print "Status Code: {$response->statusCode}\n";
+//    print "Status: {$response->result->batch_header->batch_status}\n";
+//    print "Batch ID: {$response->result->batch_header->payout_batch_id}\n";
+//    print "Links:\n";
+//    foreach ($response->result->links as $link) {
+//        print "\t{$link->rel}: {$link->href}\tCall Type: {$link->method}\n";
+//    }
+//    echo json_encode($response->result, JSON_PRETTY_PRINT), "\n";
 })->name('temp');
 Route::get('/temp2', function (Request $request) {
     $stripe = new StripeClient("sk_test_lUp78O7PgN08WC9UgNRhOCnr");
@@ -95,7 +117,8 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
 require "auth.php";
 Route::group([
     'middleware' => ['auth', 'revalidate', 'closure']
-], function () {;
+], function () {
+    ;
     Route::get('edit-profile', [ProfileController::class, 'edit'])
         ->name('editProfileForm');
     Route::post('edit-profile', [ProfileController::class, 'update'])

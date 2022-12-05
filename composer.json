@@ -23,6 +23,8 @@
         "laravel/ui": "^3.4",
         "overtrue/laravel-follow": "3.1.1",
         "overtrue/laravel-like": "^4.1",
+        "paypal/paypal-payouts-sdk": "^1.0",
+        "paypal/paypalhttp": "^1.0",
         "pusher/pusher-php-server": "^7.0",
         "spatie/laravel-medialibrary": "^9.12",
         "staudenmeir/eloquent-json-relations": "^1.5",

@@ -19,7 +19,7 @@ class HowItWorks extends Controller
 
     public function __construct()
     {
-        $this->amount = count(User::where('role_id', 2)->get()) < 5000 ? 29.99 : 59.95;
+        $this->amount = count(User::where('role_id', 2)->get()) < 5000 ? 29.99 : 59.99;
         $this->middleware('is.validate.code')->except('monthlySuccessPayment');
     }
 
