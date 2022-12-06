@@ -32,11 +32,12 @@ class ChannelController extends Controller
             ]
         ]);
 
+
         try {
             $auth = Auth::user();
             $user = User::find($request->user_id);
 
-            if (!$auth->isFollowing($user) && !$auth->isFollowedBy($user))
+            if (!$auth->isFollowing($user) && !$auth->isFollowedBy($user) && !is_in_my_network($user->id))
                 return redirect()->route('chatIndex')->with('error', 'You are not following this user!');
 
             if ($user->hasBlocked($auth))

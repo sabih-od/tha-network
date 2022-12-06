@@ -268,6 +268,11 @@ function addOrdinalNumberSuffix($num) {
 
 function has_made_monthly_payment($id = null) {
     $user = get_eloquent_user($id);
+
+    if($user->stripe_checkout_session_id == null) {
+        return false;
+    }
+
     $stripe = new \Stripe\StripeClient(
         'sk_test_lUp78O7PgN08WC9UgNRhOCnr'
     );
@@ -418,4 +423,16 @@ function commission_distribution() {
             }
         }
     }
+}
+
+function is_in_my_network($user_id) {
+    $my_network = Network::where('user_id', Auth::id())->first();
+
+    if(!$my_network) {
+        return false;
+    }
+
+    $check = NetworkMember::where('network_id', $my_network->id)->where('user_id', $user_id)->first();
+
+    return (bool)$check;
 }

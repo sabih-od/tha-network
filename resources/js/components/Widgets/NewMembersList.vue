@@ -2,13 +2,13 @@
     <div class="cardWrap">
         <h2 v-if="only == 'new_members'">This Weeks New Members to Tha Network</h2>
         <h2 v-if="only == 'friends'">Friends List</h2>
-        <form action="">
-            <div class="searchlist">
-                <i class="fal fa-search"></i>
-                <input type="search" placeholder="Search messages" name="search" v-model="search" @keyup.prevent="initateSearch()" autocomplete="off">
-                <Link :href="$route('chatIndex')"><i class="fal fa-sliders-h"></i></Link>
-            </div>
-        </form>
+<!--        <form action="">-->
+<!--            <div class="searchlist">-->
+<!--                <i class="fal fa-search"></i>-->
+<!--                <input type="search" placeholder="Search messages" name="search" v-model="search" @keyup.prevent="initateSearch()" autocomplete="off">-->
+<!--                <Link :href="$route('chatIndex')"><i class="fal fa-sliders-h"></i></Link>-->
+<!--            </div>-->
+<!--        </form>-->
         <div class="userList" v-for="user in peoples">
             <div class="userInfo">
                 <Link :href="$route('userProfile', user.id)"><img :src="user.profile_img ? user.profile_img : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>

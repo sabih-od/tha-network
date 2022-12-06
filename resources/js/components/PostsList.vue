@@ -69,7 +69,7 @@ export default {
             loading: false,
             next_page_url: null,
             posts: [],
-            people_in_my_network_flag: false,
+            people_in_my_network_flag: this.$store.getters['Misc/getPeopleInMyNetworkFlag'],
             search: '',
             peoples: [],
             debounce: null,
@@ -78,6 +78,7 @@ export default {
     },
     mounted() {
         this.loadPosts()
+        this.initateNetworkMemberSearch()
         window.addEventListener('scroll', this.listener);
         this.$emitter.on('post-created', this.onPostCreated)
         this.$emitter.on('post-shared', this.onPostShared)
@@ -171,6 +172,7 @@ export default {
             this.setPostData(post_id, post_data)
         },
         peopleInMtNetworkOff() {
+            this.$store.commit('Misc/setPeopleInMyNetworkFlag', false);
             this.$emitter.emit('people_in_my_network_off');
         },
         initateNetworkMemberSearch() {

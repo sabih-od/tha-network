@@ -39,7 +39,8 @@ export default {
     props: {
         channel_id: String,
         cover: Object,
-        is_auth_friend: Boolean
+        is_auth_friend: Boolean,
+        is_in_my_network: Boolean
     },
     data() {
         return {
@@ -78,6 +79,7 @@ export default {
     },
     methods: {
         select() {
+            this.$emitter.emit('update_is_in_my_network', this.is_in_my_network);
             this.$emitter.emit('chat_active', this.channel_id)
             this.$store.commit('Channel/setChatActiveChannel', this.channel_id)
             this.$emitter.emit('chat_active_user_data', this.cover)
