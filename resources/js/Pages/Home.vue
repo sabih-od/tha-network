@@ -38,7 +38,7 @@
                 <div class="col-md-6">
                     <FriendStorySlider/>
 
-                    <PostForm/>
+                    <PostForm id="ref_post_form"/>
 
                     <PostsList/>
                 </div>

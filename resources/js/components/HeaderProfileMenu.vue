@@ -5,6 +5,8 @@
         </button>
         <div class="dropdown-menu" aria-labelledby="profileDropDown">
             <Link class="dropdown-item" replace :href="$route('profile')">How others see your profile</Link>
+            <a class="dropdown-item" replace @click.prevent="peopleInMtNetworkOn">People in my network</a>
+            <Link class="dropdown-item" replace :href="$route('loginForm')">Home</Link>
             <Link class="dropdown-item" replace :href="$route('editProfileForm')">Edit Profile</Link>
             <Link class="dropdown-item" replace :href="$route('work')">Introduction</Link>
             <div class="dropdown-divider"></div>
@@ -55,6 +57,12 @@ export default {
     methods: {
         hasLoggedOut() {
             this.$store.commit('Misc/setHasLoggedOut', true);
+        },
+        peopleInMtNetworkOn() {
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#ref_post_list_item0").offset().top - 400
+            }, 1000);
+            this.$emitter.emit('people_in_my_network_on');
         }
     }
 }
