@@ -277,7 +277,12 @@ function has_made_monthly_payment($id = null) {
         'sk_test_lUp78O7PgN08WC9UgNRhOCnr'
     );
 
-    $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
+    try {
+        $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
+    } catch(\Exception $e) {
+        return false;
+    }
+
     $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
 //    return ($latest_invoice->status == "paid") && (Carbon::createFromTimestamp($latest_invoice->created)->isSameDay(Carbon::today()->startOfMonth()));
     return ($latest_invoice->status == "paid");
