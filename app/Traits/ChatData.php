@@ -56,6 +56,7 @@ trait ChatData
             ->through(function ($item, $key) {
                 $cover_data = null;
                 $is_auth_friend = null;
+                $is_in_my_network = null;
                 if ($item->chat_type == 'individual') {
                     $chat_user = $item->users()
                         ->select('id', 'username')
@@ -64,6 +65,8 @@ trait ChatData
                         ->first();
                     $cover_data = $chat_user;
                     $is_auth_friend = ($chat_user->isFollowing(Auth::user()) || $chat_user->isFollowedBy(Auth::user()));
+//                    dd(is_in_my_network($chat_user->id));
+                    $is_in_my_network = is_in_my_network($chat_user->id);
 
                     $cover_data->profile_img = $cover_data->getFirstMedia('profile_image')->original_url ?? null;
                 }elseif ($item->chat_type == 'group') {
@@ -76,6 +79,7 @@ trait ChatData
 
                 $item->cover_detail = $cover_data;
                 $item->is_auth_friend = $is_auth_friend;
+                $item->is_in_my_network = $is_in_my_network;
 
                 unset(
                     $item->participants,

@@ -319,6 +319,7 @@ class ProfileController extends Controller
                 'friends_count' => count($user->followers),
                 'network_count' => $user->network()->exists() ? count($user->network->members) : 0,
                 'user_is_blocked' => $auth_user->hasBlocked($user),
+                'is_in_my_network' => is_in_my_network($user->id),
                 'level_details' => get_my_level($user->id)
             ]);
         } catch (\Exception $e) {

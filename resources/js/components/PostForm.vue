@@ -1,5 +1,5 @@
 <template>
-    <div class="postBox">
+    <div class="postBox" v-if="!people_in_my_network_flag">
         <form @submit.prevent="submit">
             <ul class="topList">
                 <li><a href="#" @click.prevent><i class="fal fa-edit"></i> Make Post</a></li>
@@ -120,6 +120,7 @@ export default {
                 feeling_text: null,
                 feeling_icon: null
             }),
+            people_in_my_network_flag: false,
             renderedFiles: [],
             feelings: [
                 {
@@ -173,6 +174,14 @@ export default {
             console.log('script loaded')
         }
         document.head.appendChild(scriptTag)
+
+        let _t = this;
+        this.$emitter.on('people_in_my_network_on', function() {
+            _t.people_in_my_network_flag = true;
+        })
+        this.$emitter.on('people_in_my_network_off', function() {
+            _t.people_in_my_network_flag = false;
+        })
     },
     methods: {
         submit() {

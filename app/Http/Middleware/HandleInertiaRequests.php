@@ -43,7 +43,8 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         $share_data = [
-            'auth' => auth()->check() ? auth()->user()->only('id', 'username', 'email') : null,
+//            'auth' => auth()->check() ? auth()->user()->only('id', 'username', 'email') : null,
+            'auth' => auth()->check() ? User::with('profile')->select('id', 'username', 'email')->find(auth()->user()->id) : null,
             'auth_profile_image' => auth()->check() && auth()->user()->getFirstMediaUrl('profile_image') ? auth()->user()->getFirstMediaUrl('profile_image') : asset('images/char-usr.png'),
             'flash' => [
                 'success' => function () use ($request) {

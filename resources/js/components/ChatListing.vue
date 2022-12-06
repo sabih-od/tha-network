@@ -29,6 +29,7 @@
                 :cover="channel.cover_detail"
                 :key="channel.id"
                 :is_auth_friend="channel.is_auth_friend"
+                :is_in_my_network="channel.is_in_my_network"
             />
 
             <teleport to="body">

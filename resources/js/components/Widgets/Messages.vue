@@ -4,13 +4,13 @@
             <h2 class="m-0">Messages</h2>
             <Link :href="$route('chatIndex')" class="editBtn"><i class="fal fa-edit"></i></Link>
         </div>
-        <form action="">
-            <div class="searchlist">
-                <i class="fal fa-search"></i>
-                <input type="search" placeholder="Search messages" name="search" v-model="search" @keyup.prevent="fetchFriendRequests()" autocomplete="off">
-                <Link :href="$route('chatIndex')"><i class="fal fa-sliders-h"></i></Link>
-            </div>
-        </form>
+<!--        <form action="">-->
+<!--            <div class="searchlist">-->
+<!--                <i class="fal fa-search"></i>-->
+<!--                <input type="search" placeholder="Search messages" name="search" v-model="search" @keyup.prevent="fetchFriendRequests()" autocomplete="off">-->
+<!--                <Link :href="$route('chatIndex')"><i class="fal fa-sliders-h"></i></Link>-->
+<!--            </div>-->
+<!--        </form>-->
         <div class="msgList">
             <ul class="nav msg-tabs" id="myTab" role="tablist">
                 <!--unread notifications-->

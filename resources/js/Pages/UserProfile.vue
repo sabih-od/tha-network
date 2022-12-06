@@ -105,6 +105,7 @@ export default {
         profile: Object,
         profile_image: Object,
         level_details: Object,
+        is_in_my_network: Boolean,
     },
     mounted() {
         this.$store.commit('Profile/setIsAnother', true)
@@ -123,7 +124,7 @@ export default {
         this.user_is_blocked = usePage().props.value?.user_is_blocked;
 
         //message button behaviour
-        $('.btn_message').prop('hidden', !(usePage().props.value?.is_auth_friend));
+        $('.btn_message').prop('hidden', !(usePage().props.value?.is_auth_friend || this.is_in_my_network));
         $('.btn_message').data('profile', usePage().props.value?.user.id);
 
         //invite button behaviour

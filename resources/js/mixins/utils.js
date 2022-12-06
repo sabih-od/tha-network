@@ -18,6 +18,13 @@ export default {
                 return this.asset('images/avatars/female-avatar.png')
             }
         },
+        generic_avatar_image() {
+            if(this.user.profile.gender == 'Male') {
+                return this.asset('images/avatars/male-avatar.png')
+            } else {
+                return this.asset('images/avatars/female-avatar.png')
+            }
+        },
         profile_link() {
             return (id) => {
                 return this.$store.getters['Utils/generateProfileLink'](id)

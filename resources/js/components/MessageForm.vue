@@ -12,7 +12,7 @@
     </div>
 
     <div class="d-flex commentBox">
-        <div v-if="is_auth_friend"
+        <div v-if="is_auth_friend || is_in_my_network"
              class="form-control demo6"
              id="message-text"
              ref="textInput"
@@ -22,15 +22,15 @@
              :contenteditable="!this.form.processing"
         ></div>
 
-        <EmojiButton v-if="is_auth_friend" ref="emojiComponent" @select-emoji="addEmoji"/>
+        <EmojiButton v-if="is_auth_friend || is_in_my_network" ref="emojiComponent" @select-emoji="addEmoji"/>
 
-        <div v-if="is_auth_friend" class="papr-clp" id="post-image">
+        <div v-if="is_auth_friend || is_in_my_network" class="papr-clp" id="post-image">
             <i class="far fa-paperclip"></i>
             <input type="file" name="file" id="msgfile" accept="image/*, video/*, audio/*" @change.prevent="filesSelect($event, files, renderedFiles)"
                    multiple>
         </div>
 
-        <button v-if="is_auth_friend" class="btn btn-default text-white" id="send_message" @click="submit">
+        <button v-if="is_auth_friend || is_in_my_network" class="btn btn-default text-white" id="send_message" @click="submit">
             <i class="fa fa-paper-plane"></i>
         </button>
 
@@ -68,6 +68,12 @@ export default {
             }
         }
     },
+    mounted() {
+        let _t = this;
+        this.$emitter.on('update_is_in_my_network', function(is_in_my_network) {
+            _t.is_in_my_network = is_in_my_network;
+        });
+    },
     data() {
         return {
             form: useForm({
@@ -75,7 +81,8 @@ export default {
                 message: '',
             }),
             files: [],
-            renderedFiles: []
+            renderedFiles: [],
+            is_in_my_network: true,
         }
     },
     methods: {

@@ -108,6 +108,7 @@ export default {
                     }
                 }).then(res => {
                     this.peoples = res?.peoples?.data.filter(element => element.has_blocked == false) ?? []
+                    this.peoples = this.exactSearchSanitizer(this.peoples, this.search);
                 }).finally(() => {
                     this.loading = false
                 })
@@ -117,6 +118,18 @@ export default {
             this.search = '';
             this.peoples = [];
             $('.expandSearch').slideUp('slow');
+        },
+        exactSearchSanitizer (list, query) {
+            let final_list = [];
+            for (var i = 0; i < list.length; i++) {
+                if(list[i].username == query) {
+                    final_list = [list[i]];
+                    break;
+                }
+
+                final_list.push(list[i]);
+            }
+            return final_list;
         }
     }
 }
