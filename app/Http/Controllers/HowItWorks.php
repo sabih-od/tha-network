@@ -79,19 +79,21 @@ class HowItWorks extends Controller
 
     public function stripeSuccessPayment(Request $request)
     {
+//        dd(session()->has('inviter_id'));
         //checking for inviter in session
         if (!session()->has('inviter_id'))
-            return redirect()->route('loginForm');
+            session()->put('validate-code', 'validate-code');
+//            return redirect()->route('loginForm');
 
         //if registered by following invitation link
-        if(session()->has('inviter_id')) {
+//        if(session()->has('inviter_id')) {
             $payment = Payment::create([
                 'amount' => $this->amount,
                 'client_secret' => session('client-secret'),
                 'payable_type' => 'App\Models\Payment',
-                'payable_id' => session()->get('inviter_id')
+                'payable_id' => session()->has('inviter_id') ? session()->get('inviter_id') : 'registered-with-code'
             ]);
-        }
+//        }
 
         session()->put('tha_payment_amount', $this->amount);
 
