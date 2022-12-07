@@ -20,6 +20,11 @@
                             <button type="button" class="btn btn-sm btn-success" @click="add_email_object">
                                 + Add email
                             </button>
+                            <button type="button" class="btn btn-sm btn-danger ml-2" @click="remove_email_object">
+                                -
+                            </button>
+                        </div>
+                        <div class="form-group">
                         </div>
                         <div class="form-group">
                             <button type="submit" class="themeBtn">
@@ -153,6 +158,9 @@ export default {
             this.email_objects.push({
                 content: ''
             });
+        },
+        remove_email_object () {
+            this.email_objects.pop()
         }
     }
 }
