@@ -191,8 +191,8 @@ trait UserData
         return $query
             ->with('profile')
             ->where('id', '!=', $user_id)
-            ->simplePaginate(8)
-            ->through(function ($item, $key) use($user_id) {
+            ->get()
+            ->map(function ($item, $key) use($user_id) {
                 $item->auth_id = $user_id;
                 $auth_user = Auth::user();
                 $request_sent_check = FriendRequest::where('user_id', Auth::id())->where('target_id', $item->id)->get();

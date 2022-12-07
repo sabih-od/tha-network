@@ -171,8 +171,9 @@ class ProfileController extends Controller
 
     public function profileImgUpload(Request $request)
     {
+//        dd($request->all());
         $request->validate([
-            'file' => ['required_without:url', 'image', 'max:5120'],
+            'file' => ['required_without:url', 'max:5120'],
             'url' => ['required_without:file'],
         ]);
 
@@ -180,7 +181,7 @@ class ProfileController extends Controller
             $user = Auth::user();
             if ($user) {
                 $user->clearMediaCollection('profile_image');
-                if($request->has('url')) {
+                if($request->has('url') && $request->get('url') != null) {
                     $user
                         ->addMediaFromUrl($request->get('url'))
                         ->toMediaCollection('profile_image');

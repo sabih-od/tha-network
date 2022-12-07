@@ -91,7 +91,8 @@ class PostController extends Controller
 
         $data = $request->validate([
             'post_id' => ['required', 'string', Rule::exists('posts', 'id')->whereNull('deleted_at')],
-            'content' => ['required', 'string'],
+//            'content' => ['required', 'string'],
+            'content' => ['nullable', 'string'],
         ]);
 
         try {

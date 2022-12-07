@@ -9,7 +9,7 @@
             <!--                <i class="fas fa-camera"></i><input type="file">-->
             <!--            </div>-->
         </div>
-        <h2>{{ name + '('+this.level_details.level+' level)'}} <span>@{{ user?.username }}</span></h2>
+        <h2>{{ name + '('+(this.level_details.level ?? 'Bronze')+' level)'}} <span>@{{ user?.username }}</span></h2>
         <teleport to="body">
             <CreateAvatar/>
         </teleport>

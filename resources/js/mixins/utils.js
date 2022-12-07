@@ -19,6 +19,9 @@ export default {
             }
         },
         generic_avatar_image() {
+            const img = usePage().props.value?.auth_profile_image
+            if (img !== '' && img !== null)
+                return img
             if(this.user.profile.gender == 'Male') {
                 return this.asset('images/avatars/male-avatar.png')
             } else {

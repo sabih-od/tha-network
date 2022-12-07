@@ -16,6 +16,8 @@
                                         <div class="btnCont">
                                             <button class="themeBtn" @click="randomize()">Generate Random</button>
                                             <button class="themeBtn" @click="generateAvatar()">Generate Avatar</button>
+                                            <button class="themeBtn" @click="uploadPicture()">Upload Picture</button>
+                                            <input type="file" hidden class="input_hidden_image" id="input_hidden_image">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
@@ -83,7 +85,8 @@
                                             </div>
                                         </div>
                                         <!--                                        <button @click="generateAvatar()">Generate Avatar</button>-->
-                                        <button class="themeBtn" @click="profileImgUpload()">Confirm</button>
+                                        <button class="themeBtn" @click="profileImgUpload()" :disabled="formLoading">
+                                            {{ formLoading ? 'Please Wait' : 'Confirm' }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +110,8 @@ export default {
     data() {
         return {
             form: useForm({
-                url: ''
+                url: '',
+                file: null
             }),
             choices: {
                 gender: 1,
@@ -1697,7 +1701,9 @@ export default {
                         "face_proportion 9": "Square",
                     }
                 }
-            ]
+            ],
+            image_upload_flag: false,
+            formLoading: false
         }
     },
     props: {
@@ -1706,6 +1712,12 @@ export default {
     mounted() {
         this.setLibmojiData()
         this.randomize();
+
+        //img upload instead of avatar
+        let _t = this;
+        $('.input_hidden_image').on('change', function(e) {
+            _t.createUploadedImageURL(e);
+        });
     },
     methods: {
         setLibmojiData() {
@@ -1788,7 +1800,12 @@ export default {
         },
         profileImgUpload() {
             console.log(this.avatar.url);
-            this.form.url = this.avatar.url;
+            this.formLoading = true;
+            if(this.image_upload_flag === false) {
+                this.form.url = this.avatar.url;
+            } else {
+                this.form.url = null;
+            }
 
             this.form.post(this.$route('profileImgUpload'), {
                 replace: true,
@@ -1801,10 +1818,20 @@ export default {
                 },
                 onFinish: () => {
                     this.$store.dispatch('Utils/showErrorMessages').then(res => {
-                        this.isEdit = false
+                        this.formLoading = false
                     })
                 }
             })
+        },
+        uploadPicture () {
+            $('.input_hidden_image').click();
+        },
+        createUploadedImageURL (e) {
+            console.log(e.target.files);
+            this.form.file = e.target.files[0];
+            this.image_upload_flag = true;
+            this.profileImgUpload();
+            this.image_upload_flag = false;
         }
     }
 }

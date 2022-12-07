@@ -43,7 +43,8 @@ export default {
                         search: this.search
                     }
                 }).then(res => {
-                    this.peoples = res?.friends?.data.filter(element => element.is_followed == true) ?? [];
+                    console.log('res?.friends?.data', res?.friends);
+                    this.peoples = res?.friends?.filter(element => element.is_followed == true) ?? [];
                     this.initSlick(this.peoples.length);
                 }).finally(() => {
                     // this.loading = false
