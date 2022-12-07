@@ -79,6 +79,8 @@ class RegisterController extends Controller
                 'inviter_id' => session()->get('inviter_id'),
                 'email' => 'asd'
             ]);
+        } else if(session()->has('validate-code') && session()->get('validate-code') == 'validate-code') {
+            return Inertia::render('Auth/Register');
         }
         else
             return redirect(route('loginForm'));
