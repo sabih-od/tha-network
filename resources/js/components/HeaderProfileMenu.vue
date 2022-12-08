@@ -65,22 +65,18 @@ export default {
         peopleInMtNetworkOn() {
             this.$store.commit('Misc/setPeopleInMyNetworkFlag', true);
             this.$store.commit('Misc/setBlockedUsersFlag', false);
+            this.$store.commit('Misc/setMyFriendsFlag', false);
             $([document.documentElement, document.body]).animate({
                 scrollTop: $("#ref_post_list_item0").offset().top - 400
             }, 1000);
-            // setTimeout(function () {
-            //     this.$emitter.emit('people_in_my_network_on');
-            // }, 2000);
         },
         blockedUsers() {
             this.$store.commit('Misc/setBlockedUsersFlag', true);
             this.$store.commit('Misc/setPeopleInMyNetworkFlag', false);
+            this.$store.commit('Misc/setMyFriendsFlag', false);
             $([document.documentElement, document.body]).animate({
                 scrollTop: $("#ref_post_list_item0").offset().top - 400
             }, 1000);
-            // setTimeout(function () {
-            //     this.$emitter.emit('people_in_my_network_on');
-            // }, 2000);
         }
     }
 }

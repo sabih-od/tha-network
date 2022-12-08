@@ -20,6 +20,7 @@ class ClosureCheck
         if (is_null(Auth::user()->closed_on)) {
             return $next($request);
         }
-        return redirect(route('loginForm'));
+        Auth::logout();
+        return redirect()->route('loginForm')->withErrors(['Your account has been closed.']);
     }
 }

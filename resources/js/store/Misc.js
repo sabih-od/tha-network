@@ -7,7 +7,8 @@ export default {
             has_logged_out: false,
             is_newly_registered: false,
             people_in_my_network_flag: false,
-            blocked_users_flag: false
+            blocked_users_flag: false,
+            my_friends_flag: false
         }
     },
     mutations: {
@@ -22,6 +23,9 @@ export default {
         },
         setBlockedUsersFlag(state, payload) {
             state.blocked_users_flag = payload
+        },
+        setMyFriendsFlag(state, payload) {
+            state.my_friends_flag = payload
         }
     },
     actions: {
@@ -41,6 +45,9 @@ export default {
         },
         getBlockedUsersFlag(state) {
             return state.blocked_users_flag;
+        },
+        getMyFriendsFlag(state) {
+            return state.my_friends_flag;
         }
     },
 }

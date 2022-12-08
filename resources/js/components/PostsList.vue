@@ -50,8 +50,33 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-12" v-if="my_friends_flag">
+            <div class="cardWrap">
+                <div class="df aic jcsb mb-3">
+                    <h2 class="m-0">My Friends</h2>
+                    <a href="#" @click.prevent="myFriendsOff" class="viewBtn">Back to feed</a>
+                </div>
+                <div class="userList" v-for="user in my_friends">
+                    <div class="userInfo">
+                        <Link :href="$route('userProfile', user.id)"><img :src="user.profile_img ? user.profile_img : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
+                        <h3>
+                            <Link :href="$route('userProfile', user.id)">
+                                <strong>{{user.profile ? user.profile.first_name +' '+ user.profile.last_name : ''}}</strong>
+                            </Link>
+                            <a href="#">Connect</a>
+                        </h3>
+                    </div>
+                    <FollowUserButton v-if="!isMe(user.id)" :user_id="user.id" :is_followed_by_auth="user.is_followed_by_auth" :is_followed="user.is_followed" :request_sent="user.request_sent" :request_received="user.request_received" @update_is_followed="user.is_followed = !user.is_followed"></FollowUserButton>
+                    <!--            <a href="#" class="nav-icons"><i class="fal fa-comments"></i></a>-->
+                </div>
+
+                <div style="text-align: center!important;" v-if="my_friends.length == 0 && search == ''">
+                    <h6>There are no friends in my list.</h6>
+                </div>
+            </div>
+        </div>
         <PostListItem
-            v-if="!people_in_my_network_flag && !blocked_users_flag"
+            v-if="!people_in_my_network_flag && !blocked_users_flag && !my_friends_flag"
             v-for="(post, index) in posts"
             :post="post"
             :key="post.id"
@@ -96,9 +121,11 @@ export default {
             posts: [],
             people_in_my_network_flag: this.$store.getters['Misc/getPeopleInMyNetworkFlag'],
             blocked_users_flag: this.$store.getters['Misc/getBlockedUsersFlag'],
+            my_friends_flag: this.$store.getters['Misc/getMyFriendsFlag'],
             search: '',
             peoples: [],
             blocked_users: [],
+            my_friends: [],
             debounce: null,
             all: true
         }
@@ -107,6 +134,7 @@ export default {
         this.loadPosts()
         this.initateNetworkMemberSearch()
         this.initateBlockedUsersSearch()
+        this.initateMyFriendsSearch()
         window.addEventListener('scroll', this.listener);
         this.$emitter.on('post-created', this.onPostCreated)
         this.$emitter.on('post-shared', this.onPostShared)
@@ -134,6 +162,13 @@ export default {
         })
         this.$emitter.on('blocked_users_off', function() {
             _t.blocked_users_flag = false;
+        })
+        this.$emitter.on('my_friends_on', function() {
+            _t.my_friends_flag = true;
+            _t.initateMyFriendsSearch()
+        })
+        this.$emitter.on('my_friends_off', function() {
+            _t.my_friends_flag = false;
         })
     },
     unmounted() {
@@ -214,6 +249,10 @@ export default {
             this.$store.commit('Misc/setBlockedUsersFlag', false);
             this.$emitter.emit('blocked_users_off');
         },
+        myFriendsOff() {
+            this.$store.commit('Misc/setMyFriendsFlag', false);
+            this.$emitter.emit('my_friends_off');
+        },
         initateNetworkMemberSearch() {
             clearTimeout(this.debounce);
             this.peoples = []
@@ -247,6 +286,25 @@ export default {
                     }
                 }).then(res => {
                     this.blocked_users = res?.blocked_users?.filter(element => element.is_blocked == true) ?? []
+                }).finally(() => {
+                    // this.loading = false
+                })
+            }, 600);
+        },
+        initateMyFriendsSearch() {
+            // clearTimeout(this.debounce);
+            this.my_friends = []
+            this.debounce = setTimeout(() => {
+                this.$store.dispatch('HttpUtils/getReq', {
+                    url: this.$store.getters['Utils/baseUrl'],
+                    only: ['friends'],
+                    params: {
+                        search: this.search,
+                        user_id: this.user_id,
+                        all: this.all
+                    }
+                }).then(res => {
+                    this.my_friends = res?.friends?.filter(element => element.is_followed == true && element.is_followed_by_auth == true) ?? []
                 }).finally(() => {
                     // this.loading = false
                 })

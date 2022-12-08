@@ -32,7 +32,7 @@
                     <div class="row mb-4">
                         <div class="col-md-4">
                             <div class="profileAwards">
-                                <img :src="asset('images/ranking.png')" alt="">
+                                <img :src="level_details.trophy ?? 'images/ranking.png'" style="max-width: 76px;" alt="">
                                 <h3><sup>{{ level_details.level }}</sup></h3>
                                 <p>Rank</p>
                             </div>

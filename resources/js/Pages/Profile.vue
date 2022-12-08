@@ -36,24 +36,28 @@
                     <div class="row mb-4">
                         <div class="col-md-4">
                             <div class="profileAwards">
-                                <img src="images/ranking.png" alt="">
+                                <img :src="level_details.trophy ?? 'images/ranking.png'" style="max-width: 76px;" alt="">
                                 <h3><sup>{{ level_details.level }}</sup></h3>
                                 <p>Rank</p>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <div class="profileAwards">
-                                <img src="images/friends.png" alt="">
-                                <h3>{{ friends_count }}</h3>
-                                <p>Friends</p>
-                            </div>
+                            <Link :href="$route('home')" @click.prevent="myFriendsOn">
+                                <div class="profileAwards">
+                                    <img src="images/friends.png" alt="">
+                                    <h3>{{ friends_count }}</h3>
+                                    <p>Friends</p>
+                                </div>
+                            </Link>
                         </div>
                         <div class="col-md-4">
-                            <div class="profileAwards">
-                                <img src="images/connections.png" alt="">
-                                <h3>{{ network_count }}</h3>
-                                <p>People in my network</p>
-                            </div>
+                            <Link :href="$route('home')" @click.prevent="peopleInMtNetworkOn">
+                                <div class="profileAwards">
+                                    <img src="images/connections.png" alt="">
+                                    <h3>{{ network_count }}</h3>
+                                    <p>People in my network</p>
+                                </div>
+                            </Link>
                         </div>
                     </div>
 
@@ -130,7 +134,23 @@ export default {
         onPostCreated() {
             // this.$store.commit('Post/setIsLoadMore', false)
             // this.$store.dispatch('Post/loadPosts', this.$route('profile'))
-        }
+        },
+        peopleInMtNetworkOn() {
+            this.$store.commit('Misc/setPeopleInMyNetworkFlag', true);
+            this.$store.commit('Misc/setBlockedUsersFlag', false);
+            this.$store.commit('Misc/setMyFriendsFlag', false);
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#ref_post_list_item0").offset().top - 400
+            }, 1000);
+        },
+        myFriendsOn() {
+            this.$store.commit('Misc/setMyFriendsFlag', true);
+            this.$store.commit('Misc/setPeopleInMyNetworkFlag', false);
+            this.$store.commit('Misc/setBlockedUsersFlag', false);
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#ref_post_list_item0").offset().top - 400
+            }, 1000);
+        },
     }
 }
 </script>
