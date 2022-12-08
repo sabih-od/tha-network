@@ -1,5 +1,5 @@
 <template>
-    <div class="postBox" v-if="!people_in_my_network_flag">
+    <div class="postBox" v-if="!people_in_my_network_flag && !blocked_users_flag">
         <form @submit.prevent="submit">
             <ul class="topList">
                 <li><a href="#" @click.prevent><i class="fal fa-edit"></i> Make Post</a></li>
@@ -121,6 +121,7 @@ export default {
                 feeling_icon: null
             }),
             people_in_my_network_flag: false,
+            blocked_users_flag: false,
             renderedFiles: [],
             feelings: [
                 {
@@ -181,6 +182,12 @@ export default {
         })
         this.$emitter.on('people_in_my_network_off', function() {
             _t.people_in_my_network_flag = false;
+        })
+        this.$emitter.on('blocked_users_on', function() {
+            _t.blocked_users_flag = true;
+        })
+        this.$emitter.on('blocked_users_off', function() {
+            _t.blocked_users_flag = false;
         })
     },
     methods: {

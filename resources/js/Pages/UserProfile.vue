@@ -124,15 +124,15 @@ export default {
         this.user_is_blocked = usePage().props.value?.user_is_blocked;
 
         //message button behaviour
-        $('.btn_message').prop('hidden', !(usePage().props.value?.is_auth_friend || this.is_in_my_network));
+        $('.btn_message').prop('hidden', !(usePage().props.value?.is_auth_friend || this.is_in_my_network) || this.user_is_blocked);
         $('.btn_message').data('profile', usePage().props.value?.user.id);
 
         //invite button behaviour
         $('.btn_invite').prop('hidden', true);
 
         //add friend button behaviour
-        $('.btn_add_friend').prop('hidden', usePage().props.value?.is_auth_friend || this.request_received);
-        $('.btn_add_friend').html(this.request_sent ? '<i class="fa fa-check mr-2"></i>Request Sent' : '<i class="fa fa-plus" aria-hidden="true"></i> Add Friend');
+        $('.btn_add_friend').prop('hidden', usePage().props.value?.is_auth_friend || this.request_received || this.user_is_blocked);
+        $('.btn_add_friend').html(this.request_sent ? 'Cancel Request' : '<i class="fa fa-plus" aria-hidden="true"></i> Add Friend');
         $('.btn_add_friend').prop('disabled', this.request_sent);
         $('.btn_add_friend').data('profile', this.$route('sendRequest', usePage().props.value?.user.id));
 

@@ -6,6 +6,7 @@
         <div class="dropdown-menu" aria-labelledby="profileDropDown">
             <Link class="dropdown-item" replace :href="$route('profile')">How others see your profile</Link>
             <Link class="dropdown-item" replace :href="$route('home')" @click.prevent="peopleInMtNetworkOn">People in my network</Link>
+            <Link class="dropdown-item" replace :href="$route('home')" @click.prevent="blockedUsers">Blocked Users</Link>
             <Link class="dropdown-item" replace :href="$route('loginForm')">Home</Link>
             <Link class="dropdown-item" replace :href="$route('editProfileForm')">Edit Profile</Link>
             <Link class="dropdown-item" replace :href="$route('work')">Introduction</Link>
@@ -63,6 +64,17 @@ export default {
         },
         peopleInMtNetworkOn() {
             this.$store.commit('Misc/setPeopleInMyNetworkFlag', true);
+            this.$store.commit('Misc/setBlockedUsersFlag', false);
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#ref_post_list_item0").offset().top - 400
+            }, 1000);
+            // setTimeout(function () {
+            //     this.$emitter.emit('people_in_my_network_on');
+            // }, 2000);
+        },
+        blockedUsers() {
+            this.$store.commit('Misc/setBlockedUsersFlag', true);
+            this.$store.commit('Misc/setPeopleInMyNetworkFlag', false);
             $([document.documentElement, document.body]).animate({
                 scrollTop: $("#ref_post_list_item0").offset().top - 400
             }, 1000);

@@ -6,7 +6,8 @@ export default {
         return {
             has_logged_out: false,
             is_newly_registered: false,
-            people_in_my_network_flag: false
+            people_in_my_network_flag: false,
+            blocked_users_flag: false
         }
     },
     mutations: {
@@ -19,6 +20,9 @@ export default {
         setPeopleInMyNetworkFlag(state, payload) {
             state.people_in_my_network_flag = payload
         },
+        setBlockedUsersFlag(state, payload) {
+            state.blocked_users_flag = payload
+        }
     },
     actions: {
         // updateHasLoggedOut({dispatch, commit, state}) {
@@ -34,6 +38,9 @@ export default {
         },
         getPeopleInMyNetworkFlag(state) {
             return state.people_in_my_network_flag;
+        },
+        getBlockedUsersFlag(state) {
+            return state.blocked_users_flag;
         }
     },
 }

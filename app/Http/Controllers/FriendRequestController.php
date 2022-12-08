@@ -26,9 +26,15 @@ class FriendRequestController extends Controller
             $check = FriendRequest::where('user_id', Auth::id())->where('target_id', $target_id)->get();
             $check2 = FriendRequest::where('user_id', $target_id)->where('target_id', Auth::id())->get();
 
+            if (count($check) > 0) {
+                $check[0]->delete();
+            }
+            if (count($check2) > 0) {
+                $check2[0]->delete();
+            }
             if(count($check) > 0 || count($check2) > 0) {
-                return redirect()->route('userProfile', $target_id)->with('error', 'Request Already Sent');
-//                return WebResponses::exception('Request Already Sent');
+                return redirect()->route('userProfile', $target_id)->with('success', 'Request Cancelled Successfully');
+//                return redirect()->route('userProfile', $target_id)->with('error', 'Request Already Sent');
             }
 
             FriendRequest::create([

@@ -59,7 +59,7 @@
             </div>
         </div>
     </section>
-    <div :class="notification_modal.class" style="z-index: 999;">
+    <div :class="notification_modal.class" style="z-in  dex: 999;">
         <div class="notiImgCont">
             <figure>
                 <img :src="notification_modal.img" alt="">
