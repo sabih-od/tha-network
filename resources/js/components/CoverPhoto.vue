@@ -172,7 +172,7 @@ export default {
                 preserveScroll: true,
                 onSuccess: visit => {
                     this.$store.dispatch('Utils/showSuccessMessage')
-                    $('.btn_add_friend').html('<i class="fa fa-check mr-2"></i>Request Sent');
+                    $('.btn_add_friend').html($('.btn_add_friend').html() == 'Cancel Request' ? '<i class="fa fa-plus" aria-hidden="true"></i>Add Friend' : 'Cancel Request');
                     $('.btn_add_friend').prop('disabled', true);
                     // this.$emit('deleted')
                     // this.$emitter.emit('chat_message_deleted', this.form.id)
@@ -255,9 +255,9 @@ export default {
                 preserveScroll: true,
                 onSuccess: visit => {
                     this.$store.dispatch('Utils/showSuccessMessage')
-                    $('.btn_message').prop('hidden', true);
+                    $('.btn_message').prop('hidden', url.includes('unblock') ? false : true);
                     $('.btn_unfriend').prop('hidden', true);
-                    $('.btn_add_friend').prop('hidden', false);
+                    $('.btn_add_friend').prop('hidden', url.includes('unblock') ? false : true);
                     $('.btn_block').html(url.includes('unblock') ? 'Block' : 'Unblock');
                     let route_slug = url.includes('unblock') ? 'block' : 'unblock';
                     const block_url = this.$route(route_slug, usePage().props.value?.user.id);

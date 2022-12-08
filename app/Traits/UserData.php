@@ -249,6 +249,43 @@ trait UserData
             });
     }
 
+    protected function getBlockedUsersData(Request $request)
+    {
+        $user_id = $request->has('user_id') ? $request->get('user_id') : Auth::id();
+
+        $query = User::select('id', 'email', 'username')->where('role_id', 2);
+
+        if (!is_null($request->get('search'))) {
+            $query->where(function ($q) use ($request) {
+                $q->where('username', 'like', "%{$request->search}%")
+                    ->orWhere('email', 'like', '%' . $request->search . '%')
+                    ->orWhereHas('profile', function($q) use ($request) {
+                        return $q->where('first_name', 'like', "%{$request->search}%")
+                            ->orWhere('last_name', 'like', '%' . $request->search . '%');
+                    });
+            });
+        }
+
+        return $query
+            ->with('profile')
+            ->where('id', '!=', $user_id)
+            ->get()
+            ->map(function ($item, $key) use($user_id) {
+                $item->auth_id = $user_id;
+                $auth_user = Auth::user();
+                $request_sent_check = FriendRequest::where('user_id', Auth::id())->where('target_id', $item->id)->get();
+                $request_received_check = FriendRequest::where('user_id', $item->id)->where('target_id', Auth::id())->get();
+                $item->request_sent = count($request_sent_check) > 0;
+                $item->request_received = count($request_received_check) > 0;
+                $item->has_blocked = $item->hasBlocked($auth_user);
+                $item->is_blocked = $auth_user->hasBlocked($item);
+                $item->profile_img = $item->getFirstMediaUrl('profile_image') ?? null;
+                $item->is_followed = $item->isFollowedBy(User::find($user_id));
+                $item->is_followed_by_auth = $item->isFollowedBy(User::find($auth_user->id));
+                return $item;
+            });
+    }
+
     protected function getFriendRequestsData(Request $request)
     {
         $friend_requests = FriendRequest::where('target_id', Auth::id())->get();

@@ -68,6 +68,9 @@ class ProfileController extends Controller
             //check for if user has made monthly payment or not
             $has_made_monthly_payment = has_made_monthly_payment();
             session()->remove('monthly_payment_flash');
+
+            $stripe_portal_session = session()->get('stripe_portal_session') ?? null;
+            session()->put('stripe_portal_session', null);
             return Inertia::render('EditProfile', [
                 'user' => $user->only('name', 'email', 'created_at') ?? null,
                 'profile' => $user->profile ?? null,
@@ -79,7 +82,7 @@ class ProfileController extends Controller
                 'stripe_account_id' => $user->stripe_account_id,
                 'paypal_account_details' => $user->paypal_account_details,
                 'stripe_checkout_session_id' => $user->stripe_checkout_session_id,
-                'stripe_portal_session' => session()->get('stripe_portal_session') ?? null,
+                'stripe_portal_session' => $stripe_portal_session,
             ]);
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());

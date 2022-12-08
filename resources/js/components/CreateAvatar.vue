@@ -23,7 +23,7 @@
                                     <div class="col-sm-6">
                                         <figure class="sticky avatarImg">
 
-                                            <img :src="avatar.url" width="350" alt="avatar"/>
+                                            <img :src="avatar.url" width="350" alt=""/>
                                         </figure>
                                     </div>
                                     <div class="col-sm-6">
@@ -1712,6 +1712,7 @@ export default {
     mounted() {
         this.setLibmojiData()
         this.randomize();
+        this.avatar.url = '';
 
         //img upload instead of avatar
         let _t = this;
@@ -1799,7 +1800,6 @@ export default {
             );
         },
         profileImgUpload() {
-            console.log(this.avatar.url);
             this.formLoading = true;
             if(this.image_upload_flag === false) {
                 this.form.url = this.avatar.url;
