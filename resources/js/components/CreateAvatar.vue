@@ -1710,7 +1710,7 @@ export default {
     watch: {
         //generate avatar when gender is selected
         "choices.gender": function(nVal, oVal) {
-            if(nVal && nVal != 0) {
+            if(nVal && nVal !== 0) {
                 this.generateAvatar();
             }
         }
@@ -1722,16 +1722,25 @@ export default {
         this.setLibmojiData()
         this.randomize();
         this.avatar.url = '';
+        this.libMojiData.genders.unshift(['Select Gender', 0]);
+        // this.libMojiData.genders.unshift(['Select Gender', 1]);
+        // this.libMojiData.genders.unshift(['Select Gender', 2]);
 
         //deselect gender at start
-        this.libMojiData.genders.unshift(['Select Gender', 0]);
+        // this.choices.gender = 0;
+        let _t = this;
         setTimeout(function () {
-            $('.gender').val(0);
+            $('.gender').val('0');
             $('.gender').trigger('change');
+            _t.choices.gender = 0;
+            // this.libMojiData.genders = [
+            //     ['Select Gender', 0],
+            //     ['Male', 1],
+            //     ['Female', 2],
+            // ];
         }, 2000);
 
         //img upload instead of avatar
-        let _t = this;
         $('.input_hidden_image').on('change', function(e) {
             _t.createUploadedImageURL(e);
         });
