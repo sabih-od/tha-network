@@ -1,8 +1,8 @@
 <template>
     <div class="cardWrap">
         <div class="df aic jcsb mb-3">
-            <h2 v-if="page_type != 'UserProfile'" class="m-0">People In My Network</h2>
-            <h2 v-if="page_type == 'UserProfile'" class="m-0">Prople In user's network </h2>
+            <h2 v-if="page_type != 'UserProfile'" class="m-0">People in My Network</h2>
+            <h2 v-if="page_type == 'UserProfile'" class="m-0">People in User's Network </h2>
             <a href="#" @click.prevent="seeAll()" class="viewBtn">{{ all ? 'Collapse' : 'See all' }}</a>
         </div>
         <form action="">

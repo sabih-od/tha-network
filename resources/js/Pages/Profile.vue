@@ -5,12 +5,18 @@
                 <!-- Left Section -->
                 <div class="col-md-3">
                     <div class="cardWrap">
-                        <h2>About</h2>
+                        <h2>About Me</h2>
 
                         <p class="text-pre-wrap"><strong>Bio: </strong>{{ bio }}</p>
                         <p class="text-pre-wrap"><strong>Gender: </strong>{{ profile.gender }}</p>
                         <p class="text-pre-wrap"><strong>Marital Status: </strong>{{ profile.marital_status }}</p>
-                        <Link :href="$route('editProfileForm')" class="btnDesign">See more </Link>
+
+                        <p v-if="see_more" class="text-pre-wrap"><strong>Rank: </strong>{{ level_details.level }}</p>
+                        <p v-if="see_more" class="text-pre-wrap"><strong>Friends: </strong>{{ friends_count }}</p>
+                        <p v-if="see_more && (profile?.city && profile?.country)" class="text-pre-wrap"><strong>Lives in: </strong>{{ profile?.city + ', ' + profile?.country + '.'}}</p>
+                        <p v-if="see_more" class="text-pre-wrap"><strong>Joined: </strong>{{ new Date(user.created_at).toLocaleString('en-us',{month:'short', year:'numeric'}) }}</p>
+
+                        <Link v-if="level_details && level_details.level && friends_count && profile && profile.city && profile.country" class="btnDesign" @click.prevent="toggleSeeMore()">{{ see_more ? 'Collapse' : 'See more' }}</Link>
                     </div>
 
                     <PeopleList/>
@@ -100,6 +106,7 @@ export default {
             friends_count: null,
             network_count: null,
             bio: null,
+            see_more: false,
         }
     },
     layout: ProfileLayout,
@@ -151,6 +158,9 @@ export default {
                 scrollTop: $("#ref_post_list_item0").offset().top - 400
             }, 1000);
         },
+        toggleSeeMore () {
+            this.see_more = !this.see_more;
+        }
     }
 }
 </script>

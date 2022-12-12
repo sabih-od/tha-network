@@ -49,7 +49,8 @@ class FriendRequestController extends Controller
                 'notifiable_type' => 'App\Models\User',
                 'notifiable_id' => $target_id,
                 'body' => $string,
-                'sender_id' => $auth->id
+                'sender_id' => $auth->id,
+                'sender_pic' => $auth->get_profile_picture(),
             ]);
             event(new FriendRequestReceived($target_id, $string, 'App\Models\User', $notification->id, $target));
 
@@ -87,7 +88,8 @@ class FriendRequestController extends Controller
                 'notifiable_type' => 'App\Models\User',
                 'notifiable_id' => $target_id,
                 'body' => $string,
-                'sender_id' => $auth->id
+                'sender_id' => $auth->id,
+                'sender_pic' => $auth->get_profile_picture(),
             ]);
             event(new FriendRequestAccepted($target_id, $string, 'App\Models\User', $notification->id, $target));
 

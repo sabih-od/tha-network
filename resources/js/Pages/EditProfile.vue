@@ -9,26 +9,8 @@
                     <span><h5 class="m-auto">Back to profile</h5></span>
                 </Link>
                 <div class="col-md-10">
-                    <BioUpdate />
-
-                    <InfoUpdate />
-
-                    <AddressUpdate />
-
-                    <PasswordUpdate />
-
-                    <MonthlyPayment
-                        :client_secret="client_secret"
-                        :monthly_payment_flash="monthly_payment_flash"
-                        :has_made_monthly_payment="has_made_monthly_payment"
-                        :stripe_checkout_session_id="stripe_checkout_session_id"
-                        :stripe_portal_session="stripe_portal_session"
-                    ></MonthlyPayment>
-
-                    <CloseAccountModal></CloseAccountModal>
-
                     <h3>Referral Payment Options</h3>
-                    <h6>In order to receive Referral Payments you must include your Bank Checking account information, Stripe Account information, or Paypal Account information.  If this information is not provided, you will not be able to receive your referral payments.</h6>
+                    <h6>In order to receive Referral Payments you must include your Paypal or Stripe Account information.  If you do not have a Stripe or Paypal Account create one and provide the information below.If this information is not provided, you will not be able to receive your referral payments.</h6>
                     <div class="row">
                         <div class="col-md-6">
                             <h4>Stripe</h4>
@@ -54,9 +36,27 @@
                     </div>
                     <br />
 
+                    <BioUpdate :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
+
+                    <InfoUpdate :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
+
+                    <AddressUpdate :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
+
+                    <PasswordUpdate :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
+
+                    <MonthlyPayment
+                        :client_secret="client_secret"
+                        :monthly_payment_flash="monthly_payment_flash"
+                        :has_made_monthly_payment="has_made_monthly_payment"
+                        :stripe_checkout_session_id="stripe_checkout_session_id"
+                        :stripe_portal_session="stripe_portal_session"
+                    ></MonthlyPayment>
+
+                    <CloseAccountModal></CloseAccountModal>
+
                     <div class="btn-group gap1">
-                        <button type="submit" class="themeBtn" @click.prevent="showWeeklyGoalNotification()">Save</button>
-                        <button class="themeBtn discard">Discard Changes</button>
+                        <button v-if="$store.getters['Misc/isNewlyRegistered']" type="submit" class="themeBtn" @click.prevent="showWeeklyGoalNotification()">Save</button>
+<!--                        <button class="themeBtn discard">Discard Changes</button>-->
                     </div>
 
                     <br />
@@ -189,6 +189,7 @@ export default {
         //hide message button
         $('.btn_message').prop('hidden', true);
         $('.btn_edit_avatar').prop('hidden', false);
+        $('.info_edit_avatar').prop('hidden', false);
         $('.changePhoto').prop('hidden', false);
 
         $('.btn_add_friend').prop('hidden', true);
@@ -209,6 +210,7 @@ export default {
         //un-hide message button
         $('.btn_message').prop('hidden', false);
         $('.btn_edit_avatar').prop('hidden', true);
+        $('.info_edit_avatar').prop('hidden', true);
         $('.changePhoto').prop('hidden', true);
         $('.btn_invite').prop('hidden', false);
     },
@@ -313,6 +315,7 @@ export default {
                 },
                 onSuccess: visit => {
                     this.form.reset();
+                    this.propmtForAvatarCreation();
                 },
                 onError: () => {
 
@@ -321,6 +324,10 @@ export default {
                     this.$store.dispatch('Utils/showErrorMessages');
                 }
             })
+        },
+        propmtForAvatarCreation() {
+            // $('.btn_edit_avatar').click();
+            this.$emitter.emit('prompt_for_avatar_creation');
         }
     }
 }

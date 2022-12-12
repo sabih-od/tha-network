@@ -14,7 +14,7 @@
                 <div class="notiCont">
                     <figure>
                         <!--                        <img :src="asset('images/small-character.jpg')" alt="">-->
-                        <img :src="auth_image" alt="">
+                        <img :src="notification.sender_pic ?? auth_image" alt="">
                     </figure>
                     <p v-if="notification.body" v-html="notification.body">
 

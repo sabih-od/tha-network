@@ -91,6 +91,9 @@ export default {
             this.removeExtraLine()
             el.innerHTML += ` <img style="max-height: 24px; margin: 0px;" src="${url}" class="emoji-icon" />`
             this.cursorToEnd()
+
+            //disappear the emoji section after emoji selection
+            $('.fa-smile').parent().click();
         },
         newLine() {
             const el = this.$refs.textInput

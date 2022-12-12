@@ -122,7 +122,7 @@ class User extends Authenticatable implements HasMedia
     public function get_profile_picture()
     {
         $check = $this->getMedia('profile_image')->first();
-        return $check ? $check->getUrl() : asset('images/avatars/male-avatar.png');
+        return $check ? $check->getUrl() : asset('images/avatars/'.($this->profile->gender == 'Male' ? 'male' : 'female').'-avatar.png');
     }
 
     public function completed_referrals()
