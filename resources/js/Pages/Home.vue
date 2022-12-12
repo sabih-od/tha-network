@@ -13,7 +13,7 @@
                     <div class="cardWrap">
                         <h2>Basic info Details</h2>
                         <ul class="infoList">
-                            <li><i class="fas fa-trophy"></i> Rank 10th</li>
+                            <li><i class="fas fa-trophy"></i> Rank: {{ level_details.level }}</li>
 
                             <li><i class="fas fa-user-friends"></i> Friends: {{ friends_count }}</li>
 
@@ -46,7 +46,7 @@
 
                 <!-- Right Section -->
                 <div class="col-md-3">
-                    <a href="#" @click.prevent="myPost" class="btnDesign postBtn mb-4 w-100 text-center">{{ myPostText }}</a>
+                    <a href="#" @click.prevent="myPost" class="btnDesign postBtn mb-4 w-100 text-center myPostText">{{ myPostText }}</a>
 
                     <WeeklyGoals :goals="goals" />
 
@@ -130,7 +130,7 @@ export default {
                 img: '',
                 class: 'notifyPopup',
                 redirect_url: "#"
-            }
+            },
         }
     },
     mounted() {
@@ -140,11 +140,32 @@ export default {
             _t.showNotification(img, text, redirect_url);
         });
 
+        this.$emitter.on('change_my_posts_button_text', function (is_my_posts) {
+            // console.log("is_my_posts === true && is_my_posts !== 'View All Posts'", is_my_posts === true && is_my_posts !== 'View All Posts')
+            if(is_my_posts === true && is_my_posts !== 'View All Posts') {
+                // alert('true');
+                $('.myPostText').html('View All Posts');
+                _t.is_my_posts = !_t.is_my_posts;
+            } else {
+                $('.myPostText').html('My Posts');
+            }
+        });
+
+        _t.$emitter.emit('change_my_posts_button_text', 'View All Posts');
+
         //if newly registered (NewMemberSignup)
         if(this.$store.getters['Misc/isNewlyRegistered']) {
             let img = _t.$store.getters['Utils/public_asset']('images/notifications/NewMemberSignup.png');
             let text = 'Welcome To Tha Network Let’s get to work sending Referrals, but first Let’s Create a Profile Page!!';
             _t.showNotification(img, text, _t.$route('editProfileForm'));
+        }
+
+        //if blocked users area flag is on
+        if(this.$store.getters['Misc/getBlockedUsersFlag']) {
+            console.log('checkkkkkkkkkkkkkkkkkkkkkk');
+            $([document.documentElement, document.body]).animate({
+                scrollTop: 1079
+            }, 1000);
         }
 
 

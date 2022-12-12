@@ -16,7 +16,7 @@
                                         <div class="btnCont">
                                             <button class="themeBtn" @click="randomize()">Generate Random</button>
                                             <button class="themeBtn" @click="generateAvatar()">Generate Avatar</button>
-                                            <button class="themeBtn" @click="uploadPicture()">Upload Picture</button>
+<!--                                            <button class="themeBtn" @click="uploadPicture()">Upload Picture</button>-->
                                             <input type="file" hidden class="input_hidden_image" id="input_hidden_image">
                                         </div>
                                     </div>
@@ -30,7 +30,7 @@
                                         <div class="fieldsBox">
                                             <div class="form-group">
                                                 <label for="gender">Gender </label>
-                                                <select class="form-control" id="gender" v-model="choices.gender" @change="changeStyle()">
+                                                <select class="form-control gender" id="gender" v-model="choices.gender" @change="changeStyle()">
                                                     <option v-for="gender in libMojiData.genders" :value="gender[1]">
                                                         {{ gender[0] }}
                                                     </option>
@@ -104,6 +104,7 @@
 <script>
 import libmoji from "libmoji";
 import {useForm} from "@inertiajs/inertia-vue3";
+import {useToast} from "vue-toastification";
 
 export default {
     name: 'CreateAvatar',
@@ -132,7 +133,7 @@ export default {
                 outfit: '',
             },
             libMojiData: {
-                genders: {},
+                genders: [],
                 styles: {},
                 poses: {},
                 traits: {},
@@ -1706,6 +1707,14 @@ export default {
             formLoading: false
         }
     },
+    watch: {
+        //generate avatar when gender is selected
+        "choices.gender": function(nVal, oVal) {
+            if(nVal && nVal != 0) {
+                this.generateAvatar();
+            }
+        }
+    },
     props: {
         msg: String,
     },
@@ -1713,6 +1722,13 @@ export default {
         this.setLibmojiData()
         this.randomize();
         this.avatar.url = '';
+
+        //deselect gender at start
+        this.libMojiData.genders.unshift(['Select Gender', 0]);
+        setTimeout(function () {
+            $('.gender').val(0);
+            $('.gender').trigger('change');
+        }, 2000);
 
         //img upload instead of avatar
         let _t = this;

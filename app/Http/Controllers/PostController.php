@@ -113,7 +113,8 @@ class PostController extends Controller
                     'notifiable_id' => $target->id,
                     'body' => $string,
                     'sender_id' => $target->id,
-                    'post_id' => $post->id
+                    'post_id' => $post->id,
+                    'sender_pic' => $auth->get_profile_picture(),
                 ]);
                 event(new PostShared($target->id, $string, 'App\Models\User', $notification->id, $target));
             }
@@ -150,7 +151,8 @@ class PostController extends Controller
                         'notifiable_id' => $target->id,
                         'body' => $string,
                         'sender_id' => $target->id,
-                        'post_id' => $post->id
+                        'post_id' => $post->id,
+                        'sender_pic' => $user->get_profile_picture(),
                     ]);
                     event(new PostLiked($target->id, $string, 'App\Models\User', $notification->id, $target));
                 }
@@ -188,7 +190,8 @@ class PostController extends Controller
                         'notifiable_id' => $target->id,
                         'body' => $string,
                         'sender_id' => $target->id,
-                        'post_id' => $post->id
+                        'post_id' => $post->id,
+                        'sender_pic' => $user->get_profile_picture(),
                     ]);
                     event(new CommentLiked($target->id, $string, 'App\Models\User', $notification->id, $target));
                 }
@@ -227,7 +230,8 @@ class PostController extends Controller
                         'notifiable_id' => $target->id,
                         'body' => $string,
                         'sender_id' => $target->id,
-                        'post_id' => $post->id
+                        'post_id' => $post->id,
+                        'sender_pic' => $user->get_profile_picture(),
                     ]);
                     event(new ReplyLiked($target->id, $string, 'App\Models\User', $notification->id, $target));
                 }
@@ -266,6 +270,7 @@ class PostController extends Controller
                     'body' => $string,
                     'sender_id' => $target->id,
                     'post_id' => $post->id,
+                    'sender_pic' => $user->get_profile_picture(),
                 ]);
                 event(new CommentOnPost($target->id, $string, 'App\Models\User', $notification->id, $target));
             }
@@ -332,6 +337,7 @@ class PostController extends Controller
                     'body' => $string,
                     'sender_id' => $target->id,
                     'post_id' => $post->id,
+                    'sender_pic' => $user->get_profile_picture(),
                 ]);
                 event(new ReplyOnComment($target->id, $string, 'App\Models\User', $notification->id, $target));
             }

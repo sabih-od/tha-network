@@ -20,6 +20,7 @@
 
     <div class="col-md-3 col-sm-3 border-right p-0">
         <div class="chatSearch">
+            <Link :href="$route('home')">Go Back to Home</Link>
             <ChatSearchForm @search="search"></ChatSearchForm>
 <!--                v-else-if="!loading && channels.length > 0"-->
             <ChatListingItem
@@ -47,13 +48,15 @@ import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
 import ChatListingItem from "./ChatListingItem";
 import _ from "lodash";
+import {Link} from '@inertiajs/inertia-vue3'
 
 export default {
     name: "ChatListing",
     components: {
         ChatSearchForm,
         CreateChatModal,
-        ChatListingItem
+        ChatListingItem,
+        Link,
     },
     computed: {
         user() {

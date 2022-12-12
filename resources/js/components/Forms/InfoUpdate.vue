@@ -57,6 +57,7 @@
 
 <script>
 import {useForm, usePage} from "@inertiajs/inertia-vue3";
+import {useToast} from 'vue-toastification'
 
 export default {
     name: "InfoUpdate",
@@ -72,9 +73,17 @@ export default {
             })
         }
     },
+    props: {
+        stripe_account_id: String,
+        paypal_account_details: String,
+    },
     methods: {
         submit() {
             if (this.form.processing) return
+
+            if(!this.stripe_account_id && !this.paypal_account_details) {
+                return (useToast()).error('You Must Provide PayPal or Stripe account information before proceeding.  If you do not have a stripe or a Paypal account create one and return to this page and enter the information.', { timeout: false });
+            }
 
             this.form.post(this.$route('updateProfile'), {
                 replace: true,

@@ -13,6 +13,7 @@
         <teleport to="body">
             <CreateAvatar/>
         </teleport>
+        <h6 class="info_edit_avatar" style="color:red;">Create/Change Avatar</h6>
     </div>
 </template>
 
@@ -65,6 +66,13 @@ export default {
         });
         this.$emitter.on('avatar_updated', function(data) {
             _t.temp_profile_image = data;
+        });
+        this.$emitter.on('prompt_for_avatar_creation', function () {
+            // console.log("_t.temp_profile_image === _t.asset('images/avatars/male-avatar.png') || _t.temp_profile_image === _t.asset('images/avatars/female-avatar.png') || _t.temp_profile_image === _t.asset('images/char-usr.png')", _t.temp_profile_image === _t.asset('images/avatars/male-avatar.png') || _t.temp_profile_image === _t.asset('images/avatars/female-avatar.png') || _t.temp_profile_image === _t.asset('images/char-usr.png'))
+            if (_t.temp_profile_image === _t.asset('images/avatars/male-avatar.png') || _t.temp_profile_image === _t.asset('images/avatars/female-avatar.png') || _t.temp_profile_image === _t.asset('images/char-usr.png')) {
+                _t.showAvatarModal();
+                (useToast()).success('Please Create Your Avatar');
+            }
         });
 
         this.$emitter.on('change_level_details', function(data) {

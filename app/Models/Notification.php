@@ -18,7 +18,8 @@ class Notification extends Model
         'viewed',
         'sender_id',
         'notifiable_type',
-        'notifiable_id'
+        'notifiable_id',
+        'sender_pic'
     ];
 
     public function user()

@@ -360,7 +360,8 @@ class ProfileController extends Controller
                     'notifiable_type' => 'App\Models\User',
                     'notifiable_id' => $target->id,
                     'body' => $string,
-                    'sender_id' => $target->id
+                    'sender_id' => $target->id,
+                    'sender_pic' => $user->get_profile_picture(),
                 ]);
 
                 event(new NetworkMemberClosure($target->id, $string, 'App\Models\User', $notification->id, $target));
