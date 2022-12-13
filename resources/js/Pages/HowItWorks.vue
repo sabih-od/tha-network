@@ -1,6 +1,6 @@
 <template>
     <div>
-        <HowItWorksMenu/>
+        <HowItWorksMenu :visitedByCode="visitedByCode"/>
 
         <div class="main-slider">
             <img class="img-fluid w-100" :src="asset('images/banner.jpg')" alt="First slide">
@@ -102,18 +102,18 @@
                             </figure>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <h3>Membership Benefits</h3>
-                        <p>Once you become a member the Sky is the Limit in your earning potential. We have developed
-                            this site to help everyone earn extra cash while also donating a portion of the sites
-                            proceeds to charities. Enjoy a full network of
-                            people to chat with, share information with, send daily post, and brag about the number of
-                            members in your Network!!! Earn Financial Freedom!! Membership has never been this
-                            great!!!!</p>
-                        <p>Have fun, keep the invites coming, build your network!!!</p>
-                        <p>Become a member today!!!!</p>
-<!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
-                    </div>
+<!--                    <div class="col-md-6">-->
+<!--                        <h3>Membership Benefits</h3>-->
+<!--                        <p>Once you become a member the Sky is the Limit in your earning potential. We have developed-->
+<!--                            this site to help everyone earn extra cash while also donating a portion of the sites-->
+<!--                            proceeds to charities. Enjoy a full network of-->
+<!--                            people to chat with, share information with, send daily post, and brag about the number of-->
+<!--                            members in your Network!!! Earn Financial Freedom!! Membership has never been this-->
+<!--                            great!!!!</p>-->
+<!--                        <p>Have fun, keep the invites coming, build your network!!!</p>-->
+<!--                        <p>Become a member today!!!!</p>-->
+<!--&lt;!&ndash;                        <a href="login.php" class="themeBtn">Join Us</a>&ndash;&gt;-->
+<!--                    </div>-->
                 </div>
                 <div class="row aic">
                     <div class="col-md-6">
@@ -155,7 +155,7 @@
                     </div>
                     <div class="col-md-6">
                         <h3>Membership Pays</h3>
-                        <p>Join Today for $39.95 per month!!! This will be the best investment you have ever made!!!!!
+                        <p>Join Today for $29.99 per month!!! This will be the best investment you have ever made!!!!!
                             You Should be Excited because WE ARE!!!</p>
                         <p><strong>HOW MANY PEOPLE ARE IN YOUR NETWORK!!!!</strong></p>
                         <img :src="asset('images/character.png')" class="character" alt="">
@@ -214,6 +214,18 @@
             </div>
         </section>
 
+        <section class="planSec">
+            <div class="container">
+                <div class="row aic">
+                    <div class="col-md-4 offset-md-4">
+                        <div class="content text-center">
+                            <Link v-if="!this.user" :href="$route('stripePaymentShow')" class="themeBtn" replace>Join Us</Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
 
         <!-- Begin: Footer -->
         <footer>
@@ -222,11 +234,11 @@
                     <div class="col-lg-12 col-md-12 col-sm-12 wow fadeInLeft" data-wow-delay="1.2s">
                         <a href="index.php" class="d-block text-center"><img :src="asset('images/logo.png')" alt="logo"></a>
                         <ul class="links">
-                            <li><a href="#">How It Works</a></li>
-                            <li><a href="#">Membership Benefits</a></li>
-                            <li><a href="#">Terms & Conditions</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Contact Us</a></li>
+                            <li><Link :href="$route('work')">How It Works</Link></li>
+                            <li><Link :href="$route('benefits')">Membership Benefits</Link></li>
+                            <li><Link :href="$route('terms')">Terms & Conditions</Link></li>
+                            <li><Link :href="$route('privacy')">Privacy Policy</Link></li>
+<!--                            <li><Link :href="$route('contact')">Contact Us</Link></li>-->
                         </ul>
                         <ul class="list-unstyled footerSocial">
                             <li><a href="https://www.facebook.com/Tha-Network-150057600527324/" target="_blank"><i
@@ -256,17 +268,19 @@
 <script>
 import HowItWorksMenu from "../components/HowItWorksMenu";
 import utils from "../mixins/utils";
-import {useForm, usePage} from "@inertiajs/inertia-vue3";
+import {Link, useForm, usePage} from "@inertiajs/inertia-vue3";
 
 
 export default {
     name: "HowItWorks",
     mixins: [utils],
     components: {
-        HowItWorksMenu
+        HowItWorksMenu,
+        Link
     },
     props: {
-        inviter: Object
+        inviter: Object,
+        visitedByCode: Boolean,
     },
     mounted() {
         let _t = this;

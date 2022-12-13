@@ -75,7 +75,8 @@ export default {
             form: useForm({
                 chat_type: 'individual',
                 user_id: null
-            })
+            }),
+            search_query: '',
         }
     },
     mounted() {
@@ -138,7 +139,7 @@ export default {
             this.form.user_id = user_id
             this.createOrGetChannel()
         },
-        loadChatListing(url = null, search = search) {
+        loadChatListing(url = null, search = this.search_query) {
             if (this.loading) return;
             let isLoadMore = !!(url)
             url = url ?? this.$store.getters['Utils/baseUrl']
@@ -208,7 +209,7 @@ export default {
             //         this.search('');
             //     }, 5000);
             // }
-        }
+        },
     },
 }
 </script>

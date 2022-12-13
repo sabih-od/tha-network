@@ -202,7 +202,12 @@ Route::group([
 });
 
 Route::get('/home', function () {
-    return Inertia::render('HowItWorks');
+    $check = session()->has('validate-code');
+    if ($check)
+        session()->remove('validate-code');
+    return Inertia::render('HowItWorks', [
+        'visitedByCode' => $check
+    ]);
 })->name('work');
 
 Route::get('/about', function () {

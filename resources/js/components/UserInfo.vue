@@ -13,7 +13,7 @@
         <teleport to="body">
             <CreateAvatar/>
         </teleport>
-        <h6 class="info_edit_avatar" style="color:red;">Create/Change Avatar</h6>
+        <h6 v-if="isEditProfile" class="info_edit_avatar" style="color:red;">Create/Change Avatar</h6>
     </div>
 </template>
 
@@ -44,6 +44,10 @@ export default {
         profile_img() {
             return usePage().props.value?.profile_image ?? this.$store.getters['Utils/public_asset']('images/small-character.jpg')
         },
+        isEditProfile() {
+            const page = usePage().component.value;
+            return page === 'EditProfile';
+        }
     },
     data() {
         return {

@@ -6,6 +6,7 @@ use App\Events\PaymentNotMade;
 use App\Events\SetWeeklyGoal;
 use App\Events\UnableToMeetWeeklyGoal;
 use App\Events\WeeklyRankingNotification;
+use App\Models\Channel;
 use App\Models\Goal;
 use App\Models\Network;
 use App\Models\NetworkMember;
@@ -440,4 +441,21 @@ function is_in_my_network($user_id) {
     $check = NetworkMember::where('network_id', $my_network->id)->where('user_id', $user_id)->first();
 
     return (bool)$check;
+}
+
+function create_chat_channel($user_id, $target_id) {
+    $auth = User::find($user_id);
+    $user = User::find($target_id);
+
+    $channel = Channel::where(function ($q) use ($auth, $user) {
+        return $q->whereRaw("participants = CAST('" . json_encode([$auth->id, $user->id]) . "' AS JSON)")
+            ->orWhereRaw("participants = CAST('" . json_encode([$user->id, $auth->id]) . "' AS JSON)");
+    })->where('chat_type', 'individual')->first();
+
+    if (is_null($channel)) {
+        $channel = new Channel;
+        $channel->creator_id = $auth->id;
+        $channel->users()->attach([$auth->id, $user->id]);
+        $channel->save();
+    }
 }

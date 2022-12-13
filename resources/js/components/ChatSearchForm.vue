@@ -5,13 +5,13 @@
 <!--            <button><i class="fal fa-search"></i></button>-->
 <!--        </div>-->
 <!--    </form>-->
-    <form action="#" @submit.prevent="submit">
+<!--    <form action="#" @submit.prevent>-->
         <div class="search-box">
             <div class="input-wrapper">
-                <input type="text" v-model="search" placeholder="Search Contact" name="search" id="search" autocomplete="off">
+                <input @keyup.enter="submit" type="text" v-model="search" placeholder="Search Contact" name="search" id="search" autocomplete="off">
             </div>
         </div>
-    </form>
+<!--    </form>-->
 </template>
 
 <script>
@@ -22,9 +22,18 @@ export default {
             search: ''
         }
     },
+    mounted() {
+        // $('#search').on('keyup', function (e) {
+        //     return e.preventDefault();
+        //     // alert(e.key === "Enter");
+        // });
+    },
     methods: {
         submit() {
-            this.$emit('search', this.search);
+            // this.$parent.updateSearchQuery(this.search);
+            this.$parent.search_query = this.search;
+            this.$parent.loadChatListing();
+            // this.$emit('search', this.search);
         }
     }
 }

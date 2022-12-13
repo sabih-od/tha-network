@@ -221,8 +221,8 @@ class RegisterController extends Controller
                 $inviter = User::with('profile', 'network')->find($inviter_id);
                 $user = User::with('profile')->find($user->id);
 
-
-                //$user->follow($inviter);
+                //create chat channel for both
+                create_chat_channel($user->id, $inviter->id);
 
                 //check for inviter's network. create new if not created already
                 $network_check = Network::where('user_id', $inviter->id)->get();

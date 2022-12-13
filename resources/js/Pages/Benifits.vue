@@ -72,7 +72,7 @@
                         <div class="secHeading">
                             <h2>Membership Pays</h2>
                             <p>
-                                Join Today for $29.95 per month!!! This will be the best investment you have ever
+                                Join Today for $29.99 per month!!! This will be the best investment you have ever
                                 made!!!!! You Should be Excited because WE ARE!!!
                             </p>
                             <p>

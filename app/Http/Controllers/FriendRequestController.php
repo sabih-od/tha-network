@@ -81,6 +81,9 @@ class FriendRequestController extends Controller
             $target->follow($auth);
             $check[0]->delete();
 
+            //create chat channel for both
+            create_chat_channel($auth->id, $target->id);
+
             //friend request notification
             $string = ($auth->profile->first_name . ' ' . $auth->profile->last_name) . " has accepted your friend request.";
             $notification = Notification::create([
