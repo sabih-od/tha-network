@@ -2,9 +2,14 @@
     <header class="wow fadeInDown" data-wow-delay="0.5s">
         <div class="container">
             <nav class="navbar navbar-expand-lg">
-                <Link class="navbar-brand" :href="$route('loginForm')" replace>
+
+                <Link v-if="visitedByLink || visitedByCode" class="navbar-brand" :href="$route('loginForm')" @click.prevent.capture>
                     <img :src="asset('images/logo.png')" alt="">
                 </Link>
+                <Link v-else class="navbar-brand" :href="$route('loginForm')" replace>
+                    <img :src="asset('images/logo.png')" alt="">
+                </Link>
+
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -23,31 +28,31 @@
                     </ul>
                     <ul class="navbar-nav ml-auto">
                         <li :class="page === 'HowItWorks' ? 'nav-item active' : 'nav-item'">
-                            <a class="nav-link" :href="this.$route('work')">How It Works</a>
+                            <Link class="nav-link" :href="$route('work')">How It Works</Link>
                         </li>
                         <li :class="page === 'Benifits'? 'nav-item active' : 'nav-item'">
-                            <a class="nav-link" :href="this.$route('benefits')">Membership Benefits</a>
+                            <Link class="nav-link" :href="$route('benefits')">Membership Benefits</Link>
                         </li>
                         <li :class="page === 'About'? 'nav-item active' : 'nav-item'">
-                            <a class="nav-link" :href="this.$route('about')">About Us</a>
+                            <Link class="nav-link" :href="$route('about')">About Us</Link>
                         </li>
                         <li :class="page === 'Terms'? 'nav-item active' : 'nav-item'">
-                            <a class="nav-link" :href="this.$route('terms')">Terms & Conditions</a>
+                            <Link class="nav-link" :href="$route('terms')">Terms & Conditions</Link>
                         </li>
                         <li :class="page === 'Privacy'? 'nav-item active' : 'nav-item'">
-                            <a class="nav-link" :href="this.$route('privacy')">Privacy Policy</a>
+                            <Link class="nav-link" :href="$route('privacy')">Privacy Policy</Link>
                         </li>
-                        <li  :class="page === 'Contact'? 'nav-item active' : 'nav-item'">
-                            <a class="nav-link" :href="this.$route('contact')">Contact Us</a>
-                        </li>
-                        <li class="nav-item">
-                            <Link class="nav-link" :href="this.$route('login')">{{ this.user ? 'Go Back To Profile' : 'Login' }}</Link>
+<!--                        <li  :class="page === 'Contact'? 'nav-item active' : 'nav-item'">-->
+<!--                            <Link class="nav-link" :href="$route('contact')">Contact Us</Link>-->
+<!--                        </li>-->
+                        <li class="nav-item" v-if="!visitedByLink && !visitedByCode">
+                            <Link class="nav-link" :href="$route('login')">{{ this.user ? 'Go Back To Profile' : 'Login' }}</Link>
                         </li>
 <!--                        <li :class="$Link === 'about'? 'nav-item active' : 'nav-item'">-->
-<!--                            <a class="nav-link" :href="this.$route('about')">Contact Us</a>-->
+<!--                            <a class="nav-link" :href="$route('about')">Contact Us</a>-->
 <!--                        </li>-->
 <!--                        <li :class="url === 'login'? 'nav-item active' : 'nav-item'">-->
-<!--                            <a class="nav-link" :href="this.$route('login')">Login</a>-->
+<!--                            <a class="nav-link" :href="$route('login')">Login</a>-->
 <!--                        </li>-->
                     </ul>
                 </div>
@@ -67,9 +72,15 @@ export default {
     components: {
         Link
     },
+    props: {
+        visitedByCode: Boolean,
+    },
     computed: {
         user() {
             return usePage().props.value?.auth ?? null
+        },
+        visitedByLink() {
+            return window.location.toString().includes('join');
         }
     },
     data() {
@@ -78,6 +89,9 @@ export default {
             page: usePage().component.value
         }
     },
+    mounted() {
+        // alert(window.location);
+    }
 }
 </script>
 
