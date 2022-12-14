@@ -203,8 +203,8 @@ Route::group([
 
 Route::get('/home', function () {
     $check = session()->has('validate-code');
-    if ($check)
-        session()->remove('validate-code');
+//    if ($check)
+//        session()->remove('validate-code');
     return Inertia::render('HowItWorks', [
         'visitedByCode' => $check
     ]);
