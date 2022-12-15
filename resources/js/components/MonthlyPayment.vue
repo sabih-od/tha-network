@@ -13,15 +13,6 @@
                 <img src="images/payment2.png" alt="">
             </div>
         </div>
-<!--        <form @submit.prevent="submit" v-if="!has_made_monthly_payment">-->
-<!--            <h3 class="text-secondary" v-if="mountLoading">Please wait...</h3>-->
-<!--            <div id="monthly-payment-element"></div>-->
-<!--            <template v-if="!mountLoading">-->
-<!--                <button type="submit" class="themeBtn mt-3 mb-3">-->
-<!--                    {{ formLoading ? 'Please wait...' : 'CONFIRM PAYMENT' }}-->
-<!--                </button>-->
-<!--            </template>-->
-<!--        </form>-->
     </div>
 </template>
 
@@ -84,17 +75,17 @@ export default {
             }, 4000);
         }
 
-        if (!document.head.querySelector('#stripe-js')) {
-            const scriptTag = document.createElement('script')
-            scriptTag.src = 'https://js.stripe.com/v3/'
-            scriptTag.onload = () => {
-                console.log('script loaded')
-                this.initialize()
-            }
-            document.head.appendChild(scriptTag)
-        } else {
-            this.initialize()
-        }
+        // if (!document.head.querySelector('#stripe-js')) {
+        //     const scriptTag = document.createElement('script')
+        //     scriptTag.src = 'https://js.stripe.com/v3/'
+        //     scriptTag.onload = () => {
+        //         console.log('script loaded')
+        //         this.initialize()
+        //     }
+        //     document.head.appendChild(scriptTag)
+        // } else {
+        //     this.initialize()
+        // }
     },
     watch: {
         stripe_portal_session: function(nVal, oVal) {
@@ -110,14 +101,14 @@ export default {
     },
     methods: {
         initialize() {
-            this.stripe = Stripe("pk_test_0rY5rGJ7GN1xEhCB40mAcWjg");
-            this.elements = this.stripe.elements({clientSecret: this.client_secret})
-
-            const paymentElement = this.elements.create("payment");
-            paymentElement.mount("#monthly-payment-element");
-            paymentElement.on('ready', () => {
-                this.mountLoading = false
-            })
+            // this.stripe = Stripe("pk_test_0rY5rGJ7GN1xEhCB40mAcWjg");
+            // this.elements = this.stripe.elements({clientSecret: this.client_secret})
+            //
+            // const paymentElement = this.elements.create("payment");
+            // paymentElement.mount("#monthly-payment-element");
+            // paymentElement.on('ready', () => {
+            //     this.mountLoading = false
+            // })
         },
         async submit() {
             this.formLoading = true
