@@ -61,7 +61,7 @@
                                             <div class="form-group">
                                                 <label for="outfit">Outfit </label>
                                                 <select class="form-control" id="outfit" v-model="choices.outfit" @change="generateAvatar()">
-                                                    <option v-for="(outfit, key) in libMojiData.outfits" :value="key">{{slugs[choices.gender - 1].outfits[outfit.outfit] ?? outfit.outfit}}
+                                                    <option v-if="choices.gender != 0" v-for="(outfit, key) in libMojiData.outfits" :value="key">{{slugs[choices.gender - 1].outfits[outfit.outfit] ?? outfit.outfit}}
                                                     </option>
                                                 </select>
                                             </div>
@@ -74,7 +74,7 @@
                                                 </select>
                                             </div>
                                             <br v-if="choices.pose == 'body'">
-                                            <div class="form-group" v-for="(traits, key) in libMojiData.traits">
+                                            <div class="form-group" v-if="choices.gender != 0" v-for="(traits, key) in libMojiData.traits">
                                                 <label :for="traits.key">{{ traits.key }}&nbsp;</label>
                                                 <select class="form-control" :id="traits.key" v-model="choices.traits[traits.key]" :key="key"
                                                         @change="generateAvatar()">
