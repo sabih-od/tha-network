@@ -6,8 +6,21 @@
                 <div class="col-md-3">
                     <div class="cardWrap" v-if="profile?.bio">
                         <h2>About</h2>
-                        <p class="text-pre-wrap">{{ profile?.bio }}</p>
-                        <a href="#" @click.prevent class="btnDesign">See more</a>
+<!--                        <p class="text-pre-wrap">{{ profile?.bio }}</p>-->
+                        <p class="text-pre-wrap">
+                            <strong>Bio: </strong>
+                            <span id="span_bio_teaser" v-if="para_bio_lines > 4 && bio_see_more">{{ bio_teaser }}</span>
+                            <span id="span_bio" v-if="para_bio_lines < 4 || !bio_see_more">{{ profile.bio }}</span>
+                            <span class="span_more" style="color: blue; cursor: pointer;" v-if="para_bio_lines > 4" @click.prevent="toggleBioSeeMore()">{{bio_see_more ? '...see more' : '[X]'}}</span>
+                        </p>
+
+
+                        <p v-if="see_more" class="text-pre-wrap"><strong>Rank: </strong>{{ level_details.level }}</p>
+                        <p v-if="see_more" class="text-pre-wrap"><strong>Friends: </strong>{{ friends_count }}</p>
+                        <p v-if="see_more && (profile?.city && profile?.country)" class="text-pre-wrap"><strong>Lives in: </strong>{{ profile?.city + ', ' + profile?.country + '.'}}</p>
+                        <p v-if="see_more" class="text-pre-wrap"><strong>Joined: </strong>{{ new Date(user.created_at).toLocaleString('en-us',{month:'short', year:'numeric'}) }}</p>
+
+                        <a href="javascript:void(0)" v-if="level_details && level_details.level && friends_count && profile && profile.city && profile.country" class="btnDesign" @click.prevent="toggleSeeMore()">{{ see_more ? 'Collapse' : 'See more' }}</a>
                     </div>
 
                     <PeopleList/>
@@ -97,6 +110,10 @@ export default {
             request_sent: null,
             request_received: null,
             user_is_blocked: null,
+            para_bio_lines: 0,
+            bio_see_more: false,
+            bio_teaser: null,
+            see_more: false,
         }
     },
     layout: ProfileLayout,
@@ -107,7 +124,27 @@ export default {
         level_details: Object,
         is_in_my_network: Boolean,
     },
+    methods: {
+        toggleBioSeeMore () {
+            this.bio_see_more = !this.bio_see_more;
+        },
+        toggleSeeMore () {
+            this.see_more = !this.see_more;
+        },
+    },
     mounted() {
+        //computing bio
+        let _t = this;
+        setTimeout(function () {
+            _t.para_bio_lines = ($('#span_bio').text().split(' ').length) / 6;
+            _t.bio_teaser = _t.profile.bio.substring(0, 20);
+            _t.bio_see_more = (_t.para_bio_lines > 4);
+        }, 50);
+
+        //hide blocked users and people in my network areas
+        this.$emitter.emit('setPeopleInMyNetworkFlagOff', false);
+        this.$emitter.emit('setBlockedUsersFlagOff', false);
+
         this.$store.commit('Profile/setIsAnother', true)
         this.$store.commit('Profile/setProfile', this.profile)
 

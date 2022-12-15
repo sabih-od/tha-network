@@ -40,7 +40,7 @@
                                 Become a member today!!!!
                             </p>
                         </div>
-                        <a href="#" class="themeBtn">JOIN US</a>
+<!--                        <a href="#" class="themeBtn" v-if="!user">JOIN US</a>-->
                     </div>
                 </div>
                 <div class="row aic">
@@ -108,7 +108,7 @@ The site does all the work for you automatically by sending payments directly to
                                 </span>
                             </li>
                         </ul>
-                        <a href="" class="themeBtn">JOIN US</a>
+<!--                        <a href="" class="themeBtn" v-if="!user">JOIN US</a>-->
                     </div>
                 </div>
             </div>
@@ -150,12 +150,18 @@ The site does all the work for you automatically by sending payments directly to
 <script>
 import utils from "../mixins/utils";
 import HowItWorksMenu from "../components/HowItWorksMenu";
+import {usePage} from "@inertiajs/inertia-vue3";
 
 export default {
     name: "About",
     mixins: [utils],
     components: {
         HowItWorksMenu
+    },
+    computed: {
+        user() {
+            return usePage().props.value?.auth ?? null
+        }
     },
     mounted() {
         // alert(this.$route('about'));

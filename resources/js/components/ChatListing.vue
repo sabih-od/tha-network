@@ -20,7 +20,7 @@
 
     <div class="col-md-3 col-sm-3 border-right p-0">
         <div class="chatSearch">
-            <Link :href="$route('home')">Go Back to Home</Link>
+            <Link class="backBtn" :href="$route('home')">Go Back to Home</Link>
             <ChatSearchForm @search="search"></ChatSearchForm>
 <!--                v-else-if="!loading && channels.length > 0"-->
             <ChatListingItem
@@ -32,6 +32,8 @@
                 :is_auth_friend="channel.is_auth_friend"
                 :is_in_my_network="channel.is_in_my_network"
             />
+
+            <span v-if="channels.length == 0 ">No Member Found</span>
 
             <teleport to="body">
                 <CreateChatModal ref="createChatModal"/>
@@ -242,5 +244,16 @@ export default {
     background-color: white;
     color: #121f2b;
     box-shadow: 0 2px 5px 1px white;
+}
+
+.backBtn{
+    display: inline-block;
+    width: auto;
+    text-align: center;
+    padding: 0.5rem;
+    background-color: var(--primary);
+    color: #fff;
+    margin-left: 1rem;
+    border-radius: 30px;
 }
 </style>

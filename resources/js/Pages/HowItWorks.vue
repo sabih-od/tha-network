@@ -13,7 +13,9 @@
                         <div class="col-md-4">
                             <div class="content">
                                 <h3>Membership Pays</h3>
-                                <Link v-if="!this.user" :href="$route('stripePaymentShow')" class="themeBtn" replace>Join Us</Link>
+                                <Link v-if="!this.user" :href="$route('stripePaymentShow')" class="themeBtn" replace>
+                                    Join Us
+                                </Link>
                                 <Link v-else :href="$route('login')" class="themeBtn" replace>Go Back to Profile</Link>
                             </div>
                         </div>
@@ -82,38 +84,42 @@
                 <div class="row">
                     <div class="col-md-6 d-flex">
                         <div class="videoBox">
-                            <img v-if="video_classes.includes('minimized')" :src="asset('images/intro-placeholder.png')" alt="">
+                            <img v-if="video_classes.includes('minimized')" :src="asset('images/intro-placeholder.png')"
+                                 alt="">
                             <figure :class="video_classes" :style="video_Styling">
-                                <video autoplay muted controls id="video_element">
+                                <video controls id="video_element">
                                     <source :src="asset('video/introVideo.mp4')">
                                 </video>
+                                <div id="video_btn">
+                                    <button class="themeBtn" @click.prevent="playVideo">Play Introduction</button>
+                                </div>
                                 <div class="videoControllers">
                                     <button id="minmize" class="themeBtn"
                                             v-if="video_classes === 'introVideo minimized'"
                                             @click.prevent="minimizeVideo"><i
                                         class="fas fa-compress-arrows-alt"></i><span>Minimize</span>
                                     </button>
-<!--                                    <button id="pip" class="themeBtn"-->
-<!--                                            v-if="video_classes === 'introVideo columned'"-->
-<!--                                            @click.prevent="togglePictureInPicture"><i-->
-<!--                                        class="fal fa-photo-video"></i><span>PIP Mode</span>-->
-<!--                                    </button>-->
+                                    <!--                                    <button id="pip" class="themeBtn"-->
+                                    <!--                                            v-if="video_classes === 'introVideo columned'"-->
+                                    <!--                                            @click.prevent="togglePictureInPicture"><i-->
+                                    <!--                                        class="fal fa-photo-video"></i><span>PIP Mode</span>-->
+                                    <!--                                    </button>-->
                                 </div>
                             </figure>
                         </div>
                     </div>
-<!--                    <div class="col-md-6">-->
-<!--                        <h3>Membership Benefits</h3>-->
-<!--                        <p>Once you become a member the Sky is the Limit in your earning potential. We have developed-->
-<!--                            this site to help everyone earn extra cash while also donating a portion of the sites-->
-<!--                            proceeds to charities. Enjoy a full network of-->
-<!--                            people to chat with, share information with, send daily post, and brag about the number of-->
-<!--                            members in your Network!!! Earn Financial Freedom!! Membership has never been this-->
-<!--                            great!!!!</p>-->
-<!--                        <p>Have fun, keep the invites coming, build your network!!!</p>-->
-<!--                        <p>Become a member today!!!!</p>-->
-<!--&lt;!&ndash;                        <a href="login.php" class="themeBtn">Join Us</a>&ndash;&gt;-->
-<!--                    </div>-->
+                    <!--                    <div class="col-md-6">-->
+                    <!--                        <h3>Membership Benefits</h3>-->
+                    <!--                        <p>Once you become a member the Sky is the Limit in your earning potential. We have developed-->
+                    <!--                            this site to help everyone earn extra cash while also donating a portion of the sites-->
+                    <!--                            proceeds to charities. Enjoy a full network of-->
+                    <!--                            people to chat with, share information with, send daily post, and brag about the number of-->
+                    <!--                            members in your Network!!! Earn Financial Freedom!! Membership has never been this-->
+                    <!--                            great!!!!</p>-->
+                    <!--                        <p>Have fun, keep the invites coming, build your network!!!</p>-->
+                    <!--                        <p>Become a member today!!!!</p>-->
+                    <!--&lt;!&ndash;                        <a href="login.php" class="themeBtn">Join Us</a>&ndash;&gt;-->
+                    <!--                    </div>-->
                 </div>
                 <div class="row aic">
                     <div class="col-md-6">
@@ -129,7 +135,7 @@
                             great!!!!</p>
                         <p>Have fun, keep the invites coming, build your network!!!</p>
                         <p>Become a member today!!!!</p>
-<!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
+                        <!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
                     </div>
                 </div>
                 <div class="row aic frr">
@@ -146,7 +152,7 @@
                             is how much you could earn per month if
                             all your friends and followers joined your network. What are you waiting for JOIN
                             TODAY!!!</p>
-<!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
+                        <!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
                     </div>
                 </div>
                 <div class="row aic">
@@ -172,7 +178,7 @@
                                 when your referrals join Tha Network.
                             </li>
                         </ul>
-<!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
+                        <!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
                     </div>
                 </div>
             </div>
@@ -208,7 +214,7 @@
                         <p class="text-center">
                             <strong>So What Are You Waiting For JOIN TODAY!!!</strong>
                         </p>
-<!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
+                        <!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
                     </div>
                 </div>
             </div>
@@ -219,7 +225,9 @@
                 <div class="row aic">
                     <div class="col-md-4 offset-md-4">
                         <div class="content text-center">
-                            <Link v-if="!this.user" :href="$route('stripePaymentShow')" class="themeBtn" replace>Join Us</Link>
+                            <Link v-if="!this.user" :href="$route('stripePaymentShow')" class="themeBtn" replace>Join
+                                Us
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -234,11 +242,19 @@
                     <div class="col-lg-12 col-md-12 col-sm-12 wow fadeInLeft" data-wow-delay="1.2s">
                         <a href="index.php" class="d-block text-center"><img :src="asset('images/logo.png')" alt="logo"></a>
                         <ul class="links">
-                            <li><Link :href="$route('work')">How It Works</Link></li>
-                            <li><Link :href="$route('benefits')">Membership Benefits</Link></li>
-                            <li><Link :href="$route('terms')">Terms & Conditions</Link></li>
-                            <li><Link :href="$route('privacy')">Privacy Policy</Link></li>
-<!--                            <li><Link :href="$route('contact')">Contact Us</Link></li>-->
+                            <li>
+                                <Link :href="$route('work')">How It Works</Link>
+                            </li>
+                            <li>
+                                <Link :href="$route('benefits')">Membership Benefits</Link>
+                            </li>
+                            <li>
+                                <Link :href="$route('terms')">Terms & Conditions</Link>
+                            </li>
+                            <li>
+                                <Link :href="$route('privacy')">Privacy Policy</Link>
+                            </li>
+                            <!--                            <li><Link :href="$route('contact')">Contact Us</Link></li>-->
                         </ul>
                         <ul class="list-unstyled footerSocial">
                             <li><a href="https://www.facebook.com/Tha-Network-150057600527324/" target="_blank"><i
@@ -289,7 +305,7 @@ export default {
         });
 
         // video columned if user is logged in
-        if(this.user) {
+        if (this.user) {
             this.video_classes = 'introVideo columned';
         }
     },
@@ -314,6 +330,18 @@ export default {
         minimizeVideo() {
             this.video_classes = 'introVideo columned';
         },
+
+        playVideo() {
+            const video = document.getElementById("video_element");
+            const btnCont = document.getElementById("video_btn");
+            video.play()
+            btnCont.style.display = 'none';
+            console.log('working')
+            // playBtn.addEventListener('click', function (){
+            //     // playBtn.fadeOut('slow')
+            // });
+        },
+
         async togglePictureInPicture(event) {
             const video = document.getElementById("video_element");
             const togglePipButton = document.getElementById("pip");
@@ -364,5 +392,15 @@ export default {
     height: 100%;
     width: 100%;
     background-color: #ddd;
+}
+
+#video_btn {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1111111;
 }
 </style>

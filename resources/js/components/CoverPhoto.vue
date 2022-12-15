@@ -1,29 +1,34 @@
 <template>
     <!-- Begin: Cover Section -->
-    <section class="bg-grey cover-photo pt-0 pb-5">
+    <section class="bg-grey cover-photo pt-0 pb-0">
         <div class="filSet changePhoto" hidden="true" v-if="!$store.state.Profile.is_another">
             <input type="file" class="form-control" @change.prevent="imageChange"
                    style="border: 1px solid red!important;">
             <i class="fas fa-edit"></i>
+            <h6>Add/Change Banner</h6>
         </div>
         <!--        <div style="max">-->
         <!--            <avataaars></avataaars>-->
         <!--        </div>-->
         <!--        <img :src="asset('images/cover-photo.jpg')" class="w-100" alt="">-->
         <img :src="profile_cover" class="w-100" alt="">
+    </section>
+    <section class="profilePictureSec pt-2 pb-5 bg-grey">
+
         <div class="container-fluid">
             <div class="topWrap">
                 <div class="row aic">
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <UserInfo/>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <a href="#" class="awardWrap profilePage">
                             <img :src="level_details.trophy" alt="">
                         </a>
                         <div class="btn-group">
                             <!--                            <a href="#" class="themeBtn">Message</a>-->
-                            <button v-if="!edit_profile_active" class="themeBtn btn_invite" :title="$route('joinByInvite', this.user.username)"
+                            <button v-if="!edit_profile_active" class="themeBtn btn_invite"
+                                    :title="$route('joinByInvite', this.user.username)"
                                     @click.prevent="copy_my_referral_link">Share your profile
                             </button>
                             <button v-if="!edit_profile_active" class="themeBtn btn_invite"
@@ -103,7 +108,7 @@ export default {
     },
     mounted() {
         let _t = this;
-        this.$emitter.on('change_level_details', function(data) {
+        this.$emitter.on('change_level_details', function (data) {
             _t.level_details = data;
         });
     },
@@ -296,21 +301,32 @@ export default {
 
 .filSet.changePhoto {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 50%;
+    left: 50%;
     background: var(--primary);
-    padding: 0.5rem .75rem;
-    border-radius: 100%;
+    border-radius: 30px;
     color: #fff;
-    border-top-right-radius: 0;
+    transform: translate(-50%, -50%);
+    height: 60px;
+    width: 230px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+    transition: all 0.4s ease-in-out;
+    flex-direction: column;
 }
 
+.filSet.changePhoto:hover {
+    opacity: 1;
+}
 
 .filSet.changePhoto + img {
     max-height: 550px;
     width: 100%;
     object-fit: cover;
 }
+
 .filSet.changePhoto input {
     z-index: 1;
     cursor: pointer;

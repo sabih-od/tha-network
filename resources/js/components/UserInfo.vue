@@ -13,8 +13,8 @@
         <teleport to="body">
             <CreateAvatar/>
         </teleport>
-        <h6 v-if="isEditProfile" class="info_edit_avatar" style="color:red;">Create/Change Avatar</h6>
     </div>
+    <h6 v-if="isEditProfile" class="info_edit_avatar" style="color:red;">Create/Change Avatar</h6>
 </template>
 
 <script>
