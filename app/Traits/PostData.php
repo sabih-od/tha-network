@@ -88,6 +88,13 @@ trait PostData
                         }*/
                     }
                 }
+
+                //block data in item
+                //                'is_blocked_by_user' => $auth->isBlockedBy($user),
+//                'has_blocked' => $auth->hasBlocked($user),
+                $item->is_blocked_by_user = $auth_user->isBlockedBy($item->user);
+                $item->has_blocked = $auth_user->hasBlocked($item->user);
+
                 return $item;
             });
 

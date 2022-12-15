@@ -76,8 +76,8 @@
             </div>
         </div>
         <PostListItem
+            v-for="(post, index) in block_filtered_posts"
             v-if="!people_in_my_network_flag && !blocked_users_flag && !my_friends_flag"
-            v-for="(post, index) in posts"
             :post="post"
             :key="post.id"
             :id="'ref_post_list_item' + index"
@@ -112,6 +112,9 @@ export default {
                     return user_id === usePage().props.value?.auth?.id
                 return false
             }
+        },
+        block_filtered_posts: function () {
+            return this.posts.filter(i => (!i.is_blocked_by_user && !i.has_blocked));
         }
     },
     data() {

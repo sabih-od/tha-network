@@ -47,7 +47,8 @@
                         <label for="phone">Username</label>
                         <input type="text" id="phone" v-model="form.username" class="form-control"
                                :readonly="!isEdit"
-                               placeholder="Username">
+                               placeholder="Username"
+                               @keydown.space.prevent>
                     </div>
                 </div>
             </div>

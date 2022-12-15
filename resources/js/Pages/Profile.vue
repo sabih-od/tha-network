@@ -7,7 +7,7 @@
                     <div class="cardWrap">
                         <h2>About Me</h2>
 
-                        <p class="text-pre-wrap"><strong>Bio: </strong>{{ bio }}</p>
+                        <p class="text-pre-wrap" id="para_bio"><strong>Bio: </strong>{{ bio }}</p>
                         <p class="text-pre-wrap"><strong>Gender: </strong>{{ profile.gender }}</p>
                         <p class="text-pre-wrap"><strong>Marital Status: </strong>{{ profile.marital_status }}</p>
 
@@ -101,6 +101,16 @@ export default {
         PostsList,
         Link
     },
+    computed: {
+        para_bio_lines() {
+            var el = document.getElementById('para_bio');
+            var divHeight = el.offsetHeight
+            // var lineHeight = parseInt(el.style.lineHeight);
+            var lineHeight = parseInt((window.getComputedStyle(el, null).getPropertyValue('line-height')).replace('px', ''));
+            return lineHeight;
+            var lines = divHeight / lineHeight;
+        }
+    },
     data() {
         return {
             friends_count: null,
@@ -116,6 +126,7 @@ export default {
         level_details: Object,
     },
     mounted() {
+        console.log('this.para_bio_lines', this.para_bio_lines);
         this.$store.commit('Profile/setIsAnother', false)
         this.$store.commit('Profile/setProfile', this.profile)
         $('.btn_message').prop('hidden', true);

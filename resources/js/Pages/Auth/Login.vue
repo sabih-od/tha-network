@@ -43,11 +43,11 @@
                                     <div class="form-group">
                                         <label for="email">Username or Email Address</label>
                                         <input type="text" id="email" v-model="form.email" placeholder=""
-                                               class="form-control">
+                                               class="form-control" autofocus>
                                     </div>
                                     <div class="form-group">
                                         <label for="pass">Password</label>
-                                        <a href="forgot-password.php">Forget Password?</a>
+                                        <a href="forgot-password.php" tabindex="-1">Forget Password?</a>
                                         <input type="password" id="pass" v-model="form.password" placeholder=""
                                                class="form-control">
                                     </div>
