@@ -227,15 +227,17 @@ class RegisterController extends Controller
                 //check for inviter's network. create new if not created already
                 $network_check = Network::where('user_id', $inviter->id)->get();
                 if(count($network_check) == 0) {
-                    Network::create([
+                    $inviter_network = Network::create([
                         'user_id' => $inviter->id
                     ]);
+                } else {
+                    $inviter_network = Network::where('user_id', $inviter->id)->first();
                 }
 
                 //add to inviters network
                 NetworkMember::create([
                     'user_id' =>  $user->id,
-                    'network_id' => $inviter->network->id,
+                    'network_id' => $inviter_network->id,
                 ]);
 
                 //add inviter to user's network
