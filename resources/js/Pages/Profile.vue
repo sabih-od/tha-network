@@ -7,7 +7,12 @@
                     <div class="cardWrap">
                         <h2>About Me</h2>
 
-                        <p class="text-pre-wrap" id="para_bio"><strong>Bio: </strong>{{ bio }}</p>
+                        <p class="text-pre-wrap">
+                            <strong>Bio: </strong>
+                            <span id="span_bio_teaser" v-if="para_bio_lines > 4 && bio_see_more">{{ bio_teaser }}</span>
+                            <span id="span_bio" v-if="para_bio_lines < 4 || !bio_see_more">{{ bio }}</span>
+                            <span class="span_more" style="color: blue; cursor: pointer;" v-if="para_bio_lines > 4" @click.prevent="toggleBioSeeMore()">{{bio_see_more ? '...see more' : '[X]'}}</span>
+                        </p>
                         <p class="text-pre-wrap"><strong>Gender: </strong>{{ profile.gender }}</p>
                         <p class="text-pre-wrap"><strong>Marital Status: </strong>{{ profile.marital_status }}</p>
 
@@ -101,23 +106,19 @@ export default {
         PostsList,
         Link
     },
-    computed: {
-        para_bio_lines() {
-            var el = document.getElementById('para_bio');
-            var divHeight = el.offsetHeight
-            // var lineHeight = parseInt(el.style.lineHeight);
-            var lineHeight = parseInt((window.getComputedStyle(el, null).getPropertyValue('line-height')).replace('px', ''));
-            return lineHeight;
-            var lines = divHeight / lineHeight;
-        }
-    },
     data() {
         return {
             friends_count: null,
             network_count: null,
             bio: null,
+            bio_teaser: null,
             see_more: false,
+            bio_see_more: false,
+            para_bio_lines: 0
         }
+    },
+    computed: {
+
     },
     layout: ProfileLayout,
     props: {
@@ -126,7 +127,18 @@ export default {
         level_details: Object,
     },
     mounted() {
-        console.log('this.para_bio_lines', this.para_bio_lines);
+        //computing bio
+        let _t = this;
+        setTimeout(function () {
+            _t.para_bio_lines = ($('#span_bio').text().split(' ').length) / 6;
+            _t.bio_teaser = _t.bio.substring(0, 20);
+            _t.bio_see_more = (_t.para_bio_lines > 4);
+        }, 50);
+
+        //hide blocked users and people in my network areas
+        this.$emitter.emit('setPeopleInMyNetworkFlagOff', false);
+        this.$emitter.emit('setBlockedUsersFlagOff', false);
+
         this.$store.commit('Profile/setIsAnother', false)
         this.$store.commit('Profile/setProfile', this.profile)
         $('.btn_message').prop('hidden', true);
@@ -171,6 +183,9 @@ export default {
         },
         toggleSeeMore () {
             this.see_more = !this.see_more;
+        },
+        toggleBioSeeMore () {
+            this.bio_see_more = !this.bio_see_more;
         }
     }
 }

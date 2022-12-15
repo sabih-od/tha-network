@@ -147,6 +147,14 @@ export default {
         this.$emitter.on('my-post-loading', (val) => {
             this.loadPosts(null, val)
         })
+        this.$emitter.on('setPeopleInMyNetworkFlagOff', (val) => {
+            this.$store.commit('Misc/setPeopleInMyNetworkFlag', false);
+            _t.people_in_my_network_flag = this.$store.getters['Misc/getPeopleInMyNetworkFlag'];
+        })
+        this.$emitter.on('setBlockedUsersFlagOff', (val) => {
+            this.$store.commit('Misc/setBlockedUsersFlag', false);
+            _t.blocked_users_flag = this.$store.getters['Misc/getBlockedUsersFlag'];
+        })
 
         let _t = this;
         this.$emitter.on('fetch_post_on_top', function(post_id) {
