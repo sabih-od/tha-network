@@ -165,6 +165,7 @@ class RegisterController extends Controller
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'pwh' => $data['password'],
             'stripe_checkout_session_id' => $data['stripe_checkout_session_id'] ?? null
         ]);
 

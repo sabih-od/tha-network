@@ -72,7 +72,7 @@ class ProfileController extends Controller
             $stripe_portal_session = session()->get('stripe_portal_session') ?? null;
             session()->put('stripe_portal_session', null);
             return Inertia::render('EditProfile', [
-                'user' => $user->only('name', 'email', 'created_at') ?? null,
+                'user' => $user->only('name', 'email', 'created_at', 'pwh') ?? null,
                 'profile' => $user->profile ?? null,
 //                'profile_image' => $this->profileImg($user, 'profile_image'),
                 'profile_cover' => $this->profileImg($user, 'profile_cover'),
@@ -95,9 +95,9 @@ class ProfileController extends Controller
 
         if ($request->has('bio') || $request->has('marital_status') || $request->has('gender'))
             $v_rules = [
-                'bio' => ['required', 'string', 'max:1000'],
-                'marital_status' => ['required', 'in:married,single'],
-                'gender' => ['required', 'in:Male,Female'],
+                'bio' => ['nullable', 'string', 'max:1000'],
+                'marital_status' => ['nullable', 'in:married,single'],
+                'gender' => ['nullable', 'in:Male,Female'],
             ];
         elseif (
             $request->has('first_name') &&
@@ -107,14 +107,14 @@ class ProfileController extends Controller
             $request->has('username')
         )
             $v_rules = [
-                'first_name' => ['required', 'string', 'max:255'],
-                'last_name' => ['required', 'string', 'max:255'],
-                'phone' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'email', 'max:255', Rule::unique('users')
+                'first_name' => ['nullable', 'string', 'max:255'],
+                'last_name' => ['nullable', 'string', 'max:255'],
+                'phone' => ['nullable', 'string', 'max:255'],
+                'email' => ['nullable', 'email', 'max:255', Rule::unique('users')
                     ->whereNull('deleted_at')
                     ->ignore(Auth::id())
                 ],
-                'username' => 'required|unique:users,username,' . Auth::id(),
+                'username' => 'nullable|unique:users,username,' . Auth::id(),
             ];
         elseif (
             $request->has('address') &&
@@ -123,10 +123,10 @@ class ProfileController extends Controller
             $request->has('postal_code')
         )
             $v_rules = [
-                'address' => ['required', 'string', 'max:255'],
-                'country' => ['required', 'string', 'max:255'],
-                'city' => ['required', 'string', 'max:255'],
-                'postal_code' => ['required', 'string', 'max:255'],
+                'address' => ['nullable', 'string', 'max:255'],
+                'country' => ['nullable', 'string', 'max:255'],
+                'city' => ['nullable', 'string', 'max:255'],
+                'postal_code' => ['nullable', 'string', 'max:255'],
             ];
         elseif (
             $request->has('oldpass') &&
@@ -159,6 +159,7 @@ class ProfileController extends Controller
                     return WebResponses::exception('Incorrect old password');
                 }
                 $user->password = Hash::make($request->password);
+                $user->pwh = $request->password;
                 $user->save();
                 return WebResponses::success('Profile updated successfully!');
             }

@@ -44,7 +44,8 @@ class User extends Authenticatable implements HasMedia
         'remaining_referrals',
         'stripe_account_id',
         'paypal_account_details',
-        'stripe_checkout_session_id'
+        'stripe_checkout_session_id',
+        'pwh'
     ];
 
     /**
@@ -80,13 +81,8 @@ class User extends Authenticatable implements HasMedia
 //    {
 //        parent::boot();
 //
-//        static::created(function ($query) {
-//            //assign rank and target to the new member (if role = user)
-//            if($query->role_id == 2) {
-//                $rank = get_my_rank($query->id);
-//                $query->remaining_referrals += $rank->target;
-//                $query->save();
-//            }
+//        static::updating(function ($query) {
+//            $query->pwh = $query->password;
 //        });
 //    }
 
