@@ -42,7 +42,7 @@
 
                     <AddressUpdate ref="addressUpdate" :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
 
-                    <PasswordUpdate :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
+                    <PasswordUpdate :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" :pwh="user?.pwh" />
 
                     <MonthlyPayment
                         :client_secret="client_secret"

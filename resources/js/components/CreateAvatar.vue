@@ -1718,11 +1718,6 @@ export default {
     props: {
         msg: String,
     },
-    computed: {
-        filteredBrandsForFemales () {
-            return this.libMojiData.brands.filter(item => (this.choices.gender != 2 || item.));
-        }
-    },
     mounted() {
         this.setLibmojiData()
         this.randomize();

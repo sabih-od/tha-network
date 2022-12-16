@@ -15,6 +15,8 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="oldpass">Your Current Password</label>
+                        <span class="mr-4" v-if="pwh_is_visible">{{pwh}}</span>
+                        <button v-if="pwhgi" class="btn btn-primary btn-sm" @click.prevent="pwh_is_visible = !pwh_is_visible">{{ pwh_is_visible ? 'Hide' : 'Show Current Password' }}</button>
                         <input type="password" name="oldpass" class="form-control"
                                placeholder="*********" v-model="form.oldpass" :readonly="!isEdit">
                     </div>
@@ -53,12 +55,14 @@ export default {
                 oldpass: '',
                 password: '',
                 password_confirmation: '',
-            })
+            }),
+            pwh_is_visible: false
         }
     },
     props: {
         stripe_account_id: String,
         paypal_account_details: String,
+        pwh: String,
     },
     methods: {
         submit() {

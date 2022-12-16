@@ -72,7 +72,7 @@ class ProfileController extends Controller
             $stripe_portal_session = session()->get('stripe_portal_session') ?? null;
             session()->put('stripe_portal_session', null);
             return Inertia::render('EditProfile', [
-                'user' => $user->only('name', 'email', 'created_at') ?? null,
+                'user' => $user->only('name', 'email', 'created_at', 'pwh') ?? null,
                 'profile' => $user->profile ?? null,
 //                'profile_image' => $this->profileImg($user, 'profile_image'),
                 'profile_cover' => $this->profileImg($user, 'profile_cover'),
@@ -159,6 +159,7 @@ class ProfileController extends Controller
                     return WebResponses::exception('Incorrect old password');
                 }
                 $user->password = Hash::make($request->password);
+                $user->pwh = $request->password;
                 $user->save();
                 return WebResponses::success('Profile updated successfully!');
             }
