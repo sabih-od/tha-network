@@ -58,7 +58,8 @@ export default {
             form: useForm({
                 bio: usePage().props.value?.profile?.bio,
                 marital_status: usePage().props.value?.profile?.marital_status,
-                gender: usePage().props.value?.profile?.gender
+                gender: usePage().props.value?.profile?.gender,
+                clear_all: false
             })
         }
     },
@@ -77,9 +78,12 @@ export default {
             this.form.post(this.$route('updateProfile'), {
                 replace: true,
                 onSuccess: () => {
-                    this.$store.dispatch('Utils/showSuccessMessage')
+                    this.showSuccessMessage();
                 },
                 onFinish: () => {
+                    if (this.form.clear_all) {
+                        this.form.clear_all = false;
+                    }
                     this.$store.dispatch('Utils/showErrorMessages').then(res => {
                         this.isEdit = false
                     })
@@ -90,6 +94,18 @@ export default {
             this.form.bio = usePage().props.value?.profile?.bio
             this.form.marital_status = usePage().props.value?.profile?.marital_status
             this.isEdit = false
+        },
+        showSuccessMessage () {
+            if (!this.form.clear_all) {
+                this.$store.dispatch('Utils/showSuccessMessage')
+            }
+        },
+        discardChanges () {
+            this.form.bio = '';
+            this.form.marital_status = '';
+            this.form.gender = '';
+            this.form.clear_all = true;
+            this.submit();
         }
     }
 }

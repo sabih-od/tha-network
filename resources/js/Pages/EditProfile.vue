@@ -36,11 +36,11 @@
                     </div>
                     <br />
 
-                    <BioUpdate :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
+                    <BioUpdate ref="bioUpdate" :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
 
                     <InfoUpdate :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
 
-                    <AddressUpdate :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
+                    <AddressUpdate ref="addressUpdate" :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
 
                     <PasswordUpdate :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
 
@@ -56,7 +56,7 @@
 
                     <div class="btn-group gap1">
                         <button v-if="$store.getters['Misc/isNewlyRegistered']" type="submit" class="themeBtn" @click.prevent="showWeeklyGoalNotification()">Save</button>
-<!--                        <button class="themeBtn discard">Discard Changes</button>-->
+                        <button class="themeBtn discard" @click="discardChanges">Discard Changes</button>
                     </div>
 
                     <br />
@@ -145,6 +145,9 @@ export default {
             }
             return data
         },
+        filteredBrandsForFemales () {
+
+        }
     },
     data() {
         return {
@@ -328,6 +331,11 @@ export default {
         propmtForAvatarCreation() {
             // $('.btn_edit_avatar').click();
             this.$emitter.emit('prompt_for_avatar_creation');
+        },
+        discardChanges () {
+            this.$refs.bioUpdate.discardChanges();
+            this.$refs.addressUpdate.discardChanges();
+            (useToast()).success('You Have Discarded Your Changes.');
         }
     }
 }
