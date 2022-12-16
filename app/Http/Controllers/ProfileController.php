@@ -141,6 +141,7 @@ class ProfileController extends Controller
             return WebResponses::exception('Invalid request!');
 
         $data = $request->validate($v_rules);
+//        dd($data);
 
         try {
             $user = Auth::user();
@@ -164,6 +165,7 @@ class ProfileController extends Controller
                 return WebResponses::success('Profile updated successfully!');
             }
 
+//            dd(collect($data)->except(['email', 'username'])->all());
             $user->profile()->update(
                 collect($data)->except(['email', 'username'])->all()
             );

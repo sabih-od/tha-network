@@ -59,8 +59,18 @@ export default {
                 bio: usePage().props.value?.profile?.bio,
                 marital_status: usePage().props.value?.profile?.marital_status,
                 gender: usePage().props.value?.profile?.gender,
-                clear_all: false
-            })
+            }),
+            discardForm1: useForm({
+                bio: '',
+                marital_status: '',
+                gender: '',
+            }),
+            discardForm2: useForm({
+                address: '',
+                country: '',
+                city: '',
+                postal_code: '',
+            }),
         }
     },
     props: {
@@ -96,16 +106,30 @@ export default {
             this.isEdit = false
         },
         showSuccessMessage () {
-            if (!this.form.clear_all) {
-                this.$store.dispatch('Utils/showSuccessMessage')
-            }
+            this.$store.dispatch('Utils/showSuccessMessage')
         },
         discardChanges () {
             this.form.bio = '';
             this.form.marital_status = '';
             this.form.gender = '';
-            this.form.clear_all = true;
-            this.submit();
+
+            this.discardForm1.post(this.$route('updateProfile'), {
+                replace: true,
+                onSuccess: () => {
+                    this.discardForm2.post(this.$route('updateProfile'), {
+                        replace: true,
+                        onSuccess: () => {
+                            this.showSuccessMessage();
+                        },
+                        onFinish: () => {
+
+                        }
+                    })
+                },
+                onFinish: () => {
+
+                }
+            })
         }
     }
 }
