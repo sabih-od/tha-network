@@ -114,7 +114,7 @@ export default {
             }
         },
         block_filtered_posts: function () {
-            return this.posts.filter(i => (!i.is_blocked_by_user && !i.has_blocked));
+            return this.posts.filter(i => (!i.new_block_property));
         }
     },
     data() {
