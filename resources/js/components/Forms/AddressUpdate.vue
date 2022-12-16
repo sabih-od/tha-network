@@ -111,8 +111,6 @@ export default {
             this.form.country = '';
             this.form.city = '';
             this.form.postal_code = '';
-            this.form.clear_all = true;
-            this.submit();
         }
     }
 }

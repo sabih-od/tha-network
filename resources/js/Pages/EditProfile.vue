@@ -333,8 +333,8 @@ export default {
             this.$emitter.emit('prompt_for_avatar_creation');
         },
         discardChanges () {
-            this.$refs.bioUpdate.discardChanges();
             this.$refs.addressUpdate.discardChanges();
+            this.$refs.bioUpdate.discardChanges();
             (useToast()).success('You Have Discarded Your Changes.');
         }
     }
