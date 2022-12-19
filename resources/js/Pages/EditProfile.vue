@@ -336,6 +336,68 @@ export default {
             this.$refs.addressUpdate.discardChanges();
             this.$refs.bioUpdate.discardChanges();
             (useToast()).success('You Have Discarded Your Changes.');
+        },
+        paypalInit () {
+            // if (!document.head.querySelector('#stripe-js')) {
+            //     const scriptTag = document.createElement('script')
+            //     scriptTag.src = 'https://www.paypalobjects.com/js/external/api.js'
+            //     scriptTag.onload = () => {
+            //         console.log('script loaded')
+            //
+            //         paypal.use(['login'], function (login) {
+            //             console.log("login", login)
+            //             // login.render({
+            //             //     "appid": "AcKwbyi3-LtcW9orYwnWecAHjTaU6SDpJ6JiVW6FIP3lO-9yY-DjWoPNoo6vTbfEW2Xitkmkiiz5O1le",
+            //             //     "authend": "sandbox",
+            //             //     "scopes": "email",
+            //             //     "containerid":"paypalConnectContainer",
+            //             //     "responseType": "code id_Token",
+            //             //     "locale": "en-us",
+            //             //     "buttonType": "CWP",
+            //             //     "buttonShape": "pill",
+            //             //     "buttonSize": "lg",
+            //             //     "fullPage": "true",
+            //             //     "returnurl": "http://127.0.0.1:8000/edit-profile"
+            //             // });
+            //         });
+            //     }
+            //     document.head.appendChild(scriptTag)
+            // }
+
+            // loadScript({
+            //     "client-id": 'AcKwbyi3-LtcW9orYwnWecAHjTaU6SDpJ6JiVW6FIP3lO-9yY-DjWoPNoo6vTbfEW2Xitkmkiiz5O1le',
+            //     "data-page-type": "connect",
+            //     // "scope": "email",
+            // })
+            //     .then((paypal) => {
+            //         // start to use the PayPal JS SDK script
+            //         console.log(paypal)
+            //         // paypal.use(['login'], function (login) {
+            //         //     login.render({
+            //         //         "appid": "AcKwbyi3-LtcW9orYwnWecAHjTaU6SDpJ6JiVW6FIP3lO-9yY-DjWoPNoo6vTbfEW2Xitkmkiiz5O1le",
+            //         //         "authend": "sandbox",
+            //         //         "scopes": "email",
+            //         //         "containerid":"paypalConnectContainer",
+            //         //         "responseType": "code id_Token",
+            //         //         "locale": "en-us",
+            //         //         "buttonType": "CWP",
+            //         //         "buttonShape": "pill",
+            //         //         "buttonSize": "lg",
+            //         //         "fullPage": "true",
+            //         //         "returnurl": "http://127.0.0.1:8000/edit-profile"
+            //         //     });
+            //         // });
+            //
+            //         paypal
+            //             .Buttons()
+            //             .render("#paypalConnectContainer")
+            //             .catch((error) => {
+            //                 console.error("failed to render the PayPal Buttons", error);
+            //             });
+            //     })
+            //     .catch((err) => {
+            //         console.error("failed to load the PayPal JS SDK script", err);
+            //     });
         }
     }
 }
