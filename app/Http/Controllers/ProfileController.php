@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
+use Stripe\StripeClient;
 
 class ProfileController extends Controller
 {
@@ -69,6 +70,14 @@ class ProfileController extends Controller
             $has_made_monthly_payment = has_made_monthly_payment();
             session()->remove('monthly_payment_flash');
 
+            //check if user has linked any accounts to their stripe payout screen
+            $stripe = new StripeClient("sk_test_lUp78O7PgN08WC9UgNRhOCnr");
+            $has_provided_stripe_payout_information = false;
+            if ($user->stripe_account_id) {
+                $account = $stripe->accounts->retrieve($user->stripe_account_id);
+                $has_provided_stripe_payout_information = (bool)($account->external_accounts->total_count > 0);
+            }
+
             $stripe_portal_session = session()->get('stripe_portal_session') ?? null;
             session()->put('stripe_portal_session', null);
             return Inertia::render('EditProfile', [
@@ -83,6 +92,7 @@ class ProfileController extends Controller
                 'paypal_account_details' => $user->paypal_account_details,
                 'stripe_checkout_session_id' => $user->stripe_checkout_session_id,
                 'stripe_portal_session' => $stripe_portal_session,
+                'has_provided_stripe_payout_information' => $has_provided_stripe_payout_information,
             ]);
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());
