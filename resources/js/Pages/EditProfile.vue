@@ -16,11 +16,11 @@
                             <h4>Stripe</h4>
 
                             <!--badge-->
-                            <span :class="'badge badge-pill badge-' + (this.stripe_account_id ? 'success' : 'danger')">{{ this.stripe_account_id ? 'Connected' : 'Not Connected' }}</span>
+                            <span :class="'badge badge-pill badge-' + ((this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'success' : 'danger')">{{ (this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'Connected' : 'Not Connected' }}</span>
                             <br />
 
                             <!--button-->
-                            <button type="button" class="btn btn-success btn-sm" @click.prevent="connectStripeAccount()">{{ this.stripe_account_id ? 'Reconnect' : 'Connect' }}</button>
+                            <button type="button" class="btn btn-success btn-sm" @click.prevent="connectStripeAccount()">{{ (this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'Reconnect' : 'Connect' }}</button>
                         </div>
                         <div class="col-md-6">
                             <h4>Paypal</h4>
@@ -128,7 +128,8 @@ export default {
         stripe_account_id: String,
         paypal_account_details: String,
         stripe_checkout_session_id: String,
-        stripe_portal_session: Object
+        stripe_portal_session: Object,
+        has_provided_stripe_payout_information: Boolean,
     },
     computed: {
         userProfile() {
