@@ -27,7 +27,7 @@
                         </a>
                         <div class="btn-group">
                             <!--                            <a href="#" class="themeBtn">Message</a>-->
-                            <button v-if="!edit_profile_active && paypal_account_details && has_provided_stripe_payout_information" class="themeBtn btn_invite"
+                            <button v-if="!edit_profile_active && (paypal_account_details || has_provided_stripe_payout_information)" class="themeBtn btn_invite"
                                     :title="$route('joinByInvite', this.user.username)"
                                     @click.prevent="copy_my_referral_link">Share your profile
                             </button>
@@ -37,7 +37,7 @@
                                     :href="$route('editProfileForm')">Share your profile
                             </Link>
 
-                            <button v-if="!edit_profile_active && paypal_account_details && has_provided_stripe_payout_information" class="themeBtn btn_invite"
+                            <button v-if="!edit_profile_active && (paypal_account_details || has_provided_stripe_payout_information)" class="themeBtn btn_invite"
                                     @click.prevent="inviteModal()">Make a Referral
                             </button>
                             <Link v-else class="themeBtn btn_invite"

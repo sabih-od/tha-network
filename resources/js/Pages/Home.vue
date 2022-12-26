@@ -153,10 +153,6 @@ export default {
             }
         });
 
-        this.$emitter.on('request_for_copying_link', function () {
-            _t.$emitter.emit('response_for_copying_link', (_t.paypal_account_details && _t.has_provided_stripe_payout_information));
-        });
-
         _t.$emitter.emit('change_my_posts_button_text', 'View All Posts');
 
         _t.$emitter.emit('populate_share_and_referral_permission_data', {
