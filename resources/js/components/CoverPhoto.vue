@@ -42,7 +42,7 @@
                             </button>
                             <Link v-else class="themeBtn btn_invite"
                                   @click.prevent="inviteModalDummy()"
-                                  :href="$route('editProfileForm')">Share your profile
+                                  :href="$route('editProfileForm')">Make a Referral
                             </Link>
                             <!--                            <a v-if="!edit_profile_active" href="#" @click="$emitter.emit('chat-with-profile')" class="themeBtn btn_message">Message</a>-->
                             <Link v-if="!edit_profile_active" :href="$route('chatIndex')" class="themeBtn btn_message"
