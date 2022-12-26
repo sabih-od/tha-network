@@ -13,7 +13,10 @@
                     <h6>In order to receive Referral Payments you must include your Paypal or Stripe Account information.  If you do not have a Stripe or Paypal Account create one and provide the information below.If this information is not provided, you will not be able to receive your referral payments.</h6>
                     <div class="row">
                         <div class="col-md-6">
-                            <h4>Stripe</h4>
+                            <h4>
+                                Stripe
+                                <input type="checkbox" name="" id="" :checked="preferred_payout_form.preferred_payout_method === 'stripe'" @click="submitPreferredPayoutForm('stripe')">
+                            </h4>
 
                             <!--badge-->
                             <span :class="'badge badge-pill badge-' + ((this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'success' : 'danger')">{{ (this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'Connected' : 'Not Connected' }}</span>
@@ -23,7 +26,10 @@
                             <button type="button" class="btn btn-success btn-sm" @click.prevent="connectStripeAccount()">{{ (this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'Reconnect' : 'Connect' }}</button>
                         </div>
                         <div class="col-md-6">
-                            <h4>Paypal</h4>
+                            <h4>
+                                Paypal
+                                <input type="checkbox" name="" id="" :checked="preferred_payout_form.preferred_payout_method === 'paypal'" @click="submitPreferredPayoutForm('paypal')">
+                            </h4>
 
                             <!--badge-->
                             <span :class="'badge badge-pill badge-' + (this.paypal_account_details ? 'success' : 'danger')">{{ this.paypal_account_details ? 'Connected' : 'Not Connected' }}</span>
@@ -130,6 +136,7 @@ export default {
         stripe_checkout_session_id: String,
         stripe_portal_session: Object,
         has_provided_stripe_payout_information: Boolean,
+        preferred_payout_method: String
     },
     computed: {
         userProfile() {
@@ -166,6 +173,9 @@ export default {
             }),
             paypalForm: useForm({
                 paypal_account_details: this.paypal_account_details
+            }),
+            preferred_payout_form: useForm({
+                preferred_payout_method: this.preferred_payout_method
             }),
             genders: [
                 'Male',
@@ -399,6 +409,20 @@ export default {
             //     .catch((err) => {
             //         console.error("failed to load the PayPal JS SDK script", err);
             //     });
+        },
+        submitPreferredPayoutForm (val) {
+            this.preferred_payout_form.preferred_payout_method = val;
+            this.preferred_payout_form.post(this.$route('updateProfile'), {
+                replace: true,
+                onSuccess: () => {
+                    this.showSuccessMessage();
+                },
+                onFinish: () => {
+                    this.$store.dispatch('Utils/showErrorMessages').then(res => {
+                        this.isEdit = false
+                    })
+                }
+            })
         }
     }
 }
