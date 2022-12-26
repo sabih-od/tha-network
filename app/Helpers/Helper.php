@@ -60,7 +60,14 @@ function get_eloquent_users($id = null) {
 function get_my_rank($id = null) {
     $user = get_eloquent_user($id);
 
-    return Goal::where('target', '>', $user->completed_referrals->count())->orderBy('target', 'ASC')->first();
+    $goal = Goal::where('target', '>', $user->completed_referrals->count())->orderBy('target', 'ASC')->first();
+
+    //remove if buggy
+    if (!$goal) {
+        $goal = Goal::query()->orderBy('target','DESC')->first();
+    }////
+
+    return $goal;
 }
 
 function get_my_level($id = null) {
