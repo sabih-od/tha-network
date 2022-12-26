@@ -29,6 +29,13 @@ class ProfileController extends Controller
     {
         try {
             $user = Auth::user();
+            //check if user has linked any accounts to their stripe payout screen
+            $stripe = new StripeClient("sk_test_lUp78O7PgN08WC9UgNRhOCnr");
+            $has_provided_stripe_payout_information = false;
+            if ($user->stripe_account_id) {
+                $account = $stripe->accounts->retrieve($user->stripe_account_id);
+                $has_provided_stripe_payout_information = (bool)($account->external_accounts->total_count > 0);
+            }
             return Inertia::render('Profile', [
                 'user' => $user->only('id', 'username', 'email', 'created_at') ?? null,
                 'profile' => $user->profile ?? null,
@@ -45,7 +52,9 @@ class ProfileController extends Controller
                 'profile_cover' => $this->profileImg($user, 'profile_cover'),
                 'friends_count' => count($user->followers),
                 'network_count' => $user->network()->exists() ? count($user->network->members) : 0,
-                'level_details' => get_my_level($user->id)
+                'level_details' => get_my_level($user->id),
+                'paypal_account_details' => $user->paypal_account_details,
+                'has_provided_stripe_payout_information' => $has_provided_stripe_payout_information,
             ]);
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());

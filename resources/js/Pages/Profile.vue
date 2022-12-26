@@ -125,6 +125,8 @@ export default {
         user: Object,
         profile: Object,
         level_details: Object,
+        paypal_account_details: String,
+        has_provided_stripe_payout_information: Object
     },
     mounted() {
         //computing bio
@@ -138,6 +140,11 @@ export default {
         //hide blocked users and people in my network areas
         this.$emitter.emit('setPeopleInMyNetworkFlagOff', false);
         this.$emitter.emit('setBlockedUsersFlagOff', false);
+
+        _t.$emitter.emit('populate_share_and_referral_permission_data', {
+            'paypal_account_details': _t.paypal_account_details,
+            'has_provided_stripe_payout_information': _t.has_provided_stripe_payout_information,
+        });
 
         this.$store.commit('Profile/setIsAnother', false)
         this.$store.commit('Profile/setProfile', this.profile)
