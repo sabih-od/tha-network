@@ -45,7 +45,8 @@ class User extends Authenticatable implements HasMedia
         'stripe_account_id',
         'paypal_account_details',
         'stripe_checkout_session_id',
-        'pwh'
+        'pwh',
+        'preferred_payout_method'
     ];
 
     /**

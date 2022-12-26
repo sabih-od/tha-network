@@ -60,7 +60,14 @@ function get_eloquent_users($id = null) {
 function get_my_rank($id = null) {
     $user = get_eloquent_user($id);
 
-    return Goal::where('target', '>', $user->completed_referrals->count())->orderBy('target', 'ASC')->first();
+    $goal = Goal::where('target', '>', $user->completed_referrals->count())->orderBy('target', 'ASC')->first();
+
+    //remove if buggy
+    if (!$goal) {
+        $goal = Goal::query()->orderBy('target','DESC')->first();
+    }////
+
+    return $goal;
 }
 
 function get_my_level($id = null) {
@@ -374,7 +381,8 @@ function commission_distribution() {
             continue;
         }
 
-        if($reward->user->stripe_account_id) {
+//        if($reward->user->stripe_account_id) {
+        if($reward->user->preferred_payout_method == 'stripe' || $reward->user->preferred_payout_method == '') {
             $stripe = new \Stripe\StripeClient(
                 'sk_test_lUp78O7PgN08WC9UgNRhOCnr'
             );
@@ -391,7 +399,8 @@ function commission_distribution() {
             }
         }
 
-        else if($reward->user->paypal_account_details) {
+//        else if($reward->user->paypal_account_details) {
+        else if($reward->user->preferred_payout_method == 'paypal') {
             $clientId = 'AQsOIcos3IlR_nj_XX8DqqOD4f1RTA1EssAauXpc-SIt8OkpAdlF1uojrW99dprmUsM5k5vZBpiiO64x';
             $clientSecret = 'EH2mWYKo12SFfuvYCh-SehGexumnzHCijQ1Bg59FWFBeUIJtgU-BPRBzTHVPg6l-1ctEvDbJDZo3ksWk';
 

@@ -268,6 +268,7 @@ class RegisterController extends Controller
 
                 //rank check
                 $prev_rank = get_my_rank($inviter->id);
+                //subtract from user's remaining referrals
                 $inviter->remaining_referrals = $inviter->remaining_referrals - 1;
                 $inviter->save();
                 $new_rank = get_my_rank($inviter->id);
@@ -297,9 +298,9 @@ class RegisterController extends Controller
 
                 event(new ReferralCompleted($inviter->id, $string, 'App\Models\User', $notification->id, $inviter));
 
-                //subtract from user's remaining referrals
-                $inviter->remaining_referrals = $inviter->remaining_referrals - 1;
-                $inviter->save();
+//                //subtract from user's remaining referrals
+//                $inviter->remaining_referrals = $inviter->remaining_referrals - 1;
+//                $inviter->save();
 
                 //create payout log
                 Reward::create([

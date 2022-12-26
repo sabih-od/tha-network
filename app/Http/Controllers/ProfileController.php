@@ -93,6 +93,7 @@ class ProfileController extends Controller
                 'stripe_checkout_session_id' => $user->stripe_checkout_session_id,
                 'stripe_portal_session' => $stripe_portal_session,
                 'has_provided_stripe_payout_information' => $has_provided_stripe_payout_information,
+                'preferred_payout_method' => $user->preferred_payout_method,
             ]);
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());
@@ -101,6 +102,7 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
+//        dd($request->all());
         $v_rules = [];
 
         if ($request->has('bio') || $request->has('marital_status') || $request->has('gender'))
@@ -146,6 +148,12 @@ class ProfileController extends Controller
             $v_rules = [
                 'password' => ['required', 'string', 'confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],
             ];
+        elseif (
+            $request->has('preferred_payout_method')
+        )
+            $v_rules = [
+                'preferred_payout_method' => ['required'],
+            ];
 
         if (empty($v_rules))
             return WebResponses::exception('Invalid request!');
@@ -163,6 +171,10 @@ class ProfileController extends Controller
                 $user->username = $data['username'];
                 $user->save();
             }
+            if (collect($data)->has('preferred_payout_method')) {
+                $user->preferred_payout_method = $data['preferred_payout_method'];
+                $user->save();
+            }
 
             //change password
             if (collect($data)->has('password')) {
@@ -177,7 +189,7 @@ class ProfileController extends Controller
 
 //            dd(collect($data)->except(['email', 'username'])->all());
             $user->profile()->update(
-                collect($data)->except(['email', 'username'])->all()
+                collect($data)->except(['email', 'username', 'preferred_payout_method'])->all()
             );
             return WebResponses::success('Profile updated successfully!');
         } catch (\Exception $e) {
