@@ -73,6 +73,10 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
     //setting
     Route::match(['get', 'post'], '/settings', 'SettingController@index')->name('settings');
 
+    //payouts
+    Route::match(['get', 'post'], '/payouts', 'SettingController@payouts')->name('payouts');
+    Route::get( '/connect-stripe-account', [\App\Http\Controllers\Admin\StripeController::class, 'connectAccount'])->name('admin.connectStripePayoutAccount');
+
     //goal
     Route::match(['get', 'post'], '/goals', 'GoalController@index')->name('admin.goals');
 

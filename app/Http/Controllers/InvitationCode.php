@@ -273,8 +273,7 @@ class InvitationCode extends Controller
                             <tr>
                                 <td colspan="3" style="width: 50%">
                                     <p style="color: #333; margin: 0 0 30px; line-height: 31px; font-size: 18px; text-align: center">
-                                        Welcome to ThaNetwork.org, <strong style="color: red;">'.$name.'</strong> invited you to join their network. To learn more about your Invitation click the link below or visit
-                                        <a href="https://thanetwork.org/login/" target="_blank">www.thanetwork.org</a> and login using the Invitation link below.
+                                        Welcome to ThaNetwork.org, <strong style="color: red;">'.$name.'</strong> invited you to join their network. To learn more about your Invitation click the link below.
                                     </p>
                                 </td>
                             </tr>

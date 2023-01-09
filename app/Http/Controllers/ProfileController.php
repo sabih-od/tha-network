@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\NetworkMemberClosure;
+use App\Events\ReferralReverted;
 use App\Helpers\WebResponses;
 use App\Models\FriendRequest;
 use App\Models\Network;
@@ -400,6 +401,20 @@ class ProfileController extends Controller
 
                 event(new NetworkMemberClosure($target->id, $string, 'App\Models\User', $notification->id, $target));
             }
+
+            //send referral reversion notification to inviter
+            $inviter_id = get_inviter_id($user->id);
+            $string = "Your ".$user->profile->first_name . ' ' . $user->profile->last_name." referral is no longer a member of the network you you won’t be receiving its referral payment";
+            $target = User::with('profile')->find($inviter_id);
+            $notification = Notification::create([
+                'user_id' => $target->id,
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $target->id,
+                'body' => $string,
+                'sender_id' => $target->id,
+                'sender_pic' => $user->get_profile_picture(),
+            ]);
+            event(new ReferralReverted($target->id, $string, 'App\Models\User', $notification->id, $target));
 
             Auth::logout();
 

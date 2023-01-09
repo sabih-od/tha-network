@@ -155,6 +155,9 @@ export default {
         //When you have been promoted to the next grade
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('RankPromoted', this.addNotification);
+        //When you have been promoted to the next grade
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('ReferralReverted', this.addNotification);
 
         this.fetchNotificationData();
 
@@ -213,15 +216,6 @@ export default {
                         ...(res.props?.unread_notifications ?? [])
                     ];
                     let map = new Map();
-                    // this.notifications.forEach((item, i) => {
-                    //     const value = item.sender_id;
-                    //     if (map.has(value)) {
-                    //         map.get(value).push(i);
-                    //     } else {
-                    //         map.set(value, [i])
-                    //     }
-                    // });
-                    // this.notifications = this.notifications.filter((item, i) => map.get(item.sender_id).length === 1);
 
                     this.read_notifications = [
                         ...this.read_notifications,
@@ -230,18 +224,9 @@ export default {
 
                     this.$emitter.emit('unread_notifications_updated', this.notifications);
                     this.$emitter.emit('read_notifications_updated', this.read_notifications);
-                    // this.next_page_url = res.props?.channels?.next_page_url ?? null
-                    // if (isLoadMore)
-                    //     this.channels = [
-                    //         ...this.channels,
-                    //         ...(res.props?.channels?.data ?? [])
-                    //     ]
-                    // else
-                    //     this.channels = res.props?.channels?.data ?? []
                 },
                 onFinish: () => {
-                    // this.loading = false
-                    // window.history.replaceState({}, '', this.$store.getters['Utils/baseUrl'])
+
                 },
             })
         },
@@ -290,7 +275,6 @@ export default {
     min-width: 10px;
     min-height: 10px;
 }
-
 
 .dropdown-menu {
     right: 0 !important;
