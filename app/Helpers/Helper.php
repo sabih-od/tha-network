@@ -3,6 +3,7 @@
 use App\Events\NetworkMemberClosure;
 use App\Events\NoReferralsForTheDay;
 use App\Events\PaymentNotMade;
+use App\Events\ReferralReverted;
 use App\Events\SetWeeklyGoal;
 use App\Events\UnableToMeetWeeklyGoal;
 use App\Events\WeeklyRankingNotification;
@@ -369,6 +370,21 @@ function close_accounts() {
                 event(new NetworkMemberClosure($target->id, $string, 'App\Models\User', $notification->id, $target));
             }
 
+
+
+            //send referral reversion notification to inviter
+            $inviter_id = get_inviter_id($user->id);
+            $string = "Your ".$user->profile->first_name . ' ' . $user->profile->last_name." referral is no longer a member of the network you you won’t be receiving its referral payment";
+            $target = User::with('profile')->find($inviter_id);
+            $notification = Notification::create([
+                'user_id' => $target->id,
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $target->id,
+                'body' => $string,
+                'sender_id' => $target->id,
+                'sender_pic' => $user->get_profile_picture(),
+            ]);
+            event(new ReferralReverted($target->id, $string, 'App\Models\User', $notification->id, $target));
         }
     }
 }
@@ -467,4 +483,11 @@ function create_chat_channel($user_id, $target_id) {
         $channel->users()->attach([$auth->id, $user->id]);
         $channel->save();
     }
+}
+
+function get_inviter_id($user_id = null) {
+    $network_member = NetworkMember::where('user_id', $user_id ?? Auth::id())->orderBy('created_at', 'ASC')->first();
+    $inviters_network_id = $network_member->network_id ?? null;
+    $network = Network::find($inviters_network_id) ?? null;
+    return $network->user_id ?? null;
 }
