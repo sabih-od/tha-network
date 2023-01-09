@@ -15,7 +15,7 @@
                         <div class="col-md-6">
                             <h4>
                                 Stripe
-                                <input type="checkbox" name="" id="" :checked="preferred_payout_form.preferred_payout_method === 'stripe'" @click="submitPreferredPayoutForm('stripe')">
+                                <input type="checkbox" name="" id="" :checked="preferred_payout_form.preferred_payout_method === 'stripe'" @click="submitPreferredPayoutForm('stripe')" style="transform: scale(1.5);">
                             </h4>
 
                             <!--badge-->
@@ -23,12 +23,15 @@
                             <br />
 
                             <!--button-->
-                            <button type="button" class="btn btn-success btn-sm" @click.prevent="connectStripeAccount()">{{ (this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'Reconnect' : 'Connect' }}</button>
+                            <button type="button" class="btn btn-success btn-sm" :disabled="preferred_payout_form.preferred_payout_method === 'paypal'" @click.prevent="connectStripeAccount()">{{ (this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'Reconnect' : 'Connect' }}</button>
+                            <br />
+
+                            <span v-if="this.stripe_account_id && this.has_provided_stripe_payout_information">You have successfully connected your Stripe account.</span>
                         </div>
                         <div class="col-md-6">
                             <h4>
                                 Paypal
-                                <input type="checkbox" name="" id="" :checked="preferred_payout_form.preferred_payout_method === 'paypal'" @click="submitPreferredPayoutForm('paypal')">
+                                <input type="checkbox" name="" id="" :checked="preferred_payout_form.preferred_payout_method === 'paypal'" @click="submitPreferredPayoutForm('paypal')" style="transform: scale(1.5);">
                             </h4>
 
                             <!--badge-->
@@ -37,8 +40,19 @@
                             <br />
 
                             <!--button-->
-                            <button type="button" class="btn btn-success btn-sm" @click.prevent="connectPaypalAccount()">Connect</button>
+                            <button type="button" class="btn btn-success btn-sm" :disabled="preferred_payout_form.preferred_payout_method === 'stripe'" @click.prevent="connectPaypalAccount()">Connect</button>
+                            <br />
+
+                            <span v-if="this.paypal_account_details">You have successfully connected your Paypal account.</span>
                         </div>
+                        <br />
+
+                        <span class="ml-3">
+                            <strong>
+                                <i class="fas fa-info" style="color: blue;"></i>
+                                If you would like to change the payment account please select the check box above.
+                            </strong>
+                        </span>
                     </div>
                     <br />
 
