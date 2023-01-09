@@ -99,4 +99,28 @@ class SettingController extends Controller
 
     }
 
+    public function payouts(Request $request)
+    {
+        try {
+
+            if ($request->method() == 'POST') {
+
+                $content = Settings::find(1);
+
+                $content->site_title = $request->site_title;
+
+                if ($content->save()) {
+                    return redirect('/admin/payouts')->with('success', 'Settings Update Successfully');
+                }
+            } else {
+                $content = Settings::findOrfail(1);
+
+                return view('admin.settings.payouts', compact('content'/*,'shippingRates'*/));
+            }
+        } catch (\Exception $ex) {
+            return redirect('admin/dashboard')->with('error', $ex->getMessage());
+
+        }
+    }
+
 }
