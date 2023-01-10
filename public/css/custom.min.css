@@ -2429,6 +2429,7 @@ footer .links li a:hover {
     /* padding: 40px 50px; */
     height: calc(100vh - 120px);
     display: flex;
+    margin-top: 10px;
 }
 
 .emojionearea.demo6.emojionearea-inline {
@@ -2510,8 +2511,8 @@ img.rounded-circle {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1rem;\
-    background: transparent;
+    gap: 1rem;
+    \ background: transparent;
     backdrop-filter: blur(5px);
     mix-blend-mode: difference;
 }
@@ -2753,4 +2754,10 @@ img.rounded-circle {
 .notiCont figure img {
     border-radius: 100%;
     background: #fff;
+}
+
+.group-chatting .chatBanner {
+    height: 400px;
+    width: 100%;
+    object-fit: cover;
 }

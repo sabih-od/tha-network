@@ -247,13 +247,13 @@ export default {
 }
 
 .backBtn{
-    display: inline-block;
+    display: block;
     width: auto;
     text-align: center;
     padding: 0.5rem;
     background-color: var(--primary);
     color: #fff;
     margin-left: 1rem;
-    border-radius: 30px;
+    border-radius: 0;
 }
 </style>
