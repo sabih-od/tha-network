@@ -63,6 +63,7 @@ export default {
                 country: usePage().props.value?.profile?.country,
                 city: usePage().props.value?.profile?.city,
                 postal_code: usePage().props.value?.profile?.postal_code,
+                clear_all: false
             })
         }
     },
@@ -81,9 +82,12 @@ export default {
             this.form.post(this.$route('updateProfile'), {
                 replace: true,
                 onSuccess: () => {
-                    this.$store.dispatch('Utils/showSuccessMessage')
+                    this.showSuccessMessage();
                 },
                 onFinish: () => {
+                    if (this.form.clear_all) {
+                        this.form.clear_all = false;
+                    }
                     this.$store.dispatch('Utils/showErrorMessages').then(res => {
                         this.isEdit = false
                     })
@@ -96,6 +100,17 @@ export default {
             this.form.city = usePage().props.value?.profile?.city
             this.form.postal_code = usePage().props.value?.profile?.postal_code
             this.isEdit = false
+        },
+        showSuccessMessage () {
+            if (!this.form.clear_all) {
+                this.$store.dispatch('Utils/showSuccessMessage')
+            }
+        },
+        discardChanges () {
+            this.form.address = '';
+            this.form.country = '';
+            this.form.city = '';
+            this.form.postal_code = '';
         }
     }
 }

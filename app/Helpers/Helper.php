@@ -3,6 +3,7 @@
 use App\Events\NetworkMemberClosure;
 use App\Events\NoReferralsForTheDay;
 use App\Events\PaymentNotMade;
+use App\Events\ReferralReverted;
 use App\Events\SetWeeklyGoal;
 use App\Events\UnableToMeetWeeklyGoal;
 use App\Events\WeeklyRankingNotification;
@@ -22,8 +23,9 @@ use PaypalPayoutsSDK\Core\PayPalHttpClient;
 use PaypalPayoutsSDK\Core\SandboxEnvironment;
 use PaypalPayoutsSDK\Payouts\PayoutsPostRequest;
 
-function last_active($user_id) {
-    $user = \App\Models\User::find($user_id);
+function last_active($user_id): string
+{
+    $user = User::find($user_id);
     $last_activity = Carbon::parse($user->last_activity);
 
     if(is_null($last_activity)) {
@@ -60,10 +62,18 @@ function get_eloquent_users($id = null) {
 function get_my_rank($id = null) {
     $user = get_eloquent_user($id);
 
-    return Goal::where('target', '>', $user->completed_referrals->count())->orderBy('target', 'ASC')->first();
+    $goal = Goal::where('target', '>', $user->completed_referrals->count())->orderBy('target', 'ASC')->first();
+
+    //remove if buggy
+    if (!$goal) {
+        $goal = Goal::query()->orderBy('target','DESC')->first();
+    }////
+
+    return $goal;
 }
 
-function get_my_level($id = null) {
+function get_my_level($id = null): array
+{
     $goal = get_my_rank($id);
 
     switch ($goal->name) {
@@ -111,7 +121,8 @@ function monthly_add_goals() {
     }
 }
 
-function get_weekly_goals($id = null) {
+function get_weekly_goals($id = null): array
+{
     $rank = get_my_rank($id);
     $user = get_eloquent_user($id);
     $today = Carbon::now();
@@ -147,7 +158,8 @@ function get_weekly_goals($id = null) {
     ];
 }
 
-function last_weeks_rankings() {
+function last_weeks_rankings(): string
+{
     $start_of_last_week = (Carbon::now())->subWeek()->startofWeek()->format('Y-m-d H:i');
     $end_of_last_week = (Carbon::now())->subWeek()->endofWeek()->format('Y-m-d H:i');
 
@@ -255,7 +267,8 @@ function set_weekly_goal() {
     }
 }
 
-function addOrdinalNumberSuffix($num) {
+function addOrdinalNumberSuffix($num): string
+{
     if (!in_array(($num % 100),array(11,12,13))){
         switch ($num % 10) {
             // Handle 1st, 2nd, 3rd
@@ -267,7 +280,8 @@ function addOrdinalNumberSuffix($num) {
     return $num.'th';
 }
 
-function has_made_monthly_payment($id = null) {
+function has_made_monthly_payment($id = null): bool
+{
     $user = get_eloquent_user($id);
 
     if($user->stripe_checkout_session_id == null) {
@@ -285,16 +299,8 @@ function has_made_monthly_payment($id = null) {
     }
 
     $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
-//    return ($latest_invoice->status == "paid") && (Carbon::createFromTimestamp($latest_invoice->created)->isSameDay(Carbon::today()->startOfMonth()));
+
     return ($latest_invoice->status == "paid");
-
-
-//    $start_of_month = (Carbon::now())->startOfMonth();
-//    $end_of_month = (Carbon::now())->endOfMonth();
-//
-//    $payment = ThaPayment::where('user_id', $user->id)->whereDate('created_at', '>=', $start_of_month)->whereDate('created_at', '<=', $end_of_month)->first();
-//
-//    return (bool)$payment;
 }
 
 function payment_not_made() {
@@ -317,6 +323,10 @@ function payment_not_made() {
             ]);
 
             event(new PaymentNotMade($user->id, $string, 'App\Models\User', $notification->id, $user));
+
+            //send mail to user
+            $string = str_replace("\r\n", "<br />", $string);
+            referral_reversion_mail($user->email, 'Referral Reversion', $string);
         }
     }
 }
@@ -362,6 +372,21 @@ function close_accounts() {
                 event(new NetworkMemberClosure($target->id, $string, 'App\Models\User', $notification->id, $target));
             }
 
+
+
+            //send referral reversion notification to inviter
+            $inviter_id = get_inviter_id($user->id);
+            $string = "Your ".$user->profile->first_name . ' ' . $user->profile->last_name." referral is no longer a member of the network you you won’t be receiving its referral payment";
+            $target = User::with('profile')->find($inviter_id);
+            $notification = Notification::create([
+                'user_id' => $target->id,
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $target->id,
+                'body' => $string,
+                'sender_id' => $target->id,
+                'sender_pic' => $user->get_profile_picture(),
+            ]);
+            event(new ReferralReverted($target->id, $string, 'App\Models\User', $notification->id, $target));
         }
     }
 }
@@ -374,7 +399,30 @@ function commission_distribution() {
             continue;
         }
 
-        if($reward->user->stripe_account_id) {
+        //if account is closed send payout to admin stripe account
+        if ($reward->user->closed_on) {
+            if (!Auth::user()->stripe_account_id) {
+                continue;
+            }
+
+            $stripe = new \Stripe\StripeClient(
+                'sk_test_lUp78O7PgN08WC9UgNRhOCnr'
+            );
+
+            $transfer = $stripe->transfers->create([
+                "amount" => $reward->amount * 100,
+                "currency" => "usd",
+                "destination" => Auth::user()->stripe_account_id,
+            ]);
+
+            if ($transfer) {
+                $reward->is_paid = true;
+                $reward->save();
+            }
+        }
+
+//        if($reward->user->stripe_account_id) {
+        if($reward->user->preferred_payout_method == 'stripe' || $reward->user->preferred_payout_method == '') {
             $stripe = new \Stripe\StripeClient(
                 'sk_test_lUp78O7PgN08WC9UgNRhOCnr'
             );
@@ -391,7 +439,8 @@ function commission_distribution() {
             }
         }
 
-        else if($reward->user->paypal_account_details) {
+//        else if($reward->user->paypal_account_details) {
+        else if($reward->user->preferred_payout_method == 'paypal') {
             $clientId = 'AQsOIcos3IlR_nj_XX8DqqOD4f1RTA1EssAauXpc-SIt8OkpAdlF1uojrW99dprmUsM5k5vZBpiiO64x';
             $clientSecret = 'EH2mWYKo12SFfuvYCh-SehGexumnzHCijQ1Bg59FWFBeUIJtgU-BPRBzTHVPg6l-1ctEvDbJDZo3ksWk';
 
@@ -431,7 +480,8 @@ function commission_distribution() {
     }
 }
 
-function is_in_my_network($user_id) {
+function is_in_my_network($user_id): bool
+{
     $my_network = Network::where('user_id', Auth::id())->first();
 
     if(!$my_network) {
@@ -457,5 +507,35 @@ function create_chat_channel($user_id, $target_id) {
         $channel->creator_id = $auth->id;
         $channel->users()->attach([$auth->id, $user->id]);
         $channel->save();
+    }
+}
+
+function get_inviter_id($user_id = null) {
+    $network_member = NetworkMember::where('user_id', $user_id ?? Auth::id())->orderBy('created_at', 'ASC')->first();
+    $inviters_network_id = $network_member->network_id ?? null;
+    $network = Network::find($inviters_network_id) ?? null;
+    return $network->user_id ?? null;
+}
+
+function referral_reversion_mail($to, $subject, $string): bool
+{
+    $from = 'no-reply@tha-network.com';
+
+    // To send HTML mail, the Content-type header must be set
+    $headers = 'MIME-Version: 1.0' . "\r\n";
+    $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+
+    // Create email headers
+    $headers .= 'From: ' . $from . "\r\n" .
+        'Reply-To: ' . $from . "\r\n" .
+        'X-Mailer: PHP/' . phpversion();
+
+    $html = $string;
+
+    // Sending email
+    if (mail($to, $subject, $html, $headers)) {
+        return true;
+    } else {
+        return false;
     }
 }

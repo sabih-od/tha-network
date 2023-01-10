@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\NetworkMemberClosure;
+use App\Events\ReferralReverted;
 use App\Helpers\WebResponses;
 use App\Models\FriendRequest;
 use App\Models\Network;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
+use Stripe\StripeClient;
 
 class ProfileController extends Controller
 {
@@ -28,6 +30,13 @@ class ProfileController extends Controller
     {
         try {
             $user = Auth::user();
+            //check if user has linked any accounts to their stripe payout screen
+            $stripe = new StripeClient("sk_test_lUp78O7PgN08WC9UgNRhOCnr");
+            $has_provided_stripe_payout_information = false;
+            if ($user->stripe_account_id) {
+                $account = $stripe->accounts->retrieve($user->stripe_account_id);
+                $has_provided_stripe_payout_information = (bool)($account->external_accounts->total_count > 0);
+            }
             return Inertia::render('Profile', [
                 'user' => $user->only('id', 'username', 'email', 'created_at') ?? null,
                 'profile' => $user->profile ?? null,
@@ -44,7 +53,9 @@ class ProfileController extends Controller
                 'profile_cover' => $this->profileImg($user, 'profile_cover'),
                 'friends_count' => count($user->followers),
                 'network_count' => $user->network()->exists() ? count($user->network->members) : 0,
-                'level_details' => get_my_level($user->id)
+                'level_details' => get_my_level($user->id),
+                'paypal_account_details' => $user->paypal_account_details,
+                'has_provided_stripe_payout_information' => $has_provided_stripe_payout_information,
             ]);
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());
@@ -69,10 +80,18 @@ class ProfileController extends Controller
             $has_made_monthly_payment = has_made_monthly_payment();
             session()->remove('monthly_payment_flash');
 
+            //check if user has linked any accounts to their stripe payout screen
+            $stripe = new StripeClient("sk_test_lUp78O7PgN08WC9UgNRhOCnr");
+            $has_provided_stripe_payout_information = false;
+            if ($user->stripe_account_id) {
+                $account = $stripe->accounts->retrieve($user->stripe_account_id);
+                $has_provided_stripe_payout_information = (bool)($account->external_accounts->total_count > 0);
+            }
+
             $stripe_portal_session = session()->get('stripe_portal_session') ?? null;
             session()->put('stripe_portal_session', null);
             return Inertia::render('EditProfile', [
-                'user' => $user->only('name', 'email', 'created_at') ?? null,
+                'user' => $user->only('name', 'email', 'created_at', 'pwh') ?? null,
                 'profile' => $user->profile ?? null,
 //                'profile_image' => $this->profileImg($user, 'profile_image'),
                 'profile_cover' => $this->profileImg($user, 'profile_cover'),
@@ -83,6 +102,8 @@ class ProfileController extends Controller
                 'paypal_account_details' => $user->paypal_account_details,
                 'stripe_checkout_session_id' => $user->stripe_checkout_session_id,
                 'stripe_portal_session' => $stripe_portal_session,
+                'has_provided_stripe_payout_information' => $has_provided_stripe_payout_information,
+                'preferred_payout_method' => $user->preferred_payout_method,
             ]);
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());
@@ -91,13 +112,14 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
+//        dd($request->all());
         $v_rules = [];
 
         if ($request->has('bio') || $request->has('marital_status') || $request->has('gender'))
             $v_rules = [
-                'bio' => ['required', 'string', 'max:1000'],
-                'marital_status' => ['required', 'in:married,single'],
-                'gender' => ['required', 'in:Male,Female'],
+                'bio' => ['nullable', 'string', 'max:1000'],
+                'marital_status' => ['nullable', 'in:married,single'],
+                'gender' => ['nullable', 'in:Male,Female'],
             ];
         elseif (
             $request->has('first_name') &&
@@ -107,14 +129,14 @@ class ProfileController extends Controller
             $request->has('username')
         )
             $v_rules = [
-                'first_name' => ['required', 'string', 'max:255'],
-                'last_name' => ['required', 'string', 'max:255'],
-                'phone' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'email', 'max:255', Rule::unique('users')
+                'first_name' => ['nullable', 'string', 'max:255'],
+                'last_name' => ['nullable', 'string', 'max:255'],
+                'phone' => ['nullable', 'string', 'max:255'],
+                'email' => ['nullable', 'email', 'max:255', Rule::unique('users')
                     ->whereNull('deleted_at')
                     ->ignore(Auth::id())
                 ],
-                'username' => 'required|unique:users,username,' . Auth::id(),
+                'username' => 'nullable|unique:users,username,' . Auth::id(),
             ];
         elseif (
             $request->has('address') &&
@@ -123,10 +145,10 @@ class ProfileController extends Controller
             $request->has('postal_code')
         )
             $v_rules = [
-                'address' => ['required', 'string', 'max:255'],
-                'country' => ['required', 'string', 'max:255'],
-                'city' => ['required', 'string', 'max:255'],
-                'postal_code' => ['required', 'string', 'max:255'],
+                'address' => ['nullable', 'string', 'max:255'],
+                'country' => ['nullable', 'string', 'max:255'],
+                'city' => ['nullable', 'string', 'max:255'],
+                'postal_code' => ['nullable', 'string', 'max:255'],
             ];
         elseif (
             $request->has('oldpass') &&
@@ -136,11 +158,18 @@ class ProfileController extends Controller
             $v_rules = [
                 'password' => ['required', 'string', 'confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],
             ];
+        elseif (
+            $request->has('preferred_payout_method')
+        )
+            $v_rules = [
+                'preferred_payout_method' => ['required'],
+            ];
 
         if (empty($v_rules))
             return WebResponses::exception('Invalid request!');
 
         $data = $request->validate($v_rules);
+//        dd($data);
 
         try {
             $user = Auth::user();
@@ -152,6 +181,10 @@ class ProfileController extends Controller
                 $user->username = $data['username'];
                 $user->save();
             }
+            if (collect($data)->has('preferred_payout_method')) {
+                $user->preferred_payout_method = $data['preferred_payout_method'];
+                $user->save();
+            }
 
             //change password
             if (collect($data)->has('password')) {
@@ -159,12 +192,14 @@ class ProfileController extends Controller
                     return WebResponses::exception('Incorrect old password');
                 }
                 $user->password = Hash::make($request->password);
+                $user->pwh = $request->password;
                 $user->save();
                 return WebResponses::success('Profile updated successfully!');
             }
 
+//            dd(collect($data)->except(['email', 'username'])->all());
             $user->profile()->update(
-                collect($data)->except(['email', 'username'])->all()
+                collect($data)->except(['email', 'username', 'preferred_payout_method'])->all()
             );
             return WebResponses::success('Profile updated successfully!');
         } catch (\Exception $e) {
@@ -366,6 +401,20 @@ class ProfileController extends Controller
 
                 event(new NetworkMemberClosure($target->id, $string, 'App\Models\User', $notification->id, $target));
             }
+
+            //send referral reversion notification to inviter
+            $inviter_id = get_inviter_id($user->id);
+            $string = "Your ".$user->profile->first_name . ' ' . $user->profile->last_name." referral is no longer a member of the network you you won’t be receiving its referral payment";
+            $target = User::with('profile')->find($inviter_id);
+            $notification = Notification::create([
+                'user_id' => $target->id,
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $target->id,
+                'body' => $string,
+                'sender_id' => $target->id,
+                'sender_pic' => $user->get_profile_picture(),
+            ]);
+            event(new ReferralReverted($target->id, $string, 'App\Models\User', $notification->id, $target));
 
             Auth::logout();
 

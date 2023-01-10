@@ -53,7 +53,7 @@
                                             <div class="form-group">
                                                 <label for="brand">Brands </label>
                                                 <select class="form-control" id="brand" v-model="choices.brand" @change="generateOutfits()">
-                                                    <option v-for="(brand, key) in libMojiData.brands" :value="key">
+                                                    <option v-for="(brand, key) in filteredBrands" :value="key">
                                                         {{ brand.name }}
                                                     </option>
                                                 </select>
@@ -61,7 +61,7 @@
                                             <div class="form-group">
                                                 <label for="outfit">Outfit </label>
                                                 <select class="form-control" id="outfit" v-model="choices.outfit" @change="generateAvatar()">
-                                                    <option v-for="(outfit, key) in libMojiData.outfits" :value="key">{{slugs[choices.gender - 1].outfits[outfit.outfit] ?? outfit.outfit}}
+                                                    <option v-if="choices.gender != 0" v-for="(outfit, key) in libMojiData.outfits" :value="key">{{slugs[choices.gender - 1].outfits[outfit.outfit] ?? outfit.outfit}}
                                                     </option>
                                                 </select>
                                             </div>
@@ -74,7 +74,7 @@
                                                 </select>
                                             </div>
                                             <br v-if="choices.pose == 'body'">
-                                            <div class="form-group" v-for="(traits, key) in libMojiData.traits">
+                                            <div class="form-group" v-if="choices.gender != 0" v-for="(traits, key) in libMojiData.traits">
                                                 <label :for="traits.key">{{ traits.key }}&nbsp;</label>
                                                 <select class="form-control" :id="traits.key" v-model="choices.traits[traits.key]" :key="key"
                                                         @change="generateAvatar()">
@@ -1718,6 +1718,33 @@ export default {
     props: {
         msg: String,
     },
+    computed: {
+        filteredBrands () {
+            // return this.libMojiData.brands;
+            let non_working_brands_on_female = [
+                'New Arrivals',
+                'Hollister',
+                'Bitmoji Basics',
+                'Bitmoji Collezione',
+                'Bitmoji Casual',
+                'Bitmoji Sun',
+                'Bitmoji Active',
+                'Nike',
+                'Adidas',
+                'Bitmoji Black Label',
+                'Winter',
+                'Harvest',
+            ];
+            let new_brands = [];
+            Object.values(this.libMojiData.brands).forEach((item, index) => {
+                if (this.choices.gender != 2 || !(non_working_brands_on_female.includes(item.name))) {
+                    new_brands[index] = item;
+                }
+            });
+            new_brands = new_brands.filter(item =>  item != null);
+            return new_brands;
+        }
+    },
     mounted() {
         this.setLibmojiData()
         this.randomize();
@@ -1766,7 +1793,9 @@ export default {
             this.libMojiData.traits = libmoji.getTraits(this.choices.genderStr, this.choices.styleStr);
         },
         generateOutfits() {
-            this.libMojiData.outfits = libmoji.getOutfits(this.libMojiData.brands[this.choices.brand]);
+            let female_brand_indexes = [8, 9, 10, 13, 14, 15, 18];
+            let indx = this.choices.gender === 1 ? this.choices.brand : female_brand_indexes[this.choices.brand];
+            this.libMojiData.outfits = libmoji.getOutfits(this.libMojiData.brands[indx]);
             // this.libMojiData.outfits.forEach(function (item) {
             //     item.outfit = this.slugs.outfits[item.outfit];
             //     alert(item.outfit);

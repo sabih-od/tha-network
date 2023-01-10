@@ -27,13 +27,23 @@
                         </a>
                         <div class="btn-group">
                             <!--                            <a href="#" class="themeBtn">Message</a>-->
-                            <button v-if="!edit_profile_active" class="themeBtn btn_invite"
+                            <button v-if="!edit_profile_active && (paypal_account_details || has_provided_stripe_payout_information)" class="themeBtn btn_invite"
                                     :title="$route('joinByInvite', this.user.username)"
                                     @click.prevent="copy_my_referral_link">Share your profile
                             </button>
-                            <button v-if="!edit_profile_active" class="themeBtn btn_invite"
+                            <Link v-else class="themeBtn btn_invite"
+                                    :title="$route('joinByInvite', this.user.username)"
+                                    @click.prevent="copy_my_referral_link_dummy"
+                                    :href="$route('editProfileForm')">Share your profile
+                            </Link>
+
+                            <button v-if="!edit_profile_active && (paypal_account_details || has_provided_stripe_payout_information)" class="themeBtn btn_invite"
                                     @click.prevent="inviteModal()">Make a Referral
                             </button>
+                            <Link v-else class="themeBtn btn_invite"
+                                  @click.prevent="inviteModalDummy()"
+                                  :href="$route('editProfileForm')">Make a Referral
+                            </Link>
                             <!--                            <a v-if="!edit_profile_active" href="#" @click="$emitter.emit('chat-with-profile')" class="themeBtn btn_message">Message</a>-->
                             <Link v-if="!edit_profile_active" :href="$route('chatIndex')" class="themeBtn btn_message"
                                   data-profile="asd" @click.prevent="chatWithProfile()">Message
@@ -111,6 +121,10 @@ export default {
         this.$emitter.on('change_level_details', function (data) {
             _t.level_details = data;
         });
+        this.$emitter.on('populate_share_and_referral_permission_data', function (data) {
+            _t.paypal_account_details = data.paypal_account_details;
+            _t.has_provided_stripe_payout_information = data.has_provided_stripe_payout_information;
+        });
     },
     data() {
         return {
@@ -123,7 +137,9 @@ export default {
                 user_id: null
             }),
             friendRequestForm: useForm({}),
-            level_details: {}
+            level_details: {},
+            paypal_account_details: '',
+            has_provided_stripe_payout_information: false,
         }
     },
     methods: {
@@ -146,6 +162,9 @@ export default {
         },
         inviteModal() {
             $('.modal_invite').modal('show');
+        },
+        inviteModalDummy() {
+            (useToast()).error('You Must First Add your Stripe or Paypal account information before making referrals or sharing your link.', {timeout: false});
         },
         chatWithProfile() {
             const profile_id = $('.btn_message').data('profile');
@@ -281,6 +300,9 @@ export default {
         copy_my_referral_link() {
             navigator.clipboard.writeText(this.$route('joinByInvite', this.user.username));
             (useToast()).success('Link Copied!');
+        },
+        copy_my_referral_link_dummy() {
+            (useToast()).error('You Must First Add your Stripe or Paypal account information before making referrals or sharing your link.', {timeout: false});
         }
     }
 }

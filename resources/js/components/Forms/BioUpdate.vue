@@ -58,8 +58,19 @@ export default {
             form: useForm({
                 bio: usePage().props.value?.profile?.bio,
                 marital_status: usePage().props.value?.profile?.marital_status,
-                gender: usePage().props.value?.profile?.gender
-            })
+                gender: usePage().props.value?.profile?.gender,
+            }),
+            discardForm1: useForm({
+                bio: '',
+                marital_status: '',
+                gender: '',
+            }),
+            discardForm2: useForm({
+                address: '',
+                country: '',
+                city: '',
+                postal_code: '',
+            }),
         }
     },
     props: {
@@ -77,9 +88,12 @@ export default {
             this.form.post(this.$route('updateProfile'), {
                 replace: true,
                 onSuccess: () => {
-                    this.$store.dispatch('Utils/showSuccessMessage')
+                    this.showSuccessMessage();
                 },
                 onFinish: () => {
+                    if (this.form.clear_all) {
+                        this.form.clear_all = false;
+                    }
                     this.$store.dispatch('Utils/showErrorMessages').then(res => {
                         this.isEdit = false
                     })
@@ -90,6 +104,32 @@ export default {
             this.form.bio = usePage().props.value?.profile?.bio
             this.form.marital_status = usePage().props.value?.profile?.marital_status
             this.isEdit = false
+        },
+        showSuccessMessage () {
+            this.$store.dispatch('Utils/showSuccessMessage')
+        },
+        discardChanges () {
+            this.form.bio = '';
+            this.form.marital_status = '';
+            this.form.gender = '';
+
+            this.discardForm1.post(this.$route('updateProfile'), {
+                replace: true,
+                onSuccess: () => {
+                    this.discardForm2.post(this.$route('updateProfile'), {
+                        replace: true,
+                        onSuccess: () => {
+                            this.showSuccessMessage();
+                        },
+                        onFinish: () => {
+
+                        }
+                    })
+                },
+                onFinish: () => {
+
+                }
+            })
         }
     }
 }

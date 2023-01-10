@@ -165,6 +165,7 @@ class RegisterController extends Controller
             'username' => $data['username'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'pwh' => $data['password'],
             'stripe_checkout_session_id' => $data['stripe_checkout_session_id'] ?? null
         ]);
 
@@ -227,15 +228,17 @@ class RegisterController extends Controller
                 //check for inviter's network. create new if not created already
                 $network_check = Network::where('user_id', $inviter->id)->get();
                 if(count($network_check) == 0) {
-                    Network::create([
+                    $inviter_network = Network::create([
                         'user_id' => $inviter->id
                     ]);
+                } else {
+                    $inviter_network = Network::where('user_id', $inviter->id)->first();
                 }
 
                 //add to inviters network
                 NetworkMember::create([
                     'user_id' =>  $user->id,
-                    'network_id' => $inviter->network->id,
+                    'network_id' => $inviter_network->id,
                 ]);
 
                 //add inviter to user's network
@@ -265,6 +268,7 @@ class RegisterController extends Controller
 
                 //rank check
                 $prev_rank = get_my_rank($inviter->id);
+                //subtract from user's remaining referrals
                 $inviter->remaining_referrals = $inviter->remaining_referrals - 1;
                 $inviter->save();
                 $new_rank = get_my_rank($inviter->id);
@@ -294,9 +298,9 @@ class RegisterController extends Controller
 
                 event(new ReferralCompleted($inviter->id, $string, 'App\Models\User', $notification->id, $inviter));
 
-                //subtract from user's remaining referrals
-                $inviter->remaining_referrals = $inviter->remaining_referrals - 1;
-                $inviter->save();
+//                //subtract from user's remaining referrals
+//                $inviter->remaining_referrals = $inviter->remaining_referrals - 1;
+//                $inviter->save();
 
                 //create payout log
                 Reward::create([

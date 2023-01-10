@@ -111,6 +111,8 @@ export default {
         profile: Object,
         goals: Object,
         level_details: Object,
+        paypal_account_details: String,
+        has_provided_stripe_payout_information: Object
     },
     computed: {
         myPostText() {
@@ -152,6 +154,11 @@ export default {
         });
 
         _t.$emitter.emit('change_my_posts_button_text', 'View All Posts');
+
+        _t.$emitter.emit('populate_share_and_referral_permission_data', {
+            'paypal_account_details': _t.paypal_account_details,
+            'has_provided_stripe_payout_information': _t.has_provided_stripe_payout_information,
+        });
 
         //if newly registered (NewMemberSignup)
         if(this.$store.getters['Misc/isNewlyRegistered']) {

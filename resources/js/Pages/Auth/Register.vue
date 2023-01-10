@@ -43,7 +43,7 @@
                                     <div class="form-group mb-1">
                                         <label for="username">UserName</label>
                                         <input type="text" id="username" v-model="form.username" placeholder=""
-                                               class="form-control">
+                                               class="form-control" @keydown.space.prevent>
                                     </div>
                                     <!--                                    <p class="color-danger">The username is already taken try to use a different
                                                                             one*</p>-->

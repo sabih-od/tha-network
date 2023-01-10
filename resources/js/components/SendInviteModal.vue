@@ -4,6 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Send Invitation</h5>
+                    <button @click.prevent="hide" class="btn btn-sm text-white">X</button>
                 </div>
                 <div class="modal-body">
                     <h5><small>Send invitations to people to join your network</small></h5>

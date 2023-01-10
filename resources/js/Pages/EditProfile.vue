@@ -13,17 +13,26 @@
                     <h6>In order to receive Referral Payments you must include your Paypal or Stripe Account information.  If you do not have a Stripe or Paypal Account create one and provide the information below.If this information is not provided, you will not be able to receive your referral payments.</h6>
                     <div class="row">
                         <div class="col-md-6">
-                            <h4>Stripe</h4>
+                            <h4>
+                                Stripe
+                                <input type="checkbox" name="" id="" :checked="preferred_payout_form.preferred_payout_method === 'stripe'" @click="submitPreferredPayoutForm('stripe')" style="transform: scale(1.5);">
+                            </h4>
 
                             <!--badge-->
-                            <span :class="'badge badge-pill badge-' + (this.stripe_account_id ? 'success' : 'danger')">{{ this.stripe_account_id ? 'Connected' : 'Not Connected' }}</span>
+                            <span :class="'badge badge-pill badge-' + ((this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'success' : 'danger')">{{ (this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'Connected' : 'Not Connected' }}</span>
                             <br />
 
                             <!--button-->
-                            <button type="button" class="btn btn-success btn-sm" @click.prevent="connectStripeAccount()">{{ this.stripe_account_id ? 'Reconnect' : 'Connect' }}</button>
+                            <button type="button" class="btn btn-success btn-sm" :disabled="preferred_payout_form.preferred_payout_method === 'paypal'" @click.prevent="connectStripeAccount()">{{ (this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'Reconnect' : 'Connect' }}</button>
+                            <br />
+
+                            <span v-if="this.stripe_account_id && this.has_provided_stripe_payout_information">You have successfully connected your Stripe account.</span>
                         </div>
                         <div class="col-md-6">
-                            <h4>Paypal</h4>
+                            <h4>
+                                Paypal
+                                <input type="checkbox" name="" id="" :checked="preferred_payout_form.preferred_payout_method === 'paypal'" @click="submitPreferredPayoutForm('paypal')" style="transform: scale(1.5);">
+                            </h4>
 
                             <!--badge-->
                             <span :class="'badge badge-pill badge-' + (this.paypal_account_details ? 'success' : 'danger')">{{ this.paypal_account_details ? 'Connected' : 'Not Connected' }}</span>
@@ -31,18 +40,29 @@
                             <br />
 
                             <!--button-->
-                            <button type="button" class="btn btn-success btn-sm" @click.prevent="connectPaypalAccount()">Connect</button>
+                            <button type="button" class="btn btn-success btn-sm" :disabled="preferred_payout_form.preferred_payout_method === 'stripe'" @click.prevent="connectPaypalAccount()">Connect</button>
+                            <br />
+
+                            <span v-if="this.paypal_account_details">You have successfully connected your Paypal account.</span>
                         </div>
+                        <br />
+
+                        <span class="ml-3">
+                            <strong>
+                                <i class="fas fa-info" style="color: blue;"></i>
+                                If you would like to change the payment account please select the check box above.
+                            </strong>
+                        </span>
                     </div>
                     <br />
 
-                    <BioUpdate :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
+                    <BioUpdate ref="bioUpdate" :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
 
                     <InfoUpdate :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
 
-                    <AddressUpdate :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
+                    <AddressUpdate ref="addressUpdate" :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
 
-                    <PasswordUpdate :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
+                    <PasswordUpdate :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" :pwh="user?.pwh" />
 
                     <MonthlyPayment
                         :client_secret="client_secret"
@@ -56,7 +76,7 @@
 
                     <div class="btn-group gap1">
                         <button v-if="$store.getters['Misc/isNewlyRegistered']" type="submit" class="themeBtn" @click.prevent="showWeeklyGoalNotification()">Save</button>
-<!--                        <button class="themeBtn discard">Discard Changes</button>-->
+                        <button class="themeBtn discard" @click="discardChanges">Discard Changes</button>
                     </div>
 
                     <br />
@@ -128,7 +148,9 @@ export default {
         stripe_account_id: String,
         paypal_account_details: String,
         stripe_checkout_session_id: String,
-        stripe_portal_session: Object
+        stripe_portal_session: Object,
+        has_provided_stripe_payout_information: Boolean,
+        preferred_payout_method: String
     },
     computed: {
         userProfile() {
@@ -145,6 +167,9 @@ export default {
             }
             return data
         },
+        filteredBrandsForFemales () {
+
+        }
     },
     data() {
         return {
@@ -162,6 +187,9 @@ export default {
             }),
             paypalForm: useForm({
                 paypal_account_details: this.paypal_account_details
+            }),
+            preferred_payout_form: useForm({
+                preferred_payout_method: this.preferred_payout_method
             }),
             genders: [
                 'Male',
@@ -328,6 +356,87 @@ export default {
         propmtForAvatarCreation() {
             // $('.btn_edit_avatar').click();
             this.$emitter.emit('prompt_for_avatar_creation');
+        },
+        discardChanges () {
+            this.$refs.addressUpdate.discardChanges();
+            this.$refs.bioUpdate.discardChanges();
+            (useToast()).success('You Have Discarded Your Changes.');
+        },
+        paypalInit () {
+            // if (!document.head.querySelector('#stripe-js')) {
+            //     const scriptTag = document.createElement('script')
+            //     scriptTag.src = 'https://www.paypalobjects.com/js/external/api.js'
+            //     scriptTag.onload = () => {
+            //         console.log('script loaded')
+            //
+            //         paypal.use(['login'], function (login) {
+            //             console.log("login", login)
+            //             // login.render({
+            //             //     "appid": "AcKwbyi3-LtcW9orYwnWecAHjTaU6SDpJ6JiVW6FIP3lO-9yY-DjWoPNoo6vTbfEW2Xitkmkiiz5O1le",
+            //             //     "authend": "sandbox",
+            //             //     "scopes": "email",
+            //             //     "containerid":"paypalConnectContainer",
+            //             //     "responseType": "code id_Token",
+            //             //     "locale": "en-us",
+            //             //     "buttonType": "CWP",
+            //             //     "buttonShape": "pill",
+            //             //     "buttonSize": "lg",
+            //             //     "fullPage": "true",
+            //             //     "returnurl": "http://127.0.0.1:8000/edit-profile"
+            //             // });
+            //         });
+            //     }
+            //     document.head.appendChild(scriptTag)
+            // }
+
+            // loadScript({
+            //     "client-id": 'AcKwbyi3-LtcW9orYwnWecAHjTaU6SDpJ6JiVW6FIP3lO-9yY-DjWoPNoo6vTbfEW2Xitkmkiiz5O1le',
+            //     "data-page-type": "connect",
+            //     // "scope": "email",
+            // })
+            //     .then((paypal) => {
+            //         // start to use the PayPal JS SDK script
+            //         console.log(paypal)
+            //         // paypal.use(['login'], function (login) {
+            //         //     login.render({
+            //         //         "appid": "AcKwbyi3-LtcW9orYwnWecAHjTaU6SDpJ6JiVW6FIP3lO-9yY-DjWoPNoo6vTbfEW2Xitkmkiiz5O1le",
+            //         //         "authend": "sandbox",
+            //         //         "scopes": "email",
+            //         //         "containerid":"paypalConnectContainer",
+            //         //         "responseType": "code id_Token",
+            //         //         "locale": "en-us",
+            //         //         "buttonType": "CWP",
+            //         //         "buttonShape": "pill",
+            //         //         "buttonSize": "lg",
+            //         //         "fullPage": "true",
+            //         //         "returnurl": "http://127.0.0.1:8000/edit-profile"
+            //         //     });
+            //         // });
+            //
+            //         paypal
+            //             .Buttons()
+            //             .render("#paypalConnectContainer")
+            //             .catch((error) => {
+            //                 console.error("failed to render the PayPal Buttons", error);
+            //             });
+            //     })
+            //     .catch((err) => {
+            //         console.error("failed to load the PayPal JS SDK script", err);
+            //     });
+        },
+        submitPreferredPayoutForm (val) {
+            this.preferred_payout_form.preferred_payout_method = val;
+            this.preferred_payout_form.post(this.$route('updateProfile'), {
+                replace: true,
+                onSuccess: () => {
+                    this.showSuccessMessage();
+                },
+                onFinish: () => {
+                    this.$store.dispatch('Utils/showErrorMessages').then(res => {
+                        this.isEdit = false
+                    })
+                }
+            })
         }
     }
 }

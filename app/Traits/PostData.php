@@ -4,6 +4,7 @@ namespace App\Traits;
 
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 trait PostData
@@ -88,6 +89,15 @@ trait PostData
                         }*/
                     }
                 }
+
+                //block data in item
+                //                'is_blocked_by_user' => $auth->isBlockedBy($user),
+//                'has_blocked' => $auth->hasBlocked($user),
+                $target_user = User::find($item->user->id);
+                $item->is_blocked_by_user = $auth_user->isBlockedBy($target_user);
+                $item->has_blocked = $auth_user->hasBlocked($target_user);
+                $item->new_block_property = $auth_user->isBlockedBy($target_user) || $auth_user->hasBlocked($target_user) || $target_user->isBlockedBy($auth_user) || $target_user->hasBlocked($auth_user);
+
                 return $item;
             });
 
