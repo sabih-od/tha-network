@@ -1,6 +1,7 @@
 <template>
     <div class="group-chatting">
         <ChatHeader/>
+        <img src="images/banner.jpg" alt="" class="chatBanner">
         <slot></slot>
     </div>
 </template>
