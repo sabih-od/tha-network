@@ -201,6 +201,16 @@ class ProfileController extends Controller
             $user->profile()->update(
                 collect($data)->except(['email', 'username', 'preferred_payout_method'])->all()
             );
+
+            if($request->has('clear_all') && $request->clear_all == true) {
+                $user->clearMediaCollection('profile_image');
+                $user
+                    ->addMedia(public_path('images/avatars/male-avatar.png'))
+                    ->preservingOriginal()
+                    ->toMediaCollection('profile_image');
+
+                return redirect()->route('editProfileForm');
+            }
             return WebResponses::success('Profile updated successfully!');
         } catch (\Exception $e) {
             return WebResponses::exception($e->getMessage());

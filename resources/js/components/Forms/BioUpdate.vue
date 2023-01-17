@@ -49,6 +49,7 @@
 <script>
 import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {useToast} from 'vue-toastification'
+import {Inertia} from "@inertiajs/inertia";
 
 export default {
     name: "BioUpdate",
@@ -70,6 +71,7 @@ export default {
                 country: '',
                 city: '',
                 postal_code: '',
+                clear_all: true
             }),
         }
     },
@@ -120,6 +122,8 @@ export default {
                         replace: true,
                         onSuccess: () => {
                             this.showSuccessMessage();
+                            return window.location.reload();
+                            // Inertia.get(this.$route('editProfileForm'));
                         },
                         onFinish: () => {
 
