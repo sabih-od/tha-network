@@ -19,14 +19,15 @@
                             </h4>
 
                             <!--badge-->
-                            <span :class="'badge badge-pill badge-' + ((this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'success' : 'danger')">{{ (this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'Connected' : 'Not Connected' }}</span>
-                            <br />
+<!--                            <span :class="'badge badge-pill badge-' + ((this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'success' : 'danger')">{{ (this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'Connected' : 'Not Connected' }}</span>-->
+<!--                            <br />-->
 
                             <!--button-->
                             <button type="button" class="btn btn-success btn-sm" :disabled="preferred_payout_form.preferred_payout_method === 'paypal'" @click.prevent="connectStripeAccount()">{{ (this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'Reconnect' : 'Connect' }}</button>
                             <br />
 
-                            <span v-if="this.stripe_account_id && this.has_provided_stripe_payout_information">You have successfully connected your Stripe account.</span>
+<!--                            <span v-if="this.stripe_account_id && this.has_provided_stripe_payout_information">You have successfully connected your Stripe account.</span>-->
+                            <span v-if="preferred_payout_form.preferred_payout_method === 'stripe' && this.stripe_account_id && this.has_provided_stripe_payout_information">You have successfully connected your Stripe account.</span>
                         </div>
                         <div class="col-md-6">
                             <h4>
@@ -35,7 +36,7 @@
                             </h4>
 
                             <!--badge-->
-                            <span :class="'badge badge-pill badge-' + (this.paypal_account_details ? 'success' : 'danger')">{{ this.paypal_account_details ? 'Connected' : 'Not Connected' }}</span>
+<!--                            <span :class="'badge badge-pill badge-' + (this.paypal_account_details ? 'success' : 'danger')">{{ this.paypal_account_details ? 'Connected' : 'Not Connected' }}</span>-->
                             <input class="form-control" type="email" placeholder="Paypal Email" v-model="paypalForm.paypal_account_details">
                             <br />
 
@@ -43,7 +44,8 @@
                             <button type="button" class="btn btn-success btn-sm" :disabled="preferred_payout_form.preferred_payout_method === 'stripe'" @click.prevent="connectPaypalAccount()">Connect</button>
                             <br />
 
-                            <span v-if="this.paypal_account_details">You have successfully connected your Paypal account.</span>
+<!--                            <span v-if="this.paypal_account_details">You have successfully connected your Paypal account.</span>-->
+                            <span v-if="preferred_payout_form.preferred_payout_method === 'paypal' && this.paypal_account_details">You have successfully connected your Paypal account.</span>
                         </div>
                         <br />
 
@@ -75,7 +77,7 @@
                     <CloseAccountModal></CloseAccountModal>
 
                     <div class="btn-group gap1">
-                        <button v-if="$store.getters['Misc/isNewlyRegistered']" type="submit" class="themeBtn" @click.prevent="showWeeklyGoalNotification()">Save</button>
+                        <button v-if="$store.getters['Misc/isNewlyRegistered']" type="submit" class="themeBtn" @click.prevent="showWeeklyGoalNotification()">Update Profile</button>
                         <button class="themeBtn discard" @click="discardChanges">Discard Changes</button>
                     </div>
 
