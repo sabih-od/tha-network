@@ -35,11 +35,11 @@
                                 <input type="number" name="card_no" v-model="card_number" class="form-control" placeholder="123 456 7890 789 1234">
                             </div>
                             <div class="form-group">
-                                <label for="">Expiry Month</label>
+                                <label for="">Expiration Month</label>
                                 <input type="number" name="exp_mon" v-model="exp_month" class="form-control" placeholder="12">
                             </div>
                             <div class="form-group">
-                                <label for="">Expiry Year</label>
+                                <label for="">Expiration Year</label>
                                 <input type="number" name="exp_year" v-model="exp_year" class="form-control" placeholder="2023">
                             </div>
                             <div class="form-group">
