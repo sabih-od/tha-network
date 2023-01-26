@@ -287,7 +287,7 @@ export default {
 
                 let _t = this;
                 setTimeout(function() {
-                    _t.showPromotionNotification();
+                    // _t.showPromotionNotification();
                 }, 4000);
             }
         },
@@ -307,7 +307,7 @@ export default {
 
             //PaymentMade
             let img = this.$store.getters['Utils/public_asset']('images/notifications/PaymentMade.png');
-            let text = 'Your payment of $29.99 was made for your membership with THA NETWORK on (Date of Payment) Thanks for your Payment!! ';
+            let text = 'Your payment of $29.99 was made for your membership with THA NETWORK Thanks for your Payment!! ';
             this.showNotification(img, text);
 
             //set newly registered back to false (flow ended)
