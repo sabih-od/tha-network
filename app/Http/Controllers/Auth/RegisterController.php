@@ -145,7 +145,7 @@ class RegisterController extends Controller
                 'confirmed'
             ],
             'social_security_number' => [
-                'required',
+                'nullable',
                 'string',
                 'max:255'
             ],
@@ -322,16 +322,16 @@ class RegisterController extends Controller
             'sender_id' => $user->id
         ]);
         event(new NewMemberSignup($user->id, $string, 'App\Models\User', $notification->id, User::with('profile')->find($user->id)));
-        //notification(s) after registration
-        $string = "Now that you are a member and have completed setting up your account, please go to your App store and download the APP!! Let’s get started making some CASH!!!";
-        $notification = Notification::create([
-            'user_id' => $user->id,
-            'notifiable_type' => 'App\Models\User',
-            'notifiable_id' => $user->id,
-            'body' => $string,
-            'sender_id' => $user->id
-        ]);
-        event(new AfterRegistrationAppPromotion($user->id, $string, 'App\Models\User', $notification->id, User::with('profile')->find($user->id)));
+//        //notification(s) after registration
+//        $string = "Now that you are a member and have completed setting up your account, please go to your App store and download the APP!! Let’s get started making some CASH!!!";
+//        $notification = Notification::create([
+//            'user_id' => $user->id,
+//            'notifiable_type' => 'App\Models\User',
+//            'notifiable_id' => $user->id,
+//            'body' => $string,
+//            'sender_id' => $user->id
+//        ]);
+//        event(new AfterRegistrationAppPromotion($user->id, $string, 'App\Models\User', $notification->id, User::with('profile')->find($user->id)));
 
         //create tha-payment log
         ThaPayment::create([

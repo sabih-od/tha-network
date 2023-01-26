@@ -82,12 +82,17 @@
                                 </div>
                                 <div class="col-md-12">
                                     <div class="form-group mb-2">
+                                        <input id="is_non_us_citizen" type="checkbox"
+                                               placeholder="" v-model="is_non_us_citizen" @change="toggleIsNonUsCitizen">
+                                        <label class="ml-2" for="is_non_us_citizen">Non United States Citizens check here</label>
+                                    </div>
+                                    <div class="form-group mb-2">
                                         <label for="securityNo">Social Security Number</label>
                                         <input type="text" id="securityNo" v-model="form.social_security_number"
-                                               placeholder="" class="form-control">
+                                               placeholder="" class="form-control" :readonly="is_non_us_citizen" :disabled="is_non_us_citizen">
                                     </div>
                                     <p class="color-danger">All United State citizens/residents are required to enter
-                                        their social security numbers for Tax purposes. Your information will never be
+                                        their social security number for Tax purposes. Your information will never be
                                         shared or used for any other purposes. If a social is
                                         not provided for US citizens/residents payments will not be distributed until
                                         your social is provided."</p>
@@ -154,7 +159,8 @@ export default {
                 class: 'notifyPopup',
                 redirect_url: "#",
                 on_click: this.hideNotification
-            }
+            },
+            is_non_us_citizen: false
         }
     },
     methods: {
@@ -189,12 +195,17 @@ export default {
 
             //PaymentMade
             let img = this.$store.getters['Utils/public_asset']('images/notifications/PaymentMade.png');
-            let text = 'Your payment of $29.99 was made for your membership with THA NETWORK on (Date of Payment) Thanks for your Payment!! ';
+            let text = 'Your payment of $29.99 was made for your membership with THA NETWORK Thanks for your Payment!! ';
             this.showNotification(img, text);
 
             //set newly registered back to false (flow ended)
             this.$store.commit('Misc/setIsNewlyRegistered', false);
         },
+        toggleIsNonUsCitizen () {
+            if (this.is_non_us_citizen) {
+                this.form.social_security_number = '';
+            }
+        }
     }
 }
 </script>
