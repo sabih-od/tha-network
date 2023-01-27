@@ -78,6 +78,7 @@
 
                     <div class="btn-group gap1">
                         <button v-if="$store.getters['Misc/isNewlyRegistered']" type="submit" class="themeBtn" @click.prevent="showWeeklyGoalNotification()">Update Profile</button>
+                        <Link :href="$route('home')" class="themeBtn">Back To Profile</Link>
                         <button class="themeBtn discard" @click="discardChanges">Discard Changes</button>
                     </div>
 
