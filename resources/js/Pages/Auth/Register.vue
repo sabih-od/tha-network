@@ -51,14 +51,14 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label for="email">Email</label>
-                                        <input type="text" id="email" v-model="form.email" placeholder=""
+                                        <input type="email" id="email" v-model="form.email" placeholder=""
                                                class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label for="phone">Phone</label>
-                                        <input type="text" id="phone" v-model="form.phone" placeholder=""
+                                        <input type="number"  id="phone" v-model="form.phone" placeholder=""
                                                class="form-control">
                                     </div>
                                 </div>
@@ -89,7 +89,7 @@
                                     <div class="form-group mb-2">
                                         <label for="securityNo">Social Security Number</label>
                                         <input type="text" id="securityNo" v-model="form.social_security_number"
-                                               placeholder="" class="form-control" :readonly="is_non_us_citizen" :disabled="is_non_us_citizen">
+                                               placeholder="" class="form-control" :readonly="is_non_us_citizen" :disabled="is_non_us_citizen" :aria-required="!is_non_us_citizen" >
                                     </div>
                                     <p class="color-danger">All United State citizens/residents are required to enter
                                         their social security number for Tax purposes. Your information will never be
@@ -135,6 +135,7 @@ export default {
         errors: Object,
         inviter_id: null
     },
+
     mounted() {
         console.log(this.inviter_id);
         this.showPaymentMadeNotification();
@@ -180,6 +181,17 @@ export default {
                 }
             })
         },
+
+        // myfun(){
+        // var x= document.getElementById("is_non_us_citizen").checked;
+        // if(x==true){
+        //     alert("checked");
+        // }
+        // else {
+        //     alert("unchecked");
+        // }
+        // },
+
         showNotification(img, text, redirect_url = "#", on_click = this.hideNotification) {
             this.notification_modal.img = img;
             this.notification_modal.text = text;
@@ -202,11 +214,17 @@ export default {
             this.$store.commit('Misc/setIsNewlyRegistered', false);
         },
         toggleIsNonUsCitizen () {
-            if (this.is_non_us_citizen) {
-                this.form.social_security_number = '';
+            if(this.getElementById("is_non_us_citizen").value=="Yes")
+            {
+                this.getElementById("securityNo");
+            }
+            else
+            {
+                this.getElementById("securityNo").required;
             }
         }
     }
+
 }
 </script>
 
