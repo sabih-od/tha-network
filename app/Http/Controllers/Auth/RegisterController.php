@@ -120,9 +120,13 @@ class RegisterController extends Controller
                 'string',
                 'max:255'
             ],
-            'phone' => [
+            'gender' => [
                 'required',
                 'string',
+                'max:255'
+            ],
+            'phone' => [
+                'required',
                 'max:255'
             ],
             'username' => [
@@ -158,6 +162,7 @@ class RegisterController extends Controller
      * @param array $data
      * @return \App\Models\User
      */
+
     protected function create(array $data)
     {
         $user = User::create([
@@ -201,6 +206,7 @@ class RegisterController extends Controller
 
         return $user;
     }
+
 
 //    override function
     public function register(Request $request)
