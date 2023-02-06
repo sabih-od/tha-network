@@ -8,11 +8,11 @@
                 <div class="container">
                     <div class="row aic">
                         <div class="col-md-4">
-                            <figure><img :src="asset('images/img1.png')" alt=""></figure>
+                            <figure><img :src="data.banner_image" alt=""></figure>
                         </div>
                         <div class="col-md-4">
                             <div class="content">
-                                <h3>Membership Pays</h3>
+                                <h3>{{ data.banner_circle_title }}</h3>
                                 <Link v-if="!this.user" :href="$route('stripePaymentShow')" class="themeBtn" replace>
                                     Join Us
                                 </Link>
@@ -30,7 +30,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 text-center mb-5">
-                        <h2 class="secHeading">hOW iT wORKS</h2>
+                        <h2 class="secHeading">{{ data.section_2_title }}</h2>
                     </div>
 
                     <div class="col-md-4">
@@ -41,7 +41,7 @@
                                 <img :src="asset('images/icon1.png')" alt="">
                             </div>
                             <div class="content">
-                                <h3>Become a Member</h3>
+                                <h3>{{data.section_2_element_1_text}}</h3>
                             </div>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
                                 <img :src="asset('images/icon2.png')" alt="">
                             </div>
                             <div class="content">
-                                <h3>Refer Friends</h3>
+                                <h3>{{data.section_2_element_2_text}}</h3>
                             </div>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                                 <img :src="asset('images/icon3.png')" alt="">
                             </div>
                             <div class="content">
-                                <h3>Earn Cash</h3>
+                                <h3>{{data.section_2_element_3_text}}</h3>
                             </div>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 text-center">
-                        <h2 class="secHeading">Our Benefits</h2>
+                        <h2 class="secHeading">{{data.title}}</h2>
                     </div>
                 </div>
                 <div class="row">
@@ -99,84 +99,45 @@
                                             @click.prevent="minimizeVideo"><i
                                         class="fas fa-compress-arrows-alt"></i><span>Minimize</span>
                                     </button>
-                                    <!--                                    <button id="pip" class="themeBtn"-->
-                                    <!--                                            v-if="video_classes === 'introVideo columned'"-->
-                                    <!--                                            @click.prevent="togglePictureInPicture"><i-->
-                                    <!--                                        class="fal fa-photo-video"></i><span>PIP Mode</span>-->
-                                    <!--                                    </button>-->
                                 </div>
                             </figure>
                         </div>
                     </div>
-                    <!--                    <div class="col-md-6">-->
-                    <!--                        <h3>Membership Benefits</h3>-->
-                    <!--                        <p>Once you become a member the Sky is the Limit in your earning potential. We have developed-->
-                    <!--                            this site to help everyone earn extra cash while also donating a portion of the sites-->
-                    <!--                            proceeds to charities. Enjoy a full network of-->
-                    <!--                            people to chat with, share information with, send daily post, and brag about the number of-->
-                    <!--                            members in your Network!!! Earn Financial Freedom!! Membership has never been this-->
-                    <!--                            great!!!!</p>-->
-                    <!--                        <p>Have fun, keep the invites coming, build your network!!!</p>-->
-                    <!--                        <p>Become a member today!!!!</p>-->
-                    <!--&lt;!&ndash;                        <a href="login.php" class="themeBtn">Join Us</a>&ndash;&gt;-->
-                    <!--                    </div>-->
                 </div>
                 <div class="row aic">
                     <div class="col-md-6">
-                        <figure><img :src="asset('images/benefit1.jpg')" alt=""></figure>
+                        <figure><img :src="data.element_1_image" alt=""></figure>
                     </div>
                     <div class="col-md-6">
-                        <h3>Membership Benefits</h3>
-                        <p>Once you become a member the Sky is the Limit in your earning potential. We have developed
-                            this site to help everyone earn extra cash while also donating a portion of the sites
-                            proceeds to charities. Enjoy a full network of
-                            people to chat with, share information with, send daily post, and brag about the number of
-                            members in your Network!!! Earn Financial Freedom!! Membership has never been this
-                            great!!!!</p>
-                        <p>Have fun, keep the invites coming, build your network!!!</p>
-                        <p>Become a member today!!!!</p>
-                        <!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
+                        <h3>{{data.element_1_title}}</h3>
+                        <p>{{ data.element_1_description_line_1 }}</p>
+                        <p>{{ data.element_1_description_line_2 }}</p>
+                        <p>{{ data.element_1_description_line_3 }}</p>
                     </div>
                 </div>
                 <div class="row aic frr">
                     <div class="col-md-6">
-                        <figure><img :src="asset('images/benefit2.jpg')" alt=""></figure>
+                        <figure><img :src="data.element_2_image" alt=""></figure>
                     </div>
                     <div class="col-md-6">
-                        <h3>Let Me Break it Down for you by doing the math!</h3>
-                        <p>If you invited 100 people to join your network (100 x $10 = $1,000) you could earn $1,000 if
-                            each person joined the network. If each of the 100 people continue their membership with Tha
-                            Network, you will continue to earn $1,000
-                            per month for the life of their membership. Now let’s use real numbers, multiple the number
-                            of (friends and followers) you have on all your social media sites by $10 per person!! This
-                            is how much you could earn per month if
-                            all your friends and followers joined your network. What are you waiting for JOIN
-                            TODAY!!!</p>
-                        <!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
+                        <h3>{{ data.element_2_title }}</h3>
+                        <p>{{ data.element_2_description }}</p>
                     </div>
                 </div>
                 <div class="row aic">
                     <div class="col-md-6">
-                        <figure><img :src="asset('images/benefit3.jpg')" alt=""></figure>
+                        <figure><img :src="data.element_3_image" alt=""></figure>
                     </div>
                     <div class="col-md-6">
-                        <h3>Membership Pays</h3>
-                        <p>Join Today for $29.99 per month!!! This will be the best investment you have ever made!!!!!
-                            You Should be Excited because WE ARE!!!</p>
-                        <p><strong>HOW MANY PEOPLE ARE IN YOUR NETWORK!!!!</strong></p>
-                        <img :src="asset('images/character.png')" class="character" alt="">
-                        <p><strong>REMEMBER, MEMBERSHIP PAYS!!!!</strong></p>
+                        <h3>{{ data.element_3_title }}</h3>
+                        <p>{{ data.element_3_description }}</p>
+                        <p><strong>{{ data.element_3_title_2 }}</strong></p>
+                        <img :src="data.element_3_image_2" class="character" alt="">
+                        <p><strong>{{ data.element_3_title_3 }}</strong></p>
                         <ul>
-                            <li>This site was created to allow its members to earn cash by making referrals to the
-                                people you know or meet, and allows you to enjoy the benefits that come with a social
-                                media experience.
-                            </li>
-                            <li>You will earn Monthly Income by just convincing your contacts to join your network. Once
-                                they join all you need to do is watch the cash add up in your account!
-                            </li>
-                            <li>The site does all the work for you automatically by sending payments directly to you
-                                when your referrals join Tha Network.
-                            </li>
+                            <li>{{data.element_3_description_2_line_1}}</li>
+                            <li>{{data.element_3_description_2_line_2}}</li>
+                            <li>{{data.element_3_description_2_line_3}}</li>
                         </ul>
                         <!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
                     </div>
@@ -189,30 +150,25 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="planImgs">
-                            <img :src="asset('images/plan1.jpg')" class="plan1" alt="">
-                            <img :src="asset('images/plan2.jpg')" class="plan2" alt="">
-                            <img :src="asset('images/plan3.jpg')" class="plan3" alt="">
-                            <img :src="asset('images/plan4.jpg')" class="plan4" alt="">
-                            <img :src="asset('images/plan5.jpg')" class="plan5" alt="">
+                            <img :src="data.section_3_plan_1_image" class="plan1" alt="">
+                            <img :src="data.section_3_plan_2_image" class="plan2" alt="">
+                            <img :src="data.section_3_plan_3_image" class="plan3" alt="">
+                            <img :src="data.section_3_plan_4_image" class="plan4" alt="">
+                            <img :src="data.section_3_plan_5_image" class="plan5" alt="">
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <h2 class="secHeading mb-4">OUR MEMBERSHIP PLAN PAYS!</h2>
+                        <h2 class="secHeading mb-4">{{ data.section_3_title }}</h2>
                         <ul>
                             <li>
-                                <p>
-                                    As a member your membership payment will never change, but you will have the ability
-                                    to earn more cash when the site becomes More Popular!
-                                </p>
+                                <p>{{data.section_3_description_line_1}}</p>
                             </li>
                             <li>
-                                <p>
-                                    Now is the time to become a member While Membership Rates are Inexpensive!!!!!!
-                                </p>
+                                <p>{{data.section_3_description_line_2}}</p>
                             </li>
                         </ul>
                         <p class="text-center">
-                            <strong>So What Are You Waiting For JOIN TODAY!!!</strong>
+                            <strong>{{data.section_3_description_line_3}}</strong>
                         </p>
                         <!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
                     </div>
@@ -297,6 +253,7 @@ export default {
     props: {
         inviter: Object,
         visitedByCode: Boolean,
+        data: Object,
     },
     mounted() {
         let _t = this;
