@@ -33,7 +33,7 @@
                 :is_in_my_network="channel.is_in_my_network"
             />
 
-            <span v-if="channels.length == 0 ">No Member Found</span>
+            <span v-if="channels.length == 0 " class="noMember">No Member Found</span>
 
             <teleport to="body">
                 <CreateChatModal ref="createChatModal"/>
