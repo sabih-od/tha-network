@@ -6,6 +6,7 @@ use App\Events\ReferralSent;
 use App\Helpers\WebResponses;
 use App\Models\Network;
 use App\Models\Notification;
+use App\Models\Page;
 use App\Models\Referral;
 use App\Models\SendInvitation;
 use App\Models\User;
@@ -388,6 +389,10 @@ class InvitationCode extends Controller
 
     public function join(Request $request, $username) {
         try {
+            //cms data
+            $home = Page::where('name', 'Home')->first();
+            $data = json_decode($home->content ?? []);
+
             //get inviter
             $inviter = User::where('username', $username)->first();
 
@@ -414,7 +419,8 @@ class InvitationCode extends Controller
             session()->put('validate-code', $userInvitation->id);
 
             return Inertia::render('HowItWorks', [
-                'inviter' => $inviter
+                'inviter' => $inviter,
+                'data' => $data
             ]);
         } catch (\ErrorException $e) {
             return WebResponses::exception($e->getMessage());

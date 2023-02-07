@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Page;
 use App\Models\Payment;
 use App\Models\ThaPayment;
 use App\Models\User;
@@ -25,7 +26,12 @@ class HowItWorks extends Controller
 
     public function show()
     {
-        return Inertia::render('HowItWorks');
+        $home = Page::where('name', 'Home')->first();
+        $data = json_decode($home->content ?? []);
+
+        return Inertia::render('HowItWorks', [
+            'data' => $data
+        ]);
     }
 
     public function paymentShow()

@@ -3,16 +3,16 @@
         <HowItWorksMenu/>
         <div class="main-slider">
 
-            <img class="img-fluid w-100" :src="asset('images/banner.jpg')" alt="First slide">
+            <img class="img-fluid w-100" :src="data.banner_image" alt="First slide">
             <div class="carousel-caption">
                 <div class="container">
                     <div class="row aic justify-content-center">
                         <div class="col-md-6">
                             <div class="content">
-                                <h4>ABOUT US</h4>
-                                <h3>Membership Pays</h3>
+                                <h4>{{ data.banner_circle_title }}</h4>
+                                <h3>{{ data.banner_circle_title_2 }}</h3>
                                 <p>
-                                    The Social Media Network that allows its members to earn cash
+                                    {{ data.banner_circle_text }}
                                 </p>
                             </div>
                         </div>
@@ -25,57 +25,35 @@
                 <div class="row aic">
                     <div class="col-md-6">
                         <figure>
-                            <img class="img-fluid w-100" :src="asset('images/abtImg.png')" alt="">
+                            <img class="img-fluid w-100" :src="data.section_1_image" alt="">
                         </figure>
                     </div>
                     <div class="col-md-6">
                         <div class="secHeading">
-                            <h2>About Us</h2>
-                            <p>
-                                We Pride ourselves in the creation of a fun, interactive, wealth building social media
-                                platform that allows its members to earn monthly income, while creating a large social
-                                media network.
-                            </p>
-                            <h4>What makes Tha Network different from other Social Media Sites</h4>
+                            <h2>{{ data.section_1_title }}</h2>
+                            <p>{{ data.section_1_description }}</p>
+                            <h4>{{ data.section_1_title_2 }}</h4>
                         </div>
                         <ul>
                             <li>
                                 <i class="fas fa-check-circle"></i>
-                                <span>
-                                    Tha Network is a social media site created to help people help each other while having
-                                fun and building a large network of friends.
-                                </span>
+                                <span>{{data.section_1_description_2_line_1}}</span>
                             </li>
                             <li>
                                 <i class="fas fa-check-circle"></i>
-                                <span>
-                                    Our members earn cash just by making referrals to other people and getting them to join
-                                the network.
-                                </span>
+                                <span>{{data.section_1_description_2_line_2}}</span>
                             </li>
                             <li>
                                 <i class="fas fa-check-circle"></i>
-                                <span>
-                                    Our members earn a referral fee for each person that joins and earns monthly payments
-                                for the life of that persons membership.
-                                </span>
+                                <span>{{data.section_1_description_2_line_3}}</span>
                             </li>
                             <li>
                                 <i class="fas fa-check-circle"></i>
-                                <span>
-                                    If you invited 100 people to join your network and earned $10 per person, you would make
-                                a $1,000 if all 100 people joined. If each person keeps their membership you will
-                                continue to earn $1,000 per month for the life of their membership. Now let’s use real
-                                numbers, multiple the number of (friends and followers) you have on all your social
-                                media sites by $10 per person!! This is how much you could earn per month if all your
-                                friends and followers joined your network.
-                                </span>
+                                <span>{{data.section_1_description_2_line_4}}</span>
                             </li>
                             <li>
                                 <i class="fas fa-check-circle"></i>
-                                <span>
-                                    Members can invite as many people as they like.
-                                </span>
+                                <span>{{data.section_1_description_2_line_5}}</span>
                             </li>
                         </ul>
                     </div>
@@ -83,45 +61,40 @@
                 <div class="row aic">
                     <div class="col-md-6">
                         <div class="secHeading">
-                            <h2>Our Promise</h2>
+                            <h2>{{ data.section_2_title }}</h2>
                             <p>
-                                Tha Network promises to allow its members to enjoy the benefit of membership..
+                                {{data.section_2_description }}
                             </p>
-                            <h4>Membership offers benefits.</h4>
+                            <h4>{{ data.section_2_title_2 }}</h4>
                         </div>
                         <ul>
                             <li>
                                 <i class="fas fa-check-circle"></i>
-                                <span>Your personal information is secure.</span>
+                                <span>{{ data.section_2_description_2_line_1 }}</span>
                             </li>
                             <li>
                                 <i class="fas fa-check-circle"></i>
-                                <span>You create your own personal network.</span>
+                                <span>{{ data.section_2_description_2_line_2 }}</span>
                             </li>
                             <li>
                                 <i class="fas fa-check-circle"></i>
-                                <span>You earn cash and have fun sharing information with people within your network.</span>
+                                <span>{{ data.section_2_description_2_line_3 }}</span>
                             </li>
                         </ul>
                     </div>
                     <div class="col-md-6">
-                        <figure><img :src="asset('images/abtImg2.png')" alt="" class="img-fluid w-100"></figure>
+                        <figure><img :src="data.section_2_image" alt="" class="img-fluid w-100"></figure>
                     </div>
                 </div>
             </div>
             <div class="overlayCont">
-                <img :src="asset('images/overlayBg.png')" alt="">
+                <img :src="data.section_3_image" alt="">
                 <div class="content">
                     <div class="container">
                         <div class="row justify-content-center">
                             <div class="col-md-8">
-                                <h2>
-                                    Membership Pays
-                                </h2>
-                                <p>
-                                    You earn cash while doing the things you like without needing to be behind a desk
-                                    for an 8hr work day!
-                                </p>
+                                <h2>{{data.section_3_title}}</h2>
+                                <p>{{data.section_3_description}}</p>
                             </div>
                         </div>
                     </div>
@@ -131,51 +104,48 @@
                 <div class="row aic">
                     <div class="col-md-8">
                         <div class="secHeading">
-                            <h2>Let’s Change Social Media </h2>
-                            <p>
-                                Usually people who are on social media platforms are concerned with how many likes,
-                                friends, views, and followers they have but they are missing one key element!! <span>EARNING CASH!</span>
-                            </p>
+                            <h2>{{ data.section_4_title }} </h2>
+                            <p>{{data.section_4_description}}</p>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <figure>
-                            <img :src="asset('images/abtImg3.png')" alt="" class="img-fluid w-100">
+                            <img :src="data.section_4_image" alt="" class="img-fluid w-100">
                         </figure>
                     </div>
                     <div class="col-md-6">
                         <div class="secHeading">
-                            <h2>THA NETWORK</h2>
+                            <h2>{{ data.section_4_title_2 }}</h2>
                         </div>
                         <ul>
                             <li>
                                 <i class="fas fa-check-circle"></i>
                                 <span>
-                                    Unlimited Friends.
+                                    {{ data.section_4_description_2_line_1 }}
                                 </span>
                             </li>
                             <li>
                                 <i class="fas fa-check-circle"></i>
                                 <span>
-                                    Communicate with family & Friends around the world.
+                                    {{ data.section_4_description_2_line_2 }}
                                 </span>
                             </li>
                             <li>
                                 <i class="fas fa-check-circle"></i>
                                 <span>
-                                    Send messages.
+                                    {{ data.section_4_description_2_line_3 }}
                                 </span>
                             </li>
                             <li>
                                 <i class="fas fa-check-circle"></i>
                                 <span>
-                                    Business Marketing
+                                    {{ data.section_4_description_2_line_4 }}
                                 </span>
                             </li>
                             <li>
                                 <i class="fas fa-check-circle"></i>
                                 <span class="colored">
-                                    Earn CASH from each person in your network!!!
+                                    {{ data.section_4_description_2_line_5 }}
                                 </span>
                             </li>
                         </ul>
@@ -184,38 +154,38 @@
                 <div class="row aic">
                     <div class="col-md-6">
                         <div class="secHeading">
-                            <h2>Other Social Media Sites</h2>
+                            <h2>{{ data.section_5_title }}</h2>
                         </div>
                         <ul>
                             <li>
                                 <i class="fas fa-check-circle"></i>
                                 <span>
-                                    Unlimited Friends.
+                                    {{ data.section_5_description_line_1 }}
                                 </span>
                             </li>
                             <li>
                                 <i class="fas fa-check-circle"></i>
                                 <span>
-                                    Communicate with family & Friends around the world.
+                                    {{ data.section_5_description_line_2 }}
                                 </span>
                             </li>
                             <li>
                                 <i class="fas fa-check-circle"></i>
                                 <span>
-Send messages via video or messaging.
+                                    {{ data.section_5_description_line_3 }}
                                 </span>
                             </li>
                             <li>
                                 <i class="fas fa-check-circle"></i>
                                 <span>
-                                    Business Marketing
+                                    {{ data.section_5_description_line_4 }}
                                 </span>
                             </li>
                         </ul>
                     </div>
                     <div class="col-md-6">
                         <figure>
-                            <img :src="asset('images/abtImg4.png')" alt="" class="img-fluid w-100">
+                            <img :src="data.section_5_image" alt="" class="img-fluid w-100">
                         </figure>
                     </div>
                 </div>
@@ -264,6 +234,9 @@ export default {
     mixins: [utils],
     components: {
         HowItWorksMenu
+    },
+    props: {
+        data: Object
     },
     mounted() {
         // alert(this.$route('about'));

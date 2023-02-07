@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\CmsController;
+use App\Http\Controllers\CmsController as FrontCmsController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FriendRequestController;
@@ -11,6 +13,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PusherController;
 use App\Http\Controllers\StripeController;
+use App\Models\Page;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -75,7 +78,7 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
 
     //payouts
     Route::match(['get', 'post'], '/payouts', 'SettingController@payouts')->name('payouts');
-    Route::get( '/connect-stripe-account', [\App\Http\Controllers\Admin\StripeController::class, 'connectAccount'])->name('admin.connectStripePayoutAccount');
+    Route::get('/connect-stripe-account', [\App\Http\Controllers\Admin\StripeController::class, 'connectAccount'])->name('admin.connectStripePayoutAccount');
 
     //goal
     Route::match(['get', 'post'], '/goals', 'GoalController@index')->name('admin.goals');
@@ -83,6 +86,10 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
     // Customer
     Route::resource('customers', 'CustomersController');
     Route::delete('/customers/destroy/{id}', 'CustomersController@destroy')->name('customers.destroy');
+
+    //cms
+    Route::match(['get', 'post'], '/cms/about-us', [CmsController::class, 'aboutUs'])->name('admin.cms.aboutUs');
+    Route::match(['get', 'post'], '/cms/home', [CmsController::class, 'home'])->name('admin.cms.home');
 });
 
 //Inertia routes
@@ -209,14 +216,16 @@ Route::get('/home', function () {
     $check = session()->has('validate-code');
 //    if ($check)
 //        session()->remove('validate-code');
+    $home = Page::where('name', 'Home')->first();
+    $data = json_decode($home->content ?? []);
+
     return Inertia::render('HowItWorks', [
-        'visitedByCode' => $check
+        'visitedByCode' => $check,
+        'data' => $data
     ]);
 })->name('work');
 
-Route::get('/about', function () {
-    return Inertia::render('About');
-})->name('about');
+Route::get('/about', [FrontCmsController::class, 'about'])->name('about');
 
 Route::get('/contact', function () {
     return Inertia::render('Contact');
