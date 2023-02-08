@@ -3,12 +3,12 @@
         <HowItWorksMenu :visitedByCode="visitedByCode"/>
 
         <div class="main-slider">
-            <img class="img-fluid w-100" :src="asset('images/banner.jpg')" alt="First slide">
+            <img class="img-fluid w-100" :src="data.banner_image" alt="First slide">
             <div class="carousel-caption">
                 <div class="container">
                     <div class="row aic">
                         <div class="col-md-4">
-                            <figure><img :src="data.banner_image" alt=""></figure>
+<!--                            <figure><img :src="data.banner_image" alt=""></figure>-->
                         </div>
                         <div class="col-md-4">
                             <div class="content">
