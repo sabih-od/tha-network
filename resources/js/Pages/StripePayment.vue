@@ -32,19 +32,19 @@
 
                             <div class="form-group">
                                 <label for="">Card Number</label>
-                                <input type="number" name="card_no" v-model="card_number" class="form-control" placeholder="123 456 7890 789 1234">
+                                <input type="number" name="card_no" v-model="card_number" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">Expiration Month</label>
-                                <input type="number" name="exp_mon" v-model="exp_month" class="form-control" placeholder="12">
+                                <input type="number" name="exp_mon" v-model="exp_month" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">Expiration Year</label>
-                                <input type="number" name="exp_year" v-model="exp_year" class="form-control" placeholder="2023">
+                                <input type="number" name="exp_year" v-model="exp_year" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="">CCV Code</label>
-                                <input type="password" name="cvv" v-model="cvc" class="form-control" placeholder="***">
+                                <input type="password" name="cvv" v-model="cvc" class="form-control">
                             </div>
                             <button class="themeBtn" id="checkout-and-portal-button" type="button" @click.prevent="stripe_subscribe" :disabled="form_loading">
                                 {{ form_loading ? 'Please Wait' : 'Subscribe' }}</button>
@@ -131,5 +131,15 @@ export default {
 </script>
 
 <style scoped>
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
 </style>

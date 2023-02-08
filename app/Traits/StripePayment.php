@@ -10,7 +10,7 @@ trait StripePayment
 {
     public function generateClientSecret($amount = 0)
     {
-        Stripe::setApiKey('sk_test_lUp78O7PgN08WC9UgNRhOCnr');
+        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
         try {
             // Create a PaymentIntent with amount and currency
@@ -30,7 +30,7 @@ trait StripePayment
 
     public function createStripeClient($secret = "sk_test_lUp78O7PgN08WC9UgNRhOCnr")
     {
-        $stripe = new StripeClient($secret);
+        $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
 
         $expressAccount = $stripe->accounts->create(['type' => 'express']);
 
@@ -39,7 +39,7 @@ trait StripePayment
 
     public function accountLink($secret = "sk_test_lUp78O7PgN08WC9UgNRhOCnr", $clientId)
     {
-        $stripe = new StripeClient($secret);
+        $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
 
         $getLink = $stripe->accountLinks->create([
             'account' => $clientId,
@@ -61,7 +61,7 @@ trait StripePayment
      */
     public function stripeTransfer($secret = "sk_test_lUp78O7PgN08WC9UgNRhOCnr", $clientId, $amount)
     {
-        $stripe = new StripeClient($secret);
+        $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
 
         try {
             $transfer = $stripe->transfers->create([
