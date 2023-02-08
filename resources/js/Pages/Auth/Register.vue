@@ -89,7 +89,7 @@
                                     <div class="form-group mb-2">
                                         <label for="securityNo">Social Security Number</label>
                                         <input type="text" id="securityNo" v-model="form.social_security_number"
-                                               placeholder="" class="form-control" :readonly="is_non_us_citizen" :disabled="is_non_us_citizen" :aria-required="!is_non_us_citizen" >
+                                               placeholder="" class="form-control" :readonly="is_non_us_citizen" :disabled="is_non_us_citizen" :required="!is_non_us_citizen" :aria-required="!is_non_us_citizen" >
                                     </div>
                                     <p class="color-danger">All United State citizens/residents are required to enter
                                         their social security number for Tax purposes. Your information will never be
