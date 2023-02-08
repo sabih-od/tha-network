@@ -326,7 +326,10 @@ export default {
                 },
                 onSuccess: res => {
                     console.log('res: ', res.props.v_data);
-                    window.location.replace(res.props?.v_data);
+                    window.location.href = res.props?.v_data;
+                    window.onbeforeunload = function() {
+                        history.back();
+                    };
                 },
                 onFinish: () => {
 
