@@ -441,8 +441,8 @@ function commission_distribution() {
 
 //        else if($reward->user->paypal_account_details) {
         else if($reward->user->preferred_payout_method == 'paypal') {
-            $clientId = 'AQsOIcos3IlR_nj_XX8DqqOD4f1RTA1EssAauXpc-SIt8OkpAdlF1uojrW99dprmUsM5k5vZBpiiO64x';
-            $clientSecret = 'EH2mWYKo12SFfuvYCh-SehGexumnzHCijQ1Bg59FWFBeUIJtgU-BPRBzTHVPg6l-1ctEvDbJDZo3ksWk';
+            $clientId = env('PAYPAL_CLIENT_ID');
+            $clientSecret = env('PAYPAL_SECRET_KEY');
 
 
             $environment = new SandboxEnvironment($clientId, $clientSecret);
