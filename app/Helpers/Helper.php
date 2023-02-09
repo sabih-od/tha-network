@@ -289,7 +289,7 @@ function has_made_monthly_payment($id = null): bool
     }
 
     $stripe = new \Stripe\StripeClient(
-        'sk_test_lUp78O7PgN08WC9UgNRhOCnr'
+        env('STRIPE_SECRET_KEY')
     );
 
     try {
@@ -406,7 +406,7 @@ function commission_distribution() {
             }
 
             $stripe = new \Stripe\StripeClient(
-                'sk_test_lUp78O7PgN08WC9UgNRhOCnr'
+                env('STRIPE_SECRET_KEY')
             );
 
             $transfer = $stripe->transfers->create([
@@ -424,7 +424,7 @@ function commission_distribution() {
 //        if($reward->user->stripe_account_id) {
         if($reward->user->preferred_payout_method == 'stripe' || $reward->user->preferred_payout_method == '') {
             $stripe = new \Stripe\StripeClient(
-                'sk_test_lUp78O7PgN08WC9UgNRhOCnr'
+                env('STRIPE_SECRET_KEY')
             );
 
             $transfer = \Stripe\Transfer::create([

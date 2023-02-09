@@ -438,7 +438,7 @@ class InvitationCode extends Controller
             ]);
 
             $stripe = new \Stripe\StripeClient(
-                'sk_test_lUp78O7PgN08WC9UgNRhOCnr'
+                env('STRIPE_SECRET_KEY')
             );
 
             //create product
@@ -536,7 +536,7 @@ class InvitationCode extends Controller
     {
         try {
             $stripe = new \Stripe\StripeClient(
-                'sk_test_lUp78O7PgN08WC9UgNRhOCnr'
+                env('STRIPE_SECRET_KEY')
             );
 
 //            $checkout_session = $stripe->checkout->sessions->retrieve(Auth::user()->stripe_checkout_session_id);
