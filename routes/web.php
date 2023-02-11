@@ -49,7 +49,7 @@ Route::get('/temp', function () {
     dd($auth->hasBlocked($user));
 })->name('temp');
 Route::get('/temp2', function (Request $request) {
-    $stripe = new StripeClient("sk_test_lUp78O7PgN08WC9UgNRhOCnr");
+    $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
     $stripe_account = $stripe->accounts->retrieve(session()->get('account_id'));
     dd($stripe_account);
 })->name('temp2');;
