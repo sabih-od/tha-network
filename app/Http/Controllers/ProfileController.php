@@ -31,7 +31,7 @@ class ProfileController extends Controller
         try {
             $user = Auth::user();
             //check if user has linked any accounts to their stripe payout screen
-            $stripe = new StripeClient("sk_test_lUp78O7PgN08WC9UgNRhOCnr");
+            $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
             $has_provided_stripe_payout_information = false;
             if ($user->stripe_account_id) {
                 $account = $stripe->accounts->retrieve($user->stripe_account_id);
@@ -81,7 +81,7 @@ class ProfileController extends Controller
             session()->remove('monthly_payment_flash');
 
             //check if user has linked any accounts to their stripe payout screen
-            $stripe = new StripeClient("sk_test_lUp78O7PgN08WC9UgNRhOCnr");
+            $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
             $has_provided_stripe_payout_information = false;
             if ($user->stripe_account_id) {
                 $account = $stripe->accounts->retrieve($user->stripe_account_id);

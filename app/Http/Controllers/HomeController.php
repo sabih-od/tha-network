@@ -34,7 +34,7 @@ class HomeController extends Controller
 //            $profile = $profile->only('first_name', 'last_name');
 
         //check if user has linked any accounts to their stripe payout screen
-        $stripe = new StripeClient("sk_test_lUp78O7PgN08WC9UgNRhOCnr");
+        $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
         $user = Auth::user();
         $has_provided_stripe_payout_information = false;
         if ($user && $user->stripe_account_id) {

@@ -16,7 +16,7 @@ class StripeController extends Controller
     public function connectAccount(Request $request)
     {
         $user = User::find(Auth::id());
-        $stripe = new StripeClient("sk_test_lUp78O7PgN08WC9UgNRhOCnr");
+        $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
 
         //if acc not connected
         if(is_null($user->stripe_account_id)) {
