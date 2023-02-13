@@ -216,11 +216,11 @@ class InvitationCode extends Controller
                             </tr>
                             <tr>
                                 <td colspan="3" style="width: 50%; text-align: center">
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Facebook</a>
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Twitter</a>
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Youtube</a>
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Tiktok</a>
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Instagram</a>
+                                    <a href="https://www.facebook.com/Tha-Network-150057600527324/" style="display: inline-block; margin: 0 6px">Facebook</a>
+                                    <a href="https://twitter.com/ThaNetwork4" style="display: inline-block; margin: 0 6px">Twitter</a>
+                                    <a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" style="display: inline-block; margin: 0 6px">Youtube</a>
+                                    <a href="https://www.tiktok.com/@_thanetwork_?lang=en" style="display: inline-block; margin: 0 6px">Tiktok</a>
+                                    <a href="https://www.instagram.com/_thanetwork_/" style="display: inline-block; margin: 0 6px">Instagram</a>
                                 </td>
                             </tr>
                         </table>
@@ -304,11 +304,11 @@ class InvitationCode extends Controller
                             </tr>
                             <tr>
                                 <td colspan="3" style="width: 50%; text-align: center">
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Facebook</a>
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Twitter</a>
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Youtube</a>
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Tiktok</a>
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Instagram</a>
+                                    <a href="https://www.facebook.com/Tha-Network-150057600527324/" style="display: inline-block; margin: 0 6px">Facebook</a>
+                                    <a href="https://twitter.com/ThaNetwork4" style="display: inline-block; margin: 0 6px">Twitter</a>
+                                    <a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" style="display: inline-block; margin: 0 6px">Youtube</a>
+                                    <a href="https://www.tiktok.com/@_thanetwork_?lang=en" style="display: inline-block; margin: 0 6px">Tiktok</a>
+                                    <a href="https://www.instagram.com/_thanetwork_/" style="display: inline-block; margin: 0 6px">Instagram</a>
                                 </td>
                             </tr>
                         </table>
