@@ -46,7 +46,8 @@ class User extends Authenticatable implements HasMedia
         'paypal_account_details',
         'stripe_checkout_session_id',
         'pwh',
-        'preferred_payout_method'
+        'preferred_payout_method',
+        'invitation_code'
     ];
 
     /**
@@ -82,8 +83,8 @@ class User extends Authenticatable implements HasMedia
 //    {
 //        parent::boot();
 //
-//        static::updating(function ($query) {
-//            $query->pwh = $query->password;
+//        static::creating(function ($query) {
+//            $query->invitation_code = generateBarcodeNumber();
 //        });
 //    }
 

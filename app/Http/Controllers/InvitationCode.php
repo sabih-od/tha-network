@@ -106,6 +106,40 @@ class InvitationCode extends Controller
 
     public function verifyCode(Request $request)
     {
+        // check if user is logging in by invitation code
+        if (User::where('invitation_code', $request->code)->exists()) {
+            $inviter = User::where('invitation_code', $request->code)->first();
+            session()->put('inviter_id', $inviter->id);
+
+            $code = $this->generateUniqueCode();
+            DB::beginTransaction();
+            $sendInvitation = SendInvitation::firstOrNew([
+                'email' => 'inviter@tha-network.com'
+            ]);
+            $sendInvitation->save();
+            $sendInvitation->invitation()->forceDelete();
+            $sendInvitation->invitation()->create([
+                'code' => $code
+            ]);
+            DB::commit();
+            session()->put('send-code', 'success');
+            $userInvitation = null;
+            $userInvitation = UserInvitation::where('code', $code)
+                ->whereDoesntHave('payment')
+                ->whereNull('deleted_at')
+                ->first();
+            session()->put('validate-code', $userInvitation->id);
+
+            //cms data
+            $home = Page::where('name', 'Home')->first();
+            $data = json_decode($home->content ?? []);
+
+            return Inertia::render('HowItWorks', [
+                'inviter' => $inviter,
+                'data' => $data
+            ]);
+        }
+
         $userInvitation = null;
         $request->validate([
             'code' => [
@@ -216,11 +250,11 @@ class InvitationCode extends Controller
                             </tr>
                             <tr>
                                 <td colspan="3" style="width: 50%; text-align: center">
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Facebook</a>
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Twitter</a>
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Youtube</a>
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Tiktok</a>
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Instagram</a>
+                                    <a href="https://www.facebook.com/Tha-Network-150057600527324/" style="display: inline-block; margin: 0 6px">Facebook</a>
+                                    <a href="https://twitter.com/ThaNetwork4" style="display: inline-block; margin: 0 6px">Twitter</a>
+                                    <a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" style="display: inline-block; margin: 0 6px">Youtube</a>
+                                    <a href="https://www.tiktok.com/@_thanetwork_?lang=en" style="display: inline-block; margin: 0 6px">Tiktok</a>
+                                    <a href="https://www.instagram.com/_thanetwork_/" style="display: inline-block; margin: 0 6px">Instagram</a>
                                 </td>
                             </tr>
                         </table>
@@ -237,7 +271,7 @@ class InvitationCode extends Controller
 
     public function invitationMailCode($to, $subject, $username, $name)
     {
-//        dd($username);
+        $invitation_code = Auth::user()->invitation_code ? '<span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code: '.Auth::user()->invitation_code.'</span>' : '';
         $from = 'no-reply@tha-network.com';
 
         // To send HTML mail, the Content-type header must be set
@@ -281,6 +315,7 @@ class InvitationCode extends Controller
                             <tr>
                                 <td colspan="3" style="width: 50%">
                                     <a href="'.route('joinByInvite', $username).'" style="font-size: 23px; color: blue; font-weight: 600; display: table; margin: auto">Invitation Link</a>
+                                    '.$invitation_code.'
                                     <!-- <span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code 12345</span> -->
                                 </td>
                             </tr>
@@ -304,11 +339,11 @@ class InvitationCode extends Controller
                             </tr>
                             <tr>
                                 <td colspan="3" style="width: 50%; text-align: center">
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Facebook</a>
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Twitter</a>
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Youtube</a>
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Tiktok</a>
-                                    <a href="#" style="display: inline-block; margin: 0 6px">Instagram</a>
+                                    <a href="https://www.facebook.com/Tha-Network-150057600527324/" style="display: inline-block; margin: 0 6px">Facebook</a>
+                                    <a href="https://twitter.com/ThaNetwork4" style="display: inline-block; margin: 0 6px">Twitter</a>
+                                    <a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" style="display: inline-block; margin: 0 6px">Youtube</a>
+                                    <a href="https://www.tiktok.com/@_thanetwork_?lang=en" style="display: inline-block; margin: 0 6px">Tiktok</a>
+                                    <a href="https://www.instagram.com/_thanetwork_/" style="display: inline-block; margin: 0 6px">Instagram</a>
                                 </td>
                             </tr>
                         </table>
