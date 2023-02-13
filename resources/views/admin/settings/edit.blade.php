@@ -79,6 +79,14 @@
                                             <input type="number" class="form-control" name="phone_no_2" id="name"
                                                    value="{{$content->phone_no_2??''}}" placeholder="Phone Number 2">
                                         </div>
+                                        <div class="form-group">
+                                            <label for="admin_stripe_account_id">
+                                                Admin Stripe Account ID
+                                                <i class="ml-2 fas fa-info" title="Your Stripe account ID is a unique identifier generated when you create a Stripe account. It can be found in your Stripe Dashboard. To access the Dashboard, log in to your Stripe account and click on the gear icon (found in the upper right corner). Your account ID will be displayed on the page."></i>
+                                            </label>
+                                            <input type="number" class="form-control" name="admin_stripe_account_id" id="admin_stripe_account_id"
+                                                   value="{{$content->admin_stripe_account_id??''}}" placeholder="Admin Stripe Account ID">
+                                        </div>
 
                                    <div class="form-group">
                                              {{-- start  --}}

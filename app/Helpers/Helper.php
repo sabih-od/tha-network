@@ -14,6 +14,7 @@ use App\Models\NetworkMember;
 use App\Models\Notification;
 use App\Models\Referral;
 use App\Models\Reward;
+use App\Models\Settings;
 use App\Models\ThaPayment;
 use App\Models\User;
 use Carbon\Carbon;
@@ -372,8 +373,6 @@ function close_accounts() {
                 event(new NetworkMemberClosure($target->id, $string, 'App\Models\User', $notification->id, $target));
             }
 
-
-
             //send referral reversion notification to inviter
             $inviter_id = get_inviter_id($user->id);
             $string = "Your ".$user->profile->first_name . ' ' . $user->profile->last_name." referral is no longer a member of the network you you won’t be receiving its referral payment";
@@ -400,8 +399,10 @@ function commission_distribution() {
         }
 
         //if account is closed send payout to admin stripe account
+        $settings = Settings::find(1);
+
         if ($reward->user->closed_on) {
-            if (!Auth::user()->stripe_account_id) {
+            if (!$settings->admin_stripe_account_id) {
                 continue;
             }
 
@@ -412,7 +413,7 @@ function commission_distribution() {
             $transfer = $stripe->transfers->create([
                 "amount" => $reward->amount * 100,
                 "currency" => "usd",
-                "destination" => Auth::user()->stripe_account_id,
+                "destination" => $settings->admin_stripe_account_id,
             ]);
 
             if ($transfer) {
