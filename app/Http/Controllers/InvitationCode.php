@@ -106,6 +106,40 @@ class InvitationCode extends Controller
 
     public function verifyCode(Request $request)
     {
+        // check if user is logging in by invitation code
+        if (User::where('invitation_code', $request->code)->exists()) {
+            $inviter = User::where('invitation_code', $request->code)->first();
+            session()->put('inviter_id', $inviter->id);
+
+            $code = $this->generateUniqueCode();
+            DB::beginTransaction();
+            $sendInvitation = SendInvitation::firstOrNew([
+                'email' => 'inviter@tha-network.com'
+            ]);
+            $sendInvitation->save();
+            $sendInvitation->invitation()->forceDelete();
+            $sendInvitation->invitation()->create([
+                'code' => $code
+            ]);
+            DB::commit();
+            session()->put('send-code', 'success');
+            $userInvitation = null;
+            $userInvitation = UserInvitation::where('code', $code)
+                ->whereDoesntHave('payment')
+                ->whereNull('deleted_at')
+                ->first();
+            session()->put('validate-code', $userInvitation->id);
+
+            //cms data
+            $home = Page::where('name', 'Home')->first();
+            $data = json_decode($home->content ?? []);
+
+            return Inertia::render('HowItWorks', [
+                'inviter' => $inviter,
+                'data' => $data
+            ]);
+        }
+
         $userInvitation = null;
         $request->validate([
             'code' => [
@@ -281,6 +315,7 @@ class InvitationCode extends Controller
                             <tr>
                                 <td colspan="3" style="width: 50%">
                                     <a href="'.route('joinByInvite', $username).'" style="font-size: 23px; color: blue; font-weight: 600; display: table; margin: auto">Invitation Link</a>
+                                    '.Auth::user()->invitation_code ? '<span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code: '.Auth::user()->invitation_code.'</span>' : ''.'
                                     <!-- <span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code 12345</span> -->
                                 </td>
                             </tr>
