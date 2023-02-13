@@ -1,22 +1,22 @@
 <template>
-<!--  to view video in full screen add fullScreen class -->
-<!--  to view video in minimize screen add minimized class -->
-<!--    <figure :class="video_classes" :style="video_Styling">-->
-<!--        <video autoplay muted controls id="video_element">-->
-<!--            <source :src="asset('video/introVideo.mp4')">-->
-<!--        </video>-->
-<!--        <div class="videoControllers">-->
-<!--            <button id="minimize" class="themeBtn" v-if="video_classes == 'introVideo fullScreen'" @click.prevent="minimizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Minimize</span></button>-->
-<!--            <button id="minimize" class="themeBtn" v-if="video_classes == 'introVideo minimized'" @click.prevent="maximizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Maximize</span></button>-->
-<!--            <button id="skip" class="themeBtn" @click.prevent="skipVideo"><i class="far fa-forward"></i><span>Skip</span></button>-->
-<!--        </div>-->
-<!--    </figure>-->
+    <!--  to view video in full screen add fullScreen class -->
+    <!--  to view video in minimize screen add minimized class -->
+    <!--    <figure :class="video_classes" :style="video_Styling">-->
+    <!--        <video autoplay muted controls id="video_element">-->
+    <!--            <source :src="asset('video/introVideo.mp4')">-->
+    <!--        </video>-->
+    <!--        <div class="videoControllers">-->
+    <!--            <button id="minimize" class="themeBtn" v-if="video_classes == 'introVideo fullScreen'" @click.prevent="minimizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Minimize</span></button>-->
+    <!--            <button id="minimize" class="themeBtn" v-if="video_classes == 'introVideo minimized'" @click.prevent="maximizeVideo"><i class="fas fa-compress-arrows-alt"></i><span>Maximize</span></button>-->
+    <!--            <button id="skip" class="themeBtn" @click.prevent="skipVideo"><i class="far fa-forward"></i><span>Skip</span></button>-->
+    <!--        </div>-->
+    <!--    </figure>-->
     <section class="loginSection">
         <div class="loginWrap">
-            <div class="row mx-0 no-gutters">
+            <div class="row mx-md-0 no-gutters position-relative">
                 <div class="col-md-7">
                     <figure>
-                        <img :src="asset('images/loginImg.png')" class="w-100" alt="">
+                        <img :src="asset('images/loginImg.png')" class="w-100 bg-img" alt="" >
                         <img :src="asset('images/user-logo.png')" class="login-logo" alt="">
                     </figure>
                 </div>
@@ -59,9 +59,10 @@
                                     <div class="getText">
                                         <span>
                                             <p>
-                                                1. If you are not a member you will need an invitation code to enter the site.<br />
-                                                2. If a member referred you and gave you an invitation code, use that code to enter the site.<br />
-                                                3. If you are visiting the site for the first time and interested in learning more about the site you will need to click <Link :href="$route('invitationCodeForm')" replace>here</Link> to receive an invitation code.
+                                                1. If you are not a member you will need an invitation code to enter the site.<br/>
+                                                2. If a member referred you and gave you an invitation code, use that code to enter the site.<br/>
+                                                3. If you are visiting the site for the first time and interested in learning more about the site you will need to click <Link
+                                                :href="$route('invitationCodeForm')" replace>here</Link> to receive an invitation code.
                                             </p>
                                         </span>
                                     </div>
@@ -116,12 +117,12 @@ export default {
         this.isCode = params['send-code'] && params['send-code'] == 'success';
 
         let _t = this;
-        $('#video_element').on('ended', function() {
+        $('#video_element').on('ended', function () {
             _t.skipVideo();
         });
 
         //stop video if recently logged out
-        if(this.$store.getters['Misc/hasLoggedOut']) {
+        if (this.$store.getters['Misc/hasLoggedOut']) {
             this.skipVideo();
             this.$store.commit('Misc/setHasLoggedOut', false);
         }

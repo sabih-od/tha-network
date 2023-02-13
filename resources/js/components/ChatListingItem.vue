@@ -1,8 +1,4 @@
 <template>
-<!--    <a href="#" @click.prevent="select" class="grpName">-->
-<!--        <ProfileImageIconRounded :profile_img="cover?.profile_img"/>-->
-<!--        <h2>{{ cover?.name }}</h2>-->
-<!--    </a>-->
 
     <a href="#" @click.prevent="select">
         <div class="friend-drawer friend-drawer--onhover">
@@ -11,7 +7,6 @@
             <div class="text">
                 <h6>{{ cover?.profile?.first_name + ' ' + cover?.profile?.last_name}}</h6>
             </div>
-<!--            <button class="form-control-sm btn text-danger btn-sm"><i class="fas fa-trash"></i></button>-->
 
             <div class="dropdown ml-auto">
                 <button type="button" id="dropdownNotifications" data-toggle="dropdown"
@@ -19,7 +14,6 @@
                     <i class="far fa-ellipsis-v"></i>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownNotifications">
-<!--                    <button class="dropdown-item" @click.prevent="deleteConversation" type="button">Delete Conversation</button>-->
                     <a class="dropdown-item" @click.stop.prevent="deleteConversation" href="#">Delete Conversation</a>
                 </div>
             </div>
@@ -66,12 +60,12 @@ export default {
     },
     mounted() {
         let active_user_id_check = this.$store.getters['Chat/activeUserId'];
-        if(active_user_id_check) {
+        if (active_user_id_check) {
             // alert('user id: ' + active_user_id_check);
             // this.$emitter.emit('chat_user_select', active_user_id_check);
             // this.$store.commit('Chat/setActiveUserId', null);
 
-            if(active_user_id_check == this.cover.id) {
+            if (active_user_id_check == this.cover.id) {
                 this.select();
                 this.$store.commit('Chat/setActiveUserId', null);
             }
@@ -83,7 +77,7 @@ export default {
             this.$emitter.emit('chat_active', this.channel_id)
             this.$store.commit('Channel/setChatActiveChannel', this.channel_id)
             this.$emitter.emit('chat_active_user_data', this.cover)
-            if(!this.is_auth_friend){
+            if (!this.is_auth_friend) {
                 this.$emitter.emit('unfriended_user_active');
             } else {
                 this.$emitter.emit('unfriended_user_inactive');
@@ -146,6 +140,7 @@ export default {
     height: 50px;
     object-fit: cover;
 }
+
 .dropdown button {
     background: transparent;
     border: none;

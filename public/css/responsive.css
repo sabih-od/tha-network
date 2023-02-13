@@ -1,27 +1,226 @@
-@media only screen and (max-width: 1600px) {}
+@media only screen and (max-width: 1600px) {
+}
 
-@media only screen and (max-width: 1445px) {}
+@media only screen and (max-width: 1445px) {
+}
 
 @media only screen and (max-width: 1366px) {
-	.container {
-		max-width: 1140px;
-	}
+    html {
+        font-size: 15px;
+    }
+
+    .loginSection {
+        padding: 2rem 2rem;
+    }
+
+    .loginWrap {
+        max-width: 100%;
+    }
+
+    .topWrap .btn-group {
+        gap: 0.25rem;
+    }
+
+    .topWrap .btn-group .themeBtn {
+        padding: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .userInfo h2 {
+        font-size: 1.75rem;
+    }
+
+    .userInfo h2 span {
+        font-size: 1rem;
+    }
+
+    .cardWrap h2 {
+        font-size: 1rem;
+    }
+
+    .cardWrap .viewBtn {
+        font-size: 0.75rem;
+    }
+
+    .cardWrap {
+        padding: 1.25rem 0.5rem;
+    }
+
+    .userList .userInfo a img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .slick-slide a img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .feedBox p {
+        font-size: 1rem;
+    }
+
+    .profileImg {
+        width: 150px;
+        height: 150px;
+    }
 }
 
 @media (max-width: 1199.98px) {
-	.container {
-		    max-width: 960px;
-	}
-} 
+    html {
+        font-size: 13px;
+    }
+}
+
 @media (max-width: 991.98px) {
-	.container {
-		max-width: 720px;
-	}
-} 
+    html {
+        font-size: 12px;
+    }
+}
+
 @media (max-width: 767.98px) {
-	.container {
-		max-width: 540px;
-	}
-} 
-@media (max-width: 575.98px) {} 
-@media (max-width: 320.98px) {} 
+    html {
+        font-size: 14px;
+    }
+
+    .loginWrap .contentWrap {
+        max-width: 100%;
+        border-radius: 30px;
+        padding: 2rem 0;
+    }
+
+    .loginWrap figure {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 30px;
+        overflow: hidden;
+    }
+
+    .loginWrap .contentWrap p {
+        font-size: 1rem;
+    }
+
+    .cardWrap {
+        padding: 1.25rem 2rem;
+    }
+
+    .cardWrap .imgWrap img {
+        width: 100%;
+        max-height: 300px;
+        object-fit: cover;
+    }
+
+    .topWrap .btn-group {
+        justify-content: center;
+    }
+
+    .awardWrap {
+        margin: auto;
+    }
+
+    div#navbarSupportedContent {
+        order: initial;
+    }
+
+    nav.navbar.navbar-expand {
+        flex-wrap: wrap;
+        gap: 1rem 0;
+    }
+
+    .chatCont {
+        max-height: 350px;
+        overflow-y: auto;
+        border-bottom: 1px solid #ddd;
+        box-shadow: 0 2px 5px #ddd;
+    }
+
+    .chat-panel {
+        height: 800px;
+    }
+
+    .messangerSec .chat-box-tray {
+        position: initial;
+        height: auto;
+        width: auto;
+        padding: 1rem 1rem 1rem 0;
+    }
+
+    .insideSearch {
+        /* position: initial; */
+        right: 0;
+        transform: none;
+        background: none;
+        border: 0;
+        top: 74px;
+        width: 100%;
+    }
+
+    .messangerSec .search-box, .insideSearch .input-group {
+        background: none;
+        border: 1px solid #ddd;
+        border-radius: 30px;
+        border-radius: 0;
+    }
+
+    .form-control {
+    }
+
+    .messangerSec {
+        height: auto;
+        overflow: auto;
+    }
+
+    .mainDashboard {
+        height: auto;
+        display: block;
+        margin: 0;
+    }
+
+    .messangerSec input {
+        height: 40px;
+    }
+
+    .socialIo {
+        width: 100%;
+    }
+}
+
+@media (max-width: 575.98px) {
+    html {
+        font-size: 13px;
+    }
+
+    .userInfo h2 {
+        font-size: 1.25rem;
+    }
+
+    .userInfo h2 span {
+        font-size: 0.75rem;
+    }
+
+    .profileImg {
+        width: 100px;
+        height: 100%;
+    }
+
+    .slick-slide a img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .userList .userInfo a img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .backBtn {
+        margin: 0 !important;
+    }
+}
+
+@media (max-width: 320.98px) {
+    html {
+        font-size: 11px;
+    }
+}
