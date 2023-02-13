@@ -271,7 +271,7 @@ class InvitationCode extends Controller
 
     public function invitationMailCode($to, $subject, $username, $name)
     {
-//        dd($username);
+        $invitation_code = Auth::user()->invitation_code ? '<span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code: '.Auth::user()->invitation_code.'</span>' : '';
         $from = 'no-reply@tha-network.com';
 
         // To send HTML mail, the Content-type header must be set
@@ -315,7 +315,7 @@ class InvitationCode extends Controller
                             <tr>
                                 <td colspan="3" style="width: 50%">
                                     <a href="'.route('joinByInvite', $username).'" style="font-size: 23px; color: blue; font-weight: 600; display: table; margin: auto">Invitation Link</a>
-                                    '.Auth::user()->invitation_code ? '<span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code: '.Auth::user()->invitation_code.'</span>' : ''.'
+                                    '.$invitation_code.'
                                     <!-- <span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code 12345</span> -->
                                 </td>
                             </tr>
