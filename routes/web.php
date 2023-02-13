@@ -43,16 +43,11 @@ use Stripe\StripeClient;
 });*/
 
 Route::get('/temp', function () {
-    $auth = Auth::user();
-    $user = User::find('00d77835-998f-48d3-9903-4f20dc967b37');
-
-    dd($auth->hasBlocked($user));
+    foreach (get_eloquent_users() as $user) {
+        $user->invitation_code = generateBarcodeNumber();
+        $user->save();
+    }
 })->name('temp');
-Route::get('/temp2', function (Request $request) {
-    $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
-    $stripe_account = $stripe->accounts->retrieve(session()->get('account_id'));
-    dd($stripe_account);
-})->name('temp2');;
 
 Route::get('get/redis', function () {
     dd(\Illuminate\Support\Facades\Redis::get('test:key'));

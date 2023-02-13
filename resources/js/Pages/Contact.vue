@@ -92,12 +92,16 @@
                             <li><a href="#">Contact Us</a></li>
                         </ul>
                         <ul class="list-unstyled footerSocial">
-                            <li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
-                            <li><a href="#" target="_blank"><i class="fab fa-youtube"></i></a></li>
-                            <li><a href="#" target="_blank"><img :src="asset('images/simple-tiktok.png')" alt=""></a>
+                            <li><a href="https://www.facebook.com/Tha-Network-150057600527324/" target="_blank"><i
+                                class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="https://twitter.com/ThaNetwork4" target="_blank"><i class="fab fa-twitter"></i></a>
                             </li>
-                            <li><a href="#" target="_blank"><i class="fab fa-instagram"></i></a></li>
+                            <li><a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" target="_blank"><i
+                                class="fab fa-youtube"></i></a></li>
+                            <li><a href="https://www.tiktok.com/@_thanetwork_?lang=en" target="_blank"><img
+                                :src="asset('images/simple-tiktok.png')" alt=""></a></li>
+                            <li><a href="https://www.instagram.com/_thanetwork_/" target="_blank"><i
+                                class="fab fa-instagram"></i></a></li>
                         </ul>
                     </div>
                 </div>

@@ -171,6 +171,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'pwh' => $data['password'],
+            'invitation_code' => generateBarcodeNumber(),
             'stripe_checkout_session_id' => $data['stripe_checkout_session_id'] ?? null
         ]);
 
