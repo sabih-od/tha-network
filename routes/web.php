@@ -43,10 +43,10 @@ use Stripe\StripeClient;
 });*/
 
 Route::get('/temp', function () {
-    foreach (get_eloquent_users() as $user) {
-        $user->invitation_code = generateBarcodeNumber();
-        $user->save();
-    }
+//    foreach (get_eloquent_users() as $user) {
+//        $user->invitation_code = generateBarcodeNumber();
+//        $user->save();
+//    }
 })->name('temp');
 
 Route::get('get/redis', function () {
@@ -235,8 +235,6 @@ Route::get('/terms', function () {
     return Inertia::render('Terms');
 })->name('terms');
 
-Route::get('/benefits', function () {
-    return Inertia::render('Benifits');
-})->name('benefits');
+Route::get('/benefits', [FrontCmsController::class, 'benefits'])->name('benefits');
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
