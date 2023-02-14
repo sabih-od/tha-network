@@ -30,7 +30,7 @@
                             <p>{{data.section_2_description_line_2}}</p>
                             <p>{{data.section_2_description_line_3}}</p>
                         </div>
-<!--                        <a href="#" class="themeBtn" v-if="!user">JOIN US</a>-->
+                        <!--                        <a href="#" class="themeBtn" v-if="!user">JOIN US</a>-->
                     </div>
                 </div>
                 <div class="row aic">
@@ -73,7 +73,7 @@
                                 <span>{{data.section_4_description_2_line_3}}</span>
                             </li>
                         </ul>
-<!--                        <a href="" class="themeBtn" v-if="!user">JOIN US</a>-->
+                        <!--                        <a href="" class="themeBtn" v-if="!user">JOIN US</a>-->
                     </div>
                 </div>
             </div>

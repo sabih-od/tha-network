@@ -354,7 +354,7 @@ header.sticky .navbar-brand img {
 }
 
 .socialIo li a span {
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 .socialIo li a:hover {
@@ -645,6 +645,7 @@ footer .links li a:hover {
     margin: 0 auto;
     background-color: #f9f9f9;
     box-shadow: 0 17px 38px rgb(0 0 0/6%);
+    position: relative;
 }
 
 .login-tabs {
@@ -731,7 +732,7 @@ footer .links li a:hover {
 
 .loginWrap .form-check label {
     color: #929292;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 400;
 }
 
@@ -763,7 +764,7 @@ footer .links li a:hover {
 
 .loginWrap .contentWrap p {
     line-height: 24px;
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 .loginWrap .contentWrap .color-black {
@@ -962,7 +963,7 @@ footer .links li a:hover {
 
 .profileImg .filSet p {
     color: var(--white);
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 500;
     text-align: center;
 }
@@ -1131,7 +1132,7 @@ footer .links li a:hover {
 
 .btnDesign {
     display: inline-block;
-    font-size: 14px;
+    font-size: 0.875rem;
     text-transform: uppercase;
     font-weight: 600;
     padding: 0.75em 1.5em;
@@ -1229,7 +1230,7 @@ footer .links li a:hover {
     display: inline-flex;
     align-items: center;
     gap: 1rem;
-    font-size: 14px;
+    font-size: 0.875rem;
     width: 100%;
     font-weight: 500;
     color: #fff;
@@ -1275,6 +1276,7 @@ footer .links li a:hover {
     border-radius: 50%;
     background-color: var(--white);
     box-shadow: 0 3px 10px rgb(144 152 172/50%);
+    overflow: hidden;
 }
 
 .textAreaWrap textarea {
@@ -1299,7 +1301,7 @@ footer .links li a:hover {
     align-items: center;
     gap: 0.5rem;
     padding: 0.75em;
-    font-size: 14px;
+    font-size: 0.875rem;
     border: 1px solid #f1f3f8;
     color: #7e7e7e;
     border-radius: 5px;
@@ -1393,7 +1395,7 @@ footer .links li a:hover {
 }
 
 .feedOptions li a {
-    font-size: 14px;
+    font-size: 0.875rem;
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
@@ -1499,7 +1501,7 @@ footer .links li a:hover {
 .weekly-goals p {
     display: flex;
     align-items: center;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.5;
     margin-bottom: 5px;
@@ -1642,7 +1644,7 @@ footer .links li a:hover {
 .edit-card .editProBtn {
     display: block;
     margin-left: auto;
-    font-size: 14px;
+    font-size: 0.875rem;
     width: 80px;
     text-align: center;
     text-transform: uppercase;
@@ -1682,13 +1684,13 @@ footer .links li a:hover {
 
 .edit-card .cardWrap p {
     color: var(--black);
-    font-size: 15px;
+    font-size: 0.9375rem;
     font-weight: 500;
 }
 
 .edit-card .payBtn {
     display: inline-block;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 600;
     color: var(--primary);
     text-transform: uppercase;
@@ -1890,10 +1892,11 @@ footer .links li a:hover {
     width: 100%;
     height: 700px;
     transition: ease all 0.5s;
+    overflow-x: hidden;
 }
 
 .chat-panel .row {
-    margin: 0;
+    margin-block: 0;
 }
 
 .messangerSec .settings-tray {
@@ -1913,7 +1916,7 @@ footer .links li a:hover {
 
 .messangerSec .settings-tray--right i {
     margin-top: 10px;
-    font-size: 35px;
+    font-size: 2.1875rem;
     color: #2278ba;
     margin-left: 14px;
     transition: 0.3s;
@@ -1940,7 +1943,7 @@ footer .links li a:hover {
     color: grey;
     margin: 0 10px 0 15px;
     vertical-align: middle;
-    font-size: 18px;
+    font-size: 1.125rem;
     position: absolute;
     right: 10px;
     top: 15px;
@@ -1991,20 +1994,20 @@ footer .links li a:hover {
 
 .messangerSec .friend-drawer .text h6 {
     margin-bottom: 0;
-    font-size: 20px;
+    font-size: 1.25rem;
     color: #000000;
     font-weight: 500;
 }
 
 .messangerSec .friend-drawer .text p {
     margin: 0;
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #848484;
     font-weight: 500;
 }
 
 .messangerSec .friend-drawer .time {
-    font-size: 12px;
+    font-size: 0.75rem;
     color: #000000 !important;
     font-weight: 600;
 }
@@ -2025,15 +2028,9 @@ footer .links li a:hover {
 
 .messangerSec .chat-bubble {
     padding: 10px 14px;
-    /* background: #eee; */
     margin: 10px 10px;
     border-radius: 9px;
     position: relative;
-    /* min-width: 680px; */
-    /* max-width: 500px; */
-    /* animation: fadeIn 1s ease-in; */
-    /* display: flex; */
-    /* align-items: flex-start; */
     display: flex;
     align-items: flex-start;
 }
@@ -2097,13 +2094,13 @@ footer .links li a:hover {
     margin: 0 10px;
     padding: 6px 15px;
     width: 100%;
-    font-size: 13px;
+    font-size: 0.8125rem;
     border-bottom: none;
 }
 
 .messangerSec .chat-box-tray i {
     color: #020202;
-    font-size: 18px;
+    font-size: 1.125rem;
     vertical-align: middle;
     margin: 0;
 }
@@ -2152,7 +2149,7 @@ footer .links li a:hover {
 
 .insideSearch .input-group input {
     border-radius: 0;
-    font-size: 14px;
+    font-size: 0.875rem;
     width: 68%;
 }
 
@@ -2207,7 +2204,7 @@ footer .links li a:hover {
 .emojiDropDown .dropdown-menu a i:last-of-type,
 .emojiDropDown .dropdown-menu a i {
     margin: 0;
-    font-size: 20px;
+    font-size: 1.25rem;
     color: #b5b5b5;
 }
 
@@ -2247,7 +2244,7 @@ footer .links li a:hover {
 }
 
 .mesag h6 {
-    font-size: 28px;
+    font-size: 1.75rem;
     color: #24243a;
     font-weight: 600;
     margin: 0;
@@ -2273,7 +2270,7 @@ footer .links li a:hover {
 }
 
 .mesg-bx p {
-    font-size: 16px;
+    font-size: 1rem;
     color: #fff;
     font-weight: 400;
     margin: 0;
@@ -2287,7 +2284,7 @@ footer .links li a:hover {
     display: block;
     padding-left: 0;
     padding-top: 12px;
-    font-size: 13px;
+    font-size: 0.8125rem;
     color: #adadad;
 }
 
@@ -2337,7 +2334,7 @@ footer .links li a:hover {
     width: 55px;
     height: 50px;
     background-color: var(--primary);
-    font-size: 18px;
+    font-size: 1.125rem;
     color: #fff;
     display: flex;
     align-items: center;
@@ -2354,7 +2351,7 @@ footer .links li a:hover {
 }
 
 .mesgHfs h5 {
-    font-size: 19px;
+    font-size: 1.1875rem;
     margin: 0;
 }
 
@@ -2374,7 +2371,7 @@ footer .links li a:hover {
 }
 
 .chatHead h6 {
-    font-size: 22px;
+    font-size: 1.375rem;
     color: #1b1b1b;
     margin: 0;
     font-weight: 600;
@@ -2762,16 +2759,23 @@ img.rounded-circle {
     width: 100%;
     object-fit: cover;
 }
-.chatSearch .search-box{
+
+.chatSearch .search-box {
     padding: 5px 0;
 }
-.search-box > button.fas{
+
+.search-box > button.fas {
     font-size: 1.375rem;
     background: transparent;
     border: 0;
 }
-.chatSearch .noMember{
+
+.chatSearch .noMember {
     display: block;
     font-size: 1.375rem;
     margin-left: 1.25rem;
+}
+
+div#navbarSupportedContent {
+    order: 1;
 }

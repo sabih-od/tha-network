@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <!-- Left Section -->
-                <div class="col-md-3">
+                <div class="col-md-3 order-0">
                     <PeopleList/>
 
                     <div class="cardWrap p-0">
@@ -35,7 +35,7 @@
                 <!-- Left Section -->
 
                 <!-- Center Section -->
-                <div class="col-md-6">
+                <div class="col-md-6 order-md-1 order-2">
                     <FriendStorySlider/>
 
                     <PostForm id="ref_post_form"/>
@@ -45,7 +45,7 @@
                 <!-- Center Section -->
 
                 <!-- Right Section -->
-                <div class="col-md-3">
+                <div class="col-md-3 order-md-3 order-1">
                     <a href="#" @click.prevent="myPost" class="btnDesign postBtn mb-4 w-100 text-center myPostText">{{ myPostText }}</a>
 
                     <WeeklyGoals :goals="goals" />
