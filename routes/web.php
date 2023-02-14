@@ -83,8 +83,9 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
     Route::delete('/customers/destroy/{id}', 'CustomersController@destroy')->name('customers.destroy');
 
     //cms
-    Route::match(['get', 'post'], '/cms/about-us', [CmsController::class, 'aboutUs'])->name('admin.cms.aboutUs');
     Route::match(['get', 'post'], '/cms/home', [CmsController::class, 'home'])->name('admin.cms.home');
+    Route::match(['get', 'post'], '/cms/about-us', [CmsController::class, 'aboutUs'])->name('admin.cms.aboutUs');
+    Route::match(['get', 'post'], '/cms/benefits', [CmsController::class, 'benefits'])->name('admin.cms.benefits');
 });
 
 //Inertia routes
