@@ -146,7 +146,7 @@
                             <p>Goals</p>
                         </a>
                     </li>
-                    <li class="nav-item has-treeview {{ request()->IS('admin/cms/about-us') || request()->IS('admin/cms/about-us') || request()->IS('admin/cms/about-judiann') || request()->IS('admin/cms/contact') || request()->IS('admin/cms/portfolio') || request()->IS('admin/cms/faq') || request()->IS('admin/student') || request()->IS('admin/cms/terms') || request()->IS('admin/cms/policy') ? 'menu-is-opening menu-open' : '' }}">
+                    <li class="nav-item has-treeview {{ request()->IS('admin/cms/about-us') || request()->IS('admin/cms/home') || request()->IS('admin/cms/benefits')  ? 'menu-is-opening menu-open' : '' }}">
                         <a href="#" class="nav-link ">
                             <i class="nav-icon fas fa-tags fw"></i>
                             <p>
@@ -155,16 +155,16 @@
                         </a>
                         <ul class="nav nav-treeview"
                             style="{{ request()->IS('admin/emailsetting') || request()->IS('admin/paymentgatway') ? 'display:block;' : '' }}">
-{{--                            <li class="nav-item">--}}
-{{--                                <a href="{{route('admin.cms.home')}}"--}}
-{{--                                   class="nav-link {{ request()->IS('admin/cms/home') ? 'active' : '' }}">--}}
-{{--                                    <i class="nav-icon fas fa-angle-double-right"></i>--}}
-{{--                                    <p>--}}
-{{--                                        Home--}}
-{{--                                    </p>--}}
-{{--                                </a>--}}
-{{--                            </li>--}}
 
+                            <li class="nav-item">
+                                <a href="{{route('admin.cms.home')}}"
+                                   class="nav-link {{ request()->IS('admin/cms/home') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-angle-double-right"></i>
+                                    <p>
+                                        Home
+                                    </p>
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a href="{{route('admin.cms.aboutUs')}}"
                                    class="nav-link {{ request()->IS('admin/cms/about-us') ? 'active' : '' }}">
@@ -175,91 +175,14 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{route('admin.cms.home')}}"
-                                   class="nav-link {{ request()->IS('admin/cms/home') ? 'active' : '' }}">
+                                <a href="{{route('admin.cms.benefits')}}"
+                                   class="nav-link {{ request()->IS('admin/cms/benefits') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-angle-double-right"></i>
                                     <p>
-                                        Home
+                                        Benefits
                                     </p>
                                 </a>
                             </li>
-{{--                            <li class="nav-item">--}}
-{{--                                <a href="{{route('admin.cms.contactUs')}}"--}}
-{{--                                   class="nav-link {{ request()->IS('admin/cms/contact') ? 'active' : '' }}">--}}
-{{--                                    <i class="nav-icon fas fa-angle-double-right"></i>--}}
-{{--                                    <p>--}}
-{{--                                        Contact Us--}}
-{{--                                    </p>--}}
-{{--                                </a>--}}
-{{--                            </li>--}}
-{{--                            <li class="nav-item">--}}
-{{--                                <a href="{{route('admin.cms.portfolio')}}"--}}
-{{--                                   class="nav-link {{ request()->IS('admin/cms/judiann-portfolio') ? 'active' : '' }}">--}}
-{{--                                    <i class="nav-icon fas fa-angle-double-right"></i>--}}
-{{--                                    <p>--}}
-{{--                                        Judiann's Portfolio--}}
-{{--                                    </p>--}}
-{{--                                </a>--}}
-{{--                            </li>--}}
-{{--                            <li class="nav-item">--}}
-{{--                                <a href="{{route('admin.cms.faq')}}"--}}
-{{--                                   class="nav-link {{ request()->IS('admin/cms/faq') ? 'active' : '' }}">--}}
-{{--                                    <i class="nav-icon fas fa-angle-double-right"></i>--}}
-{{--                                    <p>--}}
-{{--                                        FAQ's--}}
-{{--                                    </p>--}}
-{{--                                </a>--}}
-{{--                            </li>--}}
-
-{{--                            <li class="nav-item">--}}
-{{--                                <a href="{{route('student')}}"--}}
-{{--                                   class="nav-link {{ request()->IS('admin/student') ? 'active' : '' }}">--}}
-{{--                                    <i class="nav-icon fas fa-angle-double-right"></i>--}}
-{{--                                    <p>--}}
-{{--                                        Student's Work--}}
-{{--                                    </p>--}}
-{{--                                </a>--}}
-{{--                            </li>--}}
-
-{{--                            <li class="nav-item">--}}
-{{--                                <a href="{{route('admin.cms.schedule')}}"--}}
-{{--                                   class="nav-link {{ request()->IS('admin/schedule') ? 'active' : '' }}">--}}
-{{--                                    <i class="nav-icon fas fa-angle-double-right"></i>--}}
-{{--                                    <p>--}}
-{{--                                        Schedule a Class--}}
-{{--                                    </p>--}}
-{{--                                </a>--}}
-{{--                            </li>--}}
-
-{{--                            <li class="nav-item">--}}
-{{--                                <a href="{{route('admin.cms.services')}}"--}}
-{{--                                   class="nav-link {{ request()->IS('admin/services') ? 'active' : '' }}">--}}
-{{--                                    <i class="nav-icon fas fa-angle-double-right"></i>--}}
-{{--                                    <p>--}}
-{{--                                        Services--}}
-{{--                                    </p>--}}
-{{--                                </a>--}}
-{{--                            </li>--}}
-
-{{--                            <li class="nav-item">--}}
-{{--                                <a href="{{route('admin.cms.terms')}}"--}}
-{{--                                   class="nav-link {{ request()->IS('admin/cms/terms') ? 'active' : '' }}">--}}
-{{--                                    <i class="nav-icon fas fa-angle-double-right"></i>--}}
-{{--                                    <p>--}}
-{{--                                        Terms & Conditions--}}
-{{--                                    </p>--}}
-{{--                                </a>--}}
-{{--                            </li>--}}
-
-{{--                            <li class="nav-item">--}}
-{{--                                <a href="{{route('admin.cms.policy')}}"--}}
-{{--                                   class="nav-link {{ request()->IS('admin/cms/policy') ? 'active' : '' }}">--}}
-{{--                                    <i class="nav-icon fas fa-angle-double-right"></i>--}}
-{{--                                    <p>--}}
-{{--                                        Privacy Policy--}}
-{{--                                    </p>--}}
-{{--                                </a>--}}
-{{--                            </li>--}}
                         </ul>
                     </li>
                     <li class="nav-item">
