@@ -8,7 +8,7 @@
                 <div class="container">
                     <div class="row aic">
                         <div class="col-md-4">
-<!--                            <figure><img :src="data.banner_image" alt=""></figure>-->
+                            <figure><img :src="asset('images/img1.png')" alt=""></figure>
                         </div>
                         <div class="col-md-4">
                             <div class="content">
