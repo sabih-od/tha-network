@@ -101,5 +101,32 @@ class CMSPageSectionSeeder extends Seeder
                 'section_3_description_line_3' => 'So What Are You Waiting For JOIN TODAY!!!',
             ]),
         ]);
+
+        $benefits = Page::create([
+            'name' => 'Benefits',
+            'slug' => 'benefits',
+            'content' => json_encode([
+                'banner_image' => asset('images/banner.jpg'),
+                'banner_circle_title' =>  'MEMBERSHIP BENIFITS',
+                'section_2_image' => asset('images/benefit1.png'),
+                'section_2_title' => 'MEMBERSHIP BENEFITS',
+                'section_2_description_line_1' => ' Once you become a member, the Sky is the Limit to your earning potential. We have developed this site to help it’s members earn extra cash without over working yourself like a social media Influencer. Enjoy a full network of people to chat with, share information with, send daily post, and to brag about the number of members in your Network!!! Earn Financial Freedom!! Membership has never been this great!!!! ',
+                'section_2_description_line_2' => ' Have fun, keep the invites coming, build your network!!! ',
+                'section_2_description_line_3' => ' Become a member today!!!! ',
+                'section_3_image' => asset('images/benefit2.jpg'),
+                'section_3_title' => 'LET ME BREAK IT DOWN FOR YOU BY DOING THE MATH!',
+                'section_3_description' => ' If you invited 100 people to join your network (100 x $10 = $1,000) you could earn $1,000 if each person joined the network. If each of the 100 people continue their membership with Tha Network, you will continue to earn $1,000 per month for the life of their membership. Now let’s use real numbers, multiple the number of (friends and followers) you have on all your social media sites by $10 per person!! This is how much you could earn per month if all your friends and followers joined your network. What are you waiting for JOIN TODAY!!! ',
+                'section_4_image' => asset('images/benefit3.jpg'),
+                'section_4_title' => 'MEMBERSHIP PAYS',
+                'section_4_description_line_1' => ' Join Today for $29.99 per month!!! This will be the best investment you have ever made!!!!! You Should be Excited because WE ARE!!! ',
+                'section_4_description_line_2' => ' Join Now and lock in your membership payment because membership dues will be increasing as the site’s popularity grows!!!! Be one of the first Members to help make Tha Network an EPIC social media experience! ',
+                'section_4_title_2' => ' HOW MANY PEOPLE ARE IN YOUR NETWORK!!!! ',
+                'section_4_image_2' => asset('images/character.png'),
+                'section_4_title_3' => ' $$$ REMEMBER, MEMBERSHIP PAYS $$$ ',
+                'section_4_description_2_line_1' => ' This site was created to allow its members to earn cash by making referrals to the people you know or meet, and you will enjoy the benefits that come with a social media experience. ',
+                'section_4_description_2_line_2' => ' You will earn Monthly Income by just convincing your contacts to join your network. Once they join all you need to do is watch the cash add up in your account! ',
+                'section_4_description_2_line_3' => ' The site does all the work for you automatically by sending payments directly to your bank account when your referrals join Tha Network. ',
+            ]),
+        ]);
     }
 }
