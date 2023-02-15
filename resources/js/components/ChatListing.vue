@@ -18,20 +18,25 @@
 <!--        </teleport>-->
 <!--    </div>-->
 
-    <div class="col-md-3 col-sm-3 border-right p-0">
+    <div class="col-md-3 border-right p-md-0">
         <div class="chatSearch">
             <Link class="backBtn" :href="$route('home')">Go Back to Home</Link>
             <ChatSearchForm @search="search"></ChatSearchForm>
 <!--                v-else-if="!loading && channels.length > 0"-->
-            <ChatListingItem
-                v-if="!loading && channels.length > 0"
-                v-for="channel in channels"
-                :channel_id="channel.id"
-                :cover="channel.cover_detail"
-                :key="channel.id"
-                :is_auth_friend="channel.is_auth_friend"
-                :is_in_my_network="channel.is_in_my_network"
-            />
+
+            <ul class="chatCont">
+                <li>
+                    <ChatListingItem
+                        v-if="!loading && channels.length > 0"
+                        v-for="channel in channels"
+                        :channel_id="channel.id"
+                        :cover="channel.cover_detail"
+                        :key="channel.id"
+                        :is_auth_friend="channel.is_auth_friend"
+                        :is_in_my_network="channel.is_in_my_network"
+                    />
+                </li>
+            </ul>
 
             <span v-if="channels.length == 0 " class="noMember">No Member Found</span>
 

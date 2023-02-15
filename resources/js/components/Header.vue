@@ -1,7 +1,7 @@
 <template>
     <header class="wow fadeInDown" data-wow-delay="0.5s">
         <div class="container-fluid">
-            <nav class="navbar navbar-expand-lg">
+            <nav class="navbar navbar-expand">
                 <Link replace class="navbar-brand" :href="$route('work')">
                     <img :src="asset('images/logo.png')" alt="logo">
                 </Link>
@@ -10,14 +10,6 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="fa fa-bars"></span>
                 </button>
-                <form class="searchBar">
-                    <input type="search" placeholder="Search" name="search" v-model="search" @keyup.prevent="initateSearch()" autocomplete="off">
-                    <!-- <button type="submit"><i class="fal fa-search"></i></button> -->
-                    <div class="expandSearch" ref="expand_search_visibility">
-                        <p v-if="loading" class="text-secondary px-3">Please wait...</p>
-                        <Link v-for="user in peoples" @click.prevent="goToProfile()" :href="$route('userProfile', user.id)"><p>{{user.profile? user.profile?.first_name + ' ' + user.profile?.last_name : ''}}</p></Link>
-                    </div>
-                </form>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navIconsList ml-auto">
                         <li class="dropdown">
@@ -52,6 +44,14 @@
                         </li>
                     </ul>
                 </div>
+                <form class="searchBar">
+                    <input type="search" placeholder="Search" name="search" v-model="search" @keyup.prevent="initateSearch()" autocomplete="off">
+                    <!-- <button type="submit"><i class="fal fa-search"></i></button> -->
+                    <div class="expandSearch" ref="expand_search_visibility">
+                        <p v-if="loading" class="text-secondary px-3">Please wait...</p>
+                        <Link v-for="user in peoples" @click.prevent="goToProfile()" :href="$route('userProfile', user.id)"><p>{{user.profile? user.profile?.first_name + ' ' + user.profile?.last_name : ''}}</p></Link>
+                    </div>
+                </form>
             </nav>
         </div>
     </header>
