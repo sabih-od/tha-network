@@ -299,6 +299,11 @@ function has_made_monthly_payment($id = null): bool
         return false;
     }
 
+    //if trial still going on
+    if ($subscription->status == 'trialing') {
+        return true;
+    }
+
     $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
 
     return ($latest_invoice->status == "paid");
