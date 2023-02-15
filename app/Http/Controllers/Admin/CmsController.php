@@ -299,4 +299,108 @@ class CmsController extends Controller
             return back()->with('error', $exception->getMessage());
         }
     }
+
+    public function benefits(Request $request)
+    {
+        try {
+            if ($request->method() == 'POST') {
+                $rules = [
+                    'banner_image' => 'nullable',
+                    'banner_circle_title' => 'required',
+                    'section_2_image' => 'nullable',
+                    'section_2_title' => 'required',
+                    'section_2_description_line_1' => 'required',
+                    'section_2_description_line_2' => 'required',
+                    'section_2_description_line_3' => 'required',
+                    'section_3_image' => 'nullable',
+                    'section_3_title' => 'required',
+                    'section_3_description' => 'required',
+                    'section_4_image' => 'nullable',
+                    'section_4_title' => 'required',
+                    'section_4_description_line_1' => 'required',
+                    'section_4_description_line_2' => 'required',
+                    'section_4_title_2' => 'required',
+                    'section_4_image_2' => 'nullable',
+                    'section_4_title_3' => 'required',
+                    'section_4_description_2_line_1' => 'required',
+                    'section_4_description_2_line_2' => 'required',
+                    'section_4_description_2_line_3' => 'required',
+                ];
+                $customs = [];
+                $validator = Validator::make($request->all(), $rules, $customs);
+
+                if ($validator->fails()) {
+                    return redirect()->back()->with('error', $validator->getMessageBag()->first());
+                }
+
+                $benefits = Page::firstOrCreate([
+                    'name' => 'Benefits',
+                    'slug' => 'benefits',
+                ], []);
+
+                //banner_image
+                if($request->has('banner_image')) {
+                    $benefits->clearMediaCollection('benefits_banner_images');
+                    $benefits->addMediaFromRequest('banner_image')->toMediaCollection('benefits_banner_images');
+                }
+                //section_2_image
+                if($request->has('section_2_image')) {
+                    $benefits->clearMediaCollection('benefits_section_2_images');
+                    $benefits->addMediaFromRequest('section_2_image')->toMediaCollection('benefits_section_2_images');
+                }
+                //section_3_image
+                if($request->has('section_3_image')) {
+                    $benefits->clearMediaCollection('benefits_section_3_images');
+                    $benefits->addMediaFromRequest('section_3_image')->toMediaCollection('benefits_section_3_images');
+                }
+                //section_4_image
+                if($request->has('section_4_image')) {
+                    $benefits->clearMediaCollection('benefits_section_4_images');
+                    $benefits->addMediaFromRequest('section_4_image')->toMediaCollection('benefits_section_4_images');
+                }
+                //section_4_image_2
+                if($request->has('section_4_image_2')) {
+                    $benefits->clearMediaCollection('benefits_section_4_image_2s');
+                    $benefits->addMediaFromRequest('section_4_image_2')->toMediaCollection('benefits_section_4_image_2s');
+                }
+
+                $content = [
+                    'banner_image' => $benefits->getMedia('benefits_banner_images') && $benefits->getMedia('benefits_banner_images')->first() ? $benefits->getMedia('benefits_banner_images')->first()->getUrl() : asset('images/banner.jpg'),
+                    'banner_circle_title' => $request['banner_circle_title'],
+                    'section_2_image' => $benefits->getMedia('benefits_section_2_images') && $benefits->getMedia('benefits_section_2_images')->first() ? $benefits->getMedia('benefits_section_2_images')->first()->getUrl() : asset('images/benefit1.png'),
+                    'section_2_title' => $request['section_2_title'],
+                    'section_2_description_line_1' => $request['section_2_description_line_1'],
+                    'section_2_description_line_2' => $request['section_2_description_line_2'],
+                    'section_2_description_line_3' => $request['section_2_description_line_3'],
+                    'section_3_image' => $benefits->getMedia('benefits_section_3_images') && $benefits->getMedia('benefits_section_3_images')->first() ? $benefits->getMedia('benefits_section_3_images')->first()->getUrl() : asset('images/benefit2.jpg'),
+                    'section_3_title' => $request['section_3_title'],
+                    'section_3_description' => $request['section_3_description'],
+                    'section_4_image' => $benefits->getMedia('benefits_section_4_images') && $benefits->getMedia('benefits_section_4_images')->first() ? $benefits->getMedia('benefits_section_4_images')->first()->getUrl() : asset('images/benefit3.jpg'),
+                    'section_4_title' => $request['section_4_title'],
+                    'section_4_description_line_1' => $request['section_4_description_line_1'],
+                    'section_4_description_line_2' => $request['section_4_description_line_2'],
+                    'section_4_title_2' => $request['section_4_title_2'],
+                    'section_4_image_2' => $benefits->getMedia('benefits_section_4_image_2s') && $benefits->getMedia('benefits_section_4_image_2s')->first() ? $benefits->getMedia('benefits_section_4_image_2s')->first()->getUrl() : asset('images/character.png'),
+                    'section_4_title_3' => $request['section_4_title_3'],
+                    'section_4_description_2_line_1' => $request['section_4_description_2_line_1'],
+                    'section_4_description_2_line_2' => $request['section_4_description_2_line_2'],
+                    'section_4_description_2_line_3' => $request['section_4_description_2_line_3'],
+                ];
+
+                $benefits->content = json_encode($content);
+                $benefits->save();
+
+                return back()->with('success', 'Page Updated Successfully');
+            }
+
+            $benefits = Page::where('name', 'Benefits')->first();
+            $data = [];
+            if ($benefits && $benefits->content) {
+                $data = json_decode($benefits->content);
+            }
+            return view('admin.cms.benefits', compact('benefits', 'data'));
+        } catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
 }

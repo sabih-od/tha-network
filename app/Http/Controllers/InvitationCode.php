@@ -472,96 +472,36 @@ class InvitationCode extends Controller
                 'cvc' => 'required',
             ]);
 
-            $stripe = new \Stripe\StripeClient(
-                env('STRIPE_SECRET_KEY')
-            );
+            //if today is 1st
+            if (Carbon::today()->day == 1) {
+                $charge_date = Carbon::today();
 
-            //create product
-            $product = $stripe->products->create([
-                'name' => 'THA Network monthly subscription',
-            ]);
+                //subscribe
+                $subscription = $this->createStripeSubscription($request, $charge_date, true);
+            } else {
+                //charge
+                $charge_id = $this->stripeCharge($request);
 
-            //create price
-            $price = $stripe->prices->create([
-                'unit_amount' => $this->amount * 100,
-                'currency' => 'usd',
-                'recurring' => ['interval' => 'month'],
-                'product' => $product->id,
-            ]);
+                //compute days till next month
+                $currentDate = Carbon::today(); // get a new instance of the Carbon class representing today's date
+                $daysTillNextMonth = $currentDate->copy()->endOfMonth()->diffInDays($currentDate, true);
 
-            //create customer
-            $customer = $stripe->customers->create([
-                'name' => 'Tha network member',
-            ]);
+                //compute charge date
+                if ($daysTillNextMonth < 15) {
+                    $charge_date = Carbon::today()->copy()->addMonths(2)->firstOfMonth();
+                } else {
+                    $charge_date = Carbon::today()->copy()->addMonth()->firstOfMonth();
+                }
 
-            //create payment method
-            $payment_method = $stripe->paymentMethods->create([
-                'type' => 'card',
-                'card' => [
-                    'number' => $request->card_number,
-                    'exp_month' => $request->exp_month,
-                    'exp_year' => $request->exp_year,
-                    'cvc' => $request->cvc,
-                ],
-            ]);
-
-            //attach payment method to customer
-            $payment_method = $stripe->paymentMethods->attach(
-                $payment_method->id,
-                [
-                    'customer' => $customer->id
-                ]
-            );
-
-            //update customer
-            $customer = $stripe->customers->update(
-                $customer->id,
-                [
-                    'invoice_settings' => [
-                        'default_payment_method' => $payment_method->id
-                    ]
-                ]
-            );
-
-//            dd(Carbon::createFromTimestamp(1672429211));
-
-            //create subscription
-            $subscription = $stripe->subscriptions->create([
-                'customer' => $customer->id,
-                'items' => [[
-                    'price' => $price->id,
-                ]],
-//                'billing_cycle_anchor' => (Carbon::now())->timestamp,
-                'backdate_start_date' => (Carbon::today())->startOfMonth()->timestamp
-            ]);
-
-//            dd($subscription);
+                //subscribe
+                $subscription = $this->createStripeSubscription($request, $charge_date, false);
+            }
 
             //put checkout session id in session
             session()->put('stripe_checkout_session_id', $subscription->id);
 
             if($subscription)
                 return redirect()->route('stripeSuccessPayment');
-
-
-//            $checkout_session = $stripe->checkout->sessions->create([
-////                'customer' => $customer->id,
-//                'line_items' => [[
-////                    'price' => $subscription->items->data[0]->plan->id,
-//                    'price' => $price->id,
-//                    'quantity' => 1,
-//                ]],
-//                'mode' => 'subscription',
-//                'success_url' => route('stripeSuccessPayment'),
-//                'cancel_url' => route('login'),
-//            ]);
-//
-//            //put checkout session id in session
-//            session()->put('stripe_checkout_session_id', $checkout_session->id);
-//
-//            return Inertia::render('StripePayment', [
-//                'checkout_session' => $checkout_session
-//            ]);
         } catch (\Exception $e) {
             return Inertia::render('StripePayment', ['error' => $e->getMessage()]);
         }
@@ -602,5 +542,103 @@ class InvitationCode extends Controller
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->withErrors([$e->getMessage()]);
         }
+    }
+
+    protected function createStripeSubscription (Request $request, $charge_date, $isMonthsFirst)
+    {
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
+
+        //create product
+        $product = $stripe->products->create([
+            'name' => 'THA Network monthly subscription',
+        ]);
+
+        //create price
+        $price = $stripe->prices->create([
+            'unit_amount' => $this->amount * 100,
+            'currency' => 'usd',
+            'recurring' => ['interval' => 'month'],
+            'product' => $product->id,
+        ]);
+
+        //create customer
+        $customer = $stripe->customers->create([
+            'name' => 'Tha network member',
+        ]);
+
+        //create payment method
+        $payment_method = $stripe->paymentMethods->create([
+            'type' => 'card',
+            'card' => [
+                'number' => $request->card_number,
+                'exp_month' => $request->exp_month,
+                'exp_year' => $request->exp_year,
+                'cvc' => $request->cvc,
+            ],
+        ]);
+
+        //attach payment method to customer
+        $payment_method = $stripe->paymentMethods->attach(
+            $payment_method->id,
+            [
+                'customer' => $customer->id
+            ]
+        );
+
+        //update customer
+        $customer = $stripe->customers->update(
+            $customer->id,
+            [
+                'invoice_settings' => [
+                    'default_payment_method' => $payment_method->id
+                ]
+            ]
+        );
+
+        //create subscription
+        $subscription_array['customer'] = $customer->id;
+        $subscription_array['items'] = [['price' => $price->id]];
+        if (!$isMonthsFirst) {
+            $subscription_array['trial_end'] = strval($charge_date->timestamp);
+        }
+
+        $subscription = $stripe->subscriptions->create($subscription_array);
+
+        return $subscription;
+    }
+
+    protected function stripeCharge (Request $request)
+    {
+        $stripe = new \Stripe\StripeClient(
+            env('STRIPE_SECRET_KEY')
+        );
+
+        //create customer
+        $customer = $stripe->customers->create([
+            'name' => 'Tha network member',
+        ]);
+
+        $card = $stripe->customers->createSource(
+            $customer->id,
+            [
+                'source' => [
+                    'object' => 'card',
+                    'number' => $request->card_number,
+                    'exp_month' => $request->exp_month,
+                    'exp_year' => $request->exp_year,
+                    'cvc' => $request->cvc,
+                ]
+            ]
+        );
+
+        $charge = $stripe->charges->create([
+            'customer' => $customer->id,
+            'amount' => $this->amount * 100,
+            'currency' => 'usd',
+            'source' => $card->id,
+            'description' => 'Tha Network - Subscription Charge',
+        ]);
+
+        return $charge->id;
     }
 }
