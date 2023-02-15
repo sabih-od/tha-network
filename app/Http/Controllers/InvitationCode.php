@@ -466,21 +466,23 @@ class InvitationCode extends Controller
     {
         try {
             $request->validate([
-                'card_number' => 'required',
-                'exp_month' => 'required',
-                'exp_year' => 'required',
-                'cvc' => 'required',
+                'card_number' => 'required_without:token_id',
+                'exp_month' => 'required_without:token_id',
+                'exp_year' => 'required_without:token_id',
+                'cvc' => 'required_without:token_id',
+                'token_id' => 'required_without:card_number,exp_month,exp_year,cvc',
             ]);
 
             //if today is 1st
-            if (Carbon::today()->day == 1) {
+//            if (Carbon::today()->day == 1) {
+            if (!$request->has('token_id')) {
                 $charge_date = Carbon::today();
 
                 //subscribe
                 $subscription = $this->createStripeSubscription($request, $charge_date, true);
             } else {
                 //charge
-                $charge_id = $this->stripeCharge($request);
+                $charge_id = $this->stripeCharge($request, $request->token_id);
 
                 //compute days till next month
                 $currentDate = Carbon::today(); // get a new instance of the Carbon class representing today's date
@@ -494,7 +496,7 @@ class InvitationCode extends Controller
                 }
 
                 //subscribe
-                $subscription = $this->createStripeSubscription($request, $charge_date, false);
+                $subscription = $this->createStripeSubscription($request, $charge_date, false, $request->token_id);
             }
 
             //put checkout session id in session
@@ -544,7 +546,7 @@ class InvitationCode extends Controller
         }
     }
 
-    protected function createStripeSubscription (Request $request, $charge_date, $isMonthsFirst)
+    protected function createStripeSubscription (Request $request, $charge_date, $isMonthsFirst, $token_id = null)
     {
         $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
 
@@ -607,35 +609,44 @@ class InvitationCode extends Controller
         return $subscription;
     }
 
-    protected function stripeCharge (Request $request)
+    protected function stripeCharge (Request $request, $token_id)
     {
         $stripe = new \Stripe\StripeClient(
             env('STRIPE_SECRET_KEY')
         );
 
-        //create customer
-        $customer = $stripe->customers->create([
-            'name' => 'Tha network member',
-        ]);
 
-        $card = $stripe->customers->createSource(
-            $customer->id,
-            [
-                'source' => [
-                    'object' => 'card',
-                    'number' => $request->card_number,
-                    'exp_month' => $request->exp_month,
-                    'exp_year' => $request->exp_year,
-                    'cvc' => $request->cvc,
-                ]
-            ]
-        );
+//        //create customer
+//        $customer = $stripe->customers->create([
+//            'name' => 'Tha network member',
+//        ]);
+//
+//        $card = $stripe->customers->createSource(
+//            $customer->id,
+//            [
+//                'source' => [
+//                    'object' => 'card',
+//                    'number' => $request->card_number,
+//                    'exp_month' => $request->exp_month,
+//                    'exp_year' => $request->exp_year,
+//                    'cvc' => $request->cvc,
+//                ]
+//            ]
+//        );
+//
+//        $token = $stripe->tokens->create([
+//            'card' => [
+//                'number' => $request->card_number,
+//                'exp_month' => $request->exp_month,
+//                'exp_year' => $request->exp_year,
+//                'cvc' => $request->cvc,
+//            ],
+//        ]);
 
         $charge = $stripe->charges->create([
-            'customer' => $customer->id,
             'amount' => $this->amount * 100,
             'currency' => 'usd',
-            'source' => $card->id,
+            'source' => $token_id,
             'description' => 'Tha Network - Subscription Charge',
         ]);
 
