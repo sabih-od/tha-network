@@ -43,10 +43,10 @@ use Stripe\StripeClient;
 });*/
 
 Route::get('/temp', function () {
-    foreach (get_eloquent_users() as $user) {
-        $user->invitation_code = generateBarcodeNumber();
-        $user->save();
-    }
+//    foreach (get_eloquent_users() as $user) {
+//        $user->invitation_code = generateBarcodeNumber();
+//        $user->save();
+//    }
 })->name('temp');
 Route::get('/temp2', function (Request $request) {
     $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
@@ -88,8 +88,9 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
     Route::delete('/customers/destroy/{id}', 'CustomersController@destroy')->name('customers.destroy');
 
     //cms
-    Route::match(['get', 'post'], '/cms/about-us', [CmsController::class, 'aboutUs'])->name('admin.cms.aboutUs');
     Route::match(['get', 'post'], '/cms/home', [CmsController::class, 'home'])->name('admin.cms.home');
+    Route::match(['get', 'post'], '/cms/about-us', [CmsController::class, 'aboutUs'])->name('admin.cms.aboutUs');
+    Route::match(['get', 'post'], '/cms/benefits', [CmsController::class, 'benefits'])->name('admin.cms.benefits');
 });
 
 //Inertia routes
@@ -239,8 +240,6 @@ Route::get('/terms', function () {
     return Inertia::render('Terms');
 })->name('terms');
 
-Route::get('/benefits', function () {
-    return Inertia::render('Benifits');
-})->name('benefits');
+Route::get('/benefits', [FrontCmsController::class, 'benefits'])->name('benefits');
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

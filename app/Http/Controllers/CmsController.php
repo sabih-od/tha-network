@@ -27,4 +27,14 @@ class CmsController extends Controller
             'data' => $data
         ]);
     }
+
+    public function benefits (Request $request)
+    {
+        $benefits = Page::where('name', 'Benefits')->first();
+        $data = json_decode($benefits->content ?? []);
+
+        return Inertia::render('Benifits', [
+            'data' => $data
+        ]);
+    }
 }
