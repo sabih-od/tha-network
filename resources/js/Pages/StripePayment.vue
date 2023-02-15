@@ -234,7 +234,7 @@ export default {
         },
         async stripeCharge () {
             // const stripe = await Stripe('pk_test_0rY5rGJ7GN1xEhCB40mAcWjg');
-            const stripe = require('stripe')('sk_test_lUp78O7PgN08WC9UgNRhOCnr');
+            const stripe = require('stripe')(process.env.MIX_STRIPE_SECRET_KEY);
 
             stripe.tokens.create({'card': {
                 number: this.card_number,
