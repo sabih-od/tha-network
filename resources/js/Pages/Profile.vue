@@ -3,7 +3,7 @@
         <div class="container-fluid">
             <div class="row">
                 <!-- Left Section -->
-                <div class="col-md-3">
+                <div class="col-md-3 order-0">
                     <div class="cardWrap">
                         <h2>About Me</h2>
 
@@ -43,16 +43,16 @@
                 <!-- Left Section -->
 
                 <!-- Center Section -->
-                <div class="col-md-6">
+                <div class="col-md-6 order-md-1 order-2">
                     <div class="row mb-4">
-                        <div class="col-md-4">
+                        <div class="col-4">
                             <div class="profileAwards">
                                 <img :src="level_details.trophy ?? 'images/ranking.png'" style="max-width: 76px;" alt="">
                                 <h3><sup>{{ level_details.level }}</sup></h3>
                                 <p>Rank</p>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-4">
                             <Link :href="$route('home')" @click.prevent="myFriendsOn">
                                 <div class="profileAwards">
                                     <img src="images/friends.png" alt="">
@@ -61,7 +61,7 @@
                                 </div>
                             </Link>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-4">
                             <Link :href="$route('home')" @click.prevent="peopleInMtNetworkOn">
                                 <div class="profileAwards">
                                     <img src="images/connections.png" alt="">
@@ -78,7 +78,7 @@
                 <!-- Center Section -->
 
                 <!-- Right Section -->
-                <div class="col-md-3">
+                <div class="col-md-3 order-md-3 order-1">
                     <NewMembersList/>
                 </div>
                 <!-- Right Section -->

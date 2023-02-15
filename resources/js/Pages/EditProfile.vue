@@ -1,14 +1,14 @@
 <template>
     <section class="bg-grey editProfile pt-0">
-        <div class="container">
+        <div class="container-md">
             <div class="row jcc">
-                <div class="col-md-10">
+                <div class="col-12">
                     <h2>Personal Information</h2>
                 </div>
                 <Link :href="$route('profile')" class="btn themeBtn mb-2" style="color: white;">
                     <span><h5 class="m-auto">Back to profile</h5></span>
                 </Link>
-                <div class="col-md-10">
+                <div class="col-12">
                     <h3>Referral Payment Options</h3>
                     <h6>In order to receive Referral Payments you must include your Paypal or Stripe Account information.  If you do not have a Stripe or Paypal Account create one and provide the information below.If this information is not provided, you will not be able to receive your referral payments.</h6>
                     <div class="row">
