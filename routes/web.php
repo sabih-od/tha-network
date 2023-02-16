@@ -91,6 +91,9 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
     Route::match(['get', 'post'], '/cms/home', [CmsController::class, 'home'])->name('admin.cms.home');
     Route::match(['get', 'post'], '/cms/about-us', [CmsController::class, 'aboutUs'])->name('admin.cms.aboutUs');
     Route::match(['get', 'post'], '/cms/benefits', [CmsController::class, 'benefits'])->name('admin.cms.benefits');
+    Route::match(['get', 'post'], '/cms/terms', [CmsController::class, 'terms'])->name('admin.cms.terms');
+    Route::match(['get', 'post'], '/cms/privacy', [CmsController::class, 'privacy'])->name('admin.cms.privacy');
+    Route::match(['get', 'post'], '/cms/contact', [CmsController::class, 'contact'])->name('admin.cms.contact');
 });
 
 //Inertia routes
@@ -228,17 +231,11 @@ Route::get('/home', function () {
 
 Route::get('/about', [FrontCmsController::class, 'about'])->name('about');
 
-Route::get('/contact', function () {
-    return Inertia::render('Contact');
-})->name('contact');
+Route::get('/contact', [FrontCmsController::class, 'contact'])->name('contact');
 
-Route::get('/privacy', function () {
-    return Inertia::render('Privacy');
-})->name('privacy');
+Route::get('/privacy', [FrontCmsController::class, 'privacy'])->name('privacy');
 
-Route::get('/terms', function () {
-    return Inertia::render('Terms');
-})->name('terms');
+Route::get('/terms', [FrontCmsController::class, 'terms'])->name('terms');
 
 Route::get('/benefits', [FrontCmsController::class, 'benefits'])->name('benefits');
 

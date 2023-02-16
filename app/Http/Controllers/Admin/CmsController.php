@@ -403,4 +403,156 @@ class CmsController extends Controller
             return back()->with('error', $exception->getMessage());
         }
     }
+
+    public function terms(Request $request)
+    {
+        try {
+            if ($request->method() == 'POST') {
+                $rules = [
+                    'banner_image' => 'nullable',
+                    'banner_circle_title' => 'required',
+                    'terms_content' => 'required',
+                ];
+                $customs = [];
+                $validator = Validator::make($request->all(), $rules, $customs);
+
+                if ($validator->fails()) {
+                    return redirect()->back()->with('error', $validator->getMessageBag()->first());
+                }
+
+                $terms = Page::firstOrCreate([
+                    'name' => 'Benefits',
+                    'slug' => 'terms',
+                ], []);
+
+                //banner_image
+                if($request->has('banner_image')) {
+                    $terms->clearMediaCollection('terms_banner_images');
+                    $terms->addMediaFromRequest('banner_image')->toMediaCollection('terms_banner_images');
+                }
+
+                $content = [
+                    'banner_image' => $terms->getMedia('terms_banner_images') && $terms->getMedia('terms_banner_images')->first() ? $terms->getMedia('terms_banner_images')->first()->getUrl() : asset('images/banner.jpg'),
+                    'banner_circle_title' => $request['banner_circle_title'],
+                    'terms_content' => $request['terms_content'],
+                ];
+
+                $terms->content = json_encode($content);
+                $terms->save();
+
+                return back()->with('success', 'Page Updated Successfully');
+            }
+
+            $terms = Page::where('name', 'Terms')->first();
+            $data = [];
+            if ($terms && $terms->content) {
+                $data = json_decode($terms->content);
+            }
+            return view('admin.cms.terms', compact('terms', 'data'));
+        } catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function privacy(Request $request)
+    {
+        try {
+            if ($request->method() == 'POST') {
+                $rules = [
+                    'banner_image' => 'nullable',
+                    'banner_circle_title' => 'required',
+                    'terms_content' => 'required',
+                ];
+                $customs = [];
+                $validator = Validator::make($request->all(), $rules, $customs);
+
+                if ($validator->fails()) {
+                    return redirect()->back()->with('error', $validator->getMessageBag()->first());
+                }
+
+                $privacy = Page::firstOrCreate([
+                    'name' => 'Privacy',
+                    'slug' => 'privacy',
+                ], []);
+
+                //banner_image
+                if($request->has('banner_image')) {
+                    $privacy->clearMediaCollection('privacy_banner_images');
+                    $privacy->addMediaFromRequest('banner_image')->toMediaCollection('privacy_banner_images');
+                }
+
+                $content = [
+                    'banner_image' => $privacy->getMedia('privacy_banner_images') && $privacy->getMedia('privacy_banner_images')->first() ? $privacy->getMedia('privacy_banner_images')->first()->getUrl() : asset('images/banner.jpg'),
+                    'banner_circle_title' => $request['banner_circle_title'],
+                    'privacy_content' => $request['privacy_content'],
+                ];
+
+                $privacy->content = json_encode($content);
+                $privacy->save();
+
+                return back()->with('success', 'Page Updated Successfully');
+            }
+
+            $privacy = Page::where('name', 'Privacy')->first();
+            $data = [];
+            if ($privacy && $privacy->content) {
+                $data = json_decode($privacy->content);
+            }
+            return view('admin.cms.privacy', compact('privacy', 'data'));
+        } catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function contact(Request $request)
+    {
+        try {
+            if ($request->method() == 'POST') {
+                $rules = [
+                    'banner_image' => 'nullable',
+                    'banner_circle_title' => 'required',
+                    'banner_circle_title_2' => 'required',
+                    'banner_circle_text' => 'required',
+                ];
+                $customs = [];
+                $validator = Validator::make($request->all(), $rules, $customs);
+
+                if ($validator->fails()) {
+                    return redirect()->back()->with('error', $validator->getMessageBag()->first());
+                }
+
+                $contact = Page::firstOrCreate([
+                    'name' => 'Contact',
+                    'slug' => 'contact',
+                ], []);
+
+                //banner_image
+                if($request->has('banner_image')) {
+                    $contact->clearMediaCollection('contact_banner_images');
+                    $contact->addMediaFromRequest('banner_image')->toMediaCollection('contact_banner_images');
+                }
+
+                $content = [
+                    'banner_image' => $contact->getMedia('contact_banner_images') && $contact->getMedia('contact_banner_images')->first() ? $contact->getMedia('contact_banner_images')->first()->getUrl() : asset('images/banner.jpg'),
+                    'banner_circle_title' => $request['banner_circle_title'],
+                    'banner_circle_title_2' => $request['banner_circle_title_2'],
+                    'banner_circle_text' => $request['banner_circle_text'],
+                ];
+
+                $contact->content = json_encode($content);
+                $contact->save();
+
+                return back()->with('success', 'Page Updated Successfully');
+            }
+
+            $contact = Page::where('name', 'Contact')->first();
+            $data = [];
+            if ($contact && $contact->content) {
+                $data = json_decode($contact->content);
+            }
+            return view('admin.cms.contact', compact('contact', 'data'));
+        } catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
 }
