@@ -8,6 +8,7 @@ use App\Models\ThaPayment;
 use App\Models\User;
 use App\Models\UserInvitation;
 use App\Traits\StripePayment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -46,7 +47,9 @@ class HowItWorks extends Controller
 
     public function stripePaymentShow()
     {
-        return Inertia::render('StripePayment');
+        return Inertia::render('StripePayment', [
+            'isMonthsFirst' => (Carbon::today()->day == 1)
+        ]);
     }
 
     public function successPayment(Request $request)
