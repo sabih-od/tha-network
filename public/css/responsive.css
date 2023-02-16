@@ -70,6 +70,10 @@
     html {
         font-size: 13px;
     }
+
+    .abtSec h2 {
+        font-size: 1.75rem;
+    }
 }
 
 @media (max-width: 991.98px) {
@@ -159,11 +163,7 @@
     .messangerSec .search-box, .insideSearch .input-group {
         background: none;
         border: 1px solid #ddd;
-        border-radius: 30px;
         border-radius: 0;
-    }
-
-    .form-control {
     }
 
     .messangerSec {
@@ -183,6 +183,42 @@
 
     .socialIo {
         width: 100%;
+    }
+
+    .main-slider .content {
+        width: 230px;
+        height: 230px;
+    }
+
+    .main-slider .content h3 {
+        font-size: 1.5rem;
+    }
+
+    .abtSec .row + .row {
+        margin-top: 1rem;
+    }
+
+    .abtSec .row {
+        gap: 1rem 0;
+    }
+
+    footer .links {
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .main-slider > img {
+        height: 300px;
+        object-fit: cover;
+    }
+
+    .termsSec h2 {
+        font-size: 1.5rem;
+    }
+
+    .termsSec p, .termsSec li {
+        font-size: 0.875rem;
+        font-weight: normal;
     }
 }
 
@@ -216,6 +252,50 @@
 
     .backBtn {
         margin: 0 !important;
+    }
+
+    .profileAwards h3 {
+        font-size: 1.75rem;
+    }
+
+    .profileAwards p {
+        font-size: 0.875rem;
+    }
+
+    .profileAwards {
+        padding: 1rem 0.5rem;
+        gap: 0;
+        justify-content: space-between;
+    }
+
+    .profileAwards > img {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+    }
+
+    .navbar-brand img {
+        max-height: 50px;
+    }
+
+    .filSet.changePhoto + img {
+        height: 250px;
+    }
+}
+
+@media (max-width: 400px) {
+    nav.navbar.navbar-expand {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #navbarSupportedContent {
+        justify-content: center;
+    }
+
+    .searchBar {
+        margin: 0;
     }
 }
 
