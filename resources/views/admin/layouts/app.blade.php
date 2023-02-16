@@ -146,7 +146,7 @@
                             <p>Goals</p>
                         </a>
                     </li>
-                    <li class="nav-item has-treeview {{ request()->IS('admin/cms/about-us') || request()->IS('admin/cms/home') || request()->IS('admin/cms/benefits')  ? 'menu-is-opening menu-open' : '' }}">
+                    <li class="nav-item has-treeview {{ request()->IS('admin/cms/about-us') || request()->IS('admin/cms/home') || request()->IS('admin/cms/benefits') || request()->IS('admin/cms/terms') || request()->IS('admin/cms/privacy') || request()->IS('admin/cms/contact')  ? 'menu-is-opening menu-open' : '' }}">
                         <a href="#" class="nav-link ">
                             <i class="nav-icon fas fa-tags fw"></i>
                             <p>
@@ -166,6 +166,15 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a href="{{route('admin.cms.benefits')}}"
+                                   class="nav-link {{ request()->IS('admin/cms/benefits') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-angle-double-right"></i>
+                                    <p>
+                                        Benefits
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{route('admin.cms.aboutUs')}}"
                                    class="nav-link {{ request()->IS('admin/cms/about-us') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-angle-double-right"></i>
@@ -175,11 +184,29 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{route('admin.cms.benefits')}}"
-                                   class="nav-link {{ request()->IS('admin/cms/benefits') ? 'active' : '' }}">
+                                <a href="{{route('admin.cms.terms')}}"
+                                   class="nav-link {{ request()->IS('admin/cms/terms') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-angle-double-right"></i>
                                     <p>
-                                        Benefits
+                                        Terms
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin.cms.privacy')}}"
+                                   class="nav-link {{ request()->IS('admin/cms/privacy') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-angle-double-right"></i>
+                                    <p>
+                                        Privacy
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin.cms.contact')}}"
+                                   class="nav-link {{ request()->IS('admin/cms/contact') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-angle-double-right"></i>
+                                    <p>
+                                        Contact
                                     </p>
                                 </a>
                             </li>
