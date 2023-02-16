@@ -146,7 +146,70 @@ export default {
         }
     },
     mounted() {
-
+        // if (!this.isMonthsFirst) {
+        //     // Load the Stripe.js library
+        //     const script = document.createElement('script');
+        //     script.src = 'https://js.stripe.com/v3/';
+        //     script.onload = () => {
+        //         // Use loadStripe to create a Stripe instance with your publishable key
+        //         const stripePromise = loadStripe('pk_test_0rY5rGJ7GN1xEhCB40mAcWjg');
+        //
+        //         stripePromise.then(async stripe => {
+        //             const elements = stripe.elements();
+        //
+        //             // Custom styling can be passed to options when creating an Element.
+        //             const style = {
+        //                 base: {
+        //                     // Add your base input styles here. For example:
+        //                     fontSize: '24px',
+        //                     color: '#32325d',
+        //                 },
+        //             };
+        //
+        //             // Create an instance of the card Element.
+        //             const card = elements.create('card', {style});
+        //
+        //             card.mount('#card-element');
+        //
+        //             const form = document.getElementById('payment-form');
+        //             console.log('form', form);
+        //             form.addEventListener('submit', async (event) => {
+        //                 event.preventDefault();
+        //
+        //                 const {token, error} = await stripe.createToken(card);
+        //
+        //                 if (error) {
+        //                     // Inform the customer that there was an error.
+        //                     const errorElement = document.getElementById('card-errors');
+        //                     errorElement.textContent = error.message;
+        //                 } else {
+        //                     const stripe = await stripePromise;
+        //                     alert(stripe);
+        //                     console.log(stripe);
+        //                     const { customer, error } = await stripe.customers.create({
+        //                         email: 'customer@example.com',
+        //                         source: token.id,
+        //                     });
+        //
+        //                     if (error) {
+        //                         // Inform the customer that there was an error.
+        //                         const errorElement = document.getElementById('card-errors');
+        //                         errorElement.textContent = error.message;
+        //                     } else {
+        //                         alert('Customer created successfully: ' + customer.id);
+        //                     }
+        //                 }
+        //
+        //                 alert(customer)
+        //             });
+        //         });
+        //
+        //
+        //         // // Create a token or display an error when the form is submitted.
+        //         // const stripe = require('stripe')('sk_test_lUp78O7PgN08WC9UgNRhOCnr');
+        //     };
+        //     document.head.appendChild(script);
+        // }
     },
     methods: {
         async stripe_subscribe() {
