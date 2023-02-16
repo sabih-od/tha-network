@@ -80,10 +80,10 @@
         </section>
         <!-- Begin: Footer -->
         <footer>
-            <div class="container">
+            <div class="container-md">
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 wow fadeInLeft" data-wow-delay="1.2s">
-                        <a href="index.php" class="d-block text-center"><img :src="asset('images/logo.png')" alt="logo"></a>
+                        <a href="#" class="d-block text-center"><img :src="asset('images/logo.png')" alt="logo"></a>
                         <ul class="links">
                             <li><a href="#">How It Works</a></li>
                             <li><a href="#">Membership Benefits</a></li>

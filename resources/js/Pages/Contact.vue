@@ -3,16 +3,16 @@
         <HowItWorksMenu/>
         <div class="main-slider">
 
-            <img class="img-fluid w-100" :src="asset('images/banner.jpg')" alt="First slide">
+            <img class="img-fluid w-100" :src="data.banner_image" alt="First slide">
             <div class="carousel-caption">
                 <div class="container">
                     <div class="row aic justify-content-center">
                         <div class="col-md-6">
                             <div class="content">
-                                <h4>ABOUT US</h4>
-                                <h3>Membership Pays</h3>
+                                <h4>{{ data.banner_circle_title }}</h4>
+                                <h3>{{ data.banner_circle_title_2 }}</h3>
                                 <p>
-                                    The Social Media Network that allows its members to earn cash
+                                    {{ data.banner_circle_text }}
                                 </p>
                             </div>
                         </div>
@@ -80,7 +80,7 @@
 <!--        </section>-->
         <!-- Begin: Footer -->
         <footer>
-            <div class="container">
+            <div class="container-md">
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 wow fadeInLeft" data-wow-delay="1.2s">
                         <a href="index.php" class="d-block text-center"><img :src="asset('images/logo.png')" alt="logo"></a>
@@ -125,6 +125,9 @@ export default {
     mixins: [utils],
     components: {
         HowItWorksMenu
+    },
+    props: {
+        data: Object
     },
     mounted() {
         // alert(this.$route('about'));
