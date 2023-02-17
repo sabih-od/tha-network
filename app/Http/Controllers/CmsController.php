@@ -37,4 +37,34 @@ class CmsController extends Controller
             'data' => $data
         ]);
     }
+
+    public function terms (Request $request)
+    {
+        $benefits = Page::where('name', 'Terms')->first();
+        $data = json_decode($benefits->content ?? []);
+
+        return Inertia::render('Terms', [
+            'data' => $data
+        ]);
+    }
+
+    public function privacy (Request $request)
+    {
+        $privacy = Page::where('name', 'Privacy')->first();
+        $data = json_decode($privacy->content ?? []);
+
+        return Inertia::render('Privacy', [
+            'data' => $data
+        ]);
+    }
+
+    public function contact (Request $request)
+    {
+        $contact = Page::where('name', 'Contact')->first();
+        $data = json_decode($contact->content ?? []);
+
+        return Inertia::render('Contact', [
+            'data' => $data
+        ]);
+    }
 }
