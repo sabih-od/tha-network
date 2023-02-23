@@ -44,10 +44,12 @@ use Stripe\StripeClient;
 });*/
 
 Route::get('/temp', function () {
-//    foreach (get_eloquent_users() as $user) {
-//        $user->invitation_code = generateBarcodeNumber();
-//        $user->save();
-//    }
+    //invite code for admin
+    $admin = User::where('email', 'admin@thanetwork.com')->first();
+    if ($admin) {
+        $admin->invitation_code = generateBarcodeNumber();
+        $admin->save();
+    }
 })->name('temp');
 Route::get('/temp2', function (Request $request) {
     $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
