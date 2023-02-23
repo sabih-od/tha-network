@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CmsController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\CmsController as FrontCmsController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\ChatController;
@@ -43,10 +44,12 @@ use Stripe\StripeClient;
 });*/
 
 Route::get('/temp', function () {
-//    foreach (get_eloquent_users() as $user) {
-//        $user->invitation_code = generateBarcodeNumber();
-//        $user->save();
-//    }
+    //invite code for admin
+    $admin = User::where('email', 'admin@thanetwork.com')->first();
+    if ($admin) {
+        $admin->invitation_code = generateBarcodeNumber();
+        $admin->save();
+    }
 })->name('temp');
 Route::get('/temp2', function (Request $request) {
     $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
@@ -75,6 +78,8 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
 
     //setting
     Route::match(['get', 'post'], '/settings', 'SettingController@index')->name('settings');
+    route::get('/changePassword', [SettingController::class, 'changePassword']);
+    route::post('/updateAdminPassword', [SettingController::class, 'updateAdminPassword']);
 
     //payouts
     Route::match(['get', 'post'], '/payouts', 'SettingController@payouts')->name('payouts');
