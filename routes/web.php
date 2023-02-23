@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CmsController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\CmsController as FrontCmsController;
 use App\Http\Controllers\ChannelController;
 use App\Http\Controllers\ChatController;
@@ -75,6 +76,8 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
 
     //setting
     Route::match(['get', 'post'], '/settings', 'SettingController@index')->name('settings');
+    route::get('/changePassword', [SettingController::class, 'changePassword']);
+    route::post('/updateAdminPassword', [SettingController::class, 'updateAdminPassword']);
 
     //payouts
     Route::match(['get', 'post'], '/payouts', 'SettingController@payouts')->name('payouts');
