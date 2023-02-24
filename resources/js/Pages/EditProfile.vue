@@ -5,7 +5,7 @@
                 <div class="col-12">
                     <h2>Personal Information</h2>
                 </div>
-                <Link :href="$route('profile')" class="btn themeBtn mb-2" style="color: white;">
+                <Link :href="$route('loginForm')" class="btn themeBtn mb-2" style="color: white;">
                     <span><h5 class="m-auto">Back to profile</h5></span>
                 </Link>
                 <div class="col-12">

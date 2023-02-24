@@ -177,6 +177,7 @@ class RegisterController extends Controller
 
         $rank = get_my_rank($user->id);
         $user->remaining_referrals = intval($user->remaining_referrals) + intval($rank->target);
+        $user->stripe_charge_object =  json_encode(session()->get('stripe_charge_object')) ?? null;
         $user->save();
 
         //create avatar based on gender
