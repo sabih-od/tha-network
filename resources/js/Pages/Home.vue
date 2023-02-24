@@ -144,16 +144,18 @@ export default {
 
         this.$emitter.on('change_my_posts_button_text', function (is_my_posts) {
             // console.log("is_my_posts === true && is_my_posts !== 'View All Posts'", is_my_posts === true && is_my_posts !== 'View All Posts')
-            if(is_my_posts === true && is_my_posts !== 'View All Posts') {
-                // alert('true');
+            if(is_my_posts === true) {
+                // alert('if');
                 $('.myPostText').html('View All Posts');
                 _t.is_my_posts = !_t.is_my_posts;
             } else {
+                // alert('else');
                 $('.myPostText').html('My Posts');
+                _t.is_my_posts = !_t.is_my_posts;
             }
         });
 
-        _t.$emitter.emit('change_my_posts_button_text', 'View All Posts');
+        // _t.$emitter.emit('change_my_posts_button_text', 'View All Posts');
 
         _t.$emitter.emit('populate_share_and_referral_permission_data', {
             'paypal_account_details': _t.paypal_account_details,
@@ -204,7 +206,9 @@ export default {
     },
     methods: {
         myPost() {
-            this.is_my_posts = !this.is_my_posts
+            // alert("Before toggle:" + this.is_my_posts);
+            this.is_my_posts = !this.is_my_posts;
+            // alert("After toggle:" + this.is_my_posts);
             this.$emitter.emit('my-post-loading', this.is_my_posts)
         },
         showNotification(img, text, redirect_url = "#") {
