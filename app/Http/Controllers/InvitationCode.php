@@ -477,12 +477,15 @@ class InvitationCode extends Controller
 //            if (Carbon::today()->day == 1) {
             if (!$request->has('token_id')) {
                 $charge_date = Carbon::today();
-
-                //subscribe
-                $subscription = $this->createStripeSubscription($request, $charge_date, true);
+                $isMonthsFirst = true;
+                $token_id = null;
             } else {
                 //charge
-                $charge_id = $this->stripeCharge($request, $request->token_id);
+                $stripe_charge_object = $this->stripeCharge($request, $request->token_id);
+                if ($stripe_charge_object->status != 'succeeded') {
+                    return Inertia::render('StripePayment', ['error' => 'Stripe charge: ' . $stripe_charge_object->status]);
+                }
+                session()->put('stripe_charge_object', $stripe_charge_object);
 
                 //compute days till next month
                 $currentDate = Carbon::today(); // get a new instance of the Carbon class representing today's date
@@ -494,10 +497,12 @@ class InvitationCode extends Controller
                 } else {
                     $charge_date = Carbon::today()->copy()->addMonth()->firstOfMonth();
                 }
-
-                //subscribe
-                $subscription = $this->createStripeSubscription($request, $charge_date, false, $request->token_id);
+                $isMonthsFirst = false;
+                $token_id = $request->token_id;
             }
+
+            //subscribe
+            $subscription = $this->createStripeSubscription($request, $charge_date, $isMonthsFirst, $token_id);
 
             //put checkout session id in session
             session()->put('stripe_checkout_session_id', $subscription->id);
@@ -650,6 +655,6 @@ class InvitationCode extends Controller
             'description' => 'Tha Network - Subscription Charge',
         ]);
 
-        return $charge->id;
+        return $charge;
     }
 }

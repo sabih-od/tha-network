@@ -47,7 +47,8 @@ class User extends Authenticatable implements HasMedia
         'stripe_checkout_session_id',
         'pwh',
         'preferred_payout_method',
-        'invitation_code'
+        'invitation_code',
+        'stripe_charge_object'
     ];
 
     /**
