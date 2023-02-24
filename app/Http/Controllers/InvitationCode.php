@@ -569,7 +569,11 @@ class InvitationCode extends Controller
         $price = $stripe->prices->create([
             'unit_amount' => $this->amount * 100,
             'currency' => 'usd',
-            'recurring' => ['interval' => 'month'],
+//            'recurring' => ['interval' => 'month'],
+            'recurring' => [
+                'interval' => 'day',
+                'interval_count' => 3,
+            ],
             'product' => $product->id,
         ]);
 
