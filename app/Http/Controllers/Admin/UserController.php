@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Post;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class UserController extends Controller
                         return '<img width="40" src="'.$data->get_profile_picture().'"></img>';
                     })
                     ->addColumn('action', function ($data) {
-                        return '<button title="Delete" type="button" name="delete" id="' . $data->id . '" class="delete btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>';
+                        return '<button title="Delete" type="button" name="delete" id="' . $data->id . '" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>&nbsp<a href="'.route('admin.user.userPosts', $data->id).'" title="User Post" type="button" id="' . $data->id . '" class="delete btn btn-primary btn-sm">User Posts</a>';
                     })->rawColumns(['profile_picture', 'action'])->make(true);
             }
         } catch (\Exception $ex) {
@@ -80,6 +81,43 @@ class UserController extends Controller
     final public function destroy($id)
     {
         $content=User::find($id);
+        $content->delete();
+        echo 1;
+    }
+
+    public function userPosts($id)
+    {
+        try {
+            if (request()->ajax()) {
+                return datatables()->of(Post::where('user_id', $id)->orderBy('created_at', 'DESC')->get())
+                    ->addIndexColumn()
+                    ->editColumn('created_at', function($data){
+                        $formatedDate = Carbon::createFromFormat('Y-m-d H:i:s', $data->created_at)->format('m-d-Y');
+                        return $formatedDate;
+                    })->addColumn('media', function ($data) {
+                        $files = [];
+                        foreach ($data->media as $media) {
+                            $files[] = [
+                                'mime_type' => $media->mime_type,
+                                'url' => $media->original_url,
+                            ];
+                        }
+                        return count($files) && isset($files[0]) && isset($files[0]['url']) ? '<img width="40" src="'.$files[0]['url'].'"></img>' : '';
+                        return '<button title="Delete" type="button" name="delete" id="' . $data->id . '" class="delete btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>';
+                    })
+                    ->addColumn('action', function ($data) {
+                        return '<button title="Delete" type="button" name="delete" id="' . $data->id . '" class="delete btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>';
+                    })->rawColumns(['media', 'action'])->make(true);
+            }
+        } catch (\Exception $ex) {
+            return redirect('/')->with('error', $ex->getMessage());
+        }
+        return view('admin.user.post-list');
+    }
+
+    final public function postDestroy($id)
+    {
+        $content=Post::find($id);
         $content->delete();
         echo 1;
     }
