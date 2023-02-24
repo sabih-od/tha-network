@@ -63,7 +63,12 @@ class InvitationCode extends Controller
             'email.unique' => 'This user is already registered on the website.'
         ]);
         try {
-            $code = $this->generateUniqueCode();
+//            $code = $this->generateUniqueCode();
+
+            //get admin code
+            $admin = User::where('email', 'admin@thanetwork.com')->first();
+            $code = $admin ? $admin->invitation_code : $this->generateUniqueCode();
+
             if ($code instanceof \Exception)
                 throw $code;
 
