@@ -102,6 +102,14 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
     //goal
     Route::match(['get', 'post'], '/goals', 'GoalController@index')->name('admin.goals');
 
+    //user
+    Route::get('users', 'UserController@index')->name('admin.users');
+    Route::delete('users/destroy/{id}', 'UserController@destroy');
+
+    //deleted-user
+    Route::get('deleted-users', 'DeletedUserController@index')->name('admin.deleted-users');
+    Route::post('deleted-users/retrieve/{id}', 'DeletedUserController@retrieve');
+
     // Customer
     Route::resource('customers', 'CustomersController');
     Route::delete('/customers/destroy/{id}', 'CustomersController@destroy')->name('customers.destroy');
