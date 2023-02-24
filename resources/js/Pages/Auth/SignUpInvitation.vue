@@ -69,7 +69,7 @@ export default {
             form: useForm({
                 email: "",
                 phone: "",
-                send_code_type: ""
+                send_code_type: "email"
             })
         }
     },
