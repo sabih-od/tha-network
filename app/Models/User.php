@@ -47,7 +47,8 @@ class User extends Authenticatable implements HasMedia
         'stripe_checkout_session_id',
         'pwh',
         'preferred_payout_method',
-        'invitation_code'
+        'invitation_code',
+        'stripe_charge_object'
     ];
 
     /**
@@ -120,7 +121,8 @@ class User extends Authenticatable implements HasMedia
     public function get_profile_picture()
     {
         $check = $this->getMedia('profile_image')->first();
-        return $check ? $check->getUrl() : asset('images/avatars/'.($this->profile->gender == 'Male' ? 'male' : 'female').'-avatar.png');
+        $gender_check = $this->profile && $this->profile->gender ? ($this->profile->gender == 'Male' ? 'male' : 'female') : 'male';
+        return $check ? $check->getUrl() : asset('images/avatars/'.$gender_check.'-avatar.png');
     }
 
     public function completed_referrals()

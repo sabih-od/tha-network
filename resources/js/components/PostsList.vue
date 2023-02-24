@@ -193,11 +193,12 @@ export default {
     },
     methods: {
         loadPosts(url = null, is_my_posts = false, post_id = null) {
+            // alert(is_my_posts);
             if (this.loading) return;
 
-            if(is_my_posts) {
+            // if(is_my_posts) {
                 this.$emitter.emit('change_my_posts_button_text', is_my_posts);
-            }
+            // }
 
             let isLoadMore = !!(url)
             url = url ?? this.$store.getters['Utils/baseUrl']
