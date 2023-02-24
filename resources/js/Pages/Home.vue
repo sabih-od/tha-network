@@ -165,6 +165,7 @@ export default {
             let img = _t.$store.getters['Utils/public_asset']('images/notifications/NewMemberSignup.png');
             let text = 'Welcome To Tha Network Let’s get to work sending Referrals, but first Let’s Create a Profile Page!!';
             _t.showNotification(img, text, _t.$route('editProfileForm'));
+            _t.$store.commit('Misc/setIsNewlyRegistered', false);
         }
 
         //if blocked users area flag is on
