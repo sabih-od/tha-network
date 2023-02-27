@@ -145,7 +145,7 @@ export default {
         this.$emitter.on('post-like-toggle', this.onLikeToggle)
         this.$emitter.on('post-deleted', this.loadPosts)
         this.$emitter.on('my-post-loading', (val) => {
-            this.loadPosts(null, val)
+            this.loadPosts(null, val, null, true)
         })
         this.$emitter.on('setPeopleInMyNetworkFlagOff', (val) => {
             this.$store.commit('Misc/setPeopleInMyNetworkFlag', false);
@@ -192,13 +192,13 @@ export default {
         this.$emitter.off('my-post-loading')
     },
     methods: {
-        loadPosts(url = null, is_my_posts = false, post_id = null) {
-            // alert(is_my_posts);
+        loadPosts(url = null, is_my_posts = false, post_id = null, changeText = false) {
+            // alert('is_my_posts ' + this.$store.getters['Misc/getIsMyPosts']);
             if (this.loading) return;
 
-            // if(is_my_posts) {
+            if(changeText) {
                 this.$emitter.emit('change_my_posts_button_text', is_my_posts);
-            // }
+            }
 
             let isLoadMore = !!(url)
             url = url ?? this.$store.getters['Utils/baseUrl']

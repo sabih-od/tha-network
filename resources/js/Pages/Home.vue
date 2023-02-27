@@ -116,7 +116,8 @@ export default {
     },
     computed: {
         myPostText() {
-            if(this.is_my_posts)
+            // if(this.is_my_posts)
+            if(this.$store.getters['Misc/getIsMyPosts'])
                 return 'View All Posts'
             return 'My Posts'
         }
@@ -207,9 +208,11 @@ export default {
     methods: {
         myPost() {
             // alert("Before toggle:" + this.is_my_posts);
-            this.is_my_posts = !this.is_my_posts;
+            // this.is_my_posts = !this.is_my_posts;
+            this.$store.commit('Misc/setIsMyPosts', !this.$store.getters['Misc/getIsMyPosts']);
             // alert("After toggle:" + this.is_my_posts);
-            this.$emitter.emit('my-post-loading', this.is_my_posts)
+            // this.$emitter.emit('my-post-loading', this.is_my_posts)
+            this.$emitter.emit('my-post-loading')
         },
         showNotification(img, text, redirect_url = "#") {
             this.notification_modal.img = img;
