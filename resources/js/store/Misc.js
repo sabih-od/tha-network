@@ -8,7 +8,8 @@ export default {
             is_newly_registered: false,
             people_in_my_network_flag: false,
             blocked_users_flag: false,
-            my_friends_flag: false
+            my_friends_flag: false,
+            is_my_posts: false,
         }
     },
     mutations: {
@@ -26,6 +27,9 @@ export default {
         },
         setMyFriendsFlag(state, payload) {
             state.my_friends_flag = payload
+        },
+        setIsMyPosts(state, payload) {
+            state.is_my_posts = payload
         }
     },
     actions: {
@@ -48,6 +52,9 @@ export default {
         },
         getMyFriendsFlag(state) {
             return state.my_friends_flag;
+        },
+        getIsMyPosts(state) {
+            return state.is_my_posts;
         }
     },
 }
