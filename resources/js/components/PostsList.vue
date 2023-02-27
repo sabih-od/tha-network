@@ -206,11 +206,13 @@ export default {
             this.loading = true
             if (!isLoadMore)
                 this.posts = []
+
+            let imp = this.$store.getters['Misc/getIsMyPosts'];
             this.$store.dispatch('HttpUtils/getReq', {
                 url: url,
                 only: ['posts'],
                 params: {
-                    is_my_posts: this.$store.getters['Misc/getIsMyPosts'] ? 1 : 0,
+                    is_my_posts: imp ? 1 : 0,
                     post_id: post_id
                 }
             }).then(res => {
