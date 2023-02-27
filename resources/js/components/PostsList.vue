@@ -210,7 +210,7 @@ export default {
                 url: url,
                 only: ['posts'],
                 params: {
-                    is_my_posts: is_my_posts ? 1 : 0,
+                    is_my_posts: this.$store.getters['Misc/getIsMyPosts'] ? 1 : 0,
                     post_id: post_id
                 }
             }).then(res => {
