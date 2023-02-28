@@ -59,7 +59,7 @@
             </div>
         </div>
     </section>
-    <div :class="notification_modal.class" style="z-in  dex: 999;">
+    <div :class="notification_modal.class" style="z-index: 999;">
         <div class="notiImgCont">
             <figure>
                 <img :src="notification_modal.img" alt="">
@@ -163,13 +163,13 @@ export default {
             'has_provided_stripe_payout_information': _t.has_provided_stripe_payout_information,
         });
 
-        //if newly registered (NewMemberSignup)
-        if(this.$store.getters['Misc/isNewlyRegistered']) {
-            let img = _t.$store.getters['Utils/public_asset']('images/notifications/NewMemberSignup.png');
-            let text = 'Welcome To Tha Network Let’s get to work sending Referrals, but first Let’s Create a Profile Page!!';
-            _t.showNotification(img, text, _t.$route('editProfileForm'));
-            _t.$store.commit('Misc/setIsNewlyRegistered', false);
-        }
+        // //if newly registered (NewMemberSignup) | takes newly registered users to edit profile page
+        // if(this.$store.getters['Misc/isNewlyRegistered']) {
+        //     let img = _t.$store.getters['Utils/public_asset']('images/notifications/NewMemberSignup.png');
+        //     let text = 'Welcome To Tha Network Let’s get to work sending Referrals, but first Let’s Create a Profile Page!!';
+        //     _t.showNotification(img, text, _t.$route('editProfileForm'));
+        //     _t.$store.commit('Misc/setIsNewlyRegistered', false);
+        // }
 
         //if blocked users area flag is on
         if(this.$store.getters['Misc/getBlockedUsersFlag']) {
