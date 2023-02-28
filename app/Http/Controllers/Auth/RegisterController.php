@@ -350,6 +350,8 @@ class RegisterController extends Controller
 
         $this->guard()->login($user);
 
+        return redirect()->route('editProfileForm');
+
         if ($response = $this->registered($request, $user)) {
             return $response;
         }
