@@ -198,7 +198,7 @@ export default {
 
             if(changeText) {
                 this.$emitter.emit('change_my_posts_button_text', is_my_posts);
-            // }
+            }
 
             let isLoadMore = !!(url)
             url = url ?? this.$store.getters['Utils/baseUrl']

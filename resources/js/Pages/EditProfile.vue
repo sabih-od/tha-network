@@ -15,7 +15,7 @@
                         <div class="col-md-6">
                             <h4>
                                 Stripe
-                                <input type="checkbox" name="" id="" :checked="preferred_payout_form.preferred_payout_method === 'stripe'" @click="submitPreferredPayoutForm('stripe')" style="transform: scale(1.5);">
+                                <input type="radio" name="preferred_payout_method" :checked="preferred_payout_form.preferred_payout_method === 'stripe'" @click="submitPreferredPayoutForm('stripe')" style="transform: scale(1.5);">
                             </h4>
 
                             <!--badge-->
@@ -32,7 +32,7 @@
                         <div class="col-md-6">
                             <h4>
                                 Paypal
-                                <input type="checkbox" name="" id="" :checked="preferred_payout_form.preferred_payout_method === 'paypal'" @click="submitPreferredPayoutForm('paypal')" style="transform: scale(1.5);">
+                                <input type="radio" name="preferred_payout_method" :checked="preferred_payout_form.preferred_payout_method === 'paypal'" @click="submitPreferredPayoutForm('paypal')" style="transform: scale(1.5);">
                             </h4>
 
                             <!--badge-->
@@ -75,6 +75,8 @@
                     ></MonthlyPayment>
 
                     <CloseAccountModal></CloseAccountModal>
+
+                    <ChangePreferredPayoutMethodModal :preferred_payout_method="preferred_payout_form.preferred_payout_method"></ChangePreferredPayoutMethodModal>
 
                     <div class="btn-group gap1">
                         <button v-if="$store.getters['Misc/isNewlyRegistered']" type="submit" class="themeBtn" @click.prevent="showWeeklyGoalNotification()">Update Profile</button>
@@ -124,6 +126,7 @@ import AddressUpdate from "../components/Forms/AddressUpdate";
 import PasswordUpdate from "../components/Forms/PasswordUpdate";
 import MonthlyPayment from "../components/MonthlyPayment";
 import CloseAccountModal from "../components/CloseAccountModal";
+import ChangePreferredPayoutMethodModal from "../components/ChangePreferredPayoutMethodModal";
 
 export default {
     name: "EditProfile",
@@ -139,7 +142,8 @@ export default {
         FormLoading,
         CoverPhoto,
         MonthlyPayment,
-        CloseAccountModal
+        CloseAccountModal,
+        ChangePreferredPayoutMethodModal
     },
     layout: ProfileLayout,
     props: {
@@ -234,6 +238,13 @@ export default {
         let _t = this;
         this.$emitter.on('payment_made', function() {
             _t.showPaymentMadeNotification();
+        });
+
+        this.$emitter.on('revert_preferred_payout_method', function() {
+            if (_t.preferred_payout_form.preferred_payout_method === "" || _t.preferred_payout_form.preferred_payout_method == null) {
+                return;
+            }
+            _t.preferred_payout_form.preferred_payout_method = _t.preferred_payout_form.preferred_payout_method === 'stripe' ? 'paypal' : 'stripe';
         });
 
     },
@@ -432,17 +443,7 @@ export default {
         },
         submitPreferredPayoutForm (val) {
             this.preferred_payout_form.preferred_payout_method = val;
-            this.preferred_payout_form.post(this.$route('updateProfile'), {
-                replace: true,
-                onSuccess: () => {
-                    this.showSuccessMessage();
-                },
-                onFinish: () => {
-                    this.$store.dispatch('Utils/showErrorMessages').then(res => {
-                        this.isEdit = false
-                    })
-                }
-            })
+            $('.modal_change_preferred_payout_method_modal').modal('show');
         }
     }
 }
