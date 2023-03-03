@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\DB;
 use PaypalPayoutsSDK\Core\PayPalHttpClient;
 use PaypalPayoutsSDK\Core\SandboxEnvironment;
 use PaypalPayoutsSDK\Payouts\PayoutsPostRequest;
+use Stripe\Stripe;
 
 function last_active($user_id): string
 {
@@ -433,6 +434,7 @@ function commission_distribution() {
                 env('STRIPE_SECRET_KEY')
             );
 
+            Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
             $transfer = \Stripe\Transfer::create([
                 "amount" => $reward->amount * 100,
                 "currency" => "usd",
