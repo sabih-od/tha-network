@@ -44,26 +44,28 @@ use Stripe\StripeClient;
 });*/
 
 Route::get('/temp', function () {
-    //create profile for admin
-    $admin = User::where('email', 'admin@thanetwork.com')->first();
-    if ($admin) {
-        //create avatar based on gender
-        $avatar_url = public_path('images/avatars/male-avatar.png');
-        $admin
-            ->addMedia($avatar_url)
-            ->preservingOriginal()
-            ->toMediaCollection('profile_image');
-        //create profile
-        if (!$admin->profile()->exists()) {
-            $admin->profile()->create([
-                'first_name' => 'Admin',
-                'last_name' => 'User',
-                'phone' => '123456789',
-                'social_security_number' => '123456789',
-                'gender' => 'Male',
-            ]);
-        }
-    }
+//    //create profile for admin
+//    $admin = User::where('email', 'admin@thanetwork.com')->first();
+//    if ($admin) {
+//        //create avatar based on gender
+//        $avatar_url = public_path('images/avatars/male-avatar.png');
+//        $admin
+//            ->addMedia($avatar_url)
+//            ->preservingOriginal()
+//            ->toMediaCollection('profile_image');
+//        //create profile
+//        if (!$admin->profile()->exists()) {
+//            $admin->profile()->create([
+//                'first_name' => 'Admin',
+//                'last_name' => 'User',
+//                'phone' => '123456789',
+//                'social_security_number' => '123456789',
+//                'gender' => 'Male',
+//            ]);
+//        }
+//    }
+
+    commission_distribution();
 })->name('temp');
 Route::get('/temp2', function (Request $request) {
     $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
