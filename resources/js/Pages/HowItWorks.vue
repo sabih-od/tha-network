@@ -276,7 +276,7 @@ export default {
     },
     data() {
         return {
-            video_classes: 'introVideo minimized',
+            video_classes: 'introVideo columned',
             text_classes: 'hide',
             video_Styling: '',
             gridWidth: screen.availWidth,
