@@ -400,7 +400,11 @@ function commission_distribution() {
     $rewards = Reward::where('is_paid', false)->get();
 
     foreach ($rewards as $reward) {
-        if($reward->user->stripe_account_id == null && $reward->user->paypal_account_details == null) {
+        if ($reward->user->preferred_payout_method == null) {
+            continue;
+        }
+
+        if(($reward->user->preferred_payout_method == 'stripe' && $reward->user->stripe_account_id == null) || ($reward->user->preferred_payout_method == 'paypal' && $reward->user->paypal_account_details == null)) {
             continue;
         }
 
