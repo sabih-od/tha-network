@@ -21,6 +21,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PaypalPayoutsSDK\Core\PayPalHttpClient;
+use PaypalPayoutsSDK\Core\ProductionEnvironment;
 use PaypalPayoutsSDK\Core\SandboxEnvironment;
 use PaypalPayoutsSDK\Payouts\PayoutsPostRequest;
 use Stripe\Stripe;
@@ -457,9 +458,20 @@ function commission_distribution() {
             $clientSecret = env('PAYPAL_SECRET_KEY');
 
 
-            $environment = new SandboxEnvironment($clientId, $clientSecret);
+            if (env('PAYPAL_LIVE_MODE')) {
+                $environment = new ProductionEnvironment($clientId, $clientSecret);
+            } else {
+                $environment = new SandboxEnvironment($clientId, $clientSecret)
+            }
             $client = new PayPalHttpClient($environment);
             $request = new PayoutsPostRequest();
+
+            $authorizationString = base64_encode($clientId . ':' . $clientSecret);
+            $request->headers = [
+                'Authorization' => 'Basic ' . $authorizationString,
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ];
+
             $body = json_decode(
                 '{
                 "sender_batch_header":
