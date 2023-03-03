@@ -461,7 +461,7 @@ function commission_distribution() {
             if (env('PAYPAL_LIVE_MODE')) {
                 $environment = new ProductionEnvironment($clientId, $clientSecret);
             } else {
-                $environment = new SandboxEnvironment($clientId, $clientSecret)
+                $environment = new SandboxEnvironment($clientId, $clientSecret);
             }
             $client = new PayPalHttpClient($environment);
             $request = new PayoutsPostRequest();
