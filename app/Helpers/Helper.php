@@ -500,27 +500,19 @@ function is_in_my_network($user_id): bool
 }
 
 function create_chat_channel($user_id, $target_id) {
-    $auth = User::find($user_id);
-    $user = User::find($target_id);
-
     $channel = Channel::
-        orWhere(function ($q) use ($auth, $user) {
-            return $q->where('creator_id', $auth->id)->where('participants', 'LIKE', '%'.$user->id.'%');
+        orWhere(function ($q) use ($user_id, $target_id) {
+            return $q->where('creator_id', $user_id)->where('participants', 'LIKE', '%'.$target_id.'%');
         })
-        ->orWhere(function ($q) use ($auth, $user) {
-            return $q->where('creator_id', $user->id)->where('participants', 'LIKE', '%'.$auth->id.'%');
+        ->orWhere(function ($q) use ($user_id, $target_id) {
+            return $q->where('creator_id', $target_id)->where('participants', 'LIKE', '%'.$user_id.'%');
         })
         ->first();
 
-//    $channel = Channel::where(function ($q) use ($auth, $user) {
-//        return $q->whereRaw("participants = CAST('" . json_encode([$auth->id, $user->id]) . "' AS JSON)")
-//            ->orWhereRaw("participants = CAST('" . json_encode([$user->id, $auth->id]) . "' AS JSON)");
-//    })->where('chat_type', 'individual')->first();
-
     if (is_null($channel)) {
         $channel = new Channel;
-        $channel->creator_id = $auth->id;
-        $channel->users()->attach([$auth->id, $user->id]);
+        $channel->creator_id = $user_id;
+        $channel->users()->attach([$user_id, $target_id]);
         $channel->save();
     }
 }
