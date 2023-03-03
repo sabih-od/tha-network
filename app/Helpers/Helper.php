@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\DB;
 use PaypalPayoutsSDK\Core\PayPalHttpClient;
 use PaypalPayoutsSDK\Core\SandboxEnvironment;
 use PaypalPayoutsSDK\Payouts\PayoutsPostRequest;
+use Stripe\Stripe;
 
 function last_active($user_id): string
 {
