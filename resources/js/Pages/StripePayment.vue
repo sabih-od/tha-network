@@ -26,6 +26,9 @@
                             <h2 class="m-0">Payment Method</h2>
                             <img :src="asset('images/payment.png')" alt="">
                         </div>
+                        <div class="df jcsb mt-3 mb-4">
+                            <p class="m-0">Welcome to Tha Network and we appreciate your interest in becoming a member of our Exclusive Community.  Membership for Tha Network is $29.99 per month.  Read our terms and conditions and check the box to acknowledge the disclosure.  By checking the box you give Tha Network permission to charge your payment selection $29.99 per month.  If at any time you wish to stop automatic payment, go to your Edit Profile Page and select Cancel Membership.</p>
+                        </div>
 
                         <form v-if="isMonthsFirst">
                             <!-- Add a hidden field with the lookup_key of your Price -->
@@ -36,17 +39,27 @@
                             </div>
                             <div class="form-group">
                                 <label for="">Expiration Month</label>
-                                <input type="number" name="exp_mon" v-model="exp_month" class="form-control">
+                                <input type="text" name="exp_mon" v-model="exp_month" class="form-control" maxlength="2">
                             </div>
                             <div class="form-group">
                                 <label for="">Expiration Year</label>
-                                <input type="number" name="exp_year" v-model="exp_year" class="form-control">
+                                <input type="text" name="exp_year" v-model="exp_year" class="form-control" maxlength="4">
                             </div>
                             <div class="form-group">
                                 <label for="">CCV Code</label>
-                                <input type="password" name="cvv" v-model="cvc" class="form-control">
+                                <input type="password" name="cvv" v-model="cvc" class="form-control" maxlength="3">
                             </div>
-                            <button class="themeBtn" id="checkout-and-portal-button" type="button" @click.prevent="stripe_subscribe" :disabled="form_loading">
+                            <div class="form-check mt-3 mb-0 getText terms_wrapper m-auto" style="padding-bottom: 0px;">
+                                <input type="checkbox" class="form-check-input" v-model="agree_terms" id="agree_terms">
+                                <span>
+                                        <p>
+                                            <label for="agree_terms">
+                                                By checking this box you agree to the <a href="#" @click.prevent="showTerms" replace>Terms & Conditions</a>
+                                            </label>
+                                        </p>
+                                    </span>
+                            </div>
+                            <button class="themeBtn" id="checkout-and-portal-button" type="button" @click.prevent="stripe_subscribe" :disabled="form_loading || !agree_terms">
                                 {{ form_loading ? 'Please Wait' : 'Subscribe' }}</button>
                         </form>
 
@@ -76,17 +89,27 @@
                             </div>
                             <div class="form-group">
                                 <label for="">Expiration Month</label>
-                                <input type="number" name="exp_mon" v-model="exp_month" class="form-control">
+                                <input type="text" name="exp_mon" v-model="exp_month" class="form-control" maxlength="2">
                             </div>
                             <div class="form-group">
                                 <label for="">Expiration Year</label>
-                                <input type="number" name="exp_year" v-model="exp_year" class="form-control">
+                                <input type="text" name="exp_year" v-model="exp_year" class="form-control" maxlength="4">
                             </div>
                             <div class="form-group">
                                 <label for="">CCV Code</label>
-                                <input type="password" name="cvv" v-model="cvc" class="form-control">
+                                <input type="password" name="cvv" v-model="cvc" class="form-control" maxlength="3">
                             </div>
-                            <button class="themeBtn" id="checkout-and-portal-button" type="button" @click.prevent="stripeCharge" :disabled="form_loading">
+                            <div class="form-check mt-3 mb-0 getText terms_wrapper m-auto" style="padding-bottom: 0px;">
+                                <input type="checkbox" class="form-check-input" v-model="agree_terms" id="agree_terms">
+                                <span>
+                                        <p>
+                                            <label for="agree_terms">
+                                                By checking this box you agree to the <a href="#" @click.prevent="showTerms" replace>Terms & Conditions</a>
+                                            </label>
+                                        </p>
+                                    </span>
+                            </div>
+                            <button class="themeBtn" id="checkout-and-portal-button" type="button" @click.prevent="stripeCharge" :disabled="form_loading || !agree_terms">
                                 {{ form_loading ? 'Please Wait' : 'Subscribe' }}</button>
                         </form>
                     </div>
@@ -107,6 +130,7 @@ import _ from "lodash";
 import {useToast} from "vue-toastification";
 import { loadStripe } from '@stripe/stripe-js';
 import * as Stripe from "stripe";
+import TermsModal from "../components/TermsModal";
 
 export default {
     name: "StripePayment",
@@ -135,6 +159,7 @@ export default {
     },
     components: {
         Link,
+        TermsModal
     },
     data() {
         return {
@@ -143,6 +168,7 @@ export default {
             exp_year: '',
             cvc: '',
             form_loading: false,
+            agree_terms: false
         }
     },
     mounted() {
@@ -264,6 +290,9 @@ export default {
                     })
                 }
             });
+        },
+        showTerms() {
+            $('.modal_terms').modal('show');
         }
     }
 }
