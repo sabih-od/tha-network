@@ -88,7 +88,7 @@
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="securityNo">Social Security Number</label>
-                                        <input type="text" id="securityNo" v-model="form.social_security_number"
+                                        <input type="text" id="securityNo" v-model="form.social_security_number" maxlength="11"
                                                placeholder="" class="form-control" :readonly="is_non_us_citizen" :disabled="is_non_us_citizen" :required="!is_non_us_citizen" :aria-required="!is_non_us_citizen" >
                                     </div>
                                     <p class="color-danger">All United State citizens/residents are required to enter
@@ -139,6 +139,21 @@ export default {
     mounted() {
         console.log(this.inviter_id);
         this.showPaymentMadeNotification();
+
+        //format social security number
+        $('#securityNo').on('keydown keyup mousedown mouseup', function() {
+            let val = $(this).val().replace(/[^0-9]/g, '');
+            if (val.length == 4) {
+                let res = val.substr(0, 3) + '-' + val.substr(3, 1);
+                $(this).val(res);
+            } else if (val.length == 6) {
+                let res = val.substr(0, 3) + '-' + val.substr(3, 2) + '-' + val.substr(5, 1);
+                $(this).val(res);
+            } else if (val.length == 9) {
+                let res = val.substr(0, 3) + '-' + val.substr(3, 2) + '-' + val.substr(5, 4);
+                $(this).val(res);
+            }
+        });
     },
     data() {
         return {
