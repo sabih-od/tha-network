@@ -14,9 +14,10 @@
                                     <div class="col-12">
                                         <h1>{{ msg }}</h1>
                                         <div class="btnCont">
-                                            <button class="themeBtn" @click="randomize()">Generate Random</button>
-                                            <button class="themeBtn" @click="generateAvatar()">Generate Avatar</button>
+<!--                                            <button class="themeBtn" @click="randomize()">Generate Random</button>-->
+<!--                                            <button class="themeBtn" @click="generateAvatar()">Generate Avatar</button>-->
 <!--                                            <button class="themeBtn" @click="uploadPicture()">Upload Picture</button>-->
+                                            <p>Select Gender to get started creating your Avatar</p>
                                             <input type="file" hidden class="input_hidden_image" id="input_hidden_image">
                                         </div>
                                     </div>
