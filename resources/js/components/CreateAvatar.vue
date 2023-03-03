@@ -85,6 +85,7 @@
                                             </div>
                                         </div>
                                         <!--                                        <button @click="generateAvatar()">Generate Avatar</button>-->
+                                        <button class="themeBtn mr-2" @click="hide()" :disabled="formLoading">Cancel</button>
                                         <button class="themeBtn" @click="profileImgUpload()" :disabled="formLoading">
                                             {{ formLoading ? 'Please Wait' : 'Confirm' }}</button>
                                     </div>
@@ -1886,6 +1887,13 @@ export default {
             this.image_upload_flag = true;
             this.profileImgUpload();
             this.image_upload_flag = false;
+        },
+        hide() {
+            this.setLibmojiData()
+            this.randomize();
+            this.avatar.url = '';
+            this.libMojiData.genders.unshift(['Select Gender', 0]);
+            $('.modal_create_avatar').modal('hide');
         }
     }
 }
