@@ -158,6 +158,12 @@ export default {
         //When you have been promoted to the next grade
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('ReferralReverted', this.addNotification);
+        //When you have connected to stripe payout account
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('StripePayoutConnected', this.addNotification);
+        //When you have connected to paypal payout account
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('PaypalPayoutConnected', this.addNotification);
 
         this.fetchNotificationData();
 
