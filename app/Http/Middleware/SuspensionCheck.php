@@ -20,6 +20,8 @@ class SuspensionCheck
         if (is_null(Auth::user()->suspended_on)) {
             return $next($request);
         }
+        Auth::logout();
+        return redirect()->route('loginForm')->withErrors(['Your account has been suspended.']);
         return redirect(route('editProfileForm', ['payment']));
     }
 }
