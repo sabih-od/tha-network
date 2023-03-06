@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\PaypalPayoutConnected;
+use App\Events\StripePayoutConnected;
 use App\Helpers\WebResponses;
 use App\Models\Notification;
 use App\Models\User;
