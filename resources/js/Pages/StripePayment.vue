@@ -39,15 +39,15 @@
                             </div>
                             <div class="form-group">
                                 <label for="">Expiration Month</label>
-                                <input type="text" name="exp_mon" v-model="exp_month" class="form-control" maxlength="2">
+                                <input type="text" name="exp_mon" v-model="exp_month" class="form-control" maxlength="2" placeholder="XX">
                             </div>
                             <div class="form-group">
                                 <label for="">Expiration Year</label>
-                                <input type="text" name="exp_year" v-model="exp_year" class="form-control" maxlength="4">
+                                <input type="text" name="exp_year" v-model="exp_year" class="form-control" maxlength="4" placeholder="XXXX">
                             </div>
                             <div class="form-group">
                                 <label for="">CCV Code</label>
-                                <input type="password" name="cvv" v-model="cvc" class="form-control" maxlength="3">
+                                <input type="password" name="cvv" v-model="cvc" class="form-control" maxlength="3" placeholder="XXX">
                             </div>
                             <div class="form-check mt-3 mb-0 getText terms_wrapper m-auto" style="padding-bottom: 0px;">
                                 <input type="checkbox" class="form-check-input" v-model="agree_terms" id="agree_terms">
@@ -89,15 +89,15 @@
                             </div>
                             <div class="form-group">
                                 <label for="">Expiration Month</label>
-                                <input type="text" name="exp_mon" v-model="exp_month" class="form-control" maxlength="2">
+                                <input type="text" name="exp_mon" v-model="exp_month" class="form-control" maxlength="2" placeholder="XX">
                             </div>
                             <div class="form-group">
                                 <label for="">Expiration Year</label>
-                                <input type="text" name="exp_year" v-model="exp_year" class="form-control" maxlength="4">
+                                <input type="text" name="exp_year" v-model="exp_year" class="form-control" maxlength="4" placeholder="XXXX">
                             </div>
                             <div class="form-group">
                                 <label for="">CCV Code</label>
-                                <input type="password" name="cvv" v-model="cvc" class="form-control" maxlength="3">
+                                <input type="password" name="cvv" v-model="cvc" class="form-control" maxlength="3" placeholder="XXX">
                             </div>
                             <div class="form-check mt-3 mb-0 getText terms_wrapper m-auto" style="padding-bottom: 0px;">
                                 <input type="checkbox" class="form-check-input" v-model="agree_terms" id="agree_terms">
