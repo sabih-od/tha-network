@@ -1,5 +1,5 @@
 @extends('admin.layouts.app')
-@section('title', 'Users')
+@section('title', 'Suspended Users')
 @section('page_css')
     <style>
         .addBtn{
@@ -18,12 +18,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Users</h1>
+                        <h1>Suspended Users</h1>
                     </div>
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Home</a></li>
-                            <li class="breadcrumb-item active">User</li>
+                            <li class="breadcrumb-item active">Suspended User</li>
                         </ol>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
 
                         <div class="card">
 {{--                            <div class="card-header">--}}
-{{--                                <a class="btn btn-primary pull-right addBtn" href="{{route('admin.add-user')}}">Add User</a>--}}
+{{--                                <a class="btn btn-primary pull-right addBtn" href="{{route('admin.add-suspended-user')}}">Add Suspended User</a>--}}
 {{--                            </div>--}}
                             <div class="col-md-12">
 
@@ -82,10 +82,10 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
-                        <h4 align="center" style="margin: 0;">Are you sure you want to delete this ?</h4>
+                        <h4 align="center" style="margin: 0;">Are you sure you want to retrieve this ?</h4>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="ok_delete" name="ok_delete" class="btn btn-danger">Delete</button>
+                        <button type="button" id="ok_delete" name="ok_delete" class="btn btn-success">Retrieve</button>
                         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -137,7 +137,7 @@
                 serverSide: true,
                 pageLength: 10,
                 ajax: {
-                    url: `{{route('admin.users')}}`,
+                    url: `{{route('admin.suspended-users')}}`,
                 },
                 columns: [
 
@@ -162,13 +162,13 @@
             });
             $(document).on('click','#ok_delete',function(){
                 $.ajax({
-                    type:"delete",
-                    url:`{{url('admin/'.request()->segment(2).'/destroy/')}}/${delete_id}`,
+                    type:"post",
+                    url:`{{url('admin/'.request()->segment(2).'/retrieve/')}}/${delete_id}`,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     beforeSend: function(){
-                        $('#ok_delete').text('Deleting...');
+                        $('#ok_delete').text('Retrieving...');
                         $('#ok_delete').attr("disabled",true);
                     },
                     success: function (data) {
@@ -178,39 +178,10 @@
                         $('#confirmModal').modal('hide');
                      //   js_success(data);
                         if(data==0) {
-                            toastr.error('Exception Here ! Delete Firstly Child Category');
+                            toastr.error('Exception Here !');
                         }else{
-                            toastr.success('Record Delete Successfully');
+                            toastr.success('Record Retrieved Successfully');
                         }
-                    }
-                })
-            });
-            //on suspend click
-            $(document,this).on('click','.suspend',function(){
-                let suspend_id = $(this).attr('id');
-
-                $.ajax({
-                    type:"get",
-                    url:`{{url('admin/'.request()->segment(2).'/suspend/')}}/${suspend_id}`,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    beforeSend: function(){
-                        // $('#ok_delete').text('Deleting...');
-                        // $('#ok_delete').attr("disabled",true);
-                    },
-                    success: function (data) {
-                        DataTable.ajax.reload();
-                        toastr.success('User Suspended Successfully.');
-                        // $('#ok_delete').text('Delete');
-                        // $('#ok_delete').attr("disabled",false);
-                        // $('#confirmModal').modal('hide');
-                        // //   js_success(data);
-                        // if(data==0) {
-                        //     toastr.error('Exception Here ! Delete Firstly Child Category');
-                        // }else{
-                        //     toastr.success('Record Delete Successfully');
-                        // }
                     }
                 })
             });

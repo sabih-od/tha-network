@@ -8,6 +8,9 @@
             </div>
             <span class="text-center" v-else><strong>You have no friends.</strong></span>
         </div>
+        <div class="text-center">
+            <button v-if="peoples.length > 0" @click="seeFriendsList">See More</button>
+        </div>
     </div>
 </template>
 
@@ -87,6 +90,13 @@ export default {
                     ],
                 });
             })
+        },
+        seeFriendsList() {
+            this.$store.commit('Misc/setMyFriendsFlag', true);
+            this.$emitter.emit('my_friends_on');
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("#ref_post_list_item0").offset().top - 400
+            }, 1000);
         }
     }
 }
