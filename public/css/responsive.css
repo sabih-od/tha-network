@@ -306,6 +306,10 @@
     .searchBar {
         margin: 0;
     }
+
+    .profileMenu{
+        width: 250px !important;
+    }
 }
 
 @media (max-width: 320.98px) {
