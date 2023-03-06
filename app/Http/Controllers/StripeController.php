@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PaypalPayoutConnected;
+use App\Events\StripePayoutConnected;
 use App\Helpers\WebResponses;
+use App\Models\Notification;
 use App\Models\User;
 use App\Traits\StripePayment;
 use Illuminate\Http\Request;
@@ -32,6 +35,18 @@ class StripeController extends Controller
             'type' => 'account_onboarding',
         ]);
 
+        //send notification to user
+        $string = "You have successfully connected your Stripe account.";
+        $notification = Notification::create([
+            'user_id' => $user->id,
+            'notifiable_type' => 'App\Models\User',
+            'notifiable_id' => $user->id,
+            'body' => $string,
+            'sender_id' => $user->id
+        ]);
+
+        event(new StripePayoutConnected($user->id, $string, 'App\Models\User', $notification->id, $user));
+
 //        return $account_link->url;
         return WebResponses::success(
             'redirect url',
@@ -49,7 +64,18 @@ class StripeController extends Controller
 
         $user->update($request->all());
 
-//        return $account_link->url;
+        //send notification to user
+        $string = "You have successfully connected your Paypal account.";
+        $notification = Notification::create([
+            'user_id' => $user->id,
+            'notifiable_type' => 'App\Models\User',
+            'notifiable_id' => $user->id,
+            'body' => $string,
+            'sender_id' => $user->id
+        ]);
+
+        event(new PaypalPayoutConnected($user->id, $string, 'App\Models\User', $notification->id, $user));
+
         return redirect()->route('editProfileForm');
     }
 }

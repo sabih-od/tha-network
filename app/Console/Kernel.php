@@ -15,10 +15,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //testing | suspend and close accounts
-        $schedule->call(function () {payment_not_made();})->monthlyOn(26, '00:00');
-        $schedule->call(function () {close_accounts();})->monthlyOn(27, '00:00');
-        //testing | suspend and close accounts
+//        //testing | suspend and close accounts
+//        $schedule->call(function () {payment_not_made();})->monthlyOn(26, '00:00');
+//        $schedule->call(function () {close_accounts();})->monthlyOn(27, '00:00');
+//        //testing | suspend and close accounts
 
         //monthly add goals
         $schedule->call(function () {monthly_add_goals();})->monthlyOn(1, '00:00');
@@ -42,6 +42,13 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {close_accounts();})->monthlyOn(15, '00:00');
         // commission distribution
         $schedule->call(function () {commission_distribution();})->monthlyOn(15, '00:00');
+
+        //close garbage accounts (30 days old | Deleted, Closed, Suspended)
+        $schedule->call(function () {
+            delete_deleted_accounts();
+            delete_closed_accounts();
+            delete_suspended_accounts();
+        })->monthlyOn(1, '00:00');
     }
 
     /**
