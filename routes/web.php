@@ -107,12 +107,17 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
     //user
     Route::get('users', 'UserController@index')->name('admin.users');
     Route::delete('users/destroy/{id}', 'UserController@destroy');
+    Route::get('users/suspend/{id}', 'UserController@suspend');
     Route::get('user-posts/{id}', 'UserController@userPosts')->name('admin.user.userPosts');
     Route::delete('user-posts/destroy/{id}', 'UserController@postDestroy');
 
     //deleted-user
     Route::get('deleted-users', 'DeletedUserController@index')->name('admin.deleted-users');
     Route::post('deleted-users/retrieve/{id}', 'DeletedUserController@retrieve');
+
+    //suspended-user
+    Route::get('suspended-users', 'SuspendedUserController@index')->name('admin.suspended-users');
+    Route::post('suspended-users/retrieve/{id}', 'SuspendedUserController@retrieve');
 
     // Customer
     Route::resource('customers', 'CustomersController');
@@ -130,7 +135,7 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
 //Inertia routes
 require "auth.php";
 Route::group([
-    'middleware' => ['auth', 'revalidate', 'closure']
+    'middleware' => ['auth', 'revalidate', 'closure', 'suspension']
 ], function () {
     ;
     Route::get('edit-profile', [ProfileController::class, 'edit'])

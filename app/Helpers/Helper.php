@@ -582,3 +582,42 @@ function barcodeNumberExists($number) {
     // for instance, it might look like this in Laravel
     return User::where('invitation_code', $number)->exists();
 }
+
+function delete_deleted_accounts ()
+{
+    $month_ago = now()->subMonth(); // Get the date that was a month ago
+
+    $soft_deleted_users = User::where('role_id', 2)->onlyTrashed()
+        ->whereDate('deleted_at', '<', $month_ago)
+        ->get();
+
+    foreach ($soft_deleted_users as $user) {
+        $user->forceDelete(); // Permanently delete the user
+    }
+}
+
+function delete_closed_accounts ()
+{
+    $month_ago = now()->subMonth(); // Get the date that was a month ago
+
+    $closed_users = User::where('role_id', 2)->whereNotNull('closed_on')
+        ->whereDate('closed_on', '<', $month_ago)
+        ->get();
+
+    foreach ($closed_users as $user) {
+        $user->forceDelete(); // Permanently delete the user
+    }
+}
+
+function delete_suspended_accounts ()
+{
+    $month_ago = now()->subMonth(); // Get the date that was a month ago
+
+    $suspended_users = User::where('role_id', 2)->whereNotNull('suspended_on')
+        ->whereDate('suspended_on', '<', $month_ago)
+        ->get();
+
+    foreach ($suspended_users as $user) {
+        $user->forceDelete(); // Permanently delete the user
+    }
+}
