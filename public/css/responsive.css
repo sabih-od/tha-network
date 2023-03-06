@@ -83,6 +83,12 @@
 }
 
 @media (max-width: 767.98px) {
+    .dropdown-menu.notiMenu {
+        left: 50% !important;
+        transform: translateX(-50%);
+        width: 300px !important;
+    }
+
     html {
         font-size: 14px;
     }
@@ -296,6 +302,10 @@
 
     .searchBar {
         margin: 0;
+    }
+
+    .profileMenu {
+        width: 250px !Important;
     }
 }
 
