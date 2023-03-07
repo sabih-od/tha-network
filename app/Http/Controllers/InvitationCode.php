@@ -742,10 +742,8 @@ class InvitationCode extends Controller
                     </body>
                 </html>';
 
-            if (mail($request->email, 'Forgot Password | Tha-Network', $html, $headers)) {
-                return true;
-            } else {
-                return false;
+            if (!mail($request->email, 'Forgot Password | Tha-Network', $html, $headers)) {
+                return WebResponses::exception('Unable to send mail.');
             }
         } catch (\Exception $e) {
             return WebResponses::exception($e->getMessage());
