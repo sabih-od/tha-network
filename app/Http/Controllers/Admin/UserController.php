@@ -15,7 +15,7 @@ class UserController extends Controller
     {
         try {
             if (request()->ajax()) {
-                return datatables()->of(User::with('profile')->whereNull('closed_on')->where('role_id', 2)->get())
+                return datatables()->of(User::with('profile')->whereNull('suspended_on')->whereNull('closed_on')->where('role_id', 2)->get())
                     ->addIndexColumn()
                     ->editColumn('created_at', function($data){
                         $formatedDate = Carbon::createFromFormat('Y-m-d H:i:s', $data->created_at)->format('m-d-Y');
@@ -31,7 +31,7 @@ class UserController extends Controller
                         return '<img width="40" src="'.$data->get_profile_picture().'"></img>';
                     })
                     ->addColumn('action', function ($data) {
-                        return '<button title="Delete" type="button" name="delete" id="' . $data->id . '" class="btn btn-danger delete btn-sm"><i class="fa fa-trash"></i></button>&nbsp<a href="'.route('admin.user.userPosts', $data->id).'" title="User Post" type="button" id="' . $data->id . '" class="btn btn-primary btn-sm">User Posts</a>';
+                        return '<button title="Delete" type="button" name="delete" id="' . $data->id . '" class="btn btn-danger delete btn-sm"><i class="fa fa-trash"></i></button>&nbsp<button title="Suspend" type="button" name="suspend" id="' . $data->id . '" class="btn btn-warning suspend btn-sm"><i class="fa fa-ban"></i></button>&nbsp<a href="'.route('admin.user.userPosts', $data->id).'" title="User Post" type="button" id="' . $data->id . '" class="btn btn-primary btn-sm">User Posts</a>';
                     })->rawColumns(['profile_picture', 'action'])->make(true);
             }
         } catch (\Exception $ex) {
@@ -82,6 +82,14 @@ class UserController extends Controller
     {
         $content=User::find($id);
         $content->delete();
+        echo 1;
+    }
+
+    final public function suspend($id)
+    {
+        $content=User::find($id);
+        $content->suspended_on = Carbon::now();
+        $content->save();
         echo 1;
     }
 

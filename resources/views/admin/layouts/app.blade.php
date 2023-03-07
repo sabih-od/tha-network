@@ -163,6 +163,14 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a href="{{route('admin.suspended-users')}}"
+                           class="nav-link {{ request()->IS('admin/suspended-users') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>Suspended Users</p>
+                        </a>
+                    </li>
+
                     <li class="nav-item has-treeview {{ request()->IS('admin/cms/about-us') || request()->IS('admin/cms/home') || request()->IS('admin/cms/benefits') || request()->IS('admin/cms/terms') || request()->IS('admin/cms/privacy') || request()->IS('admin/cms/contact')  ? 'menu-is-opening menu-open' : '' }}">
                         <a href="#" class="nav-link ">
                             <i class="nav-icon fas fa-tags fw"></i>

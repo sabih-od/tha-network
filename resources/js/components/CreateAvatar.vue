@@ -1751,23 +1751,16 @@ export default {
         this.setLibmojiData()
         this.randomize();
         this.avatar.url = '';
-        this.libMojiData.genders.unshift(['Select Gender', 0]);
-        // this.libMojiData.genders.unshift(['Select Gender', 1]);
-        // this.libMojiData.genders.unshift(['Select Gender', 2]);
+        // this.libMojiData.genders.unshift(['Select Gender', 0]);
 
         //deselect gender at start
         // this.choices.gender = 0;
-        let _t = this;
-        setTimeout(function () {
-            $('.gender').val('0');
-            $('.gender').trigger('change');
-            _t.choices.gender = 0;
-            // this.libMojiData.genders = [
-            //     ['Select Gender', 0],
-            //     ['Male', 1],
-            //     ['Female', 2],
-            // ];
-        }, 2000);
+        // let _t = this;
+        // setTimeout(function () {
+        //     $('.gender').val('0');
+        //     $('.gender').trigger('change');
+        //     _t.choices.gender = 0;
+        // }, 2000);
 
         //img upload instead of avatar
         $('.input_hidden_image').on('change', function(e) {
@@ -1893,9 +1886,9 @@ export default {
             this.setLibmojiData()
             this.randomize();
             this.avatar.url = '';
-            this.libMojiData.genders.unshift(['Select Gender', 0]);
+            // this.libMojiData.genders.unshift(['Select Gender', 0]);
             $('.modal_create_avatar').modal('hide');
-        }
+        },
     }
 }
 </script>
