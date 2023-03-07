@@ -1888,7 +1888,7 @@ export default {
             this.avatar.url = '';
             // this.libMojiData.genders.unshift(['Select Gender', 0]);
             $('.modal_create_avatar').modal('hide');
-        }
+        },
     }
 }
 </script>

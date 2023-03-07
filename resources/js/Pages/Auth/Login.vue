@@ -47,7 +47,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="pass">Password</label>
-                                        <a href="forgot-password.php" tabindex="-1">Forget Password?</a>
+                                        <Link :href="$route('forgotPasswordForm')" tabindex="-1">Forgot Password?</Link>
                                         <input type="password" id="pass" v-model="form.password" placeholder=""
                                                class="form-control">
                                     </div>
