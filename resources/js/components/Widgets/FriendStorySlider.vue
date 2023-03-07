@@ -9,7 +9,7 @@
             <span class="text-center" v-else><strong>You have no friends.</strong></span>
         </div>
         <div class="text-center">
-            <button v-if="peoples.length > 0" @click="seeFriendsList">See More</button>
+            <button v-if="peoples.length > 0" @click="seeFriendsList" class="themeBtn">See More</button>
         </div>
     </div>
 </template>
