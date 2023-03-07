@@ -290,6 +290,10 @@
     .filSet.changePhoto + img {
         height: 250px;
     }
+
+    .dropdown.nav-icons button img{
+        object-fit: cover;
+    }
 }
 
 @media (max-width: 400px) {
@@ -307,8 +311,29 @@
         margin: 0;
     }
 
-    .profileMenu{
+    .profileMenu {
         width: 250px !important;
+    }
+
+    .loginWrap form .form-group.form-check {
+        display: flex;
+        align-items: center;
+        gap: 0 .5rem;
+        padding: 0;
+        position: initial;
+    }
+
+    .loginWrap form .form-group.form-check input {
+        position: unset;
+        width: 15px;
+        height: 15px;
+        margin: 0;
+    }
+
+    .loginWrap form .form-group.form-check label {
+        font-size: 1rem;
+        margin: 0;
+        line-height: initial;
     }
 }
 
