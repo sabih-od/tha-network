@@ -2,13 +2,13 @@
     <div>
         <HowItWorksMenu/>
         <div class="main-slider">
-            <img class="img-fluid w-100" :src="data.banner_image" alt="First slide">
+            <img class="img-fluid w-100" :src="asset('images/banner.jpg')" alt="First slide">
             <div class="carousel-caption">
                 <div class="container">
                     <div class="row aic justify-content-center">
                         <div class="col-md-6">
                             <div class="content">
-                                <h3>{{ data.banner_circle_title }}</h3>
+                                <h3>Terms & Conditions</h3>
                             </div>
                         </div>
                     </div>

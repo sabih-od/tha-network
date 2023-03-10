@@ -6,7 +6,7 @@
             <span v-if="notifications.length > 0" class="button__badge"></span>
         </a>
         <!--notifications-->
-        <div class="dropdown-menu" aria-labelledby="profileDropDown">
+        <div class="dropdown-menu notiMenu" aria-labelledby="profileDropDown">
             <span v-if="notifications.length == 0" class="dropdown-item">No new messages</span>
             <Link v-else v-for="notification in notifications" class="dropdown-item" replace
                   @click.prevent="notification.post_id != null ? (this.fetchPostOnTop(notification.post_id)) : (!notification.body.includes('friend request') && notification.sender.id != user.id ? chatWithProfile(notification.sender.id) : '')"

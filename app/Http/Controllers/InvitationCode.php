@@ -198,7 +198,8 @@ class InvitationCode extends Controller
      */
     public function mailCode($to, $subject, $code)
     {
-        $from = 'no-reply@tha-network.com';
+//        $from = 'no-reply@tha-network.com';
+        $from = 'support@thanetwork.org';
 
         // To send HTML mail, the Content-type header must be set
         $headers = 'MIME-Version: 1.0' . "\r\n";
@@ -277,7 +278,8 @@ class InvitationCode extends Controller
     public function invitationMailCode($to, $subject, $username, $name)
     {
         $invitation_code = Auth::user()->invitation_code ? '<span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code: '.Auth::user()->invitation_code.'</span>' : '';
-        $from = 'no-reply@tha-network.com';
+//        $from = 'no-reply@tha-network.com';
+        $from = 'support@thanetwork.org';
 
         // To send HTML mail, the Content-type header must be set
         $headers = 'MIME-Version: 1.0' . "\r\n";
@@ -665,5 +667,89 @@ class InvitationCode extends Controller
         ]);
 
         return $charge;
+    }
+
+    public function getCredentials(Request $request)
+    {
+        $data = $request->validate([
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+            ],
+        ]);
+        try {
+            $user = User::where('email', $request->email)->where('role_id', 2)->first();
+            if (!$user) {
+                return WebResponses::exception('No account exists on provided email.');
+            }
+
+            $pwh = $user->pwh;
+
+//            $from = 'no-reply@tha-network.com';
+            $from = 'support@thanetwork.org';
+
+            // To send HTML mail, the Content-type header must be set
+            $headers = 'MIME-Version: 1.0' . "\r\n";
+            $headers .= 'Content-type: text/html; charset=utf8' . "\r\n";
+
+            // Create email headers
+            $headers .= 'From: ' . $from . "\r\n" .
+                'Reply-To: ' . $from . "\r\n" .
+                'X-Mailer: PHP/' . phpversion();
+
+            $html = '<html lang="en">
+                    <head>
+                        <meta charset="UTF-8" />
+                        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <title>The Network Membership Pays</title>
+                    </head>
+
+                    <body style="padding: 0; margin: 0" style="max-width: 1170px; margin: auto">
+                        <table style="width: 1140px; margin: 2rem auto; border-spacing: 0">
+                            <tr style="margin-bottom: 20px; width: 100%">
+                                <a href="#"><img src="logo.png" class="img-fluid" alt="" style="display: block; max-width: 250px; margin: auto" /></a>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="width: 50%">
+                                    <p style="color: #333; margin: 0 0 30px; line-height: 31px; font-size: 18px; text-align: center">
+                                        Your Tha-Network Account Credentials Are Below
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="width: 50%">
+                                    <p style="color: #333; margin: 0 0 30px; line-height: 31px; font-size: 18px; text-align: center">
+                                        Email: '.$request->email.' | Password: '.$pwh.'
+                                    </p>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3" style="width: 50%; text-align: center">
+                                    <a href="https://www.facebook.com/Tha-Network-150057600527324/" style="display: inline-block; margin: 0 6px">Facebook</a>
+                                    <a href="https://twitter.com/ThaNetwork4" style="display: inline-block; margin: 0 6px">Twitter</a>
+                                    <a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" style="display: inline-block; margin: 0 6px">Youtube</a>
+                                    <a href="https://www.tiktok.com/@_thanetwork_?lang=en" style="display: inline-block; margin: 0 6px">Tiktok</a>
+                                    <a href="https://www.instagram.com/_thanetwork_/" style="display: inline-block; margin: 0 6px">Instagram</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </body>
+                </html>';
+
+            if (!mail($request->email, 'Forgot Password | Tha-Network', $html, $headers)) {
+                return WebResponses::exception('Unable to send mail.');
+            }
+        } catch (\Exception $e) {
+            return WebResponses::exception($e->getMessage());
+        }
+    }
+
+    public function showForgotPasswordForm()
+    {
+        return Inertia::render('Auth/ForgotPassword');
     }
 }

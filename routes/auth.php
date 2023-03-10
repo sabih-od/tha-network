@@ -25,6 +25,10 @@ Route::group(['middleware' => ['revalidate']], function () {
             ->name('verifyCode');
         Route::post('create-stripe-checkout-session', [InvitationCode::class, 'createStripeCheckoutSession'])
             ->name('createStripeCheckoutSession');
+        Route::get('forgot-password', [InvitationCode::class, 'showForgotPasswordForm'])
+            ->name('forgotPasswordForm');
+        Route::post('get-credentials', [InvitationCode::class, 'getCredentials'])
+            ->name('getCredentials');
 
         // if user enter valid code
         Route::get('how-it-works', [HowItWorks::class, 'show'])
