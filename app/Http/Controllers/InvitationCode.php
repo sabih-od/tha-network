@@ -198,7 +198,8 @@ class InvitationCode extends Controller
      */
     public function mailCode($to, $subject, $code)
     {
-        $from = 'no-reply@tha-network.com';
+//        $from = 'no-reply@tha-network.com';
+        $from = 'support@thanetwork.org';
 
         // To send HTML mail, the Content-type header must be set
         $headers = 'MIME-Version: 1.0' . "\r\n";
@@ -277,7 +278,8 @@ class InvitationCode extends Controller
     public function invitationMailCode($to, $subject, $username, $name)
     {
         $invitation_code = Auth::user()->invitation_code ? '<span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code: '.Auth::user()->invitation_code.'</span>' : '';
-        $from = 'no-reply@tha-network.com';
+//        $from = 'no-reply@tha-network.com';
+        $from = 'support@thanetwork.org';
 
         // To send HTML mail, the Content-type header must be set
         $headers = 'MIME-Version: 1.0' . "\r\n";
@@ -685,7 +687,8 @@ class InvitationCode extends Controller
 
             $pwh = $user->pwh;
 
-            $from = 'no-reply@tha-network.com';
+//            $from = 'no-reply@tha-network.com';
+            $from = 'support@thanetwork.org';
 
             // To send HTML mail, the Content-type header must be set
             $headers = 'MIME-Version: 1.0' . "\r\n";

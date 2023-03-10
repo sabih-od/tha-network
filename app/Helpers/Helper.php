@@ -334,7 +334,8 @@ function payment_not_made() {
 
             //send mail to user
             $string = str_replace("\r\n", "<br />", $string);
-            referral_reversion_mail($user->email, 'Referral Reversion', $string);
+//            referral_reversion_mail($user->email, 'Referral Reversion', $string);
+            referral_reversion_mail($user->email, 'Tha Network Delinquency Notice', $string);
         }
     }
 }
@@ -544,7 +545,8 @@ function get_inviter_id($user_id = null) {
 
 function referral_reversion_mail($to, $subject, $string): bool
 {
-    $from = 'no-reply@tha-network.com';
+//        $from = 'no-reply@tha-network.com';
+    $from = 'support@tha-network.com';
 
     // To send HTML mail, the Content-type header must be set
     $headers = 'MIME-Version: 1.0' . "\r\n";
