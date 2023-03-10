@@ -3,7 +3,7 @@
         <button class="dropdown-toggle" type="button" id="profileDropDown" data-toggle="dropdown" aria-expanded="false">
             <img :src="generic_avatar_image" class="rounded-circle" alt="">
         </button>
-        <div class="dropdown-menu" aria-labelledby="profileDropDown">
+        <div class="dropdown-menu profileMenu" aria-labelledby="profileDropDown">
             <Link class="dropdown-item" replace :href="$route('profile')">How others see your profile</Link>
             <Link class="dropdown-item" replace :href="$route('home')" @click.prevent="peopleInMtNetworkOn">People in my network</Link>
             <Link class="dropdown-item" replace :href="$route('home')" @click.prevent="blockedUsers">Blocked Users</Link>

@@ -81,8 +81,8 @@
                         <h2 class="secHeading">{{data.title}}</h2>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6 d-flex">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 d-flex">
                         <div class="videoBox">
                             <img v-if="video_classes.includes('minimized')" :src="asset('images/intro-placeholder.png')"
                                  alt="">
