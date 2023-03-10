@@ -41,7 +41,8 @@ class Kernel extends ConsoleKernel
         // close accounts
         $schedule->call(function () {close_accounts();})->monthlyOn(15, '00:00');
         // commission distribution
-        $schedule->call(function () {commission_distribution();})->monthlyOn(15, '00:00');
+//        $schedule->call(function () {commission_distribution();})->monthlyOn(15, '00:00');
+        $schedule->call(function () {commission_distribution();})->dailyAt('00:00');
 
         //close garbage accounts (30 days old | Deleted, Closed, Suspended)
         $schedule->call(function () {
