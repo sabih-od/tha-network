@@ -1888,7 +1888,7 @@ footer .links li a:hover {
 
 .chatSec {
     overflow-y: auto;
-    border: 1px solid #eee;
+    border: 1px solid #ddd;
     width: 100%;
     height: 700px;
     transition: ease all 0.5s;
@@ -2083,11 +2083,13 @@ footer .links li a:hover {
     flex-direction: column;
     left: 0;
     gap: 1rem;
-    border-bottom: 1px solid #f1f3f8;
+    border: 1px solid #ddd;
     position: absolute;
     bottom: 0;
     width: 100%;
     height: 250px;
+    justify-content: end;
+    border-top: none;
 }
 
 .messangerSec .chat-box-tray input {
@@ -2306,7 +2308,7 @@ footer .links li a:hover {
 
 .dse .settings-tray {
     padding: 25px 33px;
-    border-bottom: 1px solid #edeff0;
+    border: 1px solid #ddd;
 }
 
 .papr-clp {
@@ -2778,4 +2780,12 @@ img.rounded-circle {
 
 div#navbarSupportedContent {
     order: 1;
+}
+
+ul.chatCont li a + a .friend-drawer {
+    border-top: 1px solid #ddd;
+}
+
+ul.chatCont {
+    border: 1px solid #ddd;
 }
