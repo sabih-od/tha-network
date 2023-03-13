@@ -31,6 +31,9 @@
                             <button type="submit" class="themeBtn">
                                 {{ form.processing ? 'Please wait...' : 'Send' }}
                             </button>
+                            <button @click.prevent="hide" type="button" class="themeBtn ml-2" style="background: #c82333 !important; border: #c82333 !important;">
+                                Cancel
+                            </button>
                         </div>
                     </form>
                 </div>
