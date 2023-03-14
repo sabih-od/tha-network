@@ -35,7 +35,7 @@
 
                             <div class="form-group">
                                 <label for="">Card Number</label>
-                                <input type="number" name="card_no" v-model="card_number" class="form-control">
+                                <input type="number" name="card_no" v-model="card_number" class="form-control" placeholder="XXXX-XXXX-XXXX-XXXX">
                             </div>
                             <div class="form-group">
                                 <label for="">Expiration Month</label>
@@ -86,7 +86,7 @@
 
                             <div class="form-group">
                                 <label for="">Card Number</label>
-                                <input type="number" name="card_no" v-model="card_number" class="form-control">
+                                <input type="number" name="card_no" v-model="card_number" class="form-control" placeholder="XXXX-XXXX-XXXX-XXXX">
                             </div>
                             <div class="form-group">
                                 <label for="">Expiration Month</label>
