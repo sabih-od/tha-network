@@ -35,7 +35,7 @@
 
                             <div class="form-group">
                                 <label for="">Card Number</label>
-                                <input type="number" name="card_no" v-model="card_number" class="form-control">
+                                <input type="number" name="card_no" v-model="card_number" class="form-control" placeholder="XXXX-XXXX-XXXX-XXXX">
                             </div>
                             <div class="form-group">
                                 <label for="">Expiration Month</label>
@@ -59,8 +59,9 @@
                                         </p>
                                     </span>
                             </div>
-                            <button class="themeBtn" id="checkout-and-portal-button" type="button" @click.prevent="stripe_subscribe" :disabled="form_loading || !agree_terms">
+                            <button v-if="!is_excluded_country" class="themeBtn" id="checkout-and-portal-button" type="button" @click.prevent="stripe_subscribe" :disabled="form_loading || !agree_terms">
                                 {{ form_loading ? 'Please Wait' : 'Subscribe' }}</button>
+                            <span v-else>Not available in your country.</span>
                         </form>
 
 <!--                        <form v-else action="/charge" method="post" id="payment-form">-->
@@ -85,7 +86,7 @@
 
                             <div class="form-group">
                                 <label for="">Card Number</label>
-                                <input type="number" name="card_no" v-model="card_number" class="form-control">
+                                <input type="number" name="card_no" v-model="card_number" class="form-control" placeholder="XXXX-XXXX-XXXX-XXXX">
                             </div>
                             <div class="form-group">
                                 <label for="">Expiration Month</label>
@@ -109,8 +110,9 @@
                                         </p>
                                     </span>
                             </div>
-                            <button class="themeBtn" id="checkout-and-portal-button" type="button" @click.prevent="stripeCharge" :disabled="form_loading || !agree_terms">
+                            <button v-if="!is_excluded_country" class="themeBtn" id="checkout-and-portal-button" type="button" @click.prevent="stripeCharge" :disabled="form_loading || !agree_terms">
                                 {{ form_loading ? 'Please Wait' : 'Subscribe' }}</button>
+                            <span v-else>Not available in your country.</span>
                         </form>
                     </div>
                 </div>
@@ -168,74 +170,50 @@ export default {
             exp_year: '',
             cvc: '',
             form_loading: false,
-            agree_terms: false
+            agree_terms: false,
+            is_excluded_country: false,
         }
     },
     mounted() {
-        // if (!this.isMonthsFirst) {
-        //     // Load the Stripe.js library
-        //     const script = document.createElement('script');
-        //     script.src = 'https://js.stripe.com/v3/';
-        //     script.onload = () => {
-        //         // Use loadStripe to create a Stripe instance with your publishable key
-        //         const stripePromise = loadStripe('pk_test_0rY5rGJ7GN1xEhCB40mAcWjg');
-        //
-        //         stripePromise.then(async stripe => {
-        //             const elements = stripe.elements();
-        //
-        //             // Custom styling can be passed to options when creating an Element.
-        //             const style = {
-        //                 base: {
-        //                     // Add your base input styles here. For example:
-        //                     fontSize: '24px',
-        //                     color: '#32325d',
-        //                 },
-        //             };
-        //
-        //             // Create an instance of the card Element.
-        //             const card = elements.create('card', {style});
-        //
-        //             card.mount('#card-element');
-        //
-        //             const form = document.getElementById('payment-form');
-        //             console.log('form', form);
-        //             form.addEventListener('submit', async (event) => {
-        //                 event.preventDefault();
-        //
-        //                 const {token, error} = await stripe.createToken(card);
-        //
-        //                 if (error) {
-        //                     // Inform the customer that there was an error.
-        //                     const errorElement = document.getElementById('card-errors');
-        //                     errorElement.textContent = error.message;
-        //                 } else {
-        //                     const stripe = await stripePromise;
-        //                     alert(stripe);
-        //                     console.log(stripe);
-        //                     const { customer, error } = await stripe.customers.create({
-        //                         email: 'customer@example.com',
-        //                         source: token.id,
-        //                     });
-        //
-        //                     if (error) {
-        //                         // Inform the customer that there was an error.
-        //                         const errorElement = document.getElementById('card-errors');
-        //                         errorElement.textContent = error.message;
-        //                     } else {
-        //                         alert('Customer created successfully: ' + customer.id);
-        //                     }
-        //                 }
-        //
-        //                 alert(customer)
-        //             });
-        //         });
-        //
-        //
-        //         // // Create a token or display an error when the form is submitted.
-        //         // const stripe = require('stripe')('sk_test_lUp78O7PgN08WC9UgNRhOCnr');
-        //     };
-        //     document.head.appendChild(script);
-        // }
+        let _t = this;
+        $.get("https://ipinfo.io", function(response) {
+            const excluded_countries = [
+                'AF',
+                'AL',
+                'BA',
+                'BG',
+                'HR',
+                'GR',
+                'ME',
+                'MK',
+                'RO',
+                'RS',
+                'SI',
+                'BY',
+                'MM',
+                'CN',
+                'CU',
+                'ET',
+                'HK',
+                'IQ',
+                'LB',
+                'LY',
+                'AT',
+                'NI',
+                'KR',
+                'RU',
+                'SO',
+                'SD',
+                'SS',
+                'SY',
+                'UA',
+                'VE',
+                'YE',
+                'ZW'
+            ];
+
+            _t.is_excluded_country = (excluded_countries.includes(response.country));
+        }, "jsonp");
     },
     methods: {
         async stripe_subscribe() {
