@@ -36,7 +36,7 @@ export default {
     },
     methods: {
         loadComments(post_id, url = null) {
-            if (this.loading) return;
+            if (this.loading || post_id != this.post.id) return;
 
             if (!this.initial_load)
                 this.initial_load = true

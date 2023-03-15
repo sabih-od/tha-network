@@ -21,7 +21,7 @@
                 </div>
 
                 <div style="text-align: center!important;" v-if="peoples.length == 0 && search == ''">
-                    <h6>There is no user in my network.</h6>
+                    <h6>{{ peoples_wait_text }}</h6>
                 </div>
             </div>
         </div>
@@ -46,7 +46,7 @@
                 </div>
 
                 <div style="text-align: center!important;" v-if="blocked_users.length == 0 && search == ''">
-                    <h6>There are no blocked users.</h6>
+                    <h6>{{ blocked_users_wait_text }}</h6>
                 </div>
             </div>
         </div>
@@ -71,7 +71,32 @@
                 </div>
 
                 <div style="text-align: center!important;" v-if="my_friends.length == 0 && search == ''">
-                    <h6>There are no friends in my list.</h6>
+                    <h6>{{ my_friends_wait_text }}</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12" v-if="all_users_flag">
+            <div class="cardWrap">
+                <div class="df aic jcsb mb-3">
+                    <h2 class="m-0">All Users</h2>
+                    <a href="#" @click.prevent="allUserssOff" class="viewBtn">Back to feed</a>
+                </div>
+                <div class="userList" v-for="user in all_users">
+                    <div class="userInfo">
+                        <Link :href="$route('userProfile', user.id)"><img :src="user.profile_img ? user.profile_img : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
+                        <h3>
+                            <Link :href="$route('userProfile', user.id)">
+                                <strong>{{user.profile ? user.profile.first_name +' '+ user.profile.last_name : ''}}</strong>
+                            </Link>
+                            <a href="#">Connect</a>
+                        </h3>
+                    </div>
+                    <FollowUserButton v-if="!isMe(user.id)" :user_id="user.id" :is_followed_by_auth="user.is_followed_by_auth" :is_followed="user.is_followed" :request_sent="user.request_sent" :request_received="user.request_received" @update_is_followed="user.is_followed = !user.is_followed"></FollowUserButton>
+                    <!--            <a href="#" class="nav-icons"><i class="fal fa-comments"></i></a>-->
+                </div>
+
+                <div style="text-align: center!important;" v-if="all_users.length == 0 && search == ''">
+                    <h6>{{ all_users_wait_text }}</h6>
                 </div>
             </div>
         </div>
@@ -152,6 +177,9 @@ export default {
             my_friends_flag: this.$store.getters['Misc/getMyFriendsFlag'],
             all_users_flag: this.$store.getters['Misc/getAllUsersFlag'],
             all_users_wait_text: 'No Customers Found.',
+            peoples_wait_text: 'There is no user in my network.',
+            blocked_users_wait_text: 'There are no blocked users.',
+            my_friends_wait_text: 'There are no friends in my list.',
             search: '',
             peoples: [],
             blocked_users: [],
@@ -310,6 +338,7 @@ export default {
         initateNetworkMemberSearch() {
             clearTimeout(this.debounce);
             this.peoples = []
+            this.peoples_wait_text = 'Please Wait.'
             this.debounce = setTimeout(() => {
                 this.$store.dispatch('HttpUtils/getReq', {
                     url: this.$store.getters['Utils/baseUrl'],
@@ -323,12 +352,14 @@ export default {
                     this.peoples = res?.network_members?.data.filter(element => element.has_blocked == false) ?? []
                 }).finally(() => {
                     // this.loading = false
+                    this.peoples_wait_text = (this.peoples.length == 0) ? 'There is no user in my network.' : 'Please Wait';
                 })
             }, 600);
         },
         initateBlockedUsersSearch() {
             // clearTimeout(this.debounce);
             this.blocked_users = []
+            this.blocked_users_wait_text = 'Please Wait.'
             this.debounce = setTimeout(() => {
                 this.$store.dispatch('HttpUtils/getReq', {
                     url: this.$store.getters['Utils/baseUrl'],
@@ -342,12 +373,14 @@ export default {
                     this.blocked_users = res?.blocked_users?.filter(element => element.is_blocked == true) ?? []
                 }).finally(() => {
                     // this.loading = false
+                    this.blocked_users_wait_text = (this.blocked_users.length == 0) ? 'There are no blocked users.' : 'Please Wait';
                 })
             }, 600);
         },
         initateMyFriendsSearch() {
             // clearTimeout(this.debounce);
             this.my_friends = []
+            this.my_friends_wait_text = 'Please Wait.'
             this.debounce = setTimeout(() => {
                 this.$store.dispatch('HttpUtils/getReq', {
                     url: this.$store.getters['Utils/baseUrl'],
@@ -361,6 +394,26 @@ export default {
                     this.my_friends = res?.friends?.filter(element => element.is_followed == true && element.is_followed_by_auth == true) ?? []
                 }).finally(() => {
                     // this.loading = false
+                    this.my_friends_wait_text = (this.my_friends.length == 0) ? 'There are no friends in my list.' : 'Please Wait';
+                })
+            }, 600);
+        },
+        initateAllUsersSearch() {
+            // clearTimeout(this.debounce);
+            this.all_users = []
+            this.all_users_wait_text = 'Please Wait.'
+            this.debounce = setTimeout(() => {
+                this.$store.dispatch('HttpUtils/getReq', {
+                    url: this.$store.getters['Utils/baseUrl'],
+                    only: ['all_users'],
+                    params: {
+
+                    }
+                }).then(res => {
+                    this.all_users = res?.all_users ?? []
+                }).finally(() => {
+                    // this.loading = false
+                    this.all_users_wait_text = (this.all_users.length == 0) ? 'No Customers Found.' : 'Please Wait';
                 })
             }, 600);
         },
