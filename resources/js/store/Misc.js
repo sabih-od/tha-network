@@ -9,6 +9,7 @@ export default {
             people_in_my_network_flag: false,
             blocked_users_flag: false,
             my_friends_flag: false,
+            all_users_flag: false,
             is_my_posts: false,
         }
     },
@@ -27,6 +28,9 @@ export default {
         },
         setMyFriendsFlag(state, payload) {
             state.my_friends_flag = payload
+        },
+        setAllUsersFlag(state, payload) {
+            state.all_users_flag = payload
         },
         setIsMyPosts(state, payload) {
             state.is_my_posts = payload
@@ -52,6 +56,9 @@ export default {
         },
         getMyFriendsFlag(state) {
             return state.my_friends_flag;
+        },
+        getAllUsersFlag(state) {
+            return state.all_users_flag;
         },
         getIsMyPosts(state) {
             return state.is_my_posts;

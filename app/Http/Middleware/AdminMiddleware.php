@@ -18,6 +18,10 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next)
     {
         if (Auth::check() == true && Auth::user()->role_id == 1) {
+            //if admin logs in from website, dont open admin dashboard
+            if (url()->previous() == route('login')) {
+                return redirect()->route('home');
+            }
             return $next($request);
         }
         return redirect(route('admin.login'));

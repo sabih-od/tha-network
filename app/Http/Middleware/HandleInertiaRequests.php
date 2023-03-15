@@ -45,6 +45,7 @@ class HandleInertiaRequests extends Middleware
         $share_data = [
 //            'auth' => auth()->check() ? auth()->user()->only('id', 'username', 'email') : null,
             'auth' => auth()->check() ? User::with('profile')->select('id', 'username', 'email')->find(auth()->user()->id) : null,
+            'role_id' => Auth::user()->role_id ?? null,
             'auth_profile_image' => auth()->check() && auth()->user()->getFirstMediaUrl('profile_image') ? auth()->user()->getFirstMediaUrl('profile_image') : asset('images/char-usr.png'),
             'flash' => [
                 'success' => function () use ($request) {
@@ -62,6 +63,9 @@ class HandleInertiaRequests extends Middleware
             }),
             'friends' => Inertia::lazy(function () use ($request) {
                 return $this->getFriendsData($request);
+            }),
+            'all_users' => Inertia::lazy(function () use ($request) {
+                return $this->getAllUsersData($request);
             }),
             'network_members' => Inertia::lazy(function () use ($request) {
                 return $this->getNetworkMemberssData($request);

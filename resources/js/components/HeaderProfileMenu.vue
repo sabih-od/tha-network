@@ -7,6 +7,7 @@
             <Link class="dropdown-item" replace :href="$route('profile')">How others see your profile</Link>
             <Link class="dropdown-item" replace :href="$route('home')" @click.prevent="peopleInMtNetworkOn">People in my network</Link>
             <Link class="dropdown-item" replace :href="$route('home')" @click.prevent="blockedUsers">Blocked Users</Link>
+            <Link v-if="role_id == 1" class="dropdown-item" replace :href="$route('home')" @click.prevent="allUsers">All Users (Admin)</Link>
             <Link class="dropdown-item" replace :href="$route('loginForm')">Home</Link>
             <Link class="dropdown-item" replace :href="$route('editProfileForm')">Edit Profile</Link>
             <Link class="dropdown-item" replace :href="$route('work')">Introduction</Link>
@@ -52,7 +53,8 @@ export default {
                 'Cache-Control': 'nocache, no-store, max-age=0, must-revalidate',
                 'Pragma': 'nocache, no-store, max-age=0, must-revalidate',
                 'Expires': 'Fri, 01 Jan 1990 00:00:00 GMT',
-            }
+            },
+            role_id: usePage().props.value?.role_id
         }
     },
     mounted() {
@@ -74,6 +76,14 @@ export default {
             this.$store.commit('Misc/setBlockedUsersFlag', true);
             this.$store.commit('Misc/setPeopleInMyNetworkFlag', false);
             this.$store.commit('Misc/setMyFriendsFlag', false);
+            if (typeof $("#ref_post_list_item0").offset() !== 'undefined') {
+                $([document.documentElement, document.body]).animate({
+                    scrollTop: $("#ref_post_list_item0").offset().top - 400
+                }, 1000);
+            }
+        },
+        allUsers() {
+            this.$store.commit('Misc/setAllUsersFlag', true);
             if (typeof $("#ref_post_list_item0").offset() !== 'undefined') {
                 $([document.documentElement, document.body]).animate({
                     scrollTop: $("#ref_post_list_item0").offset().top - 400
