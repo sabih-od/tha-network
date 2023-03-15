@@ -410,10 +410,9 @@ function commission_distribution() {
             continue;
         }
 
-        //if account is closed send payout to admin stripe account
-        $settings = Settings::find(1);
-
-        if ($reward->user->closed_on) {
+        //if account is closed or permanently deleted send payout to admin stripe account
+        if ($reward->user->closed_on || !$reward->user) {
+            $settings = Settings::find(1);
             if (!$settings->admin_stripe_account_id) {
                 continue;
             }

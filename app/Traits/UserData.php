@@ -207,6 +207,28 @@ trait UserData
             });
     }
 
+    protected function getAllUsersData(Request $request)
+    {
+        $query = User::select('id', 'email', 'username')->where('role_id', 2);
+
+        return $query
+            ->with('profile')
+            ->get()
+            ->map(function ($item, $key) {
+                $item->auth_id = null;
+                $auth_user = Auth::user();
+                $request_sent_check = FriendRequest::where('user_id', Auth::id())->where('target_id', $item->id)->get();
+                $request_received_check = FriendRequest::where('user_id', $item->id)->where('target_id', Auth::id())->get();
+                $item->request_sent = count($request_sent_check) > 0;
+                $item->request_received = count($request_received_check) > 0;
+                $item->has_blocked = $item->hasBlocked($auth_user);
+                $item->profile_img = $item->getFirstMediaUrl('profile_image') ?? null;
+                $item->is_followed = $item->isFollowedBy(User::find($item->id));
+                $item->is_followed_by_auth = $item->isFollowedBy(User::find($auth_user->id));
+                return $item;
+            });
+    }
+
     protected function getNetworkMemberssData(Request $request)
     {
         $user_id = $request->has('user_id') ? $request->get('user_id') : Auth::id();
