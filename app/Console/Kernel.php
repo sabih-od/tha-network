@@ -16,8 +16,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
 //        //testing | suspend and close accounts
-        $schedule->call(function () {payment_not_made();})->monthlyOn(17, '00:00');
-        $schedule->call(function () {close_accounts();})->monthlyOn(18, '00:00');
+        $schedule->call(function () {payment_not_made();})->monthlyOn(20, '00:00');
+        $schedule->call(function () {close_accounts();})->monthlyOn(21, '00:00');
 //        //testing | suspend and close accounts
 
         //monthly add goals
