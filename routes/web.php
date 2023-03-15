@@ -67,11 +67,6 @@ Route::get('/temp', function () {
 
     commission_distribution();
 })->name('temp');
-Route::get('/temp2', function (Request $request) {
-    $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
-    $stripe_account = $stripe->accounts->retrieve(session()->get('account_id'));
-    dd($stripe_account);
-})->name('temp2');;
 
 Route::get('get/redis', function () {
     dd(\Illuminate\Support\Facades\Redis::get('test:key'));
