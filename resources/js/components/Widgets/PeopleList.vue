@@ -27,7 +27,7 @@
         </div>
 
         <div style="text-align: center!important;" v-if="peoples.length == 0 && search == ''">
-            <h6>There is no user in my network.</h6>
+            <h6>{{users_wait_text}}</h6>
         </div>
     </div>
 </template>
@@ -62,7 +62,8 @@ export default {
             peoples: [],
             debounce: null,
             user_id: null,
-            all: false
+            all: false,
+            users_wait_text: 'There is no user in my network.'
         }
     },
     mounted() {
@@ -76,6 +77,7 @@ export default {
             clearTimeout(this.debounce);
             this.peoples = []
             this.debounce = setTimeout(() => {
+                this.users_wait_text = "Please Wait";
                 this.$store.dispatch('HttpUtils/getReq', {
                     url: this.$store.getters['Utils/baseUrl'],
                     only: ['network_members'],
@@ -88,6 +90,7 @@ export default {
                     this.peoples = res?.network_members?.data.filter(element => element.has_blocked == false) ?? []
                 }).finally(() => {
                     // this.loading = false
+                    this.users_wait_text = this.peoples.length == 0 ? 'There is no user in my network.' : '';
                 })
             }, 600);
         },
