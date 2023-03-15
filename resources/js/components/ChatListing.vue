@@ -21,7 +21,7 @@
     <div class="col-md-3 border-right p-md-0">
         <div class="chatSearch">
             <Link class="backBtn" :href="$route('home')">Go Back to Home</Link>
-            <ChatSearchForm @search="search"></ChatSearchForm>
+<!--            <ChatSearchForm @search="search"></ChatSearchForm>-->
 <!--                v-else-if="!loading && channels.length > 0"-->
 
             <ul class="chatCont">
@@ -258,7 +258,6 @@ export default {
     padding: 0.5rem;
     background-color: var(--primary);
     color: #fff;
-    margin-left: 1rem;
     border-radius: 0;
 }
 </style>
