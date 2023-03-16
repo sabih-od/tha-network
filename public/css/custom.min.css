@@ -1975,6 +1975,7 @@ footer .links li a:hover {
 .messangerSec .friend-drawer {
     padding: 15px 33px;
     display: flex;
+    gap: 0 1rem;
     justify-content: space-between;
     vertical-align: baseline;
     background: #fff;
@@ -2117,9 +2118,9 @@ footer .links li a:hover {
     border-left: 1px solid #eee;
     z-index: 1;
     transform: translateX(100%);
-    position: absolute;
-    top: 0;
-    right: -35%;
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*right: -35%;*/
     transition: ease all 0.5s;
 }
 
@@ -2789,3 +2790,4 @@ ul.chatCont li a + a .friend-drawer {
 ul.chatCont {
     border: 1px solid #ddd;
 }
+
