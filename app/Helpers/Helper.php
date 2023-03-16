@@ -406,6 +406,10 @@ function commission_distribution() {
             continue;
         }
 
+        if ($reward->user->role_id == 1) {
+            continue;
+        }
+
         if(($reward->user->preferred_payout_method == 'stripe' && $reward->user->stripe_account_id == null) || ($reward->user->preferred_payout_method == 'paypal' && $reward->user->paypal_account_details == null)) {
             continue;
         }
