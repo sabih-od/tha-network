@@ -291,8 +291,44 @@
         height: 250px;
     }
 
-    .dropdown.nav-icons button img{
+    .dropdown.nav-icons button img {
         object-fit: cover;
+    }
+
+    .messangerSec .friend-drawer {
+        padding: 1rem;
+    }
+
+    .commentBox {
+        flex-wrap: wrap;
+    }
+
+    .messangerSec .chat-box-tray {
+        padding: 1rem;
+    }
+
+    .commentBox #message-text {
+        width: 70%;
+        height: auto;
+    }
+
+    .papr-clp {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .messangerSec .chat-box-tray i,
+    .papr-clp i {
+        font-size: 1rem;
+    }
+
+    button#send_message {
+        width: 100%;
+        border: 0;
+        padding: 0;
+        background: var(--primary);
+        display: flex;
+        justify-content: center;
     }
 }
 
