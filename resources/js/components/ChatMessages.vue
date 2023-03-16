@@ -27,16 +27,6 @@
                         </div>
                     </div>
                 </div>
-                <!--messages-->
-                <div class="chatSec" ref="chatContainer">
-                    <ChatMessageItem
-                        :channel_id="this.active_channel_id"
-                        v-for="message in messages"
-                        :message="message"
-                        :key="message.id"
-                    />
-                </div>
-
                 <!--inside search-->
                 <div class="insideSearch">
                     <div class="input-group">
@@ -50,6 +40,16 @@
                         </div>
                     </div>
                 </div>
+                <!--messages-->
+                <div class="chatSec" ref="chatContainer">
+                    <ChatMessageItem
+                        :channel_id="this.active_channel_id"
+                        v-for="message in messages"
+                        :message="message"
+                        :key="message.id"
+                    />
+                </div>
+
                 <!--message form-->
                 <div class="chat-box-tray">
                     <MessageForm :is_auth_friend="is_auth_friend"></MessageForm>
