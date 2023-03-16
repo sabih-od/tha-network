@@ -68,6 +68,7 @@ export default {
             this.$store.commit('Misc/setPeopleInMyNetworkFlag', true);
             this.$store.commit('Misc/setBlockedUsersFlag', false);
             this.$store.commit('Misc/setMyFriendsFlag', false);
+            this.$store.commit('Misc/setAllUsersFlag', false);
             $([document.documentElement, document.body]).animate({
                 scrollTop: $("#ref_post_list_item0").offset().top - 400
             }, 1000);
@@ -76,6 +77,7 @@ export default {
             this.$store.commit('Misc/setBlockedUsersFlag', true);
             this.$store.commit('Misc/setPeopleInMyNetworkFlag', false);
             this.$store.commit('Misc/setMyFriendsFlag', false);
+            this.$store.commit('Misc/setAllUsersFlag', false);
             if (typeof $("#ref_post_list_item0").offset() !== 'undefined') {
                 $([document.documentElement, document.body]).animate({
                     scrollTop: $("#ref_post_list_item0").offset().top - 400
@@ -84,6 +86,9 @@ export default {
         },
         allUsers() {
             this.$store.commit('Misc/setAllUsersFlag', true);
+            this.$store.commit('Misc/setBlockedUsersFlag', false);
+            this.$store.commit('Misc/setPeopleInMyNetworkFlag', false);
+            this.$store.commit('Misc/setMyFriendsFlag', false);
             if (typeof $("#ref_post_list_item0").offset() !== 'undefined') {
                 $([document.documentElement, document.body]).animate({
                     scrollTop: $("#ref_post_list_item0").offset().top - 400
