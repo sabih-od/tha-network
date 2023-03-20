@@ -237,11 +237,7 @@ trait UserData
     protected function getNetworkMemberssData(Request $request)
     {
         $user_id = $request->has('user_id') ? $request->get('user_id') : Auth::id();
-        $network = Network::where('user_id', $user_id)->whereHas('members', function($q) {
-            return $q->whereHas('user', function($q) {
-                return $q->whereNull('closed_on');
-            });
-        })->first();
+        $network = Network::where('user_id', $user_id)->whereHas('members')->first();
         $network_members = $network ? $network->members()->get() : [];
         $network_member_ids = [];
         foreach ($network_members as $network_member) {
