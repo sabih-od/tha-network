@@ -23,7 +23,7 @@ class NetworkMember extends Model
 
     public function user()
     {
-        return $this->HasOne(User::class)->whereNull('closed_on');
+        return $this->HasOne(User::class);
     }
 
     public function network()
