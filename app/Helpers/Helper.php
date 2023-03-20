@@ -368,7 +368,7 @@ function close_accounts() {
             $joined_networks_owner_ids = Network::whereIn('id', $joined_networks_ids)->pluck('user_id');
             //send notification to owners
             foreach ($joined_networks_owner_ids as $target_id) {
-                $string = $user->profile->first_name . ' ' . $user->profile->last_name . " account has been closed.";
+                $string = $user->profile->first_name . ' ' . $user->profile->last_name . " is no longer a member of the network so you will not earn your referral fee for this member any longer.";
                 $target = User::with('profile')->find($target_id);
                 $notification = Notification::create([
                     'user_id' => $target->id,
@@ -394,6 +394,12 @@ function close_accounts() {
                 'sender_pic' => $user->get_profile_picture(),
             ]);
             event(new ReferralReverted($target->id, $string, 'App\Models\User', $notification->id, $target));
+
+            //remove user from all networks
+            NetworkMember::where('user_id', $user->id)->delete();
+
+            //remove user from all friends lists
+            DB::table('user_follower')->where('following_id', $user->id)->orWhere('follower_id', $user->id)->delete();
         }
     }
 }

@@ -1766,6 +1766,9 @@ export default {
         $('.input_hidden_image').on('change', function(e) {
             _t.createUploadedImageURL(e);
         });
+
+        //if the male avatar is the default settings allow a male avatar to be shown when the page is initially open
+        this.generateAvatar();
     },
     methods: {
         setLibmojiData() {
