@@ -20,4 +20,14 @@ class FriendRequest extends Model
         'deleted_at',
         'updated_at'
     ];
+
+    public function sender ()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function receiver ()
+    {
+        return $this->belongsTo(User::class, 'target_id');
+    }
 }

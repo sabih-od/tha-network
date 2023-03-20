@@ -89,6 +89,8 @@
                                     <div class="form-group mb-2">
                                         <label for="securityNo">Social Security Number</label>
                                         <input type="text" id="securityNo" v-model="form.social_security_number" maxlength="11"
+                                               oninvalid="setCustomValidity('If you are an United States Citizen you must complete the Social Security field, if you are not check the box above as a non-United States Citizen to continue.')"
+                                               oninput="setCustomValidity('')"
                                                placeholder="" class="form-control" :readonly="is_non_us_citizen" :disabled="is_non_us_citizen" :required="!is_non_us_citizen" :aria-required="!is_non_us_citizen" >
                                     </div>
                                     <p class="color-danger">All United State citizens/residents are required to enter

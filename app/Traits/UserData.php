@@ -24,6 +24,7 @@ trait UserData
                     $q->where('follower_id', $user_id);
                 });
             })
+            ->whereNull('closed_on')
             ->where('id', '<>', $user_id);
 
         if (!is_null($request->get('search'))) {
@@ -109,7 +110,8 @@ trait UserData
 
     protected function getPeoplesData(Request $request)
     {
-        $query = User::select('id', 'email', 'username', 'role_id')->where('role_id', 2);
+        $query = User::select('id', 'email', 'username', 'role_id')->where('role_id', 2)
+            ->whereNull('closed_on');
 
         if (!is_null($request->get('search'))) {
             $query->where(function ($q) use ($request) {
@@ -139,7 +141,8 @@ trait UserData
     protected function getNewMembersData(Request $request)
     {
         $start_of_week = Carbon::now()->startOfWeek();
-        $query = User::select('id', 'email', 'username')->where('role_id', 2);
+        $query = User::select('id', 'email', 'username')->where('role_id', 2)
+            ->whereNull('closed_on');
 
         if (!is_null($request->get('search'))) {
             $query->where(function ($q) use ($request) {
@@ -175,7 +178,8 @@ trait UserData
     protected function getFriendsData(Request $request)
     {
         $user_id = $request->has('user_id') ? $request->get('user_id') : Auth::id();
-        $query = User::select('id', 'email', 'username')->where('role_id', 2);
+        $query = User::select('id', 'email', 'username')->where('role_id', 2)
+            ->whereNull('closed_on');
 
         if (!is_null($request->get('search'))) {
             $query->where(function ($q) use ($request) {
@@ -209,7 +213,8 @@ trait UserData
 
     protected function getAllUsersData(Request $request)
     {
-        $query = User::select('id', 'email', 'username')->where('role_id', 2);
+        $query = User::select('id', 'email', 'username')->where('role_id', 2)
+            ->whereNull('closed_on');
 
         return $query
             ->with('profile')
@@ -275,7 +280,8 @@ trait UserData
     {
         $user_id = $request->has('user_id') ? $request->get('user_id') : Auth::id();
 
-        $query = User::select('id', 'email', 'username')->where('role_id', 2);
+        $query = User::select('id', 'email', 'username')->where('role_id', 2)
+            ->whereNull('closed_on');
 
         if (!is_null($request->get('search'))) {
             $query->where(function ($q) use ($request) {
