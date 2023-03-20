@@ -247,7 +247,7 @@ trait UserData
         foreach ($network_members as $network_member) {
             array_push($network_member_ids, $network_member->user_id);
         }
-        $query = User::select('id', 'email', 'username')->where('role_id', 2);
+        $query = User::select('id', 'email', 'username')->where('role_id', 2)->whereNull('closed_on');
 
         if (!is_null($request->get('search'))) {
             $query->where(function ($q) use ($request) {
@@ -320,7 +320,8 @@ trait UserData
 
     protected function getFriendRequestsData(Request $request)
     {
-        $friend_requests = FriendRequest::where('target_id', Auth::id())->get();
+        $friend_requests = FriendRequest::where('target_id', Auth::id())
+            ->get();
         $friend_request_user_ids = [];
         foreach ($friend_requests as $friend_request) {
             array_push($friend_request_user_ids, $friend_request->user_id);
