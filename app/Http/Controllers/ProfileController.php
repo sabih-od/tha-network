@@ -399,7 +399,7 @@ class ProfileController extends Controller
             $joined_networks_owner_ids = Network::whereIn('id', $joined_networks_ids)->pluck('user_id');
             //send notification to owners
             foreach ($joined_networks_owner_ids as $target_id) {
-                $string = $user->profile->first_name . ' ' . $user->profile->last_name . " account has been closed.";
+                $string = $user->profile->first_name . ' ' . $user->profile->last_name . " is no longer a member of the network so you will not earn your referral fee for this member any longer";
                 $target = User::with('profile')->find($target_id);
                 $notification = Notification::create([
                     'user_id' => $target->id,
