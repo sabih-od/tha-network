@@ -126,7 +126,7 @@ class RegisterController extends Controller
                 'max:255'
             ],
             'phone' => [
-                'required',
+                'nullable',
                 'max:255'
             ],
             'username' => [

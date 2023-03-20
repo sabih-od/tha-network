@@ -21,7 +21,9 @@ trait NotificationData
             ['user_id', Auth::id()],
             ['viewed', 0]
 //        ])->orderBy('created_at', 'DESC')->groupBy('sender_id')->get();
-        ])->orderBy('created_at', 'DESC')->get();
+        ])->whereHas('sender', function ($q) {
+            return $q->whereNull('closed_on');
+        })->orderBy('created_at', 'DESC')->get();
 
         $notifications = $notifications->toArray();
         $noti_arr = [];

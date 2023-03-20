@@ -275,7 +275,7 @@ class InvitationCode extends Controller
         }
     }
 
-    public function invitationMailCode($to, $subject, $username, $name)
+    public function invitationMailCode($to, $subject, $username, $name, $role_id)
     {
         $invitation_code = Auth::user()->invitation_code ? '<span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code: '.Auth::user()->invitation_code.'</span>' : '';
 //        $from = 'no-reply@tha-network.com';
@@ -299,6 +299,8 @@ class InvitationCode extends Controller
 //        $message .= '<p style="color:black;font-size:18px;">Team Tha Network</p><br />';
 //        $message .= '</body></html>';
 
+        $inviter_string = ($role_id == 1) ? '' : '<strong style="color: #ff0000;">' .$name.'</strong> invited you to join their network. ';
+
         $html = '<html lang="en">
                     <head>
                         <meta charset="UTF-8" />
@@ -315,7 +317,7 @@ class InvitationCode extends Controller
                             <tr>
                                 <td colspan="3" style="width: 50%">
                                     <p style="color: #333; margin: 0 0 30px; line-height: 31px; font-size: 18px; text-align: center">
-                                        Welcome to <a href="https://thanetwork.org">ThaNetwork.org</a>, <strong style="color: red;">'.$name.'</strong> invited you to join their network. To learn more about your Invitation click the link below or visit <a href="https://thanetwork.org">www.thanetwork.org</a> and login using the Invitation code below..
+                                        Welcome to <a href="https://thanetwork.org">ThaNetwork.org</a>, '.$inviter_string.'To learn more about your Invitation click the link below or visit <a href="https://thanetwork.org">www.thanetwork.org</a> and login using the Invitation code below..
                                     </p>
                                 </td>
                             </tr>
@@ -383,7 +385,7 @@ class InvitationCode extends Controller
             //
 
             foreach ($request->emails as $email) {
-                if (!$this->invitationMailCode($email, 'Tha Network - Invitation Code!', $request->username, $request->name))
+                if (!$this->invitationMailCode($email, 'Tha Network - Invitation Code!', $request->username, $request->name, Auth::user()->role_id))
                     return WebResponses::exception("Emails not sent!");
 
                 //Create referral

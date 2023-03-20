@@ -59,7 +59,7 @@
                                         </p>
                                     </span>
                             </div>
-                            <button v-if="!is_excluded_country" class="themeBtn" id="checkout-and-portal-button" type="button" @click.prevent="stripe_subscribe" :disabled="form_loading || !agree_terms">
+                            <button v-if="!is_excluded_country" class="themeBtn" id="checkout-and-portal-button" type="button" @click.prevent="stripe_subscribe" :disabled="form_loading">
                                 {{ form_loading ? 'Please Wait' : 'Subscribe' }}</button>
                             <span v-else>Not available in your country.</span>
                         </form>
@@ -110,7 +110,7 @@
                                         </p>
                                     </span>
                             </div>
-                            <button v-if="!is_excluded_country" class="themeBtn" id="checkout-and-portal-button" type="button" @click.prevent="stripeCharge" :disabled="form_loading || !agree_terms">
+                            <button v-if="!is_excluded_country" class="themeBtn" id="checkout-and-portal-button" type="button" @click.prevent="stripeCharge" :disabled="form_loading">
                                 {{ form_loading ? 'Please Wait' : 'Subscribe' }}</button>
                             <span v-else>Not available in your country.</span>
                         </form>
@@ -217,6 +217,10 @@ export default {
     },
     methods: {
         async stripe_subscribe() {
+            if (!this.agree_terms) {
+                (useToast()).error('You must acknowledge the Terms and Conditions by checking the box above before continuing.');
+                return;
+            }
             this.form_loading = true;
             Inertia.post(this.$route('createStripeCheckoutSession'), {
                 card_number: this.card_number,
@@ -237,6 +241,10 @@ export default {
             })
         },
         async stripeCharge () {
+            if (!this.agree_terms) {
+                (useToast()).error('You must acknowledge the Terms and Conditions by checking the box above before continuing.');
+                return;
+            }
             // const stripe = await Stripe('pk_test_0rY5rGJ7GN1xEhCB40mAcWjg');
             this.form_loading = true;
             const stripe = require('stripe')(process.env.MIX_STRIPE_SECRET_KEY);
