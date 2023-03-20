@@ -217,6 +217,10 @@ export default {
     },
     methods: {
         async stripe_subscribe() {
+            if (!this.agree_terms) {
+                (useToast()).error('You must acknowledge the Terms and Conditions by checking the box above before continuing.');
+                return;
+            }
             this.form_loading = true;
             Inertia.post(this.$route('createStripeCheckoutSession'), {
                 card_number: this.card_number,
