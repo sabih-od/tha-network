@@ -16,6 +16,7 @@ use App\Traits\StripePayment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -425,6 +426,12 @@ class ProfileController extends Controller
                 'sender_pic' => $user->get_profile_picture(),
             ]);
             event(new ReferralReverted($target->id, $string, 'App\Models\User', $notification->id, $target));
+
+            //remove user from all networks
+            NetworkMember::where('user_id', $user->id)->delete();
+
+            //remove user from all friends lists
+            DB::table('user_follower')->where('following_id', $user->id)->orWhere('follower_id', $user->id)->delete();
 
             Auth::logout();
 
