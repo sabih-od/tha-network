@@ -268,11 +268,18 @@ class InvitationCode extends Controller
                 </html>';
 
         // Sending email
-        if (mail($to, $subject, $html, $headers)) {
-            return true;
-        } else {
-            return false;
-        }
+        return Mail::send([], [], function ($message) use ($to, $subject, $html) {
+            $message->to($to)
+                ->subject($subject)
+                ->setBody($html, 'text/html'); // for HTML rich messages
+        });
+
+        // // Sending email
+        // if (mail($to, $subject, $html, $headers)) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
     }
 
     public function invitationMailCode($to, $subject, $username, $name, $role_id)
@@ -359,11 +366,18 @@ class InvitationCode extends Controller
                     </body>
                 </html>';
 
-        if (mail($to, $subject, $html, $headers)) {
-            return true;
-        } else {
-            return false;
-        }
+        // Sending email
+        return Mail::send([], [], function ($message) use ($to, $subject, $html) {
+            $message->to($to)
+                ->subject($subject)
+                ->setBody($html, 'text/html'); // for HTML rich messages
+        });
+
+        // if (mail($to, $subject, $html, $headers)) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
     }
 
     public function sendInvitation(Request $request) {
