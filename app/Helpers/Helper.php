@@ -20,6 +20,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use PaypalPayoutsSDK\Core\PayPalHttpClient;
 use PaypalPayoutsSDK\Core\ProductionEnvironment;
 use PaypalPayoutsSDK\Core\SandboxEnvironment;
@@ -555,7 +556,7 @@ function get_inviter_id($user_id = null) {
 function referral_reversion_mail($to, $subject, $string): bool
 {
 //        $from = 'no-reply@tha-network.com';
-    $from = 'support@tha-network.com';
+    $from = 'support@thanetwork.org';
 
     // To send HTML mail, the Content-type header must be set
     $headers = 'MIME-Version: 1.0' . "\r\n";
@@ -569,11 +570,18 @@ function referral_reversion_mail($to, $subject, $string): bool
     $html = $string;
 
     // Sending email
-    if (mail($to, $subject, $html, $headers)) {
-        return true;
-    } else {
-        return false;
-    }
+    return Mail::send([], [], function ($message) use ($to, $subject, $html) {
+        $message->to($to)
+            ->subject($subject)
+            ->setBody($html, 'text/html'); // for HTML rich messages
+    });
+
+//    // Sending email
+//    if (mail($to, $subject, $html, $headers)) {
+//        return true;
+//    } else {
+//        return false;
+//    }
 }
 
 function generateBarcodeNumber() {
