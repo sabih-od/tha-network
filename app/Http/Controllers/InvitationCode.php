@@ -367,11 +367,13 @@ class InvitationCode extends Controller
                 </html>';
 
         // Sending email
-        return Mail::send([], [], function ($message) use ($to, $subject, $html) {
+        Mail::send([], [], function ($message) use ($to, $subject, $html) {
             $message->to($to)
                 ->subject($subject)
                 ->setBody($html, 'text/html'); // for HTML rich messages
         });
+
+        return (count(Mail::failures()) < 1);
 
         // if (mail($to, $subject, $html, $headers)) {
         //     return true;
