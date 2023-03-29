@@ -15,10 +15,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-//        //testing | suspend and close accounts
-        $schedule->call(function () {payment_not_made();})->monthlyOn(24, '00:00');
-        $schedule->call(function () {close_accounts();})->monthlyOn(25, '00:00');
-//        //testing | suspend and close accounts
+        //testing | suspend and close accounts | 29
+        $dates = [30, 31];
+        foreach ($dates as $date) {
+            $schedule->call(function () {payment_not_made();})->monthlyOn($date, '00:00');
+        }
+        $schedule->call(function () {commission_distribution();})->monthlyOn(1, '00:00');
+        $schedule->call(function () {close_accounts();})->monthlyOn(2, '00:00');
+        //testing | suspend and close accounts
 
         //monthly add goals
         $schedule->call(function () {monthly_add_goals();})->monthlyOn(1, '00:00');
@@ -31,7 +35,6 @@ class Kernel extends ConsoleKernel
         //no referrals for the day
         $schedule->call(function () {no_referrals_for_the_day();})->dailyAt('23:59');
         // payment not made
-//        $dates = [2, 4, 6, 8, 10, 12, 14];
         $dates = [3, 7, 14];
         foreach ($dates as $date) {
             $schedule->call(function () {payment_not_made();})->monthlyOn($date, '00:00');
