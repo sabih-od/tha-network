@@ -15,18 +15,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PusherController;
 use App\Http\Controllers\StripeController;
 use App\Models\Page;
-use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use PaypalPayoutsSDK\Core\PayPalHttpClient;
-use PaypalPayoutsSDK\Core\SandboxEnvironment;
-use PaypalPayoutsSDK\Payouts\PayoutsPostRequest;
-use Sample\PayPalClient;
-use Stripe\Stripe;
-use Stripe\StripeClient;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,7 +55,7 @@ Route::get('/temp', function () {
 //        }
 //    }
 
-    commission_distribution();
+//    commission_distribution();
 })->name('temp');
 
 Route::get('get/redis', function () {
@@ -132,7 +122,6 @@ require "auth.php";
 Route::group([
     'middleware' => ['auth', 'revalidate', 'closure', 'suspension']
 ], function () {
-    ;
     Route::get('edit-profile', [ProfileController::class, 'edit'])
         ->name('editProfileForm');
     Route::post('edit-profile', [ProfileController::class, 'update'])
