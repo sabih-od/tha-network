@@ -15,13 +15,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //testing | suspend and close accounts | 29
-        $dates = [30, 31];
+        //testing | suspend and close accounts | 31
+        $dates = [1, 2];
         foreach ($dates as $date) {
             $schedule->call(function () {payment_not_made();})->monthlyOn($date, '00:00');
         }
-        $schedule->call(function () {commission_distribution();})->monthlyOn(1, '00:00');
-        $schedule->call(function () {close_accounts();})->monthlyOn(2, '00:00');
+        $schedule->call(function () {commission_distribution();})->monthlyOn(3, '00:00');
+        $schedule->call(function () {close_accounts();})->monthlyOn(4, '00:00');
         //testing | suspend and close accounts
 
         //monthly add goals
