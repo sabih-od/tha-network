@@ -8,10 +8,6 @@
             "autorestart": true,
             "max_restarts": 100,
             "interpreter" : "php",
-            "watch": true,
-            "error_file": "log/websockets.err.log",
-            "out_file": "log/websockets.out.log",
-            "log_file": "log/websockets.combined.log",
             "time": true
         },
         {
@@ -23,10 +19,6 @@
             "autorestart": true,
             "max_restarts": 100,
             "interpreter" : "php",
-            "watch": true,
-            "error_file": "log/queue.err.log",
-            "out_file": "log/queue.out.log",
-            "log_file": "log/queue.combined.log",
             "time": true
         },
         {
@@ -37,10 +29,6 @@
             "autorestart": true,
             "max_restarts": 100,
             "interpreter" : "php",
-            "watch": true,
-            "error_file": "log/queue.err.log",
-            "out_file": "log/queue.out.log",
-            "log_file": "log/queue.combined.log",
             "time": true
         }
     ]
