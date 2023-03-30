@@ -8,7 +8,6 @@
             "autorestart": true,
             "max_restarts": 100,
             "interpreter" : "php",
-            "watch": true,
             "time": true
         },
         {
@@ -20,7 +19,6 @@
             "autorestart": true,
             "max_restarts": 100,
             "interpreter" : "php",
-            "watch": true,
             "time": true
         },
         {
@@ -31,7 +29,6 @@
             "autorestart": true,
             "max_restarts": 100,
             "interpreter" : "php",
-            "watch": true,
             "time": true
         }
     ]
