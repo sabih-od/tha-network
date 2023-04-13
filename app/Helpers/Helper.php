@@ -450,6 +450,12 @@ function commission_distribution() {
                 env('STRIPE_SECRET_KEY')
             );
 
+            $balance = $stripe->balance->retrieve();
+
+            if ($balance->available[0]->amount <= $reward->amount) {
+                continue;
+            }
+
             Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
             $transfer = \Stripe\Transfer::create([
                 "amount" => $reward->amount * 100,
