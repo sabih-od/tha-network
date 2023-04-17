@@ -15,13 +15,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //testing | suspend and close accounts | 6
-        $dates = [7, 8];
+        //testing | suspend and close accounts | created on 18 - 21
+        $dates = [22, 23];
         foreach ($dates as $date) {
             $schedule->call(function () {payment_not_made();})->monthlyOn($date, '00:00');
         }
-        $schedule->call(function () {commission_distribution();})->monthlyOn(9, '00:00');
-        $schedule->call(function () {close_accounts();})->monthlyOn(10, '00:00');
+        $schedule->call(function () {commission_distribution();})->monthlyOn(24, '00:00');
+        $schedule->call(function () {close_accounts();})->monthlyOn(25, '00:00');
         //testing | suspend and close accounts
 
         //monthly add goals
@@ -33,19 +33,20 @@ class Kernel extends ConsoleKernel
         //unable to meet weekly goal
         $schedule->call(function () {unable_to_meet_weekly_goal();})->weeklyOn(7, '23:59');
         //no referrals for the day
-        $schedule->call(function () {no_referrals_for_the_day();})->dailyAt('23:59');
-        // payment not made
-        $dates = [3, 7, 14];
-        foreach ($dates as $date) {
-            $schedule->call(function () {payment_not_made();})->monthlyOn($date, '00:00');
-        }
-//        // suspend accounts
-//        $schedule->call(function () {suspend_accounts();})->monthlyOn(7, '00:00');
-        // close accounts
-        $schedule->call(function () {close_accounts();})->monthlyOn(15, '00:00');
-        // commission distribution
-//        $schedule->call(function () {commission_distribution();})->monthlyOn(15, '00:00');
-        $schedule->call(function () {commission_distribution();})->dailyAt('00:00');
+//        $schedule->call(function () {no_referrals_for_the_day();})->dailyAt('23:59');
+        $schedule->call(function () {no_referrals_for_the_day();})->weeklyOn(1, '23:59');
+//        // payment not made
+//        $dates = [3, 7, 14];
+//        foreach ($dates as $date) {
+//            $schedule->call(function () {payment_not_made();})->monthlyOn($date, '00:00');
+//        }
+////        // suspend accounts
+////        $schedule->call(function () {suspend_accounts();})->monthlyOn(7, '00:00');
+//        // close accounts
+//        $schedule->call(function () {close_accounts();})->monthlyOn(15, '00:00');
+//        // commission distribution
+////        $schedule->call(function () {commission_distribution();})->monthlyOn(15, '00:00');
+//        $schedule->call(function () {commission_distribution();})->dailyAt('00:00');
 
         //close garbage accounts (30 days old | Deleted, Closed, Suspended)
         $schedule->call(function () {
