@@ -74,11 +74,31 @@
     .abtSec h2 {
         font-size: 1.75rem;
     }
+
+    .insideSearch .input-group input {
+        height: 50px;
+    }
 }
 
 @media (max-width: 991.98px) {
     html {
         font-size: 12px;
+    }
+
+    .insideSearch .input-group {
+        width: 100%;
+    }
+
+    .insideSearch .input-group .searchBtn, .insideSearch .input-group .closeSearchBtn {
+        width: 100%;
+    }
+
+    .messangerSec .friend-drawer {
+        padding: 1rem;
+    }
+
+    .messangerSec .friend-drawer .text h6 {
+        font-size: 1rem;
     }
 }
 
@@ -87,6 +107,10 @@
         left: 50% !important;
         transform: translateX(-50%);
         width: 300px !important;
+    }
+
+    .dse .settings-tray {
+        padding: 1rem;
     }
 
     html {
@@ -145,10 +169,6 @@
         box-shadow: 0 2px 5px #ddd;
     }
 
-    .chat-panel {
-        height: 800px;
-    }
-
     .messangerSec .chat-box-tray {
         position: initial;
         height: auto;
@@ -170,20 +190,6 @@
         background: none;
         border: 1px solid #ddd;
         border-radius: 0;
-    }
-
-    .form-control {
-    }
-
-    .messangerSec {
-        height: auto;
-        overflow: auto;
-    }
-
-    .mainDashboard {
-        height: auto;
-        display: block;
-        margin: 0;
     }
 
     .messangerSec input {
@@ -228,6 +234,58 @@
     .termsSec p, .termsSec li {
         font-size: 0.875rem;
         font-weight: normal;
+    }
+
+    .benefitSec h3 {
+        font-size: 1.25rem;
+        margin-top: 1rem;
+    }
+
+    .benefitSec p {
+        font-size: 0.95rem;
+    }
+
+    .secHeading {
+        font-size: 1.5rem;
+    }
+
+    .planImgs {
+        margin-bottom: 10rem;
+    }
+
+    .planImgs img.plan3 {
+        left: auto;
+        right: 0;
+        bottom: -6rem;
+    }
+
+    .planImgs img.plan4 {
+        right: auto;
+        left: 0;
+        bottom: -7rem;
+    }
+
+    .planImgs img.plan5 {
+        top: 0;
+        left: 0;
+    }
+    .abtSec h4 {
+        font-size: 1.75rem;
+    }
+
+    .overlayCont {
+        margin: 2rem 0;
+    }
+
+    .overlayCont > img {
+        height: 150px;
+        object-fit: cover;
+    }
+
+    .overlayCont .content h2 {font-size: 2.5rem;}
+
+    .overlayCont .content p {
+        font-size: 1rem;
     }
 }
 
@@ -329,6 +387,18 @@
         background: var(--primary);
         display: flex;
         justify-content: center;
+    }
+
+    .howItWorkSlider .arrowImg img {
+        height: 200px;
+    }
+
+    .howItWorkSlider > img {
+        height: 450px;
+    }
+
+    .workCard > img {
+        display: none;
     }
 }
 

@@ -19,7 +19,6 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12" v-html="data.privacy_content">
-
                     </div>
                 </div>
             </div>
