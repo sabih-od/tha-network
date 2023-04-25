@@ -17,8 +17,10 @@
         </div>
         <section class="termsSec">
             <div class="container">
-                <div class="row" v-html="data.terms_content">
+                <div class="row">
+<div class="col-12" v-html="data.terms_content">
 
+</div>
                 </div>
             </div>
         </section>

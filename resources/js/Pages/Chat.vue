@@ -15,9 +15,9 @@
     <!--        </div>-->
     <!--    </section>-->
 
-    <div class="mainDashboard">
+    <div class="mainDashboard chatContainer">
         <div class="slctlft descriptnbg">
-            <div class="container-fluid p-md-0">
+            <div class="container p-md-0">
                 <div class="row messangerSec">
                     <ChatListing></ChatListing>
 
