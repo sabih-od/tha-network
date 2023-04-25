@@ -313,7 +313,7 @@ class RegisterController extends Controller
                 //create payout log
                 Reward::create([
                     'user_id' => $inviter->id,
-                    'amount' => session()->get('tha_payment_amount') == 29.99 ? 19.99 : 39.99,
+                    'amount' => session()->get('tha_payment_amount') == 29.99 ? 10.00 : 39.99,
                 ]);
 
                 session()->remove('inviter_id');

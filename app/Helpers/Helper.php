@@ -463,14 +463,16 @@ function commission_distribution() {
                 "destination" => $reward->user->stripe_account_id,
             ]);
 
-            if ($transfer) {
+//            if ($transfer) {
                 $reward->is_paid = true;
                 $reward->save();
-            }
+//            }
         }
 
 //        else if($reward->user->paypal_account_details) {
         else if($reward->user->preferred_payout_method == 'paypal') {
+            continue;
+
             $clientId = env('PAYPAL_CLIENT_ID');
             $clientSecret = env('PAYPAL_SECRET_KEY');
 
