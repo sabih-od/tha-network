@@ -5,7 +5,8 @@
 
             <ProfileImageIconRounded :profile_img="cover?.profile_img" :count="notifications_count"/>
             <div class="text">
-                <h6>{{ cover?.profile?.first_name + ' ' + cover?.profile?.last_name}}</h6>
+<!--                <h6>{{ cover?.profile?.first_name + ' ' + cover?.profile?.last_name}}</h6>-->
+                <h6>{{ cover?.username }}</h6>
             </div>
 
             <div class="dropdown ml-auto">

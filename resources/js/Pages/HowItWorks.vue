@@ -2,15 +2,15 @@
     <div>
         <HowItWorksMenu :visitedByCode="visitedByCode"/>
 
-        <div class="main-slider">
+        <div class="main-slider howItWorkSlider">
             <img class="img-fluid w-100" :src="data.banner_image" alt="First slide">
             <div class="carousel-caption">
                 <div class="container">
                     <div class="row aic">
-                        <div class="col-md-4">
-                            <figure><img :src="asset('images/img1.png')" alt=""></figure>
+                        <div class="col-sm-4">
+                            <figure class="arrowImg"><img :src="asset('images/img1.png')" alt=""></figure>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-sm-4">
                             <div class="content">
                                 <h3>{{ data.banner_circle_title }}</h3>
                                 <Link v-if="!this.user" :href="$route('stripePaymentShow')" class="themeBtn" replace>

@@ -37,8 +37,13 @@ export default {
             return usePage().props.value?.auth ?? null
         },
         name: () => {
-            const profile = usePage().props.value?.profile ?? null
-            return profile ? profile?.first_name + ' ' + profile?.last_name : ''
+            const page = usePage().component.value
+            if (page === 'EditProfile' || page === 'Profile') {
+                const profile = usePage().props.value?.profile ?? null
+                return profile ? profile?.first_name + ' ' + profile?.last_name : '';
+            } else {
+                return '';
+            }
         },
         errors: () => usePage().props.value?.errors ?? null,
         profile_img() {
