@@ -22,7 +22,7 @@ trait CommentData
             ->latest()
             ->with(['user' => function ($q) {
                 $q->select('id', 'username');
-            }])
+            }, 'user.profile'])
             ->withCount('replies')
             ->simplePaginate(5)
             ->through(function ($item, $key) use($auth_user) {
@@ -50,7 +50,7 @@ trait CommentData
             ->latest()
             ->with(['user' => function ($q) {
                 $q->select('id', 'username');
-            }])
+            }, 'user.profile'])
             ->simplePaginate(5)
             ->through(function ($item, $key) use($auth_user) {
                 $auth_user->attachLikeStatus($item);
