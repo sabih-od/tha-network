@@ -36,10 +36,10 @@
                         <div class="userInfo" v-if="notification.sender.id != user.id">
                             <Link href="#" @click.prevent="chatWithProfile(notification.sender.id)"><img :src="notification.sender.profile_image ? notification.sender.profile_image : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
                             <h3>
-<!--                                {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}-->
-                                {{notification.sender.username ? notification.sender.username : ''}}
+                                {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
                                 <a href="#">{{ notification.last_activity_readable }}</a>
                             </h3>
+                            <p class="m-0">{{notification.sender.username ? '@' + notification.sender.username : ''}}</p>
                         </div>
                     </div>
                     <div style="text-align: center!important;" v-if="unread_notifications.length === 0">
@@ -52,10 +52,10 @@
                         <div class="userInfo" v-if="notification.sender.id != user.id">
                             <Link href="#" @click.prevent="chatWithProfile(notification.sender.id)"><img :src="notification.sender.profile_image ? notification.sender.profile_image : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
                             <h3>
-<!--                                {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}-->
-                                {{notification.sender.username ? notification.sender.username : ''}}
+                                {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
                                 <a href="#">{{ notification.last_activity_readable }}</a>
                             </h3>
+                            <p class="m-0">{{notification.sender.username ? '@' + notification.sender.username : ''}}</p>
                         </div>
                     </div>
                     <div style="text-align: center!important;" v-if="read_notifications.length === 0">
@@ -69,9 +69,9 @@
                             <Link :href="$route('userProfile', user.id)"><img :src="user.profile_image ? user.profile_image : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
                             <h3>
                                 <Link :href="$route('userProfile', user.id)">
-<!--                                    <strong>{{user.profile ? user.profile.first_name +' '+ user.profile.last_name : ''}}</strong>-->
-                                    <strong>{{user.username ? user.username : ''}}</strong>
+                                    <strong>{{user.profile ? user.profile.first_name +' '+ user.profile.last_name : ''}}</strong>
                                 </Link>
+                                <p class="m-0">{{user.username ? '@' + user.username : ''}}</p>
                                 <a href="#">Connect</a>
                             </h3>
                         </div>

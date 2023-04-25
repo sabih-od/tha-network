@@ -28,18 +28,18 @@
                     </div>
                 </div>
                 <!--inside search-->
-                <div class="insideSearch">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <button class="searchBtn" type="button"><i class="fa fa-search"></i></button>
-                        </div>
-                        <input type="text" placeholder="Search here..." @keyup="submit" @keyup.enter.prevent v-model="search">
-                        <div class="input-group-prepend">
-                            <button class="closeSearchBtn" type="button"><i class="fa fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+<!--                <div class="insideSearch">-->
+<!--                    <div class="input-group">-->
+<!--                        <div class="input-group-prepend">-->
+<!--                            <button class="searchBtn" type="button"><i class="fa fa-search"></i></button>-->
+<!--                        </div>-->
+<!--                        <input type="text" placeholder="Search here..." @keyup="submit" @keyup.enter.prevent v-model="search">-->
+<!--                        <div class="input-group-prepend">-->
+<!--                            <button class="closeSearchBtn" type="button"><i class="fa fa-times"></i>-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <!--messages-->
                 <div class="chatSec" ref="chatContainer">
                     <ChatMessageItem
