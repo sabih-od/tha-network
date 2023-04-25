@@ -17,7 +17,8 @@
                 <Link :href="$route('userProfile', user.id)"><img :src="user.profile_img ? user.profile_img : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
                 <h3>
                     <Link :href="$route('userProfile', user.id)">
-                        <strong>{{user.profile ? user.profile.first_name +' '+ user.profile.last_name : ''}}</strong>
+<!--                        <strong>{{user.profile ? user.profile.first_name +' '+ user.profile.last_name : ''}}</strong>-->
+                        <strong>{{user.username ? user.username : ''}}</strong>
                     </Link>
                     <a href="#">Connect</a>
                 </h3>

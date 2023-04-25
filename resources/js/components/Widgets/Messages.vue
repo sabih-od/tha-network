@@ -36,7 +36,8 @@
                         <div class="userInfo" v-if="notification.sender.id != user.id">
                             <Link href="#" @click.prevent="chatWithProfile(notification.sender.id)"><img :src="notification.sender.profile_image ? notification.sender.profile_image : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
                             <h3>
-                                {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
+<!--                                {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}-->
+                                {{notification.sender.username ? notification.sender.username : ''}}
                                 <a href="#">{{ notification.last_activity_readable }}</a>
                             </h3>
                         </div>
@@ -51,7 +52,8 @@
                         <div class="userInfo" v-if="notification.sender.id != user.id">
                             <Link href="#" @click.prevent="chatWithProfile(notification.sender.id)"><img :src="notification.sender.profile_image ? notification.sender.profile_image : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
                             <h3>
-                                {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
+<!--                                {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}-->
+                                {{notification.sender.username ? notification.sender.username : ''}}
                                 <a href="#">{{ notification.last_activity_readable }}</a>
                             </h3>
                         </div>
@@ -67,7 +69,8 @@
                             <Link :href="$route('userProfile', user.id)"><img :src="user.profile_image ? user.profile_image : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
                             <h3>
                                 <Link :href="$route('userProfile', user.id)">
-                                    <strong>{{user.profile ? user.profile.first_name +' '+ user.profile.last_name : ''}}</strong>
+<!--                                    <strong>{{user.profile ? user.profile.first_name +' '+ user.profile.last_name : ''}}</strong>-->
+                                    <strong>{{user.username ? user.username : ''}}</strong>
                                 </Link>
                                 <a href="#">Connect</a>
                             </h3>
