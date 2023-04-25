@@ -265,7 +265,10 @@ trait UserData
 
         return $query
             ->with('profile')
-            ->whereIn('id', $network_member_ids)
+            ->when(Auth::user()->role_id != 1, function ($q) use ($network_member_ids) {
+                return $q->whereIn('id', $network_member_ids);
+            })
+//            ->whereIn('id', $network_member_ids)
             ->where('id', '!=', $user_id)
             ->simplePaginate($request->all == "true" ? 99999999 : 8)
             ->through(function ($item, $key) use($user_id) {

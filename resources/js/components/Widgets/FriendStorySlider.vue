@@ -4,7 +4,8 @@
         <div class="storySlider" ref="storyWrapper">
             <div class="storyWrap" v-if="peoples.length > 0" v-for="user in peoples" :key="user.id">
                 <Link :href="$route('userProfile', user.id)" class="imgBox"><img :src="user.profile_img ? user.profile_img : asset('images/char-usr.png')" alt=""></Link>
-                <h3>{{user.profile ? user.profile.first_name +' '+ user.profile.last_name : ''}}</h3>
+<!--                <h3>{{user.profile ? user.profile.first_name +' '+ user.profile.last_name : ''}}</h3>-->
+                <h3>{{user.username ? user.username : ''}}</h3>
             </div>
             <span class="text-center" v-else><strong>You have no friends.</strong></span>
         </div>

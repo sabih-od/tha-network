@@ -17,7 +17,8 @@
                 <Link :href="$route('userProfile', user.id)"><img :src="user.profile_img ? user.profile_img : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
                 <h3>
                     <Link :href="$route('userProfile', user.id)">
-                        <strong>{{user.profile ? user.profile.first_name +' '+ user.profile.last_name : ''}}</strong>
+<!--                        <strong>{{user.profile ? user.profile.first_name +' '+ user.profile.last_name : ''}}</strong>-->
+                        <strong>{{user.username ? user.username : ''}}</strong>
                     </Link>
                     <a href="#">Connect</a>
                 </h3>
@@ -25,6 +26,7 @@
             <FollowUserButton v-if="!isMe(user.id)" :user_id="user.id" :is_followed_by_auth="user.is_followed_by_auth" :is_followed="user.is_followed" :request_sent="user.request_sent" :request_received="user.request_received" @update_is_followed="user.is_followed = !user.is_followed"></FollowUserButton>
 <!--            <a href="#" class="nav-icons"><i class="fal fa-comments"></i></a>-->
         </div>
+        <h6 v-if="role_id == 1 && all && !(peoples.length == 0 && search == '')">Total Network Members: {{ peoples.length }}</h6>
 
         <div style="text-align: center!important;" v-if="peoples.length == 0 && search == ''">
             <h6>{{users_wait_text}}</h6>
@@ -63,7 +65,8 @@ export default {
             debounce: null,
             user_id: null,
             all: false,
-            users_wait_text: 'There is no user in my network.'
+            users_wait_text: 'There is no user in my network.',
+            role_id: usePage().props.value?.role_id
         }
     },
     mounted() {
