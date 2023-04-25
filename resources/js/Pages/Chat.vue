@@ -19,7 +19,7 @@
         <div class="slctlft descriptnbg">
             <div class="container p-md-0">
                 <div class="row messangerSec">
-                    <ChatListing></ChatListing>
+                    <ChatListing ref="chatListingRef"></ChatListing>
 
                     <div class="col-md-9 p-md-0 dse" id="chatbox">
                         <ChatMessages></ChatMessages>

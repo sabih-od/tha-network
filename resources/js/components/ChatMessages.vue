@@ -33,7 +33,7 @@
                         <div class="input-group-prepend">
                             <button class="searchBtn" type="button"><i class="fa fa-search"></i></button>
                         </div>
-                        <input type="text" placeholder="Search here...">
+                        <input type="text" placeholder="Search here..." @keyup="submit" @keyup.enter.prevent v-model="search">
                         <div class="input-group-prepend">
                             <button class="closeSearchBtn" type="button"><i class="fa fa-times"></i>
                             </button>
@@ -222,7 +222,13 @@ export default {
         },
         onUnfriendedUserInactive() {
             this.is_auth_friend = true;
-        }
+        },
+        submit() {
+            // this.$parent.updateSearchQuery(this.search);
+            this.$parent.$refs.chatListingRef.search_query = this.search;
+            this.$parent.$refs.chatListingRef.loadChatListing();
+            // this.$emit('search', this.search);
+        },
     }
 }
 </script>
