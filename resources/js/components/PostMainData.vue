@@ -5,7 +5,13 @@
                 <div class="userWrap"><img :src="profile_image(post?.user?.profile_image)" class="rounded-circle" alt="">
                 </div>
                 <div class="userNameWrap">
-                    <h2>@{{ post.user.username }} <span>{{ $store.getters['Utils/fromNow'](post?.created_at) }}</span></h2>
+                    <h2>
+                        {{post.user.profile ? post.user.profile.first_name +' '+ post.user.profile.last_name : ''}}
+                        <p><small>@{{ post.user.username }}</small></p>
+                        <span>
+                            {{ $store.getters['Utils/fromNow'](post?.created_at) }}
+                        </span>
+                    </h2>
                     <span v-if="post.feeling_text && post.feeling_icon">-</span>
                     <h6 v-if="post.feeling_text && post.feeling_icon"><i :class="post.feeling_icon"></i><span>Feeling {{ post.feeling_text }}!</span></h6>
 <!--                    <h5 v-if="post.location">at<span>LA, California</span></h5>-->

@@ -19,7 +19,8 @@ trait PostData
                 },
                 'sharedPost' => function ($q) {
                     $q->select('id', 'content', 'user_id', 'created_at');
-                }
+                },
+                'user.profile'
             ])
             ->withCount('likers', 'comments')
             ->when($post_id, function($q) use($post_id) {
