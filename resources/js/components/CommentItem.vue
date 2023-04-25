@@ -5,7 +5,8 @@
                                               class="rounded-circle" alt=""></a>
             <div class="content">
                 <Link :href="profile_link(comment.user.id)" replace>
-                    <h2>@{{ comment.user.username }}</h2>
+                    <h2>{{ comment.user.profile.first_name + ' ' + comment.user.profile.last_name }}</h2>
+                    <p>@{{ comment.user.username }}</p>
                 </Link>
                 <p>{{ comment.comment }}</p>
                 <ul>

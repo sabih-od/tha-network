@@ -4,7 +4,8 @@
                                           class="rounded-circle" alt=""></a>
         <div class="content">
             <Link :href="$store.getters['Utils/generateProfileLink'](reply.user.id)" replace>
-                <h2>@{{ reply.user.username }}</h2>
+                <h2>{{ reply.user.profile.first_name + ' ' + reply.user.profile.last_name }}</h2>
+                <p>@{{ reply.user.username }}</p>
             </Link>
             <p>{{ reply.comment }}</p>
             <ul>
