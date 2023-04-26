@@ -26,7 +26,8 @@
             <FollowUserButton v-if="!isMe(user.id)" :user_id="user.id" :is_followed_by_auth="user.is_followed_by_auth" :is_followed="user.is_followed" :request_sent="user.request_sent" :request_received="user.request_received" @update_is_followed="user.is_followed = !user.is_followed"></FollowUserButton>
 <!--            <a href="#" class="nav-icons"><i class="fal fa-comments"></i></a>-->
         </div>
-        <h6 v-if="role_id == 1 && all && !(peoples.length == 0 && search == '')">Total Network Members: {{ peoples.length }}</h6>
+<!--        <h6 v-if="role_id == 1 && all && !(peoples.length == 0 && search == '')">Total Network Members: {{ peoples.length }}</h6>-->
+        <h6 v-if="role_id == 1">Total Network Members: {{ peoples.length }}</h6>
 
         <div style="text-align: center!important;" v-if="peoples.length == 0 && search == ''">
             <h6>{{users_wait_text}}</h6>
