@@ -522,6 +522,10 @@ class InvitationCode extends Controller
                 } else {
                     $charge_date = Carbon::today()->copy()->addMonth()->firstOfMonth();
                 }
+
+                //testing date (3 days ahead)
+                $charge_date = Carbon::today()->copy()->addDays(3);
+
                 $isMonthsFirst = false;
                 $token_id = $request->token_id;
             }
@@ -635,6 +639,7 @@ class InvitationCode extends Controller
         $subscription_array['customer'] = $customer->id;
         $subscription_array['items'] = [['price' => $price->id]];
         if (!$isMonthsFirst) {
+//            dd(Carbon::today());
             $subscription_array['trial_end'] = strval($charge_date->timestamp);
         }
 
