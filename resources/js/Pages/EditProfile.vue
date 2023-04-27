@@ -49,12 +49,12 @@
 <!--                        </div>-->
                         <br />
 
-                        <span class="ml-3">
-                            <strong>
-                                <i class="fas fa-info" style="color: blue;"></i>
-                                If you would like to change the payment account please select the check box above.
-                            </strong>
-                        </span>
+<!--                        <span class="ml-3">-->
+<!--                            <strong>-->
+<!--                                <i class="fas fa-info" style="color: blue;"></i>-->
+<!--                                If you would like to change the payment account please select the check box above.-->
+<!--                            </strong>-->
+<!--                        </span>-->
                     </div>
                     <br />
 
