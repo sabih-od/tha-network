@@ -10,7 +10,7 @@
                 </Link>
                 <div class="col-12">
                     <h3>Referral Payment Options</h3>
-                    <h6>In order to receive Referral Payments you must include your Paypal or Stripe Account information.  If you do not have a Stripe or Paypal Account create one and provide the information below.If this information is not provided, you will not be able to receive your referral payments.</h6>
+                    <h6>In order to receive Referral Payments you must include your Stripe Account information.  If you do not have a Stripe Account create one and provide the information below. If this information is not provided, you will not be able to receive your referral payments.</h6>
                     <div class="row">
                         <div class="col-md-12">
                             <h4>
