@@ -18,7 +18,7 @@
 <!--        </teleport>-->
 <!--    </div>-->
 
-    <div class="col-md-3 border-right p-md-0">
+    <div class="col-md-4 border-right p-md-0">
         <div class="chatSearch">
             <Link class="backBtn" :href="$route('home')">Go Back to Home</Link>
             <ChatSearchForm @search="search"></ChatSearchForm>
