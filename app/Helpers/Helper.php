@@ -302,14 +302,22 @@ function has_made_monthly_payment($id = null): bool
         return false;
     }
 
-    //if trial still going on
-    if ($subscription->status == 'trialing') {
+//    dump(Carbon::parse($subscription->trial_end)->format('m d Y'));
+//    dd($stripe->invoices->retrieve($subscription->latest_invoice));
+
+    $statuses_for_payment = ["trialing", "active"];
+    if (in_array($subscription->status, $statuses_for_payment)) {
         return true;
     }
 
-    $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
+    $statuses_for_non_payment = ["incomplete", "incomplete_expired", "past_due", "canceled", "unpaid"];
+    if (in_array($subscription->status, $statuses_for_non_payment)) {
+        return false;
+    }
 
-    return ($latest_invoice->status == "paid");
+//    $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
+//
+//    return ($latest_invoice->status == "paid");
 }
 
 function payment_not_made() {
