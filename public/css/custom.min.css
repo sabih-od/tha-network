@@ -2810,16 +2810,31 @@ ul.chatCont {
     margin: 0;
     min-height: 100vh;
     height: 100%;
-    padding: 8rem 0;
 }
 
 .chatContainer .slctlft.descriptnbg {
     display: flex;
-    align-items: center;
     justify-content: center;
 }
 
 .loginWrap figure img {
     height: 100%;
     object-fit: cover;
+}
+
+.group-chatting header,
+.group-chatting .chatBanner {
+    display: none !important;
+}
+
+.messangerSec {
+    width: 75%;
+    margin: auto;
+    height: 830px;
+}
+
+.chatContainer .slctlft.descriptnbg .container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

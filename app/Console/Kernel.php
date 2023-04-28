@@ -15,13 +15,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //testing | suspend and close accounts | created on 18 - 21
-        $dates = [22, 23];
+        //testing | suspend and close accounts | created on 28
+        $dates = [29];
         foreach ($dates as $date) {
             $schedule->call(function () {payment_not_made();})->monthlyOn($date, '00:00');
         }
-        $schedule->call(function () {commission_distribution();})->monthlyOn(24, '00:00');
-        $schedule->call(function () {close_accounts();})->monthlyOn(25, '00:00');
+        $schedule->call(function () {commission_distribution();})->monthlyOn(30, '00:00');
+        $schedule->call(function () {close_accounts();})->monthlyOn(30, '00:00');
         //testing | suspend and close accounts
 
         //monthly add goals
@@ -47,13 +47,13 @@ class Kernel extends ConsoleKernel
 //        // commission distribution
 ////        $schedule->call(function () {commission_distribution();})->monthlyOn(15, '00:00');
 //        $schedule->call(function () {commission_distribution();})->dailyAt('00:00');
-
-        //close garbage accounts (30 days old | Deleted, Closed, Suspended)
-        $schedule->call(function () {
-            delete_deleted_accounts();
-            delete_closed_accounts();
-            delete_suspended_accounts();
-        })->monthlyOn(1, '00:00');
+//
+//        //close garbage accounts (30 days old | Deleted, Closed, Suspended)
+//        $schedule->call(function () {
+//            delete_deleted_accounts();
+//            delete_closed_accounts();
+//            delete_suspended_accounts();
+//        })->monthlyOn(1, '00:00');
     }
 
     /**

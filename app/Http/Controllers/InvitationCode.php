@@ -524,7 +524,8 @@ class InvitationCode extends Controller
                 }
 
                 //testing date (3 days ahead)
-                $charge_date = Carbon::today()->copy()->addDays(3);
+//                $charge_date = Carbon::today()->copy()->addDays(1);
+                $charge_date = Carbon::now()->copy()->addHours(4);
 
                 $isMonthsFirst = false;
                 $token_id = $request->token_id;
@@ -594,9 +595,10 @@ class InvitationCode extends Controller
             'unit_amount' => $this->amount * 100,
             'currency' => 'usd',
 //            'recurring' => ['interval' => 'month'],
+        //testing recurring for 1 days
             'recurring' => [
                 'interval' => 'day',
-                'interval_count' => 3,
+                'interval_count' => 1,
             ],
             'product' => $product->id,
         ]);
@@ -639,7 +641,6 @@ class InvitationCode extends Controller
         $subscription_array['customer'] = $customer->id;
         $subscription_array['items'] = [['price' => $price->id]];
         if (!$isMonthsFirst) {
-//            dd(Carbon::today());
             $subscription_array['trial_end'] = strval($charge_date->timestamp);
         }
 

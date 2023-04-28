@@ -21,7 +21,7 @@
                 <div class="row messangerSec">
                     <ChatListing ref="chatListingRef"></ChatListing>
 
-                    <div class="col-md-9 p-md-0 dse" id="chatbox">
+                    <div class="col-md-8 p-md-0 dse" id="chatbox">
                         <ChatMessages></ChatMessages>
                     </div>
                 </div>
@@ -118,5 +118,6 @@ export default {
 </script>
 
 <style scoped>
+
 
 </style>
