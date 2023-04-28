@@ -1,41 +1,39 @@
 <template>
-<!--    <div class="col-md-2">-->
-<!--        <ChatSearchForm/>-->
-<!--        <div class="groupList">-->
-<!--            <h4 v-if="loading" class="text-white text-center my-3">Loading...</h4>-->
-<!--            <ChatListingItem-->
-<!--                v-else-if="!loading && channels.length > 0"-->
-<!--                v-for="channel in channels"-->
-<!--                :channel_id="channel.id"-->
-<!--                :cover="channel.cover_detail"-->
-<!--                :key="channel.id"-->
-<!--            />-->
-<!--            <h5 v-else class="text-secondary text-center my-3 mx-3">No conversations at the moment!</h5>-->
-<!--        </div>-->
-<!--        <button class="add-new-chat" @click.prevent="showModal"><i class="fas fa-comment"></i></button>-->
-<!--        <teleport to="body">-->
-<!--            <CreateChatModal ref="createChatModal"/>-->
-<!--        </teleport>-->
-<!--    </div>-->
+    <!--    <div class="col-md-2">-->
+    <!--        <ChatSearchForm/>-->
+    <!--        <div class="groupList">-->
+    <!--            <h4 v-if="loading" class="text-white text-center my-3">Loading...</h4>-->
+    <!--            <ChatListingItem-->
+    <!--                v-else-if="!loading && channels.length > 0"-->
+    <!--                v-for="channel in channels"-->
+    <!--                :channel_id="channel.id"-->
+    <!--                :cover="channel.cover_detail"-->
+    <!--                :key="channel.id"-->
+    <!--            />-->
+    <!--            <h5 v-else class="text-secondary text-center my-3 mx-3">No conversations at the moment!</h5>-->
+    <!--        </div>-->
+    <!--        <button class="add-new-chat" @click.prevent="showModal"><i class="fas fa-comment"></i></button>-->
+    <!--        <teleport to="body">-->
+    <!--            <CreateChatModal ref="createChatModal"/>-->
+    <!--        </teleport>-->
+    <!--    </div>-->
 
-    <div class="col-md-4 border-right p-md-0">
+    <div class="col-md-3 border-right p-md-0">
         <div class="chatSearch">
             <Link class="backBtn" :href="$route('home')">Go Back to Home</Link>
             <ChatSearchForm @search="search"></ChatSearchForm>
-<!--                v-else-if="!loading && channels.length > 0"-->
+            <!--                v-else-if="!loading && channels.length > 0"-->
 
             <ul class="chatCont">
-                <li>
-                    <ChatListingItem
-                        v-if="!loading && channels.length > 0"
-                        v-for="channel in channels"
-                        :channel_id="channel.id"
-                        :cover="channel.cover_detail"
-                        :key="channel.id"
-                        :is_auth_friend="channel.is_auth_friend"
-                        :is_in_my_network="channel.is_in_my_network"
-                    />
-                </li>
+                <ChatListingItem
+                    v-if="!loading && channels.length > 0"
+                    v-for="channel in channels"
+                    :channel_id="channel.id"
+                    :cover="channel.cover_detail"
+                    :key="channel.id"
+                    :is_auth_friend="channel.is_auth_friend"
+                    :is_in_my_network="channel.is_in_my_network"
+                />
             </ul>
 
             <span v-if="channels.length == 0 " class="noMember">No Member Found</span>
@@ -157,20 +155,35 @@ export default {
                 replace: true,
                 preserveScroll: true,
                 preserveState: true,
-                only: ['channels'],
+                // only: ['channels'],
+                only: this.search_query == '' ? ['channels'] : ['people_channels'],
                 onStart: () => {
                     this.loading = true
                 },
                 onSuccess: visit => {
                     console.log(visit);
-                    this.next_page_url = visit.props?.channels?.next_page_url ?? null
+                    if (this.search_query == '') {
+                        this.next_page_url = visit.props?.channels?.next_page_url ?? null
+                    } else {
+                        this.next_page_url = visit.props?.people_channels?.next_page_url ?? null
+                    }
                     if (isLoadMore)
-                        this.channels = [
-                            ...this.channels,
-                            ...(visit.props?.channels?.data ?? [])
-                        ]
-                    else
+                        if (this.search_query == '') {
+                            this.channels = [
+                                ...this.channels,
+                                ...(visit.props?.channels?.data ?? [])
+                            ]
+                        } else {
+                            this.channels = [
+                                ...this.channels,
+                                ...(visit.props?.people_channels?.data ?? [])
+                            ]
+                        }
+                    else if (this.search_query == '') {
                         this.channels = visit.props?.channels?.data ?? []
+                    } else {
+                        this.channels = visit.props?.people_channels?.data ?? []
+                    }
                     // this.$store.dispatch('LoadingQueue/reInit')
                 },
                 onFinish: () => {
@@ -251,7 +264,7 @@ export default {
     box-shadow: 0 2px 5px 1px white;
 }
 
-.backBtn{
+.backBtn {
     display: block;
     width: auto;
     text-align: center;

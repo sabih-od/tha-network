@@ -2788,6 +2788,8 @@ ul.chatCont li a + a .friend-drawer {
 
 ul.chatCont {
     border: 1px solid #ddd;
+    height: 900px;
+    overflow: scroll;
 }
 
 .insideSearch .input-group {

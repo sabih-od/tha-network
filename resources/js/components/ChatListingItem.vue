@@ -1,25 +1,26 @@
 <template>
-
+  <li>
     <a href="#" @click.prevent="select">
-        <div class="friend-drawer friend-drawer--onhover">
+      <div class="friend-drawer friend-drawer--onhover">
 
-            <ProfileImageIconRounded :profile_img="cover?.profile_img" :count="notifications_count"/>
-            <div class="text">
-                <h6>{{ cover?.profile?.first_name + ' ' + cover?.profile?.last_name}}</h6>
-                <p>{{ '@' + cover?.username }}</p>
-            </div>
-
-            <div class="dropdown ml-auto">
-                <button type="button" id="dropdownNotifications" data-toggle="dropdown"
-                        aria-expanded="false">
-                    <i class="far fa-ellipsis-v"></i>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownNotifications">
-                    <a class="dropdown-item" @click.stop.prevent="deleteConversation" href="#">Delete Conversation</a>
-                </div>
-            </div>
+        <ProfileImageIconRounded :profile_img="cover?.profile_img" :count="notifications_count"/>
+        <div class="text">
+          <h6>{{ cover?.profile?.first_name + ' ' + cover?.profile?.last_name}}</h6>
+          <p>{{ '@' + cover?.username }}</p>
         </div>
+
+        <div class="dropdown ml-auto">
+          <button type="button" id="dropdownNotifications" data-toggle="dropdown"
+                  aria-expanded="false">
+            <i class="far fa-ellipsis-v"></i>
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownNotifications">
+            <a class="dropdown-item" @click.stop.prevent="deleteConversation" href="#">Delete Conversation</a>
+          </div>
+        </div>
+      </div>
     </a>
+  </li>
 </template>
 
 <script>
