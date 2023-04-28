@@ -29,6 +29,9 @@ class ChatController extends Controller
                 "channels" => Inertia::lazy(function () use ($request) {
                     return $this->getChannelsData($request);
                 }),
+                "people_channels" => Inertia::lazy(function () use ($request) {
+                    return $this->getPeopleChannelsData($request);
+                }),
                 "messages" => Inertia::lazy(function () use ($request) {
                     return $this->getMessagesData($request);
                 }),
@@ -55,6 +58,7 @@ class ChatController extends Controller
 
     public function chatMessageStore(Request $request)
     {
+//        dd($request->all());
         $channel = null;
         $rule = ['channel_id' => [
             'required',
@@ -67,7 +71,10 @@ class ChatController extends Controller
                     })->first();
 
                 if (is_null($channel)) {
-                    $fail("Invalid channel id!");
+                    if (!is_user_id($value)) {
+                        $fail("Invalid channel id!");
+                    }
+                    $channel = create_chat_channel(Auth::id(), $value, true);
                 }
             }
         ]];
