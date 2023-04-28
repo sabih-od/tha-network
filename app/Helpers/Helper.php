@@ -544,7 +544,7 @@ function is_in_my_network($user_id): bool
     return (bool)$check;
 }
 
-function create_chat_channel($user_id, $target_id) {
+function create_chat_channel($user_id, $target_id, $return = false) {
     $channel = Channel::
         orWhere(function ($q) use ($user_id, $target_id) {
             return $q->where('creator_id', $user_id)->where('participants', 'LIKE', '%'.$target_id.'%');
@@ -559,6 +559,10 @@ function create_chat_channel($user_id, $target_id) {
         $channel->creator_id = $user_id;
         $channel->users()->attach([$user_id, $target_id]);
         $channel->save();
+    }
+
+    if ($return) {
+        return $channel;
     }
 }
 
@@ -661,4 +665,14 @@ function delete_suspended_accounts ()
     foreach ($suspended_users as $user) {
         $user->forceDelete(); // Permanently delete the user
     }
+}
+
+function is_user_id ($id) {
+    $user_check = User::find($id);
+
+    if ($user_check) {
+        return true;
+    }
+
+    return false;
 }
