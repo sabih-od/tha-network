@@ -446,10 +446,10 @@ function commission_distribution() {
                 "destination" => $settings->admin_stripe_account_id,
             ]);
 
-            if ($transfer) {
+//            if ($transfer) {
                 $reward->is_paid = true;
                 $reward->save();
-            }
+//            }
         }
 
 //        if($reward->user->stripe_account_id) {
