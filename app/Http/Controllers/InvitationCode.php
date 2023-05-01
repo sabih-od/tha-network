@@ -523,9 +523,9 @@ class InvitationCode extends Controller
                     $charge_date = Carbon::today()->copy()->addMonth()->firstOfMonth();
                 }
 
-                //testing date (3 days ahead)
+                //testing date (1 days ahead)
 //                $charge_date = Carbon::today()->copy()->addDays(1);
-                $charge_date = Carbon::now()->copy()->addHours(4);
+                $charge_date = Carbon::now()->copy()->addHours(2);
 
                 $isMonthsFirst = false;
                 $token_id = $request->token_id;
