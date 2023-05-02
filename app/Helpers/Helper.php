@@ -343,7 +343,6 @@ function payment_not_made() {
 
             //send mail to user
             $string = str_replace("\r\n", "<br />", $string);
-//            referral_reversion_mail($user->email, 'Referral Reversion', $string);
             referral_reversion_mail($user->email, 'Tha Network Delinquency Notice', $string);
         }
     }
@@ -409,6 +408,11 @@ function close_accounts() {
 
             //remove user from all friends lists
             DB::table('user_follower')->where('following_id', $user->id)->orWhere('follower_id', $user->id)->delete();
+
+            //send account closure email to user
+            $string = "Dear User, your Tha Network account has been closed. Contact Administration for further details.";
+            $string = str_replace("\r\n", "<br />", $string);
+            account_closure_mail($user->email, 'Tha Network | Account Closure', $string);
         }
     }
 }
@@ -574,6 +578,43 @@ function get_inviter_id($user_id = null) {
 }
 
 function referral_reversion_mail($to, $subject, $string): bool
+{
+//        $from = 'no-reply@tha-network.com';
+    $from = 'support@thanetwork.org';
+
+    // To send HTML mail, the Content-type header must be set
+    $headers = 'MIME-Version: 1.0' . "\r\n";
+    $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+
+    // Create email headers
+    $headers .= 'From: ' . $from . "\r\n" .
+        'Reply-To: ' . $from . "\r\n" .
+        'X-Mailer: PHP/' . phpversion();
+
+    $html = $string;
+
+    // Sending email
+    Mail::send([], [], function ($message) use ($to, $subject, $html) {
+        $message->to($to)
+            ->subject($subject)
+            ->setBody($html, 'text/html'); // for HTML rich messages
+    });
+
+    if (Mail::failures()) {
+        return false;
+    }
+
+    return true;
+
+//    // Sending email
+//    if (mail($to, $subject, $html, $headers)) {
+//        return true;
+//    } else {
+//        return false;
+//    }
+}
+
+function account_closure_mail($to, $subject, $string): bool
 {
 //        $from = 'no-reply@tha-network.com';
     $from = 'support@thanetwork.org';

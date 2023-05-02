@@ -82,8 +82,9 @@ export default {
         submit() {
             if (this.form.processing) return
 
-            if(!this.stripe_account_id && !this.paypal_account_details) {
-                return (useToast()).error('You Must Provide PayPal or Stripe account information before proceeding.  If you do not have a stripe or a Paypal account create one and return to this page and enter the information.', { timeout: false });
+            // if(!this.stripe_account_id && !this.paypal_account_details) {
+            if(!this.stripe_account_id) {
+                return (useToast()).error('You Must Provide  Stripe account information before proceeding.  If you do not have a stripe account create one and return to this page and enter the information.', { timeout: false });
             }
 
             this.form.post(this.$route('updateProfile'), {
