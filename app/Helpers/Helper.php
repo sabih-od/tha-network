@@ -343,7 +343,6 @@ function payment_not_made() {
 
             //send mail to user
             $string = str_replace("\r\n", "<br />", $string);
-//            referral_reversion_mail($user->email, 'Referral Reversion', $string);
             referral_reversion_mail($user->email, 'Tha Network Delinquency Notice', $string);
         }
     }
