@@ -104,6 +104,10 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
     Route::get('suspended-users', 'SuspendedUserController@index')->name('admin.suspended-users');
     Route::post('suspended-users/retrieve/{id}', 'SuspendedUserController@retrieve');
 
+    //closed-user
+    Route::get('closed-users', 'ClosedUserController@index')->name('admin.closed-users');
+    Route::post('closed-users/retrieve/{id}', 'ClosedUserController@retrieve');
+
     // Customer
     Route::resource('customers', 'CustomersController');
     Route::delete('/customers/destroy/{id}', 'CustomersController@destroy')->name('customers.destroy');

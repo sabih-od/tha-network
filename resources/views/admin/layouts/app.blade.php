@@ -171,6 +171,14 @@
                         </a>
                     </li>
 
+                    <li class="nav-item">
+                        <a href="{{route('admin.closed-users')}}"
+                           class="nav-link {{ request()->IS('admin/closed-users') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>Closed Accounts</p>
+                        </a>
+                    </li>
+
                     <li class="nav-item has-treeview {{ request()->IS('admin/cms/about-us') || request()->IS('admin/cms/home') || request()->IS('admin/cms/benefits') || request()->IS('admin/cms/terms') || request()->IS('admin/cms/privacy') || request()->IS('admin/cms/contact')  ? 'menu-is-opening menu-open' : '' }}">
                         <a href="#" class="nav-link ">
                             <i class="nav-icon fas fa-tags fw"></i>
