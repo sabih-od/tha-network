@@ -393,6 +393,8 @@ class ProfileController extends Controller
             $user->closed_on = Carbon::today();
             $user->save();
 
+            toggle_user_subscription($user->id, true, false);
+
             //get what networks the user is member of
             $joined_networks_ids = NetworkMember::where('user_id', $user->id)->pluck('network_id');
             //get owners of those networks
