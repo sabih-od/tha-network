@@ -506,10 +506,11 @@ class InvitationCode extends Controller
                 $token_id = null;
             } else {
                 //charge
-                $stripe_charge_object = $this->stripeCharge($request, $request->token_id);
-                if ($stripe_charge_object->status != 'succeeded') {
-                    return Inertia::render('StripePayment', ['error' => 'Stripe charge: ' . $stripe_charge_object->status]);
-                }
+                //testing
+//                $stripe_charge_object = $this->stripeCharge($request, $request->token_id);
+//                if ($stripe_charge_object->status != 'succeeded') {
+//                    return Inertia::render('StripePayment', ['error' => 'Stripe charge: ' . $stripe_charge_object->status]);
+//                }
                 session()->put('stripe_charge_object', $stripe_charge_object);
 
                 //compute days till next month
@@ -524,7 +525,6 @@ class InvitationCode extends Controller
                 }
 
                 //testing date (1 days ahead)
-//                $charge_date = Carbon::today()->copy()->addDays(1);
                 $charge_date = Carbon::now()->copy()->addHours(2);
 
                 $isMonthsFirst = false;
