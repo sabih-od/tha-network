@@ -511,7 +511,7 @@ class InvitationCode extends Controller
 //                if ($stripe_charge_object->status != 'succeeded') {
 //                    return Inertia::render('StripePayment', ['error' => 'Stripe charge: ' . $stripe_charge_object->status]);
 //                }
-                session()->put('stripe_charge_object', $stripe_charge_object);
+//                session()->put('stripe_charge_object', $stripe_charge_object);
 
                 //compute days till next month
                 $currentDate = Carbon::today(); // get a new instance of the Carbon class representing today's date
