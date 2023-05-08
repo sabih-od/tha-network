@@ -43,6 +43,9 @@ class ClosedUserController extends Controller
         $content=User::where('id', $id)->first();
         $content->closed_on = null;
         $content->save();
+
+        toggle_user_subscription($content->id, false, true);
+
         echo 1;
     }
 }
