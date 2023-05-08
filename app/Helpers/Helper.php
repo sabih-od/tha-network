@@ -389,6 +389,9 @@ function close_accounts() {
                 event(new NetworkMemberClosure($target->id, $string, 'App\Models\User', $notification->id, $target));
             }
 
+            //pause subscription
+            toggle_user_subscription($user->id, true, false);
+
             //send referral reversion notification to inviter
             $inviter_id = get_inviter_id($user->id);
             $string = "Your ".$user->profile->first_name . ' ' . $user->profile->last_name." referral is no longer a member of the network you you won’t be receiving its referral payment";
@@ -716,4 +719,31 @@ function is_user_id ($id) {
     }
 
     return false;
+}
+
+function toggle_user_subscription ($id = null, $pause = true, $resume = false) {
+    $user = get_eloquent_user($id);
+
+    $stripe = new \Stripe\StripeClient(
+        env('STRIPE_SECRET_KEY')
+    );
+
+    try {
+        $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
+
+        if ($pause) {
+            $pause_collection = ['behavior' => 'keep_as_draft'];
+        } else if ($resume) {
+            $pause_collection = '';
+        }
+
+        $stripe->subscriptions->update(
+            $subscription->id,
+            ['pause_collection' => $pause_collection]
+        );
+
+        return true;
+    } catch(\Exception $e) {
+        return false;
+    }
 }
