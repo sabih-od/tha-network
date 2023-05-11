@@ -56,6 +56,13 @@ Route::get('/temp', function () {
 //    }
 
 //    commission_distribution();
+//    $stripe = new \Stripe\StripeClient(
+//        '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'
+//    );
+//
+//    $subscription = $stripe->subscriptions->retrieve('sub_1N3KRTFNDZX6ZunfTLGhbR8q');
+//
+//    dd($subscription);
 })->name('temp');
 
 Route::get('get/redis', function () {
@@ -91,8 +98,9 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
 
     //user
     Route::get('users', 'UserController@index')->name('admin.users');
-    Route::delete('users/destroy/{id}', 'UserController@destroy');
-    Route::get('users/suspend/{id}', 'UserController@suspend');
+    Route::delete('users/destroy/{id}', 'UserController@destroy')->name('admin.user.delete');
+    Route::get('users/suspend/{id}', 'UserController@suspend')->name('admin.user.suspend');
+    Route::get('users/close/{id}', 'UserController@close')->name('admin.user.close');
     Route::get('user-posts/{id}', 'UserController@userPosts')->name('admin.user.userPosts');
     Route::delete('user-posts/destroy/{id}', 'UserController@postDestroy');
 
