@@ -326,11 +326,10 @@ function payment_not_made() {
         if(!has_made_monthly_payment($user->id)) {
             $string = "Hi, we have not received your monthly membership payment.\r\n
             Update your payment information before the 7th of the month.\r\n
-            If you do not update your payment by the 7th at 11:59 pm central time your membership will be suspended for 7 days.\r\n
-            You will not receive payments until you update your payment information.\r\n
+            If you do not update your payment by the 7th at 11:59 pm central time your membership will be suspended until a payment is made and you will not receive referral payments for this month.\r\n
             Once payment is received your membership status will be updated and payments will continue in the next billing cycle.\r\n
-            If your payment is not received by 11:59 pm on the 14th day of delinquency your account will be closed and you will lose all of your Network Members!!!\r\n
-            Please update your account before the 14th of the month!!!!!";
+            If your payment is not received by 11:59 pm on the 11th of this month, you will no longer receive referral payments, your account will be closed and you will lose all of your Network Members!!!\r\n
+            Please update your account before the 11th of the month!!!!!";
             $notification = Notification::create([
                 'user_id' => $user->id,
                 'notifiable_type' => 'App\Models\User',
@@ -413,7 +412,10 @@ function close_accounts() {
             DB::table('user_follower')->where('following_id', $user->id)->orWhere('follower_id', $user->id)->delete();
 
             //send account closure email to user
-            $string = "Dear User, your Tha Network account has been closed. Contact Administration for further details.";
+//            $string = "Dear User, your Tha Network account has been closed. Contact Administration for further details.";
+            $string = "Due to the lack of payment for this month, your account has been closed, you will not receive any additional payments, and you have lost all of your network members.\r\n\r\n
+                        If you decide to rejoin Tha Network, you will need to be invited or request a new referral code from the login in page.\r\n\r\n
+                        Thanks for giving Tha Network a try!!!";
             $string = str_replace("\r\n", "<br />", $string);
             account_closure_mail($user->email, 'Tha Network | Account Closure', $string);
         }
@@ -438,25 +440,25 @@ function commission_distribution() {
 
         //if account is closed or permanently deleted send payout to admin stripe account
         if ($reward->user->closed_on || !$reward->user) {
-            $settings = Settings::find(1);
-            if (!$settings->admin_stripe_account_id) {
+//            $settings = Settings::find(1);
+//            if (!$settings->admin_stripe_account_id) {
                 continue;
-            }
-
-            $stripe = new \Stripe\StripeClient(
-                env('STRIPE_SECRET_KEY')
-            );
-
-            $transfer = $stripe->transfers->create([
-                "amount" => $reward->amount * 100,
-                "currency" => "usd",
-                "destination" => $settings->admin_stripe_account_id,
-            ]);
-
-//            if ($transfer) {
-                $reward->is_paid = true;
-                $reward->save();
 //            }
+//
+//            $stripe = new \Stripe\StripeClient(
+//                env('STRIPE_SECRET_KEY')
+//            );
+//
+//            $transfer = $stripe->transfers->create([
+//                "amount" => $reward->amount * 100,
+//                "currency" => "usd",
+//                "destination" => $settings->admin_stripe_account_id,
+//            ]);
+//
+////            if ($transfer) {
+//                $reward->is_paid = true;
+//                $reward->save();
+////            }
         }
 
 //        if($reward->user->stripe_account_id) {
@@ -530,7 +532,8 @@ function commission_distribution() {
 //            $client = PayPalClient::client();
             $response = $client->execute($request);
 
-            if ($response && $response->statusCode && $response->statusCode == 201) {
+//            if ($response && $response->statusCode && $response->statusCode == 201) {
+            if ($response->statusCode && $response->statusCode == 201) {
                 $reward->is_paid = true;
                 $reward->save();
             }
