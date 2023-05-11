@@ -31,7 +31,10 @@ class UserController extends Controller
                         return '<img width="40" src="'.$data->get_profile_picture().'"></img>';
                     })
                     ->addColumn('action', function ($data) {
-                        return '<button title="Delete" type="button" name="delete" id="' . $data->id . '" class="btn btn-danger delete btn-sm"><i class="fa fa-trash"></i></button>&nbsp<button title="Suspend" type="button" name="suspend" id="' . $data->id . '" class="btn btn-warning suspend btn-sm"><i class="fa fa-ban"></i></button>&nbsp<a href="'.route('admin.user.userPosts', $data->id).'" title="User Post" type="button" id="' . $data->id . '" class="btn btn-primary btn-sm">User Posts</a>&nbsp<a target="_blank" href="'.route('userProfile', $data->id).'" title="User Post" type="button" id="' . $data->id . '" class="btn btn-primary btn-sm">Profile</a>';
+                        return '<button title="Delete" type="button" name="delete" id="' . $data->id . '" class="btn btn-danger delete btn-sm"><i class="fa fa-trash"></i></button>&nbsp
+                                <a title="Close" type="button" name="close" id="' . $data->id . '" href="'.route('admin.user.close', $data->id).'" class="btn btn-danger suspend btn-sm"><i class="fa fa-ban"></i></a>&nbsp
+                                <a href="'.route('admin.user.userPosts', $data->id).'" title="User Post" type="button" id="' . $data->id . '" class="btn btn-primary btn-sm">User Posts</a>&nbsp
+                                <a target="_blank" href="'.route('userProfile', $data->id).'" title="User Post" type="button" id="' . $data->id . '" class="btn btn-primary btn-sm">Profile</a>';
                     })->rawColumns(['profile_picture', 'action'])->make(true);
             }
         } catch (\Exception $ex) {
@@ -91,6 +94,20 @@ class UserController extends Controller
         $content->suspended_on = Carbon::now();
         $content->save();
         echo 1;
+    }
+
+    final public function close($id)
+    {
+        $content=User::find($id);
+        $content->closed_on = Carbon::now();
+        $content->save();
+
+        //pause subscription
+        toggle_user_subscription($content->id, true, false);
+
+        return redirect()->back()->with('success', 'Account Closed!');
+        echo 1;
+
     }
 
     public function userPosts($id)
