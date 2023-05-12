@@ -640,9 +640,10 @@ class InvitationCode extends Controller
         //create subscription
         $subscription_array['customer'] = $customer->id;
         $subscription_array['items'] = [['price' => $price->id]];
-        if (!$isMonthsFirst) {
-            $subscription_array['trial_end'] = strval($charge_date->timestamp);
-        }
+        //testing
+//        if (!$isMonthsFirst) {
+//            $subscription_array['trial_end'] = strval($charge_date->timestamp);
+//        }
 
         $subscription = $stripe->subscriptions->create($subscription_array);
 
