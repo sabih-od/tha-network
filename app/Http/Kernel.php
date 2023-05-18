@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'suspension' => \App\Http\Middleware\SuspensionCheck::class,
         'closure' => \App\Http\Middleware\ClosureCheck::class,
+        'has.provided.stripe.info' => \App\Http\Middleware\HasProvidedStripeInfo::class,
     ];
 }

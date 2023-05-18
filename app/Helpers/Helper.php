@@ -362,6 +362,10 @@ function suspend_accounts() {
 function close_accounts() {
     $users = get_eloquent_users();
     foreach ($users as $user) {
+        if (!is_null($user->closed_on)) {
+            continue;
+        }
+
         if(!has_made_monthly_payment($user->id)) {
             //close account
 //            if(is_null($user->suspended_on)) {
