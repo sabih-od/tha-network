@@ -157,7 +157,8 @@ export default {
         stripe_checkout_session_id: String,
         stripe_portal_session: Object,
         has_provided_stripe_payout_information: Boolean,
-        preferred_payout_method: String
+        preferred_payout_method: String,
+        error: String
     },
     computed: {
         userProfile() {
@@ -220,6 +221,9 @@ export default {
         }
     },
     mounted() {
+        if (this.error) {
+            (useToast()).error(this.error, { timeout: false });
+        }
         this.$store.commit('Profile/setProfile', this.profile);
         //hide message button
         $('.btn_message').prop('hidden', true);
