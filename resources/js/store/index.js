@@ -7,6 +7,7 @@ import Chat from "./Chat";
 import Channel from "./Channel";
 import Notification from "./Notification";
 import Misc from "./Misc";
+import AuthUser from "./AuthUser";
 
 export default createStore({
     modules: {
@@ -18,5 +19,6 @@ export default createStore({
         Channel,
         Notification,
         Misc,
+        AuthUser,
     }
 })
