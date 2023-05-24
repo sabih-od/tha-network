@@ -236,7 +236,7 @@ Route::group([
 
     // Close My Account
     Route::post('close-my-account', [ProfileController::class, 'closeMyAccount'])
-        ->name('closeMyAccount');
+        ->name('closeMyAccount')->withoutMiddleware('has.provided.stripe.info');
 
     //connect stripe
     Route::get('connect-stripe', [StripeController::class, 'connectAccount'])
@@ -245,7 +245,7 @@ Route::group([
         ->name('connect-paypal')->withoutMiddleware('has.provided.stripe.info');
     //stripe portal
     Route::post('create-stripe-portal-session', [InvitationCode::class, 'createStripePortalSession'])
-        ->name('createStripePortalSession');
+        ->name('createStripePortalSession')->withoutMiddleware('has.provided.stripe.info');
 });
 
 Route::middleware('has.provided.stripe.info')->group(function () {
