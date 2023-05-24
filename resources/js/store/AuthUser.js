@@ -7,7 +7,9 @@ export default {
         }
     },
     getters: {
-
+        isAdmin(state) {
+            return state.data?.role_id && state.data?.role_id === 1
+        }
     },
     mutations: {
         setData(state, payload) {

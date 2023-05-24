@@ -389,6 +389,7 @@ class ProfileController extends Controller
     public function closeMyAccount(Request $request)
     {
         try {
+            DB::beginTransaction();
             $user = User::find(Auth::id());
             $user->closed_on = Carbon::today();
             $user->save();
@@ -437,8 +438,10 @@ class ProfileController extends Controller
 
             Auth::logout();
 
+            DB::commit();
             return redirect()->route('login');
         } catch (\Exception $e) {
+            DB::rollBack();
             return WebResponses::exception($e->getMessage());
         }
     }

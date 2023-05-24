@@ -69,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => 'America/Toronto',
+    'timezone' => env('TIMEZONE', 'America/Toronto'),
 
     /*
     |--------------------------------------------------------------------------
