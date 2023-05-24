@@ -10,61 +10,75 @@
                 </Link>
                 <div class="col-12">
                     <h3>Referral Payment Options</h3>
-                    <h6>In order to receive Referral Payments you must include your Stripe Account information.  If you do not have a Stripe Account create one and provide the information below. If this information is not provided, you will not be able to receive your referral payments.</h6>
+                    <h6>In order to receive Referral Payments you must include your Stripe Account information. If you
+                        do not have a Stripe Account create one and provide the information below. If this information
+                        is not provided, you will not be able to receive your referral payments.</h6>
                     <div class="row">
                         <div class="col-md-12">
                             <h4>
                                 Stripe
-                                <input type="radio" name="preferred_payout_method" :checked="preferred_payout_form.preferred_payout_method === 'stripe'" @click="submitPreferredPayoutForm('stripe')" style="transform: scale(1.5);">
+                                <input type="radio" name="preferred_payout_method"
+                                       :checked="preferred_payout_form.preferred_payout_method === 'stripe'"
+                                       @click="submitPreferredPayoutForm('stripe')" style="transform: scale(1.5);">
                             </h4>
 
                             <!--badge-->
-<!--                            <span :class="'badge badge-pill badge-' + ((this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'success' : 'danger')">{{ (this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'Connected' : 'Not Connected' }}</span>-->
-<!--                            <br />-->
+                            <!--                            <span :class="'badge badge-pill badge-' + ((this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'success' : 'danger')">{{ (this.stripe_account_id && this.has_provided_stripe_payout_information) ? 'Connected' : 'Not Connected' }}</span>-->
+                            <!--                            <br />-->
 
                             <!--button-->
-                            <button type="button" class="btn btn-success btn-sm" :disabled="preferred_payout_form.preferred_payout_method === 'paypal'" @click.prevent="connectStripeAccount()">{{ (this.stripe_account_id && this.has_provided_stripe_payout_information && preferred_payout_form.preferred_payout_method !== 'paypal') ? 'Connected' : 'Connect' }}</button>
-                            <br />
+                            <button type="button" class="btn btn-success btn-sm"
+                                    :disabled="preferred_payout_form.preferred_payout_method === 'paypal'"
+                                    @click.prevent="connectStripeAccount()">{{ (this.stripe_account_id &&
+                                this.has_provided_stripe_payout_information &&
+                                preferred_payout_form.preferred_payout_method !== 'paypal') ? 'Connected' : 'Connect' }}
+                            </button>
+                            <br/>
 
-<!--                            <span v-if="this.stripe_account_id && this.has_provided_stripe_payout_information">You have successfully connected your Stripe account.</span>-->
-                            <span v-if="preferred_payout_form.preferred_payout_method === 'stripe' && this.stripe_account_id && this.has_provided_stripe_payout_information">You have successfully connected your Stripe account.</span>
+                            <!--                            <span v-if="this.stripe_account_id && this.has_provided_stripe_payout_information">You have successfully connected your Stripe account.</span>-->
+                            <span
+                                v-if="preferred_payout_form.preferred_payout_method === 'stripe' && this.stripe_account_id && this.has_provided_stripe_payout_information">You have successfully connected your Stripe account.</span>
                         </div>
-<!--                        <div class="col-md-6">-->
-<!--                            <h4>-->
-<!--                                Paypal-->
-<!--                                <input type="radio" name="preferred_payout_method" :checked="preferred_payout_form.preferred_payout_method === 'paypal'" @click="submitPreferredPayoutForm('paypal')" style="transform: scale(1.5);">-->
-<!--                            </h4>-->
+                        <!--                        <div class="col-md-6">-->
+                        <!--                            <h4>-->
+                        <!--                                Paypal-->
+                        <!--                                <input type="radio" name="preferred_payout_method" :checked="preferred_payout_form.preferred_payout_method === 'paypal'" @click="submitPreferredPayoutForm('paypal')" style="transform: scale(1.5);">-->
+                        <!--                            </h4>-->
 
-<!--                            &lt;!&ndash;badge&ndash;&gt;-->
-<!--&lt;!&ndash;                            <span :class="'badge badge-pill badge-' + (this.paypal_account_details ? 'success' : 'danger')">{{ this.paypal_account_details ? 'Connected' : 'Not Connected' }}</span>&ndash;&gt;-->
-<!--                            <input class="form-control" type="email" placeholder="Paypal Email" v-model="paypalForm.paypal_account_details">-->
-<!--                            <br />-->
+                        <!--                            &lt;!&ndash;badge&ndash;&gt;-->
+                        <!--&lt;!&ndash;                            <span :class="'badge badge-pill badge-' + (this.paypal_account_details ? 'success' : 'danger')">{{ this.paypal_account_details ? 'Connected' : 'Not Connected' }}</span>&ndash;&gt;-->
+                        <!--                            <input class="form-control" type="email" placeholder="Paypal Email" v-model="paypalForm.paypal_account_details">-->
+                        <!--                            <br />-->
 
-<!--                            &lt;!&ndash;button&ndash;&gt;-->
-<!--                            <button type="button" class="btn btn-success btn-sm" :disabled="preferred_payout_form.preferred_payout_method === 'stripe'" @click.prevent="connectPaypalAccount()">{{ (this.paypal_account_details && preferred_payout_form.preferred_payout_method !== 'stripe') ? 'Connected' : 'Connect' }}</button>-->
-<!--                            <br />-->
+                        <!--                            &lt;!&ndash;button&ndash;&gt;-->
+                        <!--                            <button type="button" class="btn btn-success btn-sm" :disabled="preferred_payout_form.preferred_payout_method === 'stripe'" @click.prevent="connectPaypalAccount()">{{ (this.paypal_account_details && preferred_payout_form.preferred_payout_method !== 'stripe') ? 'Connected' : 'Connect' }}</button>-->
+                        <!--                            <br />-->
 
-<!--&lt;!&ndash;                            <span v-if="this.paypal_account_details">You have successfully connected your Paypal account.</span>&ndash;&gt;-->
-<!--                            <span v-if="preferred_payout_form.preferred_payout_method === 'paypal' && this.paypal_account_details">You have successfully connected your Paypal account.</span>-->
-<!--                        </div>-->
-                        <br />
+                        <!--&lt;!&ndash;                            <span v-if="this.paypal_account_details">You have successfully connected your Paypal account.</span>&ndash;&gt;-->
+                        <!--                            <span v-if="preferred_payout_form.preferred_payout_method === 'paypal' && this.paypal_account_details">You have successfully connected your Paypal account.</span>-->
+                        <!--                        </div>-->
+                        <br/>
 
-<!--                        <span class="ml-3">-->
-<!--                            <strong>-->
-<!--                                <i class="fas fa-info" style="color: blue;"></i>-->
-<!--                                If you would like to change the payment account please select the check box above.-->
-<!--                            </strong>-->
-<!--                        </span>-->
+                        <!--                        <span class="ml-3">-->
+                        <!--                            <strong>-->
+                        <!--                                <i class="fas fa-info" style="color: blue;"></i>-->
+                        <!--                                If you would like to change the payment account please select the check box above.-->
+                        <!--                            </strong>-->
+                        <!--                        </span>-->
                     </div>
-                    <br />
+                    <br/>
 
-                    <BioUpdate ref="bioUpdate" :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
+                    <BioUpdate ref="bioUpdate" :stripe_account_id="stripe_account_id"
+                               :paypal_account_details="paypal_account_details"/>
 
-                    <InfoUpdate :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
+                    <InfoUpdate :stripe_account_id="stripe_account_id"
+                                :paypal_account_details="paypal_account_details"/>
 
-                    <AddressUpdate ref="addressUpdate" :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" />
+                    <AddressUpdate ref="addressUpdate" :stripe_account_id="stripe_account_id"
+                                   :paypal_account_details="paypal_account_details"/>
 
-                    <PasswordUpdate :stripe_account_id="stripe_account_id" :paypal_account_details="paypal_account_details" :pwh="user?.pwh" />
+                    <PasswordUpdate :stripe_account_id="stripe_account_id"
+                                    :paypal_account_details="paypal_account_details" :pwh="user?.pwh"/>
 
                     <MonthlyPayment
                         :client_secret="client_secret"
@@ -76,18 +90,22 @@
 
                     <CloseAccountModal></CloseAccountModal>
 
-                    <ChangePreferredPayoutMethodModal :preferred_payout_method="preferred_payout_form.preferred_payout_method"></ChangePreferredPayoutMethodModal>
+                    <ChangePreferredPayoutMethodModal
+                        :preferred_payout_method="preferred_payout_form.preferred_payout_method"></ChangePreferredPayoutMethodModal>
 
                     <div class="btn-group gap1">
-                        <button v-if="$store.getters['Misc/isNewlyRegistered']" type="submit" class="themeBtn" @click.prevent="showWeeklyGoalNotification()">Update Profile</button>
+                        <button v-if="$store.getters['Misc/isNewlyRegistered']" type="submit" class="themeBtn"
+                                @click.prevent="showWeeklyGoalNotification()">Update Profile
+                        </button>
                         <Link :href="$route('home')" class="themeBtn">Back To Profile</Link>
                         <button class="themeBtn discard" @click="discardChanges">Discard Changes</button>
                     </div>
 
-                    <br />
-                    <br />
+                    <br/>
+                    <br/>
                     <div class="btn-group gap1">
-                        <button @click.prevent="closeAccountModal()" type="button" class="dangerBtn">CLOSE MY ACCOUNT</button>
+                        <button @click.prevent="closeAccountModal()" type="button" class="dangerBtn">CLOSE MY ACCOUNT
+                        </button>
                     </div>
                 </div>
 
@@ -104,7 +122,8 @@
             <p v-html="notification_modal.text"></p>
         </div>
         <div class="notiFooter">
-            <Link v-if="notification_modal.redirect_url != '#'" @click.prevent="notification_modal.on_click" :href="notification_modal.redirect_url"><i class="fas fa-check"></i><span>Ok</span></Link>
+            <Link v-if="notification_modal.redirect_url != '#'" @click.prevent="notification_modal.on_click"
+                  :href="notification_modal.redirect_url"><i class="fas fa-check"></i><span>Ok</span></Link>
             <button v-else @click.prevent="hideNotification()"><i class="fas fa-check"></i><span>Ok</span></button>
         </div>
     </div>
@@ -175,7 +194,7 @@ export default {
             }
             return data
         },
-        filteredBrandsForFemales () {
+        filteredBrandsForFemales() {
 
         }
     },
@@ -222,8 +241,9 @@ export default {
     },
     mounted() {
         if (this.error) {
-            (useToast()).error(this.error, { timeout: false });
+            (useToast()).error(this.error, {timeout: false});
         }
+        this.$store.commit("AuthUser/setData", this.user)
         this.$store.commit('Profile/setProfile', this.profile);
         //hide message button
         $('.btn_message').prop('hidden', true);
@@ -240,11 +260,11 @@ export default {
 
         //show notification if user just paid
         let _t = this;
-        this.$emitter.on('payment_made', function() {
+        this.$emitter.on('payment_made', function () {
             _t.showPaymentMadeNotification();
         });
 
-        this.$emitter.on('revert_preferred_payout_method', function() {
+        this.$emitter.on('revert_preferred_payout_method', function () {
             if (_t.preferred_payout_form.preferred_payout_method === "" || _t.preferred_payout_form.preferred_payout_method == null) {
                 return;
             }
@@ -296,13 +316,13 @@ export default {
         },
         showWeeklyGoalNotification() {
             //if newly registered - profile completed (SetWeeklyGoal)
-            if(this.$store.getters['Misc/isNewlyRegistered']) {
+            if (this.$store.getters['Misc/isNewlyRegistered']) {
                 let img = this.$store.getters['Utils/public_asset']('images/notifications/SetWeeklyGoal.png');
                 let text = 'Your Weekly goals has been set. Complete your goals to get promoted to the next grade';
                 this.showNotification(img, text);
 
                 let _t = this;
-                setTimeout(function() {
+                setTimeout(function () {
                     // _t.showPromotionNotification();
                 }, 4000);
             }
@@ -330,9 +350,7 @@ export default {
             this.$store.commit('Misc/setIsNewlyRegistered', false);
         },
         connectStripeAccount() {
-            Inertia.get(this.$route('connect-stripe'), {
-
-            }, {
+            Inertia.get(this.$route('connect-stripe'), {}, {
                 replace: true,
                 preserveScroll: true,
                 preserveState: true,
@@ -342,7 +360,7 @@ export default {
                 onSuccess: res => {
                     console.log('res: ', res.props.v_data);
                     window.location.href = res.props?.v_data;
-                    window.onbeforeunload = function() {
+                    window.onbeforeunload = function () {
                         history.back();
                     };
                 },
@@ -352,7 +370,7 @@ export default {
             })
         },
         connectPaypalAccount() {
-            if(!this.paypalForm.paypal_account_details)
+            if (!this.paypalForm.paypal_account_details)
                 return
 
             this.paypalForm.post(this.$route('connect-paypal'), {
@@ -378,12 +396,12 @@ export default {
             // $('.btn_edit_avatar').click();
             this.$emitter.emit('prompt_for_avatar_creation');
         },
-        discardChanges () {
+        discardChanges() {
             this.$refs.addressUpdate.discardChanges();
             this.$refs.bioUpdate.discardChanges();
             (useToast()).success('You Have Discarded Your Changes.');
         },
-        paypalInit () {
+        paypalInit() {
             // if (!document.head.querySelector('#stripe-js')) {
             //     const scriptTag = document.createElement('script')
             //     scriptTag.src = 'https://www.paypalobjects.com/js/external/api.js'
@@ -445,7 +463,7 @@ export default {
             //         console.error("failed to load the PayPal JS SDK script", err);
             //     });
         },
-        submitPreferredPayoutForm (val) {
+        submitPreferredPayoutForm(val) {
             this.preferred_payout_form.preferred_payout_method = val;
             $('.modal_change_preferred_payout_method_modal').modal('show');
         }
