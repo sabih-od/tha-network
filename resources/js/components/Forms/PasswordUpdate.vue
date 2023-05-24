@@ -45,9 +45,18 @@
 <script>
 import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {useToast} from 'vue-toastification'
+import {mapGetters, mapState} from "vuex";
 
 export default {
     name: "InfoUpdate",
+    computed: {
+        ...mapState({
+            authUser: (state) => state.AuthUser.data
+        }),
+        ...mapGetters({
+            isAdmin: 'AuthUser/isAdmin'
+        })
+    },
     data() {
         return {
             isEdit: false,
@@ -68,8 +77,11 @@ export default {
         submit() {
             if (this.form.processing) return
 
+            if (!this.authUser?.role_id)
+                return
+
             // if(!this.stripe_account_id && !this.paypal_account_details) {
-            if(!this.stripe_account_id) {
+            if(!this.stripe_account_id && !this.isAdmin) {
                 return (useToast()).error('You Must Provide  Stripe account information before proceeding.  If you do not have a stripe account create one and return to this page and enter the information.', { timeout: false });
             }
 

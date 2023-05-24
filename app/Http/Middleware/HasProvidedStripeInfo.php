@@ -24,7 +24,7 @@ class HasProvidedStripeInfo
         }
 
         $user = get_eloquent_user();
-        if (isNull($user->stripe_account_id)) {
+        if (isNull($user->stripe_account_id) && $user->role_id != 1) {
             return redirect()->route('editProfileForm');
             return Inertia::render('EditProfile', [
                 'user' => $user->only('name', 'email', 'created_at', 'pwh') ?? null,
