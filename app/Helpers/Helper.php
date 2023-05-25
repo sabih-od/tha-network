@@ -461,7 +461,7 @@ function commission_distribution() {
 
     foreach ($rewards as $reward) {
         try {
-            DB::beginTransaction();
+//            DB::beginTransaction();
 
             if ($reward->user->preferred_payout_method == null) {
                 continue;
@@ -577,9 +577,9 @@ function commission_distribution() {
                     $reward->save();
                 }
             }
-            DB::commit();
+//            DB::commit();
         } catch (\Exception $e) {
-            DB::rollBack();
+//            DB::rollBack();
             Log::error('commission_distribution: catch ' . $e->getMessage());
         }
     }
