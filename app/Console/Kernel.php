@@ -23,7 +23,7 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {payment_not_made();})->everyFiveMinutes();
         $schedule->call(function () {commission_distribution();})->everyFiveMinutes();
 //        $schedule->call(function () {close_accounts();})->monthlyOn(16, '00:00');
-        $schedule->call(function () {close_accounts();})->everyFiveMinutes();
+        $schedule->call(function () {close_accounts();})->everyMinute();
         //testing | suspend and close accounts
 
         //monthly add goals
