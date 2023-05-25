@@ -376,7 +376,7 @@ function close_accounts() {
     $users = get_eloquent_users();
     foreach ($users as $user) {
         try {
-            DB::beginTransaction();
+//            DB::beginTransaction();
 
             if (!is_null($user->closed_on)) {
                 continue;
@@ -390,7 +390,7 @@ function close_accounts() {
 //            }
 
                 //get what networks the user is member of
-                $joined_networks_ids = NetworkMember::whereHas('user')->where('user_id', $user->id)->pluck('network_id');
+                $joined_networks_ids = NetworkMember::where('user_id', $user->id)->pluck('network_id');
                 //get owners of those networks
                 $joined_networks_owner_ids = Network::whereHas('user')->whereIn('id', $joined_networks_ids)->pluck('user_id');
                 //send notification to owners
@@ -446,9 +446,9 @@ function close_accounts() {
                 }
             }
 
-            DB::commit();
+//            DB::commit();
         } catch (\Exception $e) {
-            DB::rollBack();
+//            DB::rollBack();
             Log::error('close_account: catch ' . $e->getMessage());
         }
         Log::info('close_account: Exit Successfully');
