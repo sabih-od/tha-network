@@ -395,7 +395,7 @@ class InvitationCode extends Controller
     }
 
     public function sendInvitation(Request $request) {
-        dd($request->all());
+        // dd($request->all());
         $data = $request->validate([
             'emails' => [
                 'required',
