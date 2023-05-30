@@ -31,6 +31,11 @@ use Stripe\Stripe;
 function last_active($user_id): string
 {
     $user = User::find($user_id);
+    
+    if(is_null($user->last_activity)) {
+        return 'Online';
+    }
+    
     $last_activity = Carbon::parse($user->last_activity);
 
     if(is_null($last_activity)) {
@@ -772,6 +777,11 @@ function is_user_id ($id) {
 function toggle_user_subscription ($id = null, $pause = true, $resume = false) {
     Log::info('toggle_user_subscription: start');
     $user = get_eloquent_user($id);
+
+    if (!$user->stripe_checkout_session_id) {
+        Log::info('toggle_user_subscription: stripe_checkout_session_id not found');
+        return false;
+    }
 
     $stripe = new \Stripe\StripeClient(
         env('STRIPE_SECRET_KEY')
