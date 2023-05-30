@@ -277,7 +277,7 @@ class InvitationCode extends Controller
                     ->setBody($html, 'text/html'); // for HTML rich messages
             });
 
-            return (bool)(count(Mail::failures()) > 0);
+            return (boolean)(count(Mail::failures()) > 0);
         } catch (\Exception $e) {
             Log::error('mailCode: Email not sent: ' . $e->getMessage());
         }
