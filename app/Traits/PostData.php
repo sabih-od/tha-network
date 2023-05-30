@@ -22,6 +22,7 @@ trait PostData
                 },
                 'user.profile'
             ])
+            ->whereHas('user')
             ->withCount('likers', 'comments')
             ->when($post_id, function($q) use($post_id) {
                 return $q->where('id', '!=', $post_id);
