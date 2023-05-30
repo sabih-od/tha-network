@@ -270,11 +270,14 @@ class InvitationCode extends Controller
 
         // Sending email
         try {
-            return Mail::send([], [], function ($message) use ($to, $subject, $html) {
+            // return Mail::send([], [], function ($message) use ($to, $subject, $html) {
+            Mail::send([], [], function ($message) use ($to, $subject, $html) {
                 $message->to($to)
                     ->subject($subject)
                     ->setBody($html, 'text/html'); // for HTML rich messages
             });
+
+            return (bool)(count(Mail::failures()) > 0);
         } catch (\Exception $e) {
             Log::error('mailCode: Email not sent: ' . $e->getMessage());
         }
