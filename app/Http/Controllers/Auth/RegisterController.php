@@ -314,6 +314,7 @@ class RegisterController extends Controller
                 Reward::create([
                     'user_id' => $inviter->id,
                     'amount' => session()->get('tha_payment_amount') == 29.99 ? 10.00 : 39.99,
+                    'on_inviting' => $user->id
                 ]);
 
                 session()->remove('inviter_id');

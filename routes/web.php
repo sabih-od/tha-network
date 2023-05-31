@@ -102,6 +102,7 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
     Route::get('users/suspend/{id}', 'UserController@suspend')->name('admin.user.suspend');
     Route::get('users/close/{id}', 'UserController@close')->name('admin.user.close');
     Route::get('user-posts/{id}', 'UserController@userPosts')->name('admin.user.userPosts');
+    Route::get('user-rewards/{id}', 'UserController@userRewards')->name('admin.user.userRewards');
     Route::delete('user-posts/destroy/{id}', 'UserController@postDestroy');
 
     //deleted-user
