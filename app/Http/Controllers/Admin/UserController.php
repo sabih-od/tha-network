@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Models\RewardLog;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -34,6 +35,7 @@ class UserController extends Controller
                         return '<button title="Delete" type="button" name="delete" id="' . $data->id . '" class="btn btn-danger delete btn-sm"><i class="fa fa-trash"></i></button>&nbsp
                                 <a title="Close" type="button" name="close" id="' . $data->id . '" href="'.route('admin.user.close', $data->id).'" class="btn btn-danger btn-sm"><i class="fa fa-ban"></i></a>&nbsp
                                 <a href="'.route('admin.user.userPosts', $data->id).'" title="User Post" type="button" id="' . $data->id . '" class="btn btn-primary btn-sm">User Posts</a>&nbsp
+                                <a href="'.route('admin.user.userRewards', $data->id).'" title="Rewards" type="button" id="' . $data->id . '" class="btn btn-primary btn-sm">Rewards</a>&nbsp
                                 <a target="_blank" href="'.route('userProfile', $data->id).'" title="User Post" type="button" id="' . $data->id . '" class="btn btn-primary btn-sm">Profile</a>';
                     })->rawColumns(['profile_picture', 'action'])->make(true);
             }
@@ -138,6 +140,34 @@ class UserController extends Controller
             return redirect('/')->with('error', $ex->getMessage());
         }
         return view('admin.user.post-list');
+    }
+
+    public function userRewards($id)
+    {
+        try {
+            if (request()->ajax()) {
+                $reward_logs = RewardLog::whereHas('reward', function ($q) use ($id) {
+                    return $q->whereHas('user')->whereHas('invited_user')->where('user_id', $id);
+                })->orderBy('created_at', 'DESC')->get();
+//                dd($reward_logs);
+
+                return datatables()->of($reward_logs)
+                    ->addIndexColumn()
+                    ->addColumn('on_inviting', function ($data) {
+                        return $data->reward->invited_user->username;
+                    })
+                    ->addColumn('amount', function ($data) {
+                        return $data->reward->amount;
+                    })
+                    ->editColumn('created_at', function($data){
+                        $formatedDate = Carbon::createFromFormat('Y-m-d H:i:s', $data->created_at)->format('m-d-Y');
+                        return $formatedDate;
+                    })->rawColumns(['media', 'action'])->make(true);
+            }
+        } catch (\Exception $ex) {
+            return redirect('/')->with('error', $ex->getMessage());
+        }
+        return view('admin.user.reward-list');
     }
 
     final public function postDestroy($id)

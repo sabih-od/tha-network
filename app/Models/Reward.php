@@ -14,10 +14,17 @@ class Reward extends Model
         'user_id',
         'amount',
         'is_paid',
+        'on_inviting',
+        'last_paid_on',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function invited_user()
+    {
+        return $this->belongsTo(User::class, 'on_inviting', 'id');
     }
 }
