@@ -269,6 +269,7 @@
         top: 0;
         left: 0;
     }
+
     .abtSec h4 {
         font-size: 1.75rem;
     }
@@ -282,7 +283,9 @@
         object-fit: cover;
     }
 
-    .overlayCont .content h2 {font-size: 2.5rem;}
+    .overlayCont .content h2 {
+        font-size: 2.5rem;
+    }
 
     .overlayCont .content p {
         font-size: 1rem;
@@ -303,8 +306,8 @@
     }
 
     .profileImg {
-        width: 100px;
-        height: 100%;
+        width: 80px;
+        height: 80px;
     }
 
     .slick-slide a img {
@@ -315,6 +318,40 @@
     .userList .userInfo a img {
         width: 30px;
         height: 30px;
+    }
+
+    .messangerSec {
+        width: 100%;
+        height: auto;
+    }
+
+    .navbar-nav {
+        gap: 0;
+    }
+
+    .navbar-nav .nav-item .nav-link {
+        padding: 0.75rem 0;
+    }
+
+    .navbar-nav .nav-item .nav-link::after {
+        bottom: 0;
+    }
+
+    .main-slider .content p {
+        width: 90%;
+        margin: 0 auto;
+    }
+    .navIconsList li {
+        flex: 0 1 20%;
+    }
+
+    .navIconsList li:first-of-type .dropdown-menu {
+        left: -50% !important;
+        right: unset !important;
+    }
+
+    .userInfo {
+        margin: 0px 0 1rem;
     }
 
     .backBtn {
@@ -350,7 +387,7 @@
     }
 
     .dropdown.nav-icons button img {
-        object-fit: cover;
+        object-fit: contain;
     }
 
     .messangerSec .friend-drawer {
