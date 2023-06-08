@@ -20,7 +20,7 @@
                                 <Link class="dropdown-item">
                                     <p>
                                         If you need assistance or need to report another member, contact us at
-                                        <a href="">support@thanetwork.org</a>
+                                        <a href="mailto:info@thanetwork.org">info@thanetwork.org</a>
                                     </p>
                                 </Link>
                             </div>
