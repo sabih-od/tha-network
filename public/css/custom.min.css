@@ -875,6 +875,7 @@ footer .links li a:hover {
     height: 100%;
     border-radius: 50%;
     outline: none;
+    padding: 0;
 }
 
 .dropdown.nav-icons .dropdown-item:hover {
