@@ -17,12 +17,12 @@
                                 <i class="fal fa-headset"></i>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="support">
-<!--                                <Link class="dropdown-item">-->
+                                <div class="dropdown-item">
                                     <p>
                                         If you need assistance or need to report another member, contact us at
                                         <a href="mailto:info@thanetwork.org">info@thanetwork.org</a>
                                     </p>
-<!--                                </Link>-->
+                                </div>
                             </div>
 <!--                            <a class="nav-icons" href="#"><i class="fal fa-headset"></i></a>-->
                         </li>
