@@ -314,6 +314,7 @@ class RegisterController extends Controller
                 Reward::create([
                     'user_id' => $inviter->id,
                     'amount' => session()->get('tha_payment_amount') == 29.99 ? 10.00 : 39.99,
+                    'on_inviting' => $user->id
                 ]);
 
                 session()->remove('inviter_id');
@@ -429,13 +430,17 @@ class RegisterController extends Controller
                 </html>';
 
         // Sending email
-        Mail::send([], [], function ($message) use ($to, $html) {
-            $message->to($to)
-                ->subject('Welcome To Tha Network!')
-                ->setBody($html, 'text/html'); // for HTML rich messages
-        });
+        try {
+            Mail::send([], [], function ($message) use ($to, $html) {
+                $message->to($to)
+                    ->subject('Welcome To Tha Network!')
+                    ->setBody($html, 'text/html'); // for HTML rich messages
+            });
 
-        return (count(Mail::failures()) < 1);
+            return (count(Mail::failures()) < 1);
+        } catch (\Exception $e) {
+            return false;
+        }
 
         // if (mail($to, $subject, $html, $headers)) {
         //     return true;

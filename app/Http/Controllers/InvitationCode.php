@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -268,11 +269,20 @@ class InvitationCode extends Controller
                 </html>';
 
         // Sending email
-        return Mail::send([], [], function ($message) use ($to, $subject, $html) {
-            $message->to($to)
-                ->subject($subject)
-                ->setBody($html, 'text/html'); // for HTML rich messages
-        });
+        try {
+            // return Mail::send([], [], function ($message) use ($to, $subject, $html) {
+            Mail::send([], [], function ($message) use ($to, $subject, $html) {
+                $message->to($to)
+                    ->subject($subject)
+                    ->setBody($html, 'text/html'); // for HTML rich messages
+            });
+
+            return (boolean)(count(Mail::failures()) == 0);
+        } catch (\Exception $e) {
+            Log::error('mailCode: Email not sent: ' . $e->getMessage());
+        }
+
+        return true;
 
         // // Sending email
         // if (mail($to, $subject, $html, $headers)) {
@@ -367,13 +377,18 @@ class InvitationCode extends Controller
                 </html>';
 
         // Sending email
-        Mail::send([], [], function ($message) use ($to, $subject, $html) {
-            $message->to($to)
-                ->subject($subject)
-                ->setBody($html, 'text/html'); // for HTML rich messages
-        });
 
-        return (count(Mail::failures()) < 1);
+        try {
+            Mail::send([], [], function ($message) use ($to, $subject, $html) {
+                $message->to($to)
+                    ->subject($subject)
+                    ->setBody($html, 'text/html'); // for HTML rich messages
+            });
+        } catch (\Exception $e) {
+            Log::error('invitationMailCode: Email not sent: ' . $e->getMessage());
+        }
+
+        return true;
 
         // if (mail($to, $subject, $html, $headers)) {
         //     return true;
@@ -383,7 +398,7 @@ class InvitationCode extends Controller
     }
 
     public function sendInvitation(Request $request) {
-//        dd($request->all());
+        // dd($request->all());
         $data = $request->validate([
             'emails' => [
                 'required',
@@ -397,6 +412,7 @@ class InvitationCode extends Controller
         ]);
 
         try {
+            DB::beginTransaction();
             //register mail code if necessary
             //
 
@@ -435,6 +451,8 @@ class InvitationCode extends Controller
 
             event(new ReferralSent(Auth::id(), $string, 'App\Models\User', $notification->id, User::with('profile')->find(Auth::id())));
 
+            DB::commit();
+
 
             return WebResponses::success(
                 'Request submitted successfully!',
@@ -442,7 +460,7 @@ class InvitationCode extends Controller
 //                $route
             );
         } catch (\Exception $e) {
-//            DB::rollBack();
+            DB::rollBack();
             return WebResponses::exception($e->getMessage());
         }
     }
@@ -525,7 +543,7 @@ class InvitationCode extends Controller
                 }
 
                 //testing date (1 days ahead)
-                $charge_date = Carbon::now()->copy()->addDays(1);
+                $charge_date = Carbon::now()->copy()->addDays(7);
 
                 $isMonthsFirst = false;
                 $token_id = $request->token_id;

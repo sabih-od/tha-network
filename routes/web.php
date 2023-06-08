@@ -102,6 +102,7 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
     Route::get('users/suspend/{id}', 'UserController@suspend')->name('admin.user.suspend');
     Route::get('users/close/{id}', 'UserController@close')->name('admin.user.close');
     Route::get('user-posts/{id}', 'UserController@userPosts')->name('admin.user.userPosts');
+    Route::get('user-rewards/{id}', 'UserController@userRewards')->name('admin.user.userRewards');
     Route::delete('user-posts/destroy/{id}', 'UserController@postDestroy');
 
     //deleted-user
@@ -236,7 +237,7 @@ Route::group([
 
     // Close My Account
     Route::post('close-my-account', [ProfileController::class, 'closeMyAccount'])
-        ->name('closeMyAccount');
+        ->name('closeMyAccount')->withoutMiddleware('has.provided.stripe.info');
 
     //connect stripe
     Route::get('connect-stripe', [StripeController::class, 'connectAccount'])
@@ -245,7 +246,7 @@ Route::group([
         ->name('connect-paypal')->withoutMiddleware('has.provided.stripe.info');
     //stripe portal
     Route::post('create-stripe-portal-session', [InvitationCode::class, 'createStripePortalSession'])
-        ->name('createStripePortalSession');
+        ->name('createStripePortalSession')->withoutMiddleware('has.provided.stripe.info');
 });
 
 Route::middleware('has.provided.stripe.info')->group(function () {

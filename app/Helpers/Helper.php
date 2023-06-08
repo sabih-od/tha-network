@@ -14,12 +14,14 @@ use App\Models\NetworkMember;
 use App\Models\Notification;
 use App\Models\Referral;
 use App\Models\Reward;
+use App\Models\RewardLog;
 use App\Models\Settings;
 use App\Models\ThaPayment;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use PaypalPayoutsSDK\Core\PayPalHttpClient;
 use PaypalPayoutsSDK\Core\ProductionEnvironment;
@@ -30,6 +32,11 @@ use Stripe\Stripe;
 function last_active($user_id): string
 {
     $user = User::find($user_id);
+
+    if(is_null($user->last_activity)) {
+        return 'Online';
+    }
+
     $last_activity = Carbon::parse($user->last_activity);
 
     if(is_null($last_activity)) {
@@ -321,30 +328,41 @@ function has_made_monthly_payment($id = null): bool
 }
 
 function payment_not_made() {
+    Log::info('payment_not_made: start');
     $users = get_eloquent_users();
     foreach ($users as $user) {
-        if(!has_made_monthly_payment($user->id)) {
-            $string = "Hi, we have not received your monthly membership payment.\r\n
+        try {
+            if(!has_made_monthly_payment($user->id)) {
+                $string = "Hi, we have not received your monthly membership payment.\r\n
             Update your payment information before the 7th of the month.\r\n
             If you do not update your payment by the 7th at 11:59 pm central time your membership will be suspended until a payment is made and you will not receive referral payments for this month.\r\n
             Once payment is received your membership status will be updated and payments will continue in the next billing cycle.\r\n
             If your payment is not received by 11:59 pm on the 11th of this month, you will no longer receive referral payments, your account will be closed and you will lose all of your Network Members!!!\r\n
             Please update your account before the 11th of the month!!!!!";
-            $notification = Notification::create([
-                'user_id' => $user->id,
-                'notifiable_type' => 'App\Models\User',
-                'notifiable_id' => $user->id,
-                'body' => $string,
-                'sender_id' => $user->id
-            ]);
+                $notification = Notification::create([
+                    'user_id' => $user->id,
+                    'notifiable_type' => 'App\Models\User',
+                    'notifiable_id' => $user->id,
+                    'body' => $string,
+                    'sender_id' => $user->id
+                ]);
 
-            event(new PaymentNotMade($user->id, $string, 'App\Models\User', $notification->id, $user));
+                Log::info('payment_not_made | user: ' . $user->id);
+                event(new PaymentNotMade($user->id, $string, 'App\Models\User', $notification->id, $user));
 
-            //send mail to user
-            $string = str_replace("\r\n", "<br />", $string);
-            referral_reversion_mail($user->email, 'Tha Network Delinquency Notice', $string);
+                //send mail to user
+                $string = str_replace("\r\n", "<br />", $string);
+                try {
+                    referral_reversion_mail($user->email, 'Tha Network Delinquency Notice', $string);
+                } catch (\Exception $e) {
+                    Log::error('payment_not_made: mail ' . $e->getMessage());
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error('payment_not_made: catch ' . $e->getMessage());
         }
     }
+    Log::info('payment_not_made: end');
 }
 
 function suspend_accounts() {
@@ -360,189 +378,217 @@ function suspend_accounts() {
 }
 
 function close_accounts() {
+    Log::info('close_account: Function Start');
     $users = get_eloquent_users();
     foreach ($users as $user) {
-        if (!is_null($user->closed_on)) {
-            continue;
-        }
+        try {
+//            DB::beginTransaction();
 
-        if(!has_made_monthly_payment($user->id)) {
-            //close account
+            if (!is_null($user->closed_on)) {
+                continue;
+            }
+
+            if(!has_made_monthly_payment($user->id)) {
+                //close account
 //            if(is_null($user->suspended_on)) {
                 $user->closed_on = Carbon::today();
                 $user->save();
 //            }
 
-            //get what networks the user is member of
-            $joined_networks_ids = NetworkMember::where('user_id', $user->id)->pluck('network_id');
-            //get owners of those networks
-            $joined_networks_owner_ids = Network::whereIn('id', $joined_networks_ids)->pluck('user_id');
-            //send notification to owners
-            foreach ($joined_networks_owner_ids as $target_id) {
-                $string = $user->profile->first_name . ' ' . $user->profile->last_name . " is no longer a member of the network so you will not earn your referral fee for this member any longer.";
-                $target = User::with('profile')->find($target_id);
-                $notification = Notification::create([
-                    'user_id' => $target->id,
-                    'notifiable_type' => 'App\Models\User',
-                    'notifiable_id' => $target->id,
-                    'body' => $string,
-                    'sender_id' => $target->id
-                ]);
+                //get what networks the user is member of
+                $joined_networks_ids = NetworkMember::where('user_id', $user->id)->pluck('network_id');
+                //get owners of those networks
+                $joined_networks_owner_ids = Network::whereHas('user')->whereIn('id', $joined_networks_ids)->pluck('user_id');
+                //send notification to owners
+                foreach ($joined_networks_owner_ids as $target_id) {
+                    $string = $user->profile->first_name . ' ' . $user->profile->last_name . " is no longer a member of the network so you will not earn your referral fee for this member any longer.";
+                    $target = User::with('profile')->find($target_id);
+                    $notification = Notification::create([
+                        'user_id' => $target->id,
+                        'notifiable_type' => 'App\Models\User',
+                        'notifiable_id' => $target->id,
+                        'body' => $string,
+                        'sender_id' => $target->id
+                    ]);
 
-                event(new NetworkMemberClosure($target->id, $string, 'App\Models\User', $notification->id, $target));
-            }
+                    event(new NetworkMemberClosure($target->id, $string, 'App\Models\User', $notification->id, $target));
+                }
 
-            //pause subscription
-            toggle_user_subscription($user->id, true, false);
+                //pause subscription
+                toggle_user_subscription($user->id);
 
-            //send referral reversion notification to inviter
-            $inviter_id = get_inviter_id($user->id);
-            $string = "Your ".$user->profile->first_name . ' ' . $user->profile->last_name." referral is no longer a member of the network you you won’t be receiving its referral payment";
-            $target = User::with('profile')->find($inviter_id);
-            $notification = Notification::create([
-                'user_id' => $target->id,
-                'notifiable_type' => 'App\Models\User',
-                'notifiable_id' => $target->id,
-                'body' => $string,
-                'sender_id' => $target->id,
-                'sender_pic' => $user->get_profile_picture(),
-            ]);
-            event(new ReferralReverted($target->id, $string, 'App\Models\User', $notification->id, $target));
+                //send referral reversion notification to inviter
+                $inviter_id = get_inviter_id($user->id);
+                $string = "Your ".$user->profile->first_name . ' ' . $user->profile->last_name." referral is no longer a member of the network you you won’t be receiving its referral payment";
+                $target = User::with('profile')->find($inviter_id);
+                if ($target) {
+                    $notification = Notification::create([
+                        'user_id' => $target->id,
+                        'notifiable_type' => 'App\Models\User',
+                        'notifiable_id' => $target->id,
+                        'body' => $string,
+                        'sender_id' => $target->id,
+                        'sender_pic' => $user->get_profile_picture(),
+                    ]);
+                    event(new ReferralReverted($target->id, $string, 'App\Models\User', $notification->id, $target));
+                }
 
-            //remove user from all networks
-            NetworkMember::where('user_id', $user->id)->delete();
+                //remove user from all networks
+                NetworkMember::where('user_id', $user->id)->delete();
 
-            //remove user from all friends lists
-            DB::table('user_follower')->where('following_id', $user->id)->orWhere('follower_id', $user->id)->delete();
+                //remove user from all friends lists
+                DB::table('user_follower')->where('following_id', $user->id)->orWhere('follower_id', $user->id)->delete();
 
-            //send account closure email to user
+                try {
+                    //send account closure email to user
 //            $string = "Dear User, your Tha Network account has been closed. Contact Administration for further details.";
-            $string = "Due to the lack of payment for this month, your account has been closed, you will not receive any additional payments, and you have lost all of your network members.\r\n\r\n
+                    $string = "Due to the lack of payment for this month, your account has been closed, you will not receive any additional payments, and you have lost all of your network members.\r\n\r\n
                         If you decide to rejoin Tha Network, you will need to be invited or request a new referral code from the login in page.\r\n\r\n
                         Thanks for giving Tha Network a try!!!";
-            $string = str_replace("\r\n", "<br />", $string);
-            account_closure_mail($user->email, 'Tha Network | Account Closure', $string);
+                    $string = str_replace("\r\n", "<br />", $string);
+                    account_closure_mail($user->email, 'Tha Network | Account Closure', $string);
+                }catch (\Exception $e) {
+                    Log::error('close_accounts: Mail ' . $e->getMessage());
+                }
+            }
+
+//            DB::commit();
+        } catch (\Exception $e) {
+//            DB::rollBack();
+            Log::error('close_account: catch ' . $e->getMessage());
         }
+        Log::info('close_account: Exit Successfully');
     }
 }
 
 function commission_distribution() {
-    $rewards = Reward::where('is_paid', false)->get();
+    Log::info('commission_distribution: Begin function');
+//    $rewards = Reward::whereHas('user')->where('is_paid', false)->get();
+    //testing 1 day
+    $rewards = Reward::
+        whereHas('user')
+        ->whereHas('invited_user')
+        ->where('last_paid_on', '<', Carbon::now()->subHours(24))
+        ->orWhereNull('last_paid_on')
+        ->get();
 
     foreach ($rewards as $reward) {
-        if ($reward->user->preferred_payout_method == null) {
-            continue;
-        }
+        try {
+//            DB::beginTransaction();
 
-        if ($reward->user->role_id == 1) {
-            continue;
-        }
-
-        if(($reward->user->preferred_payout_method == 'stripe' && $reward->user->stripe_account_id == null) || ($reward->user->preferred_payout_method == 'paypal' && $reward->user->paypal_account_details == null)) {
-            continue;
-        }
-
-        //if account is closed or permanently deleted send payout to admin stripe account
-        if ($reward->user->closed_on || !$reward->user) {
-//            $settings = Settings::find(1);
-//            if (!$settings->admin_stripe_account_id) {
-                continue;
-//            }
-//
-//            $stripe = new \Stripe\StripeClient(
-//                env('STRIPE_SECRET_KEY')
-//            );
-//
-//            $transfer = $stripe->transfers->create([
-//                "amount" => $reward->amount * 100,
-//                "currency" => "usd",
-//                "destination" => $settings->admin_stripe_account_id,
-//            ]);
-//
-////            if ($transfer) {
-//                $reward->is_paid = true;
-//                $reward->save();
-////            }
-        }
-
-//        if($reward->user->stripe_account_id) {
-        if($reward->user->preferred_payout_method == 'stripe' || $reward->user->preferred_payout_method == '') {
-            $stripe = new \Stripe\StripeClient(
-                env('STRIPE_SECRET_KEY')
-            );
-
-            $balance = $stripe->balance->retrieve();
-
-            if ($balance->available[0]->amount <= $reward->amount) {
+            if ($reward->user->preferred_payout_method == null) {
                 continue;
             }
 
-            Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-            $transfer = \Stripe\Transfer::create([
-                "amount" => $reward->amount * 100,
-                "currency" => "usd",
-                "destination" => $reward->user->stripe_account_id,
-            ]);
+            if ($reward->user->role_id == 1) {
+                continue;
+            }
+
+            if(($reward->user->preferred_payout_method == 'stripe' && $reward->user->stripe_account_id == null) || ($reward->user->preferred_payout_method == 'paypal' && $reward->user->paypal_account_details == null)) {
+                continue;
+            }
+
+            //if user's account is closed or permanently deleted or invited_user account is closed
+            if ($reward->user->closed_on || $reward->invited_user->closed_on) {
+                continue;
+            }
+
+            //if invited_user monthly subscription not paid
+            if (!has_made_monthly_payment($reward->invited_user->id)) {
+                continue;
+            }
+
+//        if($reward->user->stripe_account_id) {
+//        if($reward->user->preferred_payout_method == 'stripe' || $reward->user->preferred_payout_method == '') {
+            if($reward->user->preferred_payout_method == 'stripe') {
+                $stripe = new \Stripe\StripeClient(
+                    env('STRIPE_SECRET_KEY')
+                );
+
+                $balance = $stripe->balance->retrieve();
+
+                if ($balance->available[0]->amount <= $reward->amount) {
+                    continue;
+                }
+
+                Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+                Log::info('commission_distribution | transfer: stripe acct id: '.$reward->user->stripe_account_id.' user: '.$reward->user->id.', amount: ' . $reward->amount);
+                $transfer = \Stripe\Transfer::create([
+                    "amount" => $reward->amount * 100,
+                    "currency" => "usd",
+                    "destination" => $reward->user->stripe_account_id,
+                ]);
 
 //            if ($transfer) {
                 $reward->is_paid = true;
+                $reward->last_paid_on = Carbon::now();
                 $reward->save();
+
+                //create reward log
+                RewardLog::create(['reward_id' => $reward->id]);
 //            }
-        }
+            }
 
 //        else if($reward->user->paypal_account_details) {
-        else if($reward->user->preferred_payout_method == 'paypal') {
-            continue;
+//            else if($reward->user->preferred_payout_method == 'paypal') {
+//                continue;
+//
+//                $clientId = env('PAYPAL_CLIENT_ID');
+//                $clientSecret = env('PAYPAL_SECRET_KEY');
+//
+//
+//                if (env('PAYPAL_LIVE_MODE')) {
+//                    $environment = new ProductionEnvironment($clientId, $clientSecret);
+//                } else {
+//                    $environment = new SandboxEnvironment($clientId, $clientSecret);
+//                }
+//                $client = new PayPalHttpClient($environment);
+//                $request = new PayoutsPostRequest();
+//
+//                $authorizationString = base64_encode($clientId . ':' . $clientSecret);
+//                $request->headers = [
+//                    'Authorization' => 'Basic ' . $authorizationString,
+//                    'Content-Type' => 'application/x-www-form-urlencoded',
+//                ];
+//
+//                $body = json_decode(
+//                    '{
+//                "sender_batch_header":
+//                {
+//                  "email_subject": "SDK payouts test txn"
+//                },
+//                "items": [
+//                {
+//                  "recipient_type": "EMAIL",
+//                  "receiver": "'.$reward->user->paypal_account_details.'",
+//                  "note": "Your payout",
+//                  "sender_item_id": "Test_txn_12",
+//                  "amount":
+//                  {
+//                    "currency": "USD",
+//                    "value": "'.($reward->amount).'"
+//                  }
+//                }]
+//              }',
+//                    true);
+//                $request->body = $body;
+////            $client = PayPalClient::client();
+//                $response = $client->execute($request);
+//
+////            if ($response && $response->statusCode && $response->statusCode == 201) {
+//                if ($response->statusCode && $response->statusCode == 201) {
+//                    $reward->is_paid = true;
+//                    $reward->save();
+//                }
+//            }
 
-            $clientId = env('PAYPAL_CLIENT_ID');
-            $clientSecret = env('PAYPAL_SECRET_KEY');
-
-
-            if (env('PAYPAL_LIVE_MODE')) {
-                $environment = new ProductionEnvironment($clientId, $clientSecret);
-            } else {
-                $environment = new SandboxEnvironment($clientId, $clientSecret);
-            }
-            $client = new PayPalHttpClient($environment);
-            $request = new PayoutsPostRequest();
-
-            $authorizationString = base64_encode($clientId . ':' . $clientSecret);
-            $request->headers = [
-                'Authorization' => 'Basic ' . $authorizationString,
-                'Content-Type' => 'application/x-www-form-urlencoded',
-            ];
-
-            $body = json_decode(
-                '{
-                "sender_batch_header":
-                {
-                  "email_subject": "SDK payouts test txn"
-                },
-                "items": [
-                {
-                  "recipient_type": "EMAIL",
-                  "receiver": "'.$reward->user->paypal_account_details.'",
-                  "note": "Your payout",
-                  "sender_item_id": "Test_txn_12",
-                  "amount":
-                  {
-                    "currency": "USD",
-                    "value": "'.($reward->amount).'"
-                  }
-                }]
-              }',
-                true);
-            $request->body = $body;
-//            $client = PayPalClient::client();
-            $response = $client->execute($request);
-
-//            if ($response && $response->statusCode && $response->statusCode == 201) {
-            if ($response->statusCode && $response->statusCode == 201) {
-                $reward->is_paid = true;
-                $reward->save();
-            }
+//            DB::commit();
+        } catch (\Exception $e) {
+//            DB::rollBack();
+            Log::error('commission_distribution: catch ' . $e->getMessage());
         }
     }
+    Log::info('commission_distribution: Exit Successfully');
 }
 
 function is_in_my_network($user_id): bool
@@ -729,7 +775,13 @@ function is_user_id ($id) {
 }
 
 function toggle_user_subscription ($id = null, $pause = true, $resume = false) {
+    Log::info('toggle_user_subscription: start');
     $user = get_eloquent_user($id);
+
+    if (!$user->stripe_checkout_session_id) {
+        Log::info('toggle_user_subscription: stripe_checkout_session_id not found');
+        return false;
+    }
 
     $stripe = new \Stripe\StripeClient(
         env('STRIPE_SECRET_KEY')
@@ -737,6 +789,10 @@ function toggle_user_subscription ($id = null, $pause = true, $resume = false) {
 
     try {
         $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
+
+        if ($subscription->status == 'canceled') {
+            return true;
+        }
 
         if ($pause) {
             $pause_collection = ['behavior' => 'keep_as_draft'];
@@ -749,8 +805,10 @@ function toggle_user_subscription ($id = null, $pause = true, $resume = false) {
             ['pause_collection' => $pause_collection]
         );
 
+        Log::info('toggle_user_subscription: end');
         return true;
     } catch(\Exception $e) {
+        Log::error('toggle_user_subscription ' . $e->getMessage());
         return false;
     }
 }

@@ -19,7 +19,8 @@ class UserSeeder extends Seeder
             'username' => 'Admin',
             'email' => 'admin@thanetwork.com',
             'role_id' => 1,
-            'password' => hash::make('admin!@#')
+            'password' => hash::make('admin!@#'),
+            'invitation_code' => random_int(100000, 999999)
         ]);
     }
 }

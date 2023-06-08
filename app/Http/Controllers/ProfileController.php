@@ -92,7 +92,7 @@ class ProfileController extends Controller
             $stripe_portal_session = session()->get('stripe_portal_session') ?? null;
             session()->put('stripe_portal_session', null);
             return Inertia::render('EditProfile', [
-                'user' => $user->only('name', 'email', 'created_at', 'pwh') ?? null,
+                'user' => $user->only('name', 'email', 'created_at', 'pwh', 'role_id') ?? null,
                 'profile' => $user->profile ?? null,
 //                'profile_image' => $this->profileImg($user, 'profile_image'),
                 'profile_cover' => $this->profileImg($user, 'profile_cover'),
@@ -389,6 +389,7 @@ class ProfileController extends Controller
     public function closeMyAccount(Request $request)
     {
         try {
+            DB::beginTransaction();
             $user = User::find(Auth::id());
             $user->closed_on = Carbon::today();
             $user->save();
@@ -437,8 +438,10 @@ class ProfileController extends Controller
 
             Auth::logout();
 
+            DB::commit();
             return redirect()->route('login');
         } catch (\Exception $e) {
+            DB::rollBack();
             return WebResponses::exception($e->getMessage());
         }
     }

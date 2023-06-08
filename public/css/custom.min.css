@@ -857,8 +857,9 @@ footer .links li a:hover {
 }
 
 .nav-icons {
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: #f3f6f8;
     border-radius: 50%;
     height: 3.125rem;
@@ -874,6 +875,7 @@ footer .links li a:hover {
     height: 100%;
     border-radius: 50%;
     outline: none;
+    padding: 0;
 }
 
 .dropdown.nav-icons .dropdown-item:hover {
@@ -1976,7 +1978,7 @@ footer .links li a:hover {
 }
 
 .messangerSec .friend-drawer {
-    padding: 15px 33px;
+    padding: 1rem;
     display: flex;
     gap: 0 1rem;
     justify-content: space-between;
@@ -1998,7 +2000,7 @@ footer .links li a:hover {
 
 .messangerSec .friend-drawer .text h6 {
     margin-bottom: 0;
-    font-size: 1.25rem;
+    font-size: 1rem;
     color: #000000;
     font-weight: 500;
 }
@@ -2839,4 +2841,14 @@ ul.chatCont {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.messangerSec .friend-drawer .dropdown a {
+    font-size: 0.75rem;
+    text-align: right;
+    width: 100%;
+}
+
+.messangerSec .friend-drawer .dropdown .dropdown-menu {
+    width: max-content;
 }
