@@ -92,7 +92,7 @@ class ProfileController extends Controller
             $stripe_portal_session = session()->get('stripe_portal_session') ?? null;
             session()->put('stripe_portal_session', null);
             return Inertia::render('EditProfile', [
-                'user' => $user->only('name', 'email', 'created_at', 'pwh') ?? null,
+                'user' => $user->only('name', 'email', 'created_at', 'pwh', 'role_id') ?? null,
                 'profile' => $user->profile ?? null,
 //                'profile_image' => $this->profileImg($user, 'profile_image'),
                 'profile_cover' => $this->profileImg($user, 'profile_cover'),
@@ -105,7 +105,7 @@ class ProfileController extends Controller
                 'stripe_portal_session' => $stripe_portal_session,
                 'has_provided_stripe_payout_information' => $has_provided_stripe_payout_information,
                 'preferred_payout_method' => $user->preferred_payout_method,
-            ]);
+            ])->with('error', $has_provided_stripe_payout_information ? null : 'You Must Provide  Stripe account information before proceeding.  If you do not have a stripe account create one and return to this page and enter the information.');
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());
         }
@@ -389,9 +389,12 @@ class ProfileController extends Controller
     public function closeMyAccount(Request $request)
     {
         try {
+            DB::beginTransaction();
             $user = User::find(Auth::id());
             $user->closed_on = Carbon::today();
             $user->save();
+
+            toggle_user_subscription($user->id, true, false);
 
             //get what networks the user is member of
             $joined_networks_ids = NetworkMember::where('user_id', $user->id)->pluck('network_id');
@@ -435,8 +438,10 @@ class ProfileController extends Controller
 
             Auth::logout();
 
+            DB::commit();
             return redirect()->route('login');
         } catch (\Exception $e) {
+            DB::rollBack();
             return WebResponses::exception($e->getMessage());
         }
     }

@@ -56,6 +56,13 @@ Route::get('/temp', function () {
 //    }
 
 //    commission_distribution();
+//    $stripe = new \Stripe\StripeClient(
+//        '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'
+//    );
+//
+//    $subscription = $stripe->subscriptions->retrieve('sub_1N3KRTFNDZX6ZunfTLGhbR8q');
+//
+//    dd($subscription);
 })->name('temp');
 
 Route::get('get/redis', function () {
@@ -91,9 +98,11 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
 
     //user
     Route::get('users', 'UserController@index')->name('admin.users');
-    Route::delete('users/destroy/{id}', 'UserController@destroy');
-    Route::get('users/suspend/{id}', 'UserController@suspend');
+    Route::delete('users/destroy/{id}', 'UserController@destroy')->name('admin.user.delete');
+    Route::get('users/suspend/{id}', 'UserController@suspend')->name('admin.user.suspend');
+    Route::get('users/close/{id}', 'UserController@close')->name('admin.user.close');
     Route::get('user-posts/{id}', 'UserController@userPosts')->name('admin.user.userPosts');
+    Route::get('user-rewards/{id}', 'UserController@userRewards')->name('admin.user.userRewards');
     Route::delete('user-posts/destroy/{id}', 'UserController@postDestroy');
 
     //deleted-user
@@ -103,6 +112,10 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
     //suspended-user
     Route::get('suspended-users', 'SuspendedUserController@index')->name('admin.suspended-users');
     Route::post('suspended-users/retrieve/{id}', 'SuspendedUserController@retrieve');
+
+    //closed-user
+    Route::get('closed-users', 'ClosedUserController@index')->name('admin.closed-users');
+    Route::post('closed-users/retrieve/{id}', 'ClosedUserController@retrieve');
 
     // Customer
     Route::resource('customers', 'CustomersController');
@@ -131,7 +144,7 @@ Route::group([
         ->name('monthlySuccessPayment');
 });
 Route::group([
-    'middleware' => ['auth', 'revalidate', 'suspension', 'closure']
+    'middleware' => ['auth', 'revalidate', 'suspension', 'closure', 'has.provided.stripe.info']
 ], function () {
     // home page
     Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -224,39 +237,41 @@ Route::group([
 
     // Close My Account
     Route::post('close-my-account', [ProfileController::class, 'closeMyAccount'])
-        ->name('closeMyAccount');
+        ->name('closeMyAccount')->withoutMiddleware('has.provided.stripe.info');
 
     //connect stripe
     Route::get('connect-stripe', [StripeController::class, 'connectAccount'])
-        ->name('connect-stripe');
+        ->name('connect-stripe')->withoutMiddleware('has.provided.stripe.info');
     Route::post('connect-paypal', [StripeController::class, 'connectPaypalAccount'])
-        ->name('connect-paypal');
+        ->name('connect-paypal')->withoutMiddleware('has.provided.stripe.info');
     //stripe portal
     Route::post('create-stripe-portal-session', [InvitationCode::class, 'createStripePortalSession'])
-        ->name('createStripePortalSession');
+        ->name('createStripePortalSession')->withoutMiddleware('has.provided.stripe.info');
 });
 
-Route::get('/home', function () {
-    $check = session()->has('validate-code');
+Route::middleware('has.provided.stripe.info')->group(function () {
+    Route::get('/home', function () {
+        $check = session()->has('validate-code');
 //    if ($check)
 //        session()->remove('validate-code');
-    $home = Page::where('name', 'Home')->first();
-    $data = json_decode($home->content ?? []);
+        $home = Page::where('name', 'Home')->first();
+        $data = json_decode($home->content ?? []);
 
-    return Inertia::render('HowItWorks', [
-        'visitedByCode' => $check,
-        'data' => $data
-    ]);
-})->name('work');
+        return Inertia::render('HowItWorks', [
+            'visitedByCode' => $check,
+            'data' => $data
+        ]);
+    })->name('work');
 
-Route::get('/about', [FrontCmsController::class, 'about'])->name('about');
+    Route::get('/about', [FrontCmsController::class, 'about'])->name('about');
 
-Route::get('/contact', [FrontCmsController::class, 'contact'])->name('contact');
+    Route::get('/contact', [FrontCmsController::class, 'contact'])->name('contact');
 
-Route::get('/privacy', [FrontCmsController::class, 'privacy'])->name('privacy');
+    Route::get('/privacy', [FrontCmsController::class, 'privacy'])->name('privacy');
 
-Route::get('/terms', [FrontCmsController::class, 'terms'])->name('terms');
+    Route::get('/terms', [FrontCmsController::class, 'terms'])->name('terms');
 
-Route::get('/benefits', [FrontCmsController::class, 'benefits'])->name('benefits');
+    Route::get('/benefits', [FrontCmsController::class, 'benefits'])->name('benefits');
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+});
