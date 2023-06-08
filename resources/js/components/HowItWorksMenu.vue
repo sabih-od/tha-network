@@ -18,7 +18,7 @@
 
                 <div class="collapse navbar-collapse flex-column" id="navbarSupportedContent">
                     <ul class="list-unstyled socialIo">
-                        <li><a href="mailto:ingo@thanetwork.org"><i class="fas fa-envelope"></i><span>ingo@thanetwork.org</span></a>
+                        <li><a href="mailto:info@thanetwork.org"><i class="fas fa-envelope"></i><span>info@thanetwork.org</span></a>
                         </li>
                         <li class="ml-auto"><a href="https://www.facebook.com/Tha-Network-150057600527324/" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
                         <li><a href="https://twitter.com/ThaNetwork4" target="_blank"><i class="fab fa-twitter"></i></a></li>
