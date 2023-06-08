@@ -608,7 +608,7 @@ class CMSPageSectionSeeder extends Seeder
                     <p>
                         Users with questions about this Agreement and any of the above statements may contact the
                         Company by email at
-                        <a href="">support@thanetwork.org.</a>
+                        <a href="mailto:support@thanetwork.org">support@thanetwork.org</a>
                     </p>
 
                     <p>As a member of ThaNetwork each member`s payment method will incur a monthly membership fee of
@@ -664,7 +664,7 @@ class CMSPageSectionSeeder extends Seeder
                         <p>
                             Parents: If your child is under the age of 18 and has joined any of the Services using a
                             false age, please notify us at
-                            <a href="">support@thanetwork.org</a> , and we will terminate your child`s account and
+                            <a href="mailto:support@thanetwork.org">support@thanetwork.org</a> , and we will terminate your child`s account and
     delete all personal information displaying on the site. We will happily respond to all
                             communications from parents with privacy questions or concerns.
                         </p>
@@ -903,7 +903,7 @@ class CMSPageSectionSeeder extends Seeder
                                 residents have the right to request certain information about whether we collect, use,
         disclose and sell personal information about them, and to request to know the personal
                                 information that we have. To make such a request, please contact us at
-    <a href="">support@thanetwork.com</a> Please be advised that we will verify all such
+    <a href="mailto:support@thanetwork.org">support@thanetwork.org</a> Please be advised that we will verify all such
                                 requests prior to
                                 providing any personal information by requiring you to respond to an email sent to the
                                 email you used when making your request. Please be advised that we are only required to
@@ -914,7 +914,7 @@ class CMSPageSectionSeeder extends Seeder
     • <strong>Notice of Right to Request Deletion of of Personal Information.</strong> If
     you are a California resident and a registered user of the Service, you may request the
                                 deletion of personal information we have collected from you. To make such a request,
-                                please contact us at <a href="">support@thanetwork.org</a> Please be advised that we
+                                please contact us at <a href="mailto:support@thanetwork.org">support@thanetwork.org</a> Please be advised that we
                                 will verify all
                                 such requests prior to providing any personal information by requiring you to respond to
                                 an email sent to the email you used when making your request.
@@ -974,7 +974,7 @@ class CMSPageSectionSeeder extends Seeder
                             <li>
     • If you wish to access, correct, update or request deletion, restrict processing,
                                 object to processing, or request porting of your personal information, you can do so at
-                                any time by contacting us at support@thanetwork.org . Please see sections VI and VII
+                                any time by contacting us at <a href="mailto:support@thanetwork.org">support@thanetwork.org</a> . Please see sections VI and VII
                                 above for more information.
                             </li>
                             <li>
@@ -1015,7 +1015,7 @@ class CMSPageSectionSeeder extends Seeder
     Our Contact Information
     </h2>
                         <p>
-                            For all requests concerning the security of your data, please contact us at <a href="">support@thanetwork.org.</a>
+                            For all requests concerning the security of your data, please contact us at <a href="mailto:support@thanetwork.org">support@thanetwork.org</a>
                         </p>'
             ]),
         ]);
