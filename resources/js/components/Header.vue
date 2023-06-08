@@ -12,7 +12,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navIconsList ml-auto">
-                        <li class="dropdown">
+                        <li class="dropdown center">
                             <button class="dropdown-toggle nav-icons" type="button" id="support" data-toggle="dropdown" aria-expanded="false">
                                 <i class="fal fa-headset"></i>
                             </button>
@@ -137,5 +137,15 @@ export default {
 </script>
 
 <style scoped>
-
+.dropdown-item:focus{
+    background: transparent;
+}
+.dropdown-item:focus-visible{
+    border: none;
+}
+.center .dropdown-item.active,
+.center .dropdown-item:active{
+    color: initial;
+    background-color: transparent;
+}
 </style>
