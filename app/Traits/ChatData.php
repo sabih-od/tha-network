@@ -54,11 +54,13 @@ trait ChatData
                         ->where('id', '<>', Auth::id())
                         ->first();
                     $cover_data = $chat_user;
-                    $is_auth_friend = ($chat_user->isFollowing(Auth::user()) || $chat_user->isFollowedBy(Auth::user()));
+                    $is_auth_friend = $chat_user ? ($chat_user->isFollowing(Auth::user()) || $chat_user->isFollowedBy(Auth::user())) : false;
 //                    dd(is_in_my_network($chat_user->id));
-                    $is_in_my_network = is_in_my_network($chat_user->id);
+                    $is_in_my_network = $chat_user ? is_in_my_network($chat_user->id) : false;
 
-                    $cover_data->profile_img = $cover_data->getFirstMedia('profile_image')->original_url ?? null;
+                    if ($cover_data) {
+                        $cover_data->profile_img = $cover_data ? ($cover_data->getFirstMedia('profile_image')->original_url ?? null) : null;
+                    }
                 }elseif ($item->chat_type == 'group') {
                     $cover_data = $item->group()
                         ->select('id', 'username')
