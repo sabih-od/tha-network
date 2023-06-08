@@ -857,8 +857,9 @@ footer .links li a:hover {
 }
 
 .nav-icons {
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: #f3f6f8;
     border-radius: 50%;
     height: 3.125rem;
