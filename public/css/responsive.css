@@ -341,6 +341,9 @@
         width: 90%;
         margin: 0 auto;
     }
+    .navIconsList li {
+        flex: 0 1 20%;
+    }
 
     .navIconsList li:first-of-type .dropdown-menu {
         left: -50% !important;
