@@ -297,6 +297,26 @@
         font-size: 13px;
     }
 
+    .notifyPopup {
+        max-width: 250px;
+    }
+
+    .notifyPopup .notiImgCont img {
+        height: 150px;
+    }
+
+    .loginSection.create-profile {
+        padding: 3rem 0;
+    }
+
+    .notifyPopup .notiBody * {
+        font-size: 1rem;
+        line-height: initial;
+    }
+
+    .dropdown-menu .dropdown-item p{
+        -webkit-line-clamp: initial;
+    }
     .userInfo h2 {
         font-size: 1.25rem;
     }
@@ -341,6 +361,7 @@
         width: 90%;
         margin: 0 auto;
     }
+
     .navIconsList li {
         flex: 0 1 20%;
     }
