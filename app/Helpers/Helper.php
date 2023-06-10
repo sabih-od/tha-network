@@ -265,7 +265,7 @@ function no_referrals_for_the_day() {
 function set_weekly_goal() {
     $users = get_eloquent_users();
     foreach ($users as $user) {
-        $string = "Your Weekly goals has been set. Complete your goals to get promoted to the next grade";
+        $string = "Your Weekly goals have been set. Complete your goals to get promoted to the next grade";
         $notification = Notification::create([
             'user_id' => $user->id,
             'notifiable_type' => 'App\Models\User',

@@ -34,35 +34,7 @@ use Inertia\Inertia;
 });*/
 
 Route::get('/temp', function () {
-//    //create profile for admin
-//    $admin = User::where('email', 'admin@thanetwork.com')->first();
-//    if ($admin) {
-//        //create avatar based on gender
-//        $avatar_url = public_path('images/avatars/male-avatar.png');
-//        $admin
-//            ->addMedia($avatar_url)
-//            ->preservingOriginal()
-//            ->toMediaCollection('profile_image');
-//        //create profile
-//        if (!$admin->profile()->exists()) {
-//            $admin->profile()->create([
-//                'first_name' => 'Admin',
-//                'last_name' => 'User',
-//                'phone' => '123456789',
-//                'social_security_number' => '123456789',
-//                'gender' => 'Male',
-//            ]);
-//        }
-//    }
 
-//    commission_distribution();
-//    $stripe = new \Stripe\StripeClient(
-//        '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'
-//    );
-//
-//    $subscription = $stripe->subscriptions->retrieve('sub_1N3KRTFNDZX6ZunfTLGhbR8q');
-//
-//    dd($subscription);
 })->name('temp');
 
 Route::get('get/redis', function () {

@@ -318,7 +318,7 @@ export default {
             //if newly registered - profile completed (SetWeeklyGoal)
             if (this.$store.getters['Misc/isNewlyRegistered']) {
                 let img = this.$store.getters['Utils/public_asset']('images/notifications/SetWeeklyGoal.png');
-                let text = 'Your Weekly goals has been set. Complete your goals to get promoted to the next grade';
+                let text = 'Your Weekly goals have been set. Complete your goals to get promoted to the next grade';
                 this.showNotification(img, text);
 
                 let _t = this;

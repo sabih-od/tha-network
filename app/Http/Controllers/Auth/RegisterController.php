@@ -196,7 +196,7 @@ class RegisterController extends Controller
         ]);
 
         //notification: lets set weekly goal
-        $string = "Your Weekly goals has been set. Complete your goals to get promoted to the next grade";
+        $string = "Your Weekly goals have been set. Complete your goals to get promoted to the next grade";
         $notification = Notification::create([
             'user_id' => $user->id,
             'notifiable_type' => 'App\Models\User',

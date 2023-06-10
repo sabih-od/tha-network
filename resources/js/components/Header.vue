@@ -12,17 +12,17 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navIconsList ml-auto">
-                        <li class="dropdown">
+                        <li class="dropdown center">
                             <button class="dropdown-toggle nav-icons" type="button" id="support" data-toggle="dropdown" aria-expanded="false">
                                 <i class="fal fa-headset"></i>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="support">
-                                <Link class="dropdown-item">
+                                <div class="dropdown-item">
                                     <p>
                                         If you need assistance or need to report another member, contact us at
-                                        <a href="">support@thanetwork.org</a>
+                                        <a href="mailto:info@thanetwork.org">info@thanetwork.org</a>
                                     </p>
-                                </Link>
+                                </div>
                             </div>
 <!--                            <a class="nav-icons" href="#"><i class="fal fa-headset"></i></a>-->
                         </li>
@@ -137,5 +137,15 @@ export default {
 </script>
 
 <style scoped>
-
+.dropdown-item:focus{
+    background: transparent;
+}
+.dropdown-item:focus-visible{
+    border: none;
+}
+.center .dropdown-item.active,
+.center .dropdown-item:active{
+    color: initial;
+    background-color: transparent;
+}
 </style>
