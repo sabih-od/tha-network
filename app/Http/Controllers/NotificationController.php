@@ -30,6 +30,8 @@ class NotificationController extends Controller
         try {
             $notification = Notification::find($request->notification_id);
 
+            $notification->delete();
+
             return redirect(url()->previous(true))->with('success', "Notification deleted.");
         } catch (\Exception $e) {
             return redirect(url()->previous(true))->with('error', $e->getMessage());
