@@ -73,7 +73,7 @@ export default {
             $([document.documentElement, document.body]).animate({
                 // scrollTop: $("#ref_post_list_item0").offset().top
                 scrollTop: $(document).height()
-            }, 1000);
+            }, 3000);
         },
         blockedUsers() {
             this.$store.commit('Misc/setBlockedUsersFlag', true);
@@ -86,7 +86,7 @@ export default {
                 $([document.documentElement, document.body]).animate({
                     // scrollTop: $("#ref_post_list_item0").offset().bottom
                     scrollTop: $(document).height()
-                }, 2000);
+                }, 3000);
             }
         },
         allUsers() {
@@ -98,7 +98,7 @@ export default {
                 $([document.documentElement, document.body]).animate({
                     // scrollTop: $("#ref_post_list_item0").offset().top
                     scrollTop: $(document).height()
-                }, 1000);
+                }, 3000);
             }
         },
         goToDashboard () {
