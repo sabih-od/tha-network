@@ -79,7 +79,8 @@ export default {
             this.$store.commit('Misc/setPeopleInMyNetworkFlag', false);
             this.$store.commit('Misc/setMyFriendsFlag', false);
             this.$store.commit('Misc/setAllUsersFlag', false);
-            $("#blocked").scrollIntoView();
+            // $("#blocked").scrollIntoView();
+            $("#blocked").scrollTop($("#blocked")[0].scrollHeight);
             // if (typeof $("#ref_post_list_item0").offset() !== 'undefined') {
             //     $([document.documentElement, document.body]).animate({
             //         scrollTop: $("#ref_post_list_item0").offset().top
