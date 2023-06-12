@@ -70,7 +70,7 @@ export default {
             this.$store.commit('Misc/setBlockedUsersFlag', false);
             this.$store.commit('Misc/setMyFriendsFlag', false);
             this.$store.commit('Misc/setAllUsersFlag', false);
-            setTimeOut(function () {
+            setTimeout(function () {
                 $([document.documentElement, document.body]).animate({
                     // scrollTop: $("#ref_post_list_item0").offset().top
                     scrollTop: $(document).height()
@@ -85,7 +85,7 @@ export default {
             // $("#blocked").scrollIntoView();
             // $("#blocked").scrollTop($("#blocked")[0].scrollHeight);
             // if (typeof $("#ref_post_list_item0").offset() !== 'undefined') {
-            setTimeOut(function () {
+            setTimeout(function () {
                 $([document.documentElement, document.body]).animate({
                     // scrollTop: $("#ref_post_list_item0").offset().bottom
                     scrollTop: $(document).height()
@@ -99,7 +99,7 @@ export default {
             this.$store.commit('Misc/setPeopleInMyNetworkFlag', false);
             this.$store.commit('Misc/setMyFriendsFlag', false);
             // if (typeof $("#ref_post_list_item0").offset() !== 'undefined') {
-            setTimeOut(function () {
+            setTimeout(function () {
                 $([document.documentElement, document.body]).animate({
                     // scrollTop: $("#ref_post_list_item0").offset().top
                     scrollTop: $(document).height()
