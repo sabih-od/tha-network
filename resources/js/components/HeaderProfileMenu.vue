@@ -85,13 +85,6 @@ export default {
             //         scrollTop: $("#ref_post_list_item0").offset().top
             //     }, 1000);
             // }
-            var access = document.getElementById("blocked");
-            access.scrollIntoView({behavior: 'smooth'}, true);
-            // if (typeof $("#ref_post_list_item0").offset() !== 'undefined') {
-            //     $([document.documentElement, document.body]).animate({
-            //         scrollTop: $("#ref_post_list_item0").offset().top
-            //     }, 1000);
-            // }
         },
         allUsers() {
             this.$store.commit('Misc/setAllUsersFlag', true);
