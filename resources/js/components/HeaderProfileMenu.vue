@@ -70,10 +70,12 @@ export default {
             this.$store.commit('Misc/setBlockedUsersFlag', false);
             this.$store.commit('Misc/setMyFriendsFlag', false);
             this.$store.commit('Misc/setAllUsersFlag', false);
-            $([document.documentElement, document.body]).animate({
-                // scrollTop: $("#ref_post_list_item0").offset().top
-                scrollTop: $(document).height()
-            }, 3000);
+            setTimeOut(function () {
+                $([document.documentElement, document.body]).animate({
+                    // scrollTop: $("#ref_post_list_item0").offset().top
+                    scrollTop: $(document).height()
+                }, 2000);
+            }, 2000)
         },
         blockedUsers() {
             this.$store.commit('Misc/setBlockedUsersFlag', true);
@@ -82,24 +84,28 @@ export default {
             this.$store.commit('Misc/setAllUsersFlag', false);
             // $("#blocked").scrollIntoView();
             // $("#blocked").scrollTop($("#blocked")[0].scrollHeight);
-            if (typeof $("#ref_post_list_item0").offset() !== 'undefined') {
+            // if (typeof $("#ref_post_list_item0").offset() !== 'undefined') {
+            setTimeOut(function () {
                 $([document.documentElement, document.body]).animate({
                     // scrollTop: $("#ref_post_list_item0").offset().bottom
                     scrollTop: $(document).height()
-                }, 3000);
-            }
+                }, 2000);
+            }, 2000)
+            // }
         },
         allUsers() {
             this.$store.commit('Misc/setAllUsersFlag', true);
             this.$store.commit('Misc/setBlockedUsersFlag', false);
             this.$store.commit('Misc/setPeopleInMyNetworkFlag', false);
             this.$store.commit('Misc/setMyFriendsFlag', false);
-            if (typeof $("#ref_post_list_item0").offset() !== 'undefined') {
+            // if (typeof $("#ref_post_list_item0").offset() !== 'undefined') {
+            setTimeOut(function () {
                 $([document.documentElement, document.body]).animate({
                     // scrollTop: $("#ref_post_list_item0").offset().top
                     scrollTop: $(document).height()
-                }, 3000);
-            }
+                }, 2000);
+            }, 2000)
+            // }
         },
         goToDashboard () {
             window.location.href = this.$route('dashboard');
