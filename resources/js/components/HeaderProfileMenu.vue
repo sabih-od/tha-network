@@ -83,7 +83,7 @@ export default {
             // $("#blocked").scrollTop($("#blocked")[0].scrollHeight);
             if (typeof $("#ref_post_list_item0").offset() !== 'undefined') {
                 $([document.documentElement, document.body]).animate({
-                    scrollTop: $("#ref_post_list_item0").offset().top
+                    scrollTop: $("#ref_post_list_item0").offset().bottom
                 }, 1000);
             }
         },
