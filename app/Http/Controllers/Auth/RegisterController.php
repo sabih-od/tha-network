@@ -394,7 +394,7 @@ class RegisterController extends Controller
                             <tr>
                                 <td colspan="3" style="width: 50%">
                                     <p style="color: #333; margin: 0 0 30px; line-height: 31px; font-size: 18px; text-align: center">
-                                        Welcome to <a href="https://thanetwork.org">ThaNetwork.org</a>,To learn more about your Invitation click the link below or visit <a href="https://thanetwork.org">www.thanetwork.org</a> and login using the Invitation code below..
+                                        Welcome to <a href="https://thanetwork.org">ThaNetwork.org</a>, You may now enter the site and start earning CASH!!
                                     </p>
                                 </td>
                             </tr>
