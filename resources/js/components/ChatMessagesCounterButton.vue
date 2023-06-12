@@ -8,23 +8,28 @@
         <!--notifications-->
         <div class="dropdown-menu notiMenu" aria-labelledby="profileDropDown">
             <span v-if="notifications.length == 0" class="dropdown-item">No new messages</span>
-            <Link v-else v-for="notification in notifications" class="dropdown-item" replace
-                  @click.prevent="notification.post_id != null ? (this.fetchPostOnTop(notification.post_id)) : (!notification.body.includes('friend request') && notification.sender.id != user.id ? chatWithProfile(notification.sender.id) : '')"
-                  :href="notification.body.includes('friend request') ? $route('userProfile', notification.sender_id) : '#'">
-                <div class="notiCont">
-                    <figure>
-                        <!--                        <img :src="asset('images/small-character.jpg')" alt="">-->
-                        <img :src="notification.sender_pic ?? auth_image" alt="">
-                    </figure>
-                    <p v-if="notification.body" v-html="notification.body">
+            <div v-else v-for="notification in notifications" class="dropdown-item">
+                <Link replace
+                      @click.prevent="notification.post_id != null ? (this.fetchPostOnTop(notification.post_id)) : (!notification.body.includes('friend request') && notification.sender.id != user.id ? chatWithProfile(notification.sender.id) : '')"
+                      :href="notification.body.includes('friend request') ? $route('userProfile', notification.sender_id) : '#'">
+                    <div class="notiCont">
+                        <figure>
+                            <!--                        <img :src="asset('images/small-character.jpg')" alt="">-->
+                            <img :src="notification.sender_pic ?? auth_image" alt="">
+                        </figure>
+                        <p v-if="notification.body" v-html="notification.body">
 
-                    </p>
-                    <strong v-else>
-                        New message from
-                        {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
-                    </strong>
-                </div>
-            </Link>
+                        </p>
+                        <strong v-else>
+                            New message from
+                            {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
+                        </strong>
+                    </div>
+                </Link>
+                <button @click="deleteNotification(notification.id)" class="deleteBtn">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
             <Link v-if="notifications.length != 0" class="dropdown-item" replace @click.prevent="clearNotifications()">
                 Mark all as read
             </Link>
@@ -260,6 +265,19 @@ export default {
             $([document.documentElement, document.body]).animate({
                 scrollTop: $("#ref_post_list_item0").offset().top
             }, 2000);
+        },
+        deleteNotification(notification_id) {
+            Inertia.post(this.$route('deleteNotification'), {
+                notification_id: notification_id
+            }, {
+                replace: true,
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: () => {
+                    this.notifications = this.notifications.filter(notification => notification.id != notification_id);
+                    (useToast()).success('Notification has been deleted');
+                },
+            });
         }
     }
 }
@@ -293,6 +311,22 @@ export default {
 .dropdown-menu .dropdown-item {
     white-space: initial !important;
     background: #ddd;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.dropdown-menu .dropdown-item > a{
+    flex: 0 1 calc(100% - 50px);
+}
+.dropdown-menu .dropdown-item .deleteBtn{
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    color: red;
+    flex: 0 1 50px;
+    display:flex;
+    align-items:center;
+    justify-content: center;
 }
 
 .dropdown-menu .dropdown-item + .dropdown-item {

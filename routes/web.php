@@ -191,6 +191,8 @@ Route::group([
         ->name('channelNotificationViewed');
     Route::post('clear-notifications', [NotificationController::class, 'clearNotifications'])
         ->name('clearNotifications');
+    Route::post('delete-notification', [NotificationController::class, 'deleteNotification'])
+        ->name('deleteNotification');
 
 
     // Friend Request routes
