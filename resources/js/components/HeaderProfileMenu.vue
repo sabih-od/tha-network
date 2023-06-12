@@ -71,7 +71,7 @@ export default {
             this.$store.commit('Misc/setMyFriendsFlag', false);
             this.$store.commit('Misc/setAllUsersFlag', false);
             $([document.documentElement, document.body]).animate({
-                scrollTop: $("#ref_post_list_item0").offset().top - 400
+                scrollTop: $("#ref_post_list_item0").offset().top
             }, 1000);
         },
         blockedUsers() {
@@ -81,7 +81,7 @@ export default {
             this.$store.commit('Misc/setAllUsersFlag', false);
             if (typeof $("#ref_post_list_item0").offset() !== 'undefined') {
                 $([document.documentElement, document.body]).animate({
-                    scrollTop: $("#ref_post_list_item0").offset().top - 400
+                    scrollTop: $("#ref_post_list_item0").offset().top
                 }, 1000);
             }
         },
@@ -92,7 +92,7 @@ export default {
             this.$store.commit('Misc/setMyFriendsFlag', false);
             if (typeof $("#ref_post_list_item0").offset() !== 'undefined') {
                 $([document.documentElement, document.body]).animate({
-                    scrollTop: $("#ref_post_list_item0").offset().top - 400
+                    scrollTop: $("#ref_post_list_item0").offset().top
                 }, 1000);
             }
         },
