@@ -332,7 +332,8 @@ function payment_not_made() {
     $users = get_eloquent_users();
     foreach ($users as $user) {
         try {
-            if(!has_made_monthly_payment($user->id)) {
+//            if(!has_made_monthly_payment($user->id)) {
+            if(!has_made_monthly_payment($user->id) || $user->payment_retries > 0) {
                 $string = "Hi, we have not received your monthly membership payment.\r\n
             Update your payment information before the 7th of the month.\r\n
             If you do not update your payment by the 7th at 11:59 pm central time your membership will be suspended until a payment is made and you will not receive referral payments for this month.\r\n

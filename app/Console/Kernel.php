@@ -20,7 +20,7 @@ class Kernel extends ConsoleKernel
 //        foreach ($dates as $date) {
 //            $schedule->call(function () {payment_not_made();})->monthlyOn($date, '00:00');
 //        }
-        $schedule->call(function () {payment_not_made();})->daily();
+        $schedule->call(function () {payment_not_made();})->dailyAt('00:30');
         $schedule->call(function () {commission_distribution();})->everyThirtyMinutes();
 //        $schedule->call(function () {close_accounts();})->monthlyOn(16, '00:00');
         $dates = [15, 16, 17, 18, 19, 20];
