@@ -332,7 +332,8 @@ function payment_not_made() {
     $users = get_eloquent_users();
     foreach ($users as $user) {
         try {
-            if(!has_made_monthly_payment($user->id)) {
+//            if(!has_made_monthly_payment($user->id)) {
+            if(!has_made_monthly_payment($user->id) || $user->payment_retries > 0) {
                 $string = "Hi, we have not received your monthly membership payment.\r\n
             Update your payment information before the 7th of the month.\r\n
             If you do not update your payment by the 7th at 11:59 pm central time your membership will be suspended until a payment is made and you will not receive referral payments for this month.\r\n
@@ -810,5 +811,78 @@ function toggle_user_subscription ($id = null, $pause = true, $resume = false) {
     } catch(\Exception $e) {
         Log::error('toggle_user_subscription ' . $e->getMessage());
         return false;
+    }
+}
+
+function cancel_user_subscription ($id = null) {
+    $user = get_eloquent_user($id);
+
+    if (!$user->stripe_checkout_session_id) {
+        Log::info('cancel_user_subscription: stripe_checkout_session_id not found');
+        return false;
+    }
+
+    $stripe = new \Stripe\StripeClient(
+        env('STRIPE_SECRET_KEY')
+    );
+
+    try {
+        $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
+
+        if ($subscription->status == 'canceled') {
+            return true;
+        }
+
+        $subscription->cancel();
+
+        Log::info('cancel_user_subscription: end');
+        return true;
+    } catch(\Exception $e) {
+        Log::error('cancel_user_subscription ' . $e->getMessage());
+        return false;
+    }
+}
+
+function smart_retries () {
+    $users = get_eloquent_users();
+
+    foreach ($users as $user) {
+        if (!is_null($user->closed_on)) {
+            continue;
+        }
+
+        if (is_null($user->stripe_checkout_session_id)) {
+            continue;
+        }
+
+        try {
+            $stripe = new \Stripe\StripeClient(
+                env('STRIPE_SECRET_KEY')
+            );
+
+            $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
+            $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
+
+            if ($latest_invoice->status == "open") {
+                $latest_invoice->pay();
+
+                $payment_retries = $user->payment_retries;
+                if ($latest_invoice->status == "paid") {
+                    $user->payment_retries = 0;
+                } else if ($latest_invoice->status == "open") {
+                    $user->payment_retries = $payment_retries + 1;
+                }
+                $user->save();
+
+                if ($user->payment_retries == 3) {
+                    cancel_user_subscription($user->id);
+                }
+            }
+
+        } catch(\Exception $e) {
+            return false;
+        }
+
+        return ($latest_invoice->status == "paid");
     }
 }
