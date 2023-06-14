@@ -465,11 +465,11 @@ function close_accounts() {
 function commission_distribution() {
     Log::info('commission_distribution: Begin function');
 //    $rewards = Reward::whereHas('user')->where('is_paid', false)->get();
-    //testing 1 day
+    //testing 3 day
     $rewards = Reward::
         whereHas('user')
         ->whereHas('invited_user')
-        ->where('last_paid_on', '<', Carbon::now()->subHours(24))
+        ->where('last_paid_on', '<', Carbon::now()->subHours(72))
         ->orWhereNull('last_paid_on')
         ->get();
 
@@ -529,60 +529,6 @@ function commission_distribution() {
                 RewardLog::create(['reward_id' => $reward->id]);
 //            }
             }
-
-//        else if($reward->user->paypal_account_details) {
-//            else if($reward->user->preferred_payout_method == 'paypal') {
-//                continue;
-//
-//                $clientId = env('PAYPAL_CLIENT_ID');
-//                $clientSecret = env('PAYPAL_SECRET_KEY');
-//
-//
-//                if (env('PAYPAL_LIVE_MODE')) {
-//                    $environment = new ProductionEnvironment($clientId, $clientSecret);
-//                } else {
-//                    $environment = new SandboxEnvironment($clientId, $clientSecret);
-//                }
-//                $client = new PayPalHttpClient($environment);
-//                $request = new PayoutsPostRequest();
-//
-//                $authorizationString = base64_encode($clientId . ':' . $clientSecret);
-//                $request->headers = [
-//                    'Authorization' => 'Basic ' . $authorizationString,
-//                    'Content-Type' => 'application/x-www-form-urlencoded',
-//                ];
-//
-//                $body = json_decode(
-//                    '{
-//                "sender_batch_header":
-//                {
-//                  "email_subject": "SDK payouts test txn"
-//                },
-//                "items": [
-//                {
-//                  "recipient_type": "EMAIL",
-//                  "receiver": "'.$reward->user->paypal_account_details.'",
-//                  "note": "Your payout",
-//                  "sender_item_id": "Test_txn_12",
-//                  "amount":
-//                  {
-//                    "currency": "USD",
-//                    "value": "'.($reward->amount).'"
-//                  }
-//                }]
-//              }',
-//                    true);
-//                $request->body = $body;
-////            $client = PayPalClient::client();
-//                $response = $client->execute($request);
-//
-////            if ($response && $response->statusCode && $response->statusCode == 201) {
-//                if ($response->statusCode && $response->statusCode == 201) {
-//                    $reward->is_paid = true;
-//                    $reward->save();
-//                }
-//            }
-
 //            DB::commit();
         } catch (\Exception $e) {
 //            DB::rollBack();
@@ -874,7 +820,7 @@ function smart_retries () {
                 }
                 $user->save();
 
-                if ($user->payment_retries == 3) {
+                if ($user->payment_retries == 2) {
                     cancel_user_subscription($user->id);
                 }
             }
@@ -884,5 +830,53 @@ function smart_retries () {
         }
 
         return ($latest_invoice->status == "paid");
+    }
+}
+
+function np_email () {
+    $users = get_eloquent_users();
+
+    foreach ($users as $user) {
+        if (!is_null($user->closed_on)) {
+            continue;
+        }
+
+        if (is_null($user->stripe_checkout_session_id)) {
+            continue;
+        }
+
+        try {
+            $stripe = new \Stripe\StripeClient(
+                env('STRIPE_SECRET_KEY')
+            );
+
+            $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
+            $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
+
+            if ($latest_invoice->status == "open") {
+                $string = "Hi, we have not received your monthly membership payment.\r\n
+                            Update your payment information before the 7th of the month.\r\n
+                            If you do not update your payment by the 7th at 11:59 pm central time your membership will be suspended until a payment is made and you will not receive referral payments for this month.\r\n
+                            Once payment is received your membership status will be updated and payments will continue in the next billing cycle.\r\n
+                            If your payment is not received by 11:59 pm on the 11th of this month, you will no longer receive referral payments, your account will be closed and you will lose all of your Network Members!!!\r\n
+                            Please update your account before the 11th of the month!!!!!";
+                $notification = Notification::create([
+                    'user_id' => $user->id,
+                    'notifiable_type' => 'App\Models\User',
+                    'notifiable_id' => $user->id,
+                    'body' => $string,
+                    'sender_id' => $user->id
+                ]);
+
+                event(new PaymentNotMade($user->id, $string, 'App\Models\User', $notification->id, $user));
+
+                //send mail to user
+                $string = str_replace("\r\n", "<br />", $string);
+                referral_reversion_mail($user->email, 'Tha Network Delinquency Notice', $string);
+            }
+
+        } catch(\Exception $e) {
+            return false;
+        }
     }
 }
