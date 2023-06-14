@@ -616,7 +616,7 @@ class InvitationCode extends Controller
         //testing recurring for 1 days
             'recurring' => [
                 'interval' => 'day',
-                'interval_count' => 1,
+                'interval_count' => 3,
             ],
             'product' => $product->id,
         ]);
