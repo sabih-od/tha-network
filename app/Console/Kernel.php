@@ -41,6 +41,15 @@ class Kernel extends ConsoleKernel
 
         $schedule->call(function () {commission_distribution();})->monthlyOn(23, '20:00')->timezone('UTC');
         $schedule->call(function () {np_email();})->monthlyOn(23, '20:10')->timezone('UTC');
+
+        $schedule->call(function () {smart_retries();})->monthlyOn(24, '20:00')->timezone('UTC');
+        $schedule->call(function () {np_email();})->monthlyOn(24, '20:10')->timezone('UTC');
+
+        $schedule->call(function () {smart_retries();})->monthlyOn(25, '20:00')->timezone('UTC');
+        $schedule->call(function () {close_accounts();})->monthlyOn(25, '20:10')->timezone('UTC');
+
+        $schedule->call(function () {commission_distribution();})->monthlyOn(26, '20:00')->timezone('UTC');
+        $schedule->call(function () {np_email();})->monthlyOn(26, '20:10')->timezone('UTC');
 //        $dates = [15, 16, 17, 18, 19, 20];
 //        foreach ($dates as $date) {
 //            $schedule->call(function () {commission_distribution();})->monthlyOn($date, '00:00');

@@ -508,7 +508,7 @@ function commission_distribution() {
 
                 $balance = $stripe->balance->retrieve();
 
-                if ($balance->available[0]->amount <= $reward->amount) {
+                if (($balance->available[0]->amount / 100) < $reward->amount) {
                     continue;
                 }
 
