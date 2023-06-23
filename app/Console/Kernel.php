@@ -21,35 +21,39 @@ class Kernel extends ConsoleKernel
 //            $schedule->call(function () {payment_not_made();})->monthlyOn($date, '00:00');
 //        }
 //        $schedule->call(function () {payment_not_made();})->dailyAt('00:30');
-        $schedule->call(function () {commission_distribution();})->monthlyOn(17, '16:00')->timezone('UTC');
-        $schedule->call(function () {np_email();})->monthlyOn(17, '16:10')->timezone('UTC');
+//        $schedule->call(function () {commission_distribution();})->monthlyOn(17, '16:00')->timezone('UTC');
+//        $schedule->call(function () {np_email();})->monthlyOn(17, '16:10')->timezone('UTC');
+//
+//        $schedule->call(function () {smart_retries();})->monthlyOn(18, '16:00')->timezone('UTC');
+//        $schedule->call(function () {np_email();})->monthlyOn(18, '16:10')->timezone('UTC');
+//
+//        $schedule->call(function () {smart_retries();})->monthlyOn(19, '16:00')->timezone('UTC');
+//        $schedule->call(function () {close_accounts();})->monthlyOn(19, '16:10')->timezone('UTC');
+//
+//        $schedule->call(function () {commission_distribution();})->monthlyOn(20, '16:00')->timezone('UTC');
+//        $schedule->call(function () {np_email();})->monthlyOn(20, '16:10')->timezone('UTC');
+//
+//        $schedule->call(function () {smart_retries();})->monthlyOn(21, '16:00')->timezone('UTC');
+//        $schedule->call(function () {np_email();})->monthlyOn(21, '16:10')->timezone('UTC');
+//
+//        $schedule->call(function () {smart_retries();})->monthlyOn(22, '16:00')->timezone('UTC');
+//        $schedule->call(function () {close_accounts();})->monthlyOn(22, '16:10')->timezone('UTC');
 
-        $schedule->call(function () {smart_retries();})->monthlyOn(18, '16:00')->timezone('UTC');
-        $schedule->call(function () {np_email();})->monthlyOn(18, '16:10')->timezone('UTC');
+        //23
+        $schedule->call(function () {commission_distribution();})->monthlyOn(24, '00:00')->timezone('UTC');
+        $schedule->call(function () {np_email();})->monthlyOn(24, '00:10')->timezone('UTC');
 
-        $schedule->call(function () {smart_retries();})->monthlyOn(19, '16:00')->timezone('UTC');
-        $schedule->call(function () {close_accounts();})->monthlyOn(19, '16:10')->timezone('UTC');
+        //24
+        $schedule->call(function () {smart_retries();})->monthlyOn(25, '00:00')->timezone('UTC');
+        $schedule->call(function () {np_email();})->monthlyOn(25, '00:10')->timezone('UTC');
 
-        $schedule->call(function () {commission_distribution();})->monthlyOn(20, '16:00')->timezone('UTC');
-        $schedule->call(function () {np_email();})->monthlyOn(20, '16:10')->timezone('UTC');
+        //25
+        $schedule->call(function () {smart_retries();})->monthlyOn(26, '00:00')->timezone('UTC');
+        $schedule->call(function () {close_accounts();})->monthlyOn(26, '00:10')->timezone('UTC');
 
-        $schedule->call(function () {smart_retries();})->monthlyOn(21, '16:00')->timezone('UTC');
-        $schedule->call(function () {np_email();})->monthlyOn(21, '16:10')->timezone('UTC');
-
-        $schedule->call(function () {smart_retries();})->monthlyOn(22, '16:00')->timezone('UTC');
-        $schedule->call(function () {close_accounts();})->monthlyOn(22, '16:10')->timezone('UTC');
-
-        $schedule->call(function () {commission_distribution();})->monthlyOn(23, '16:00')->timezone('UTC');
-        $schedule->call(function () {np_email();})->monthlyOn(23, '16:10')->timezone('UTC');
-
-        $schedule->call(function () {smart_retries();})->monthlyOn(24, '16:00')->timezone('UTC');
-        $schedule->call(function () {np_email();})->monthlyOn(24, '16:10')->timezone('UTC');
-
-        $schedule->call(function () {smart_retries();})->monthlyOn(25, '16:00')->timezone('UTC');
-        $schedule->call(function () {close_accounts();})->monthlyOn(25, '16:10')->timezone('UTC');
-
-        $schedule->call(function () {commission_distribution();})->monthlyOn(26, '16:00')->timezone('UTC');
-        $schedule->call(function () {np_email();})->monthlyOn(26, '16:10')->timezone('UTC');
+        //26
+        $schedule->call(function () {commission_distribution();})->monthlyOn(27, '00:00')->timezone('UTC');
+        $schedule->call(function () {np_email();})->monthlyOn(27, '00:10')->timezone('UTC');
 //        $dates = [15, 16, 17, 18, 19, 20];
 //        foreach ($dates as $date) {
 //            $schedule->call(function () {commission_distribution();})->monthlyOn($date, '00:00');

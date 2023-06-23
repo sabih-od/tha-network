@@ -469,7 +469,7 @@ function commission_distribution() {
     $rewards = Reward::
         whereHas('user')
         ->whereHas('invited_user')
-        ->where('last_paid_on', '<', Carbon::now()->subHours(72))
+        ->where('last_paid_on', '<', Carbon::now()->subHours(60))
         ->orWhereNull('last_paid_on')
         ->get();
 
