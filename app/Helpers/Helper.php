@@ -502,32 +502,36 @@ function commission_distribution() {
 //        if($reward->user->stripe_account_id) {
 //        if($reward->user->preferred_payout_method == 'stripe' || $reward->user->preferred_payout_method == '') {
             if($reward->user->preferred_payout_method == 'stripe') {
-                $stripe = new \Stripe\StripeClient(
-                    env('STRIPE_SECRET_KEY')
-                );
+                $reward_log_check = RewardLog::where('reward_id', $reward->id)->whereDate('created_at', Carbon::today())->get();
 
-                $balance = $stripe->balance->retrieve();
+                if (count($reward_log_check) == 0) {
+                    $stripe = new \Stripe\StripeClient(
+                        env('STRIPE_SECRET_KEY')
+                    );
 
-                if (($balance->available[0]->amount / 100) < $reward->amount) {
-                    continue;
-                }
+                    $balance = $stripe->balance->retrieve();
 
-                Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-                Log::info('commission_distribution | transfer: stripe acct id: '.$reward->user->stripe_account_id.' user: '.$reward->user->id.', amount: ' . $reward->amount);
-                $transfer = \Stripe\Transfer::create([
-                    "amount" => $reward->amount * 100,
-                    "currency" => "usd",
-                    "destination" => $reward->user->stripe_account_id,
-                ]);
+                    if (($balance->available[0]->amount / 100) < $reward->amount) {
+                        continue;
+                    }
 
-//            if ($transfer) {
-                $reward->is_paid = true;
-                $reward->last_paid_on = Carbon::now();
-                $reward->save();
+                    Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+                    Log::info('commission_distribution | transfer: stripe acct id: '.$reward->user->stripe_account_id.' user: '.$reward->user->id.', amount: ' . $reward->amount);
+                    $transfer = \Stripe\Transfer::create([
+                        "amount" => $reward->amount * 100,
+                        "currency" => "usd",
+                        "destination" => $reward->user->stripe_account_id,
+                    ]);
 
-                //create reward log
-                RewardLog::create(['reward_id' => $reward->id]);
+//            if () {
+                    $reward->is_paid = true;
+                    $reward->last_paid_on = Carbon::now();
+                    $reward->save();
+
+                    //create reward log
+                    RewardLog::create(['reward_id' => $reward->id]);
 //            }
+                }
             }
 //            DB::commit();
         } catch (\Exception $e) {
@@ -834,6 +838,7 @@ function smart_retries () {
 }
 
 function np_email () {
+    Log::info('np_email: Begin function');
     $users = get_eloquent_users();
 
     foreach ($users as $user) {
@@ -879,4 +884,5 @@ function np_email () {
             return false;
         }
     }
+    Log::info('np_email: Exit Successfully');
 }
