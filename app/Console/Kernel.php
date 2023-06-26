@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -54,6 +55,18 @@ class Kernel extends ConsoleKernel
         //26
         $schedule->call(function () {commission_distribution();})->monthlyOn(27, '00:00')->timezone('UTC')->withoutOverlapping();
         $schedule->call(function () {np_email();})->monthlyOn(27, '00:10')->timezone('UTC')->withoutOverlapping();
+
+        //27
+        $schedule->call(function () {smart_retries();})->monthlyOn(28, '00:00')->timezone('UTC')->withoutOverlapping();
+        $schedule->call(function () {np_email();})->monthlyOn(28, '00:10')->timezone('UTC')->withoutOverlapping();
+
+        //29
+        $schedule->call(function () {smart_retries();})->monthlyOn(30, '00:00')->timezone('UTC')->withoutOverlapping();
+        $schedule->call(function () {close_accounts();})->monthlyOn(30, '00:10')->timezone('UTC')->withoutOverlapping();
+
+        $schedule->call(function () {
+            Log::info('DUPLICATE_CHECK');
+        })->everyTenMinutes()->timezone('UTC');
 //        $dates = [15, 16, 17, 18, 19, 20];
 //        foreach ($dates as $date) {
 //            $schedule->call(function () {commission_distribution();})->monthlyOn($date, '00:00');
