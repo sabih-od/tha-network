@@ -66,7 +66,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->call(function () {
             Log::info('DUPLICATE_CHECK');
-        })->everyTenMinutes()->timezone('UTC');
+        })->everyTenMinutes()->timezone('UTC')->name('DUPLICATE_CHECK')->withoutOverlapping();
 //        $dates = [15, 16, 17, 18, 19, 20];
 //        foreach ($dates as $date) {
 //            $schedule->call(function () {commission_distribution();})->monthlyOn($date, '00:00');
