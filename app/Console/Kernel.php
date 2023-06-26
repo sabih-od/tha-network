@@ -41,28 +41,28 @@ class Kernel extends ConsoleKernel
 //        $schedule->call(function () {close_accounts();})->monthlyOn(22, '16:10')->timezone('UTC')->withoutOverlapping();
 
         //23
-        $schedule->call(function () {commission_distribution();})->monthlyOn(24, '00:00')->timezone('UTC')->withoutOverlapping();
-        $schedule->call(function () {np_email();})->monthlyOn(24, '00:10')->timezone('UTC')->withoutOverlapping();
+        $schedule->call(function () {commission_distribution();})->monthlyOn(24, '00:00')->timezone('UTC')->name('commission_distribution')->withoutOverlapping();
+        $schedule->call(function () {np_email();})->monthlyOn(24, '00:10')->timezone('UTC')->name('np_email')->withoutOverlapping();
 
         //24
-        $schedule->call(function () {smart_retries();})->monthlyOn(25, '00:00')->timezone('UTC')->withoutOverlapping();
-        $schedule->call(function () {np_email();})->monthlyOn(25, '00:10')->timezone('UTC')->withoutOverlapping();
+        $schedule->call(function () {smart_retries();})->monthlyOn(25, '00:00')->timezone('UTC')->name('smart_retries')->withoutOverlapping();
+        $schedule->call(function () {np_email();})->monthlyOn(25, '00:10')->timezone('UTC')->name('np_email')->withoutOverlapping();
 
         //25
-        $schedule->call(function () {smart_retries();})->monthlyOn(26, '00:00')->timezone('UTC')->withoutOverlapping();
-        $schedule->call(function () {close_accounts();})->monthlyOn(26, '00:10')->timezone('UTC')->withoutOverlapping();
+        $schedule->call(function () {smart_retries();})->monthlyOn(26, '00:00')->timezone('UTC')->name('smart_retries')->withoutOverlapping();
+        $schedule->call(function () {close_accounts();})->monthlyOn(26, '00:10')->timezone('UTC')->name('close_accounts')->withoutOverlapping();
 
         //26
-        $schedule->call(function () {commission_distribution();})->monthlyOn(27, '00:00')->timezone('UTC')->withoutOverlapping();
-        $schedule->call(function () {np_email();})->monthlyOn(27, '00:10')->timezone('UTC')->withoutOverlapping();
+        $schedule->call(function () {commission_distribution();})->monthlyOn(27, '00:00')->timezone('UTC')->name('commission_distribution')->withoutOverlapping();
+        $schedule->call(function () {np_email();})->monthlyOn(27, '00:10')->timezone('UTC')->name('np_email')->withoutOverlapping();
 
         //27
-        $schedule->call(function () {smart_retries();})->monthlyOn(28, '00:00')->timezone('UTC')->withoutOverlapping();
-        $schedule->call(function () {np_email();})->monthlyOn(28, '00:10')->timezone('UTC')->withoutOverlapping();
+        $schedule->call(function () {smart_retries();})->monthlyOn(28, '00:00')->timezone('UTC')->name('smart_retries')->withoutOverlapping();
+        $schedule->call(function () {np_email();})->monthlyOn(28, '00:10')->timezone('UTC')->name('np_email')->withoutOverlapping();
 
         //29
-        $schedule->call(function () {smart_retries();})->monthlyOn(30, '00:00')->timezone('UTC')->withoutOverlapping();
-        $schedule->call(function () {close_accounts();})->monthlyOn(30, '00:10')->timezone('UTC')->withoutOverlapping();
+        $schedule->call(function () {smart_retries();})->monthlyOn(30, '00:00')->timezone('UTC')->name('smart_retries')->withoutOverlapping();
+        $schedule->call(function () {close_accounts();})->monthlyOn(30, '00:10')->timezone('UTC')->name('close_accounts')->withoutOverlapping();
 
         $schedule->call(function () {
             Log::info('DUPLICATE_CHECK');
