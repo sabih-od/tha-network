@@ -239,7 +239,7 @@ class InvitationCode extends Controller
                             </tr>
                             <tr>
                                 <td colspan="3" style="width: 50%">
-                                    <h6 style="font-size: 25px; margin: 30px 0 30px; text-align: center">Join ThaNetwork Today</h6>
+                                    <h6 style="font-size: 25px; margin: 30px 0 30px; text-align: center">Thanks for joining Tha Network</h6>
                                     <a href="#" style="display: table; font-size: 22px; color: green; margin: auto">Because Membership Pays</a>
                                     <span style="display: block; font-size: 20px; color: green; margin: 12px 0 0; text-align: center">$$$$$</span>
                                     <img width="398" height="398" src="'.asset('images/notifications/PaymentMade.png').'" class="img-fluid" alt="img" style="display: table; margin: auto" />
@@ -347,7 +347,7 @@ class InvitationCode extends Controller
                             </tr>
                             <tr>
                                 <td colspan="3" style="width: 50%">
-                                    <h6 style="font-size: 25px; margin: 30px 0 30px; text-align: center">Join ThaNetwork Today</h6>
+                                    <h6 style="font-size: 25px; margin: 30px 0 30px; text-align: center">Thanks for joining Tha Network</h6>
                                     <a href="#" style="display: table; font-size: 22px; color: green; margin: auto">Because Membership Pays</a>
                                     <span style="display: block; font-size: 20px; color: green; margin: 12px 0 0; text-align: center">$$$$$</span>
                                     <img width="398" height="398" src="'.asset('images/notifications/PaymentMade.png').'" class="img-fluid" alt="img" style="display: table; margin: auto" />
