@@ -552,6 +552,10 @@ class InvitationCode extends Controller
             //subscribe
             $subscription = $this->createStripeSubscription($request, $charge_date, $isMonthsFirst, $token_id);
 
+            if (!$subscription) {
+                return Inertia::render('StripePayment', ['error' => 'Invalid/Inactive Card provided']);
+            }
+
             //put checkout session id in session
             session()->put('stripe_checkout_session_id', $subscription->id);
 
@@ -636,6 +640,16 @@ class InvitationCode extends Controller
                 'cvc' => $request->cvc,
             ],
         ]);
+
+        // Retrieve payment method details
+        $payment_method = $stripe->paymentMethods->retrieve($payment_method->id);
+
+        // Check if the card is active
+        if ($payment_method->status !== 'active') {
+            // Return an error or handle the invalid card scenario as desired
+//            return 'Invalid card. Please provide a valid payment method.';
+            return false;
+        }
 
         //attach payment method to customer
         $payment_method = $stripe->paymentMethods->attach(
