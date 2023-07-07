@@ -489,14 +489,22 @@ function commission_distribution() {
                 continue;
             }
 
-            //if user's account is closed or permanently deleted or invited_user account is closed
-            if ($reward->user->closed_on || $reward->invited_user->closed_on) {
-                continue;
-            }
-
             //if invited_user monthly subscription not paid
             if (!has_made_monthly_payment($reward->invited_user->id)) {
                 continue;
+            }
+
+            //if user's account is closed or permanently deleted
+            if ($reward->user->closed_on) {
+                continue;
+            }
+
+            //if invited_user account is closed
+            if ($reward->invited_user->closed_on) {
+                //skip if reward from first payment has been rewarded
+                if ($reward->is_paid == 1) {
+                    continue;
+                }
             }
 
 //        if($reward->user->stripe_account_id) {
