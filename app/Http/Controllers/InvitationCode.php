@@ -641,15 +641,15 @@ class InvitationCode extends Controller
             ],
         ]);
 
-        // Retrieve payment method details
-        $payment_method = $stripe->paymentMethods->retrieve($payment_method->id);
-
-        // Check if the card is active
-        if ($payment_method->status !== 'active') {
-            // Return an error or handle the invalid card scenario as desired
-//            return 'Invalid card. Please provide a valid payment method.';
-            return false;
-        }
+//        // Retrieve payment method details
+//        $payment_method = $stripe->paymentMethods->retrieve($payment_method->id);
+//
+//        // Check if the card is active
+//        if ($payment_method->status !== 'active') {
+//            // Return an error or handle the invalid card scenario as desired
+////            return 'Invalid card. Please provide a valid payment method.';
+//            return false;
+//        }
 
         //attach payment method to customer
         $payment_method = $stripe->paymentMethods->attach(

@@ -258,7 +258,12 @@ export default {
                 },
                 onFinish: () => {
                     this.form_loading = false;
-                }
+                },
+                onError: (e) => {
+                    this.form_loading = false;
+                    (useToast()).clear();
+                    (useToast()).error(e);
+                },
             })
         },
         async stripeCharge() {
