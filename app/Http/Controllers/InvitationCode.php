@@ -294,6 +294,7 @@ class InvitationCode extends Controller
 
     public function invitationMailCode($to, $subject, $username, $name, $role_id)
     {
+        Log::info('invitationMailCode function start to: '.$to.', subject: '.$subject.', username: '.$username);
         $invitation_code = Auth::user()->invitation_code ? '<span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code: '.Auth::user()->invitation_code.'</span>' : '';
 //        $from = 'no-reply@tha-network.com';
         $from = 'support@thanetwork.org';
