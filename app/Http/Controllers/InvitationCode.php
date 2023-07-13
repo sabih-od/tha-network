@@ -294,6 +294,7 @@ class InvitationCode extends Controller
 
     public function invitationMailCode($to, $subject, $username, $name, $role_id)
     {
+        Log::info('invitationMailCode function start to: '.$to.', subject: '.$subject.', username: '.$username);
         $invitation_code = Auth::user()->invitation_code ? '<span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code: '.Auth::user()->invitation_code.'</span>' : '';
 //        $from = 'no-reply@tha-network.com';
         $from = 'support@thanetwork.org';
@@ -641,15 +642,15 @@ class InvitationCode extends Controller
             ],
         ]);
 
-//        // Retrieve payment method details
-//        $payment_method = $stripe->paymentMethods->retrieve($payment_method->id);
-//
-//        // Check if the card is active
-//        if ($payment_method->status !== 'active') {
-//            // Return an error or handle the invalid card scenario as desired
-////            return 'Invalid card. Please provide a valid payment method.';
-//            return false;
-//        }
+        // Retrieve payment method details
+        $payment_method = $stripe->paymentMethods->retrieve($payment_method->id);
+
+        // Check if the card is active
+        if ($payment_method->status !== 'active') {
+            // Return an error or handle the invalid card scenario as desired
+//            return 'Invalid card. Please provide a valid payment method.';
+            return false;
+        }
 
         //attach payment method to customer
         $payment_method = $stripe->paymentMethods->attach(
