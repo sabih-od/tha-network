@@ -396,6 +396,7 @@ class InvitationCode extends Controller
         // } else {
         //     return false;
         // }
+        Log::info('invitationMailCode function start to: '.$to.', subject: '.$subject.', username: '.$username);
     }
 
     public function sendInvitation(Request $request) {
