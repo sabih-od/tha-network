@@ -382,6 +382,7 @@ function close_accounts() {
     Log::info('close_account: Function Start');
     $users = get_eloquent_users();
     foreach ($users as $user) {
+        Log::info('user: ' . ($user->username ?? ''));
         try {
 //            DB::beginTransaction();
 
@@ -392,6 +393,7 @@ function close_accounts() {
             if(!has_made_monthly_payment($user->id)) {
                 //close account
 //            if(is_null($user->suspended_on)) {
+                Log::info('closing user');
                 $user->closed_on = Carbon::today();
                 $user->save();
 //            }
@@ -458,8 +460,9 @@ function close_accounts() {
 //            DB::rollBack();
             Log::error('close_account: catch ' . $e->getMessage());
         }
-        Log::info('close_account: Exit Successfully');
+        Log::info('end user: ' . ($user->username ?? ''));
     }
+    Log::info('close_account: Exit Successfully');
 }
 
 function commission_distribution() {
@@ -802,9 +805,11 @@ function cancel_user_subscription ($id = null) {
 }
 
 function smart_retries () {
+    Log::info('smart_retries: Begin function');
     $users = get_eloquent_users();
 
     foreach ($users as $user) {
+        Log::info('user: ' . ($user->username ?? ''));
         if (!is_null($user->closed_on)) {
             continue;
         }
@@ -833,6 +838,7 @@ function smart_retries () {
                 $user->save();
 
                 if ($user->payment_retries == 2) {
+                    Log::info('Cancelling user subscription');
                     cancel_user_subscription($user->id);
                 }
             }
@@ -841,8 +847,10 @@ function smart_retries () {
             return false;
         }
 
-        return ($latest_invoice->status == "paid");
+        Log::info('end user: ' . ($user->username ?? ''));
+//        return ($latest_invoice->status == "paid");
     }
+    return true;
 }
 
 function np_email () {
