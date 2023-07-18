@@ -249,7 +249,6 @@ export default {
                 exp_year: this.exp_year,
                 cvc: this.cvc
             }, {
-                replace: true,
                 preserveState: true,
                 preserveScroll: true,
                 onSuccess: (res) => {
@@ -261,8 +260,14 @@ export default {
                 },
                 onError: (e) => {
                     this.form_loading = false;
-                    (useToast()).clear();
-                    (useToast()).error(e);
+
+                    if (e && e.error) {
+                        (useToast()).clear();
+                        (useToast()).error(e.error);
+                    } else if (e != '') {
+                        (useToast()).clear();
+                        (useToast()).error(e);
+                    }
                 },
             })
         },
@@ -291,7 +296,6 @@ export default {
                         exp_year: this.exp_year,
                         cvc: this.cvc
                     }, {
-                        replace: true,
                         preserveState: true,
                         preserveScroll: true,
                         onSuccess: (res) => {
@@ -303,13 +307,17 @@ export default {
                         },
                         onError: (e) => {
                             this.form_loading = false;
-                            (useToast()).clear();
-                            (useToast()).error(e);
+
+                            if (e && e.error) {
+                                (useToast()).clear();
+                                (useToast()).error(e.error);
+                            } else if (e != '') {
+                                (useToast()).clear();
+                                (useToast()).error(e);
+                            }
                         },
                     })
                 }
-            }).catch(e => {
-                (useToast()).error(e);
             });
         },
         showTerms() {

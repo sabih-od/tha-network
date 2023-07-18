@@ -554,8 +554,9 @@ class InvitationCode extends Controller
             //subscribe
             $subscription = $this->createStripeSubscription($request, $charge_date, $isMonthsFirst, $token_id);
 
-            if (!$subscription) {
-                return Inertia::render('StripePayment', ['error' => 'Invalid/Inactive Card provided']);
+            if ($subscription == false) {
+                return redirect()->back()->withErrors(['error' => 'Invalid/Inactive Card provided']);
+//                return Inertia::render('StripePayment', ['error' => 'Invalid/Inactive Card provided']);
             }
 
             //put checkout session id in session
@@ -647,7 +648,8 @@ class InvitationCode extends Controller
         $payment_method = $stripe->paymentMethods->retrieve($payment_method->id);
 
         // Check if the card is active
-        if ($payment_method->status !== 'active') {
+        $checks = $payment_method->card->checks;
+        if ($checks->cvc_check == 'fail' || $checks->address_line1_check == 'fail') {
             // Return an error or handle the invalid card scenario as desired
 //            return 'Invalid card. Please provide a valid payment method.';
             return false;
