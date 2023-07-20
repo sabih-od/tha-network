@@ -73,7 +73,9 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
     Route::delete('users/destroy/{id}', 'UserController@destroy')->name('admin.user.delete');
     Route::get('users/suspend/{id}', 'UserController@suspend')->name('admin.user.suspend');
     Route::get('users/close/{id}', 'UserController@close')->name('admin.user.close');
+    Route::get('users/detail/{id}', 'UserController@detail')->name('admin.user.detail');
     Route::get('user-posts/{id}', 'UserController@userPosts')->name('admin.user.userPosts');
+    Route::get('user-comments/{id}', 'UserController@userComments')->name('admin.user.userComments');
     Route::get('user-rewards/{id}', 'UserController@userRewards')->name('admin.user.userRewards');
     Route::delete('user-posts/destroy/{id}', 'UserController@postDestroy');
 

@@ -147,4 +147,9 @@ class User extends Authenticatable implements HasMedia
             ->where('status', true)
             ->whereDate('updated_at', Carbon::today());
     }
+
+    public function rewards()
+    {
+        return $this->hasMany(Reward::class);
+    }
 }
