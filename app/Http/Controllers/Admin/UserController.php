@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Comment;
 use App\Models\Post;
+use App\Models\Reward;
 use App\Models\RewardLog;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Stripe\Exception\InvalidRequestException;
 
 class UserController extends Controller
 {
@@ -34,7 +37,9 @@ class UserController extends Controller
                     ->addColumn('action', function ($data) {
                         return '<button title="Delete" type="button" name="delete" id="' . $data->id . '" class="btn btn-danger delete btn-sm"><i class="fa fa-trash"></i></button>&nbsp
                                 <a title="Close" type="button" name="close" id="' . $data->id . '" href="'.route('admin.user.close', $data->id).'" class="btn btn-danger btn-sm"><i class="fa fa-ban"></i></a>&nbsp
+                                <a title="Close" type="button" name="detail" id="' . $data->id . '" href="'.route('admin.user.detail', $data->id).'" class="btn btn-info btn-sm"><i class="fa fa-eye"></i></a>&nbsp
                                 <a href="'.route('admin.user.userPosts', $data->id).'" title="User Post" type="button" id="' . $data->id . '" class="btn btn-primary btn-sm">User Posts</a>&nbsp
+                                <a href="'.route('admin.user.userComments', $data->id).'" title="User Post" type="button" id="' . $data->id . '" class="btn btn-primary btn-sm">User Comments</a>&nbsp
                                 <a href="'.route('admin.user.userRewards', $data->id).'" title="Rewards" type="button" id="' . $data->id . '" class="btn btn-primary btn-sm">Rewards</a>&nbsp
                                 <a target="_blank" href="'.route('userProfile', $data->id).'" title="User Post" type="button" id="' . $data->id . '" class="btn btn-primary btn-sm">Profile</a>';
                     })->rawColumns(['profile_picture', 'action'])->make(true);
@@ -142,6 +147,24 @@ class UserController extends Controller
         return view('admin.user.post-list');
     }
 
+    public function userComments($id)
+    {
+        try {
+            if (request()->ajax()) {
+                return datatables()->of(Comment::where('user_id', $id)->orderBy('created_at', 'DESC')->get())
+                    ->addIndexColumn()
+                    ->editColumn('created_at', function($data){
+                        $formatedDate = Carbon::createFromFormat('Y-m-d H:i:s', $data->created_at)->format('m-d-Y');
+                        return $formatedDate;
+                    })
+                    ->rawColumns(['media', 'action'])->make(true);
+            }
+        } catch (\Exception $ex) {
+            return redirect('/')->with('error', $ex->getMessage());
+        }
+        return view('admin.user.comment-list');
+    }
+
     public function userRewards($id)
     {
         try {
@@ -175,5 +198,78 @@ class UserController extends Controller
         $content=Post::find($id);
         $content->delete();
         echo 1;
+    }
+
+    public function detail($id)
+    {
+//        try {
+            $user = User::find($id);
+
+            //referrals
+            $referrals = \App\Models\Reward::whereHas('user')->whereHas('invited_user')->where('user_id', $id)->get();
+
+            //payments
+            $payments = [];
+            $total_payment = 0;
+            if (!is_null($user->stripe_checkout_session_id)) {
+                $stripe = new \Stripe\StripeClient(
+                    env('STRIPE_SECRET_KEY')
+                );
+
+                try {
+                    $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
+                    $invoices = $stripe->invoices->all([
+                        'subscription' => $subscription->id,
+                    ]);
+                    foreach ($invoices as $invoice) {
+                        if (!is_null($invoice->charge)) {
+                            $charge = $stripe->charges->retrieve($invoice->charge);
+                            switch ($charge->status) {
+                                case "succeeded":
+                                    $status = '<span class="badge badge-pill badge-success">Succeeded</span>';
+                                    break;
+                                case "pending":
+                                    $status = '<span class="badge badge-pill badge-warning">Pending</span>';
+                                    break;
+                                case "failed":
+                                    $status = '<span class="badge badge-pill badge-danger">Failed</span>';
+                                    break;
+                                default:
+                                    $status = '';
+                                    break;
+                            }
+
+                            $payments []= [
+                                'amount' => ('$' . $charge->amount / 100) ?? '',
+                                'date' => (Carbon::parse($charge->created)->format('M d, Y.')) ?? '',
+                                'status' =>  $status,
+                            ];
+
+                            $total_payment += ($charge->amount / 100);
+                        }
+                    }
+                } catch (InvalidRequestException $e) {
+                    $subscription = null;
+                }
+
+            } else {
+                $subscription = null;
+            }
+
+            //reward logs
+            $reward_logs = RewardLog::whereHas('reward', function ($q) use ($id) {
+                return $q->whereHas('user')->whereHas('invited_user')->where('user_id', $id);
+            })->orderBy('created_at', 'DESC')->get();
+
+            $total_referral_payment = 0;
+            foreach ($reward_logs as $reward_log) {
+                $total_referral_payment += $reward_log->reward->amount;
+            }
+
+            return view('admin.user.detail', compact('user', 'referrals', 'payments', 'subscription', 'reward_logs', 'total_referral_payment', 'total_payment'));
+//        } catch (\Exception $ex) {
+//            return redirect('/')->with('error', $ex->getMessage());
+//        }
+//        return view('admin.user.post-list');
     }
 }
