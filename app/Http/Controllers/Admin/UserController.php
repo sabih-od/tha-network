@@ -202,7 +202,7 @@ class UserController extends Controller
 
     public function detail($id)
     {
-//        try {
+        try {
             $user = User::find($id);
 
             //referrals
@@ -267,9 +267,9 @@ class UserController extends Controller
             }
 
             return view('admin.user.detail', compact('user', 'referrals', 'payments', 'subscription', 'reward_logs', 'total_referral_payment', 'total_payment'));
-//        } catch (\Exception $ex) {
-//            return redirect('/')->with('error', $ex->getMessage());
-//        }
-//        return view('admin.user.post-list');
+        } catch (\Exception $ex) {
+            return redirect('/')->with('error', $ex->getMessage());
+        }
+        return view('admin.user.post-list');
     }
 }
