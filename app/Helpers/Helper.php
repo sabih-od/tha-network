@@ -494,7 +494,10 @@ function commission_distribution() {
 
             //if invited_user monthly subscription not paid
             if (!has_made_monthly_payment($reward->invited_user->id)) {
-                continue;
+                //skip if reward from first payment has been rewarded
+                if ($reward->is_paid == 1) {
+                    continue;
+                }
             }
 
             //if user's account is closed or permanently deleted
