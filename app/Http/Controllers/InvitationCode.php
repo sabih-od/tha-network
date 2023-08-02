@@ -526,12 +526,11 @@ class InvitationCode extends Controller
                 $token_id = null;
             } else {
                 //charge
-                //testing
-//                $stripe_charge_object = $this->stripeCharge($request, $request->token_id);
-//                if ($stripe_charge_object->status != 'succeeded') {
-//                    return Inertia::render('StripePayment', ['error' => 'Stripe charge: ' . $stripe_charge_object->status]);
-//                }
-//                session()->put('stripe_charge_object', $stripe_charge_object);
+                $stripe_charge_object = $this->stripeCharge($request, $request->token_id);
+                if ($stripe_charge_object->status != 'succeeded') {
+                    return Inertia::render('StripePayment', ['error' => 'Stripe charge: ' . $stripe_charge_object->status]);
+                }
+                session()->put('stripe_charge_object', $stripe_charge_object);
 
                 //compute days till next month
                 $currentDate = Carbon::today(); // get a new instance of the Carbon class representing today's date
@@ -544,9 +543,6 @@ class InvitationCode extends Controller
                     $charge_date = Carbon::today()->copy()->addMonth()->firstOfMonth();
                 }
 
-                //testing date (1 days ahead)
-                $charge_date = Carbon::now()->copy()->addDays(7);
-
                 $isMonthsFirst = false;
                 $token_id = $request->token_id;
             }
@@ -555,6 +551,9 @@ class InvitationCode extends Controller
             $subscription = $this->createStripeSubscription($request, $charge_date, $isMonthsFirst, $token_id);
 
             if ($subscription == false) {
+                if (isset($stripe_charge_object)) {
+                    refund_charge($stripe_charge_object->id);
+                }
                 return redirect()->back()->withErrors(['error' => 'Invalid/Inactive Card provided']);
 //                return Inertia::render('StripePayment', ['error' => 'Invalid/Inactive Card provided']);
             }
@@ -619,12 +618,7 @@ class InvitationCode extends Controller
         $price = $stripe->prices->create([
             'unit_amount' => $this->amount * 100,
             'currency' => 'usd',
-//            'recurring' => ['interval' => 'month'],
-        //testing recurring for 1 days
-            'recurring' => [
-                'interval' => 'day',
-                'interval_count' => 3,
-            ],
+            'recurring' => ['interval' => 'month'],
             'product' => $product->id,
         ]);
 
@@ -651,7 +645,6 @@ class InvitationCode extends Controller
         $checks = $payment_method->card->checks;
         if ($checks->cvc_check == 'fail' || $checks->address_line1_check == 'fail') {
             // Return an error or handle the invalid card scenario as desired
-//            return 'Invalid card. Please provide a valid payment method.';
             return false;
         }
 
@@ -676,10 +669,9 @@ class InvitationCode extends Controller
         //create subscription
         $subscription_array['customer'] = $customer->id;
         $subscription_array['items'] = [['price' => $price->id]];
-        //testing
-//        if (!$isMonthsFirst) {
-//            $subscription_array['trial_end'] = strval($charge_date->timestamp);
-//        }
+        if (!$isMonthsFirst) {
+            $subscription_array['trial_end'] = strval($charge_date->timestamp);
+        }
 
         $subscription = $stripe->subscriptions->create($subscription_array);
 

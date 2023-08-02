@@ -468,11 +468,10 @@ function close_accounts() {
 function commission_distribution() {
     Log::info('commission_distribution: Begin function');
 //    $rewards = Reward::whereHas('user')->where('is_paid', false)->get();
-    //testing 3 day
     $rewards = Reward::
         whereHas('user')
         ->whereHas('invited_user')
-        ->where('last_paid_on', '<', Carbon::now()->subHours(60))
+        ->where('last_paid_on', '<', Carbon::now()->subMonth())
         ->orWhereNull('last_paid_on')
         ->get();
 
@@ -833,6 +832,7 @@ function smart_retries () {
                 $latest_invoice->pay();
 
                 $payment_retries = $user->payment_retries;
+                $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
                 if ($latest_invoice->status == "paid") {
                     $user->payment_retries = 0;
                 } else if ($latest_invoice->status == "open") {
@@ -840,7 +840,7 @@ function smart_retries () {
                 }
                 $user->save();
 
-                if ($user->payment_retries == 2) {
+                if ($user->payment_retries == 3) {
                     Log::info('Cancelling user subscription');
                     cancel_user_subscription($user->id);
                 }
@@ -904,4 +904,18 @@ function np_email () {
         }
     }
     Log::info('np_email: Exit Successfully');
+}
+
+function refund_charge($charge_id) {
+    $stripe = new \Stripe\StripeClient(
+        env('STRIPE_SECRET_KEY')
+    );
+
+    try {
+        return $stripe->refunds->create([
+            'charge' => $charge_id
+        ]);
+    } catch (\Exception $e) {
+        return false;
+    }
 }
