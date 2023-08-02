@@ -421,7 +421,7 @@ class CmsController extends Controller
                 }
 
                 $terms = Page::firstOrCreate([
-                    'name' => 'Benefits',
+                    'name' => 'Terms',
                     'slug' => 'terms',
                 ], []);
 
