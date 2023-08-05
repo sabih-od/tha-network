@@ -471,7 +471,7 @@ function commission_distribution() {
     $rewards = Reward::
         whereHas('user')
         ->whereHas('invited_user')
-        ->where('last_paid_on', '<', Carbon::now()->subMonth())
+        ->where('last_paid_on', '<', Carbon::now()->subMonth()->day(8))
         ->orWhereNull('last_paid_on')
         ->get();
 
