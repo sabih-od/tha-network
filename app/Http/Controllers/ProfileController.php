@@ -105,7 +105,7 @@ class ProfileController extends Controller
                 'stripe_portal_session' => $stripe_portal_session,
                 'has_provided_stripe_payout_information' => $has_provided_stripe_payout_information,
                 'preferred_payout_method' => $user->preferred_payout_method,
-            ])->with('error', $has_provided_stripe_payout_information ? null : 'You Must Provide  Stripe account information before proceeding.  If you do not have a stripe account create one and return to this page and enter the information.');
+            ])->with('error', $has_provided_stripe_payout_information ? null : 'You must Create a Stripe account or log into your Stripe account by selecting the “Create Stripe Account” button before continuing.');
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());
         }

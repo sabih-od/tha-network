@@ -89,7 +89,7 @@ export default {
 
             // if(!this.stripe_account_id && !this.paypal_account_details) {
             if(!this.stripe_account_id && !this.isAdmin) {
-                return (useToast()).error('You Must Provide  Stripe account information before proceeding.  If you do not have a stripe account create one and return to this page and enter the information.', { timeout: false });
+                return (useToast()).error('You must Create a Stripe account or log into your Stripe account by selecting the “Create Stripe Account” button before continuing.', { timeout: false });
             }
 
             this.form.post(this.$route('updateProfile'), {

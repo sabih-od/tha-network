@@ -334,12 +334,9 @@ function payment_not_made() {
         try {
 //            if(!has_made_monthly_payment($user->id)) {
             if(!has_made_monthly_payment($user->id) || $user->payment_retries > 0) {
-                $string = "Hi, we have not received your monthly membership payment.\r\n
-            Update your payment information before the 7th of the month.\r\n
-            If you do not update your payment by the 7th at 11:59 pm central time your membership will be suspended until a payment is made and you will not receive referral payments for this month.\r\n
-            Once payment is received your membership status will be updated and payments will continue in the next billing cycle.\r\n
-            If your payment is not received by 11:59 pm on the 11th of this month, you will no longer receive referral payments, your account will be closed and you will lose all of your Network Members!!!\r\n
-            Please update your account before the 11th of the month!!!!!";
+                $string = "Hi,\r\n We did not receive your monthly membership payment.  Update your payment information before the 7th of the month. Once payment is received your membership status will be updated and you will continue to receive referral payments on the normal payout date.\r\n
+                            If your payment is not received by 11:59 pm on the 7th of this month, you will no longer receive referral payments, your account will be closed, and you will lose all of your Network Members!!!\r\n
+                            Please update your account before the 7th of the month!!!!!";
                 $notification = Notification::create([
                     'user_id' => $user->id,
                     'notifiable_type' => 'App\Models\User',
@@ -878,12 +875,9 @@ function np_email () {
             $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
 
             if ($latest_invoice->status == "open") {
-                $string = "Hi, we have not received your monthly membership payment.\r\n
-                            Update your payment information before the 7th of the month.\r\n
-                            If you do not update your payment by the 7th at 11:59 pm central time your membership will be suspended until a payment is made and you will not receive referral payments for this month.\r\n
-                            Once payment is received your membership status will be updated and payments will continue in the next billing cycle.\r\n
-                            If your payment is not received by 11:59 pm on the 11th of this month, you will no longer receive referral payments, your account will be closed and you will lose all of your Network Members!!!\r\n
-                            Please update your account before the 11th of the month!!!!!";
+                $string = "Hi,\r\n We did not receive your monthly membership payment.  Update your payment information before the 7th of the month. Once payment is received your membership status will be updated and you will continue to receive referral payments on the normal payout date.\r\n
+                            If your payment is not received by 11:59 pm on the 7th of this month, you will no longer receive referral payments, your account will be closed, and you will lose all of your Network Members!!!\r\n
+                            Please update your account before the 7th of the month!!!!!";
                 $notification = Notification::create([
                     'user_id' => $user->id,
                     'notifiable_type' => 'App\Models\User',
