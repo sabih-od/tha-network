@@ -26,6 +26,9 @@
                         </strong>
                     </div>
                 </Link>
+                <div v-if="showCenterImage(notification)">
+                    <img :src="getCenterImageUrl(notification)" alt="" class="notiThumb">
+                </div>
                 <button @click="deleteNotification(notification.id)" class="deleteBtn">
                     <i class="fas fa-trash"></i>
                 </button>
@@ -278,7 +281,62 @@ export default {
                     (useToast()).success('Notification has been deleted');
                 },
             });
-        }
+        },
+        getCenterImageUrl (notification) {
+            if (!notification.body) {
+                return '';
+            }
+
+            if (notification.body.includes('goals have been set')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/SetWeeklyGoal.png');
+            }
+
+            if (notification.body.includes('Welcome To Tha Network')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/NewMemberSignup.png');
+            }
+
+            if (notification.body.includes('You did not meet your weekly goal this week')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/UnableToMeetWeeklyGoal.png');
+            }
+
+            if (notification.body.includes('you haven’t sent any referrals today')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/NoReferralsForTheDay.png');
+            }
+
+            if (notification.body.includes('Great Job! Your Referral was sent!!')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/ReferralSent.png');
+            }
+
+            if (notification.body.includes('just joined your network')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/ReferralCompleted.png');
+            }
+
+            if (notification.body.includes('is no longer a member of the network')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/NetworkMemberClosure.png');
+            }
+
+            if (notification.body.includes('WOW, Last week was a Great Week for the following members')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/WeeklyRankingNotification.png');
+            }
+
+            if (notification.body.includes('We did not receive your monthly membership payment')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/PaymentNotMade.png');
+            }
+        },
+        showCenterImage(notification) {
+            return notification.body
+                && (
+                    notification.body.includes('goals have been set') ||
+                    notification.body.includes('Welcome To Tha Network') ||
+                    notification.body.includes('You did not meet your weekly goal this week') ||
+                    notification.body.includes('you haven’t sent any referrals today') ||
+                    notification.body.includes('Great Job! Your Referral was sent!!') ||
+                    notification.body.includes('just joined your network') ||
+                    notification.body.includes('is no longer a member of the network') ||
+                    notification.body.includes('WOW, Last week was a Great Week for the following members') ||
+                    notification.body.includes('We did not receive your monthly membership payment')
+                );
+        },
     }
 }
 </script>
