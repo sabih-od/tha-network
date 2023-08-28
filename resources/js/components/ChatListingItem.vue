@@ -36,7 +36,8 @@ export default {
         channel_id: String,
         cover: Object,
         is_auth_friend: Boolean,
-        is_in_my_network: Boolean
+        is_in_my_network: Boolean,
+        click_channel: Boolean
     },
     data() {
         return {
@@ -61,6 +62,9 @@ export default {
         }
     },
     mounted() {
+        if (this.click_channel) {
+            this.select();
+        }
         let active_user_id_check = this.$store.getters['Chat/activeUserId'];
         if (active_user_id_check) {
             // alert('user id: ' + active_user_id_check);

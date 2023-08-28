@@ -33,6 +33,7 @@
                     :key="channel.id"
                     :is_auth_friend="channel.is_auth_friend"
                     :is_in_my_network="channel.is_in_my_network"
+                    :click_channel="channel.id === channel_to_click"
                 />
             </ul>
 
@@ -62,6 +63,9 @@ export default {
         CreateChatModal,
         ChatListingItem,
         Link,
+    },
+    props: {
+        channel_to_click: String
     },
     computed: {
         user() {

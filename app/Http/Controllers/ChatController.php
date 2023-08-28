@@ -22,6 +22,10 @@ class ChatController extends Controller
     public function index(Request $request)
     {
         try {
+            $channel_to_click= null;
+            if ($request->has('sender_id')) {
+                $channel_to_click = Channel::whereJsoncontains('participants', Auth::id())->whereJsoncontains('participants', $request->get('sender_id'))->first() ?? null;
+            }
             return Inertia::render('Chat', [
                 "users" => Inertia::lazy(function () use ($request) {
                     return $this->getFollowsData($request);
@@ -35,7 +39,8 @@ class ChatController extends Controller
                 "messages" => Inertia::lazy(function () use ($request) {
                     return $this->getMessagesData($request);
                 }),
-                "profile_id" => $request->has('profile_id') ? $request->get('profile_id') : null
+                "profile_id" => $request->has('profile_id') ? $request->get('profile_id') : null,
+                "channel_to_click" => $channel_to_click->id ?? null
 
                 /*'user' => $user->only('name', 'email', 'created_at') ?? null,
                 'profile' => $user->profile ?? null,
