@@ -27,7 +27,6 @@ class AdminController extends Controller
         $total_payments_this_year = $res['total'];
 
         $res = $this->getSubscriptionPayments(date('Y'), date('m'));
-        dd('done');
         $incoming_payments_this_month = $res['payments'];
         $total_payments_this_month = $res['total'];
 
