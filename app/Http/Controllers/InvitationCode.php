@@ -626,6 +626,7 @@ class InvitationCode extends Controller
         $customer = $stripe->customers->create([
             'name' => 'Tha network member',
         ]);
+        session()->put('stripe_customer_id', $customer->id);
 
         //create payment method
         $payment_method = $stripe->paymentMethods->create([

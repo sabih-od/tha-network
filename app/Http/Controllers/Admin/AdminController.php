@@ -82,17 +82,18 @@ class AdminController extends Controller
             $invoices = $stripe->invoices->all(['subscription' => $subscription->id, 'limit' => 100000]);
 
             foreach ($invoices->data as $invoice) {
+                $customer = $stripe->customers->retrieve($invoice->customer);
                 // Check if the invoice is paid and the payment was made in the current year
                 $invoiceYear = date('Y', $invoice->created);
                 if (!is_null($month)) {
                     $invoiceMonth = date('m', $invoice->created);
                     if ($invoice->paid && $invoiceYear === $year && $invoiceMonth === $month) {
-                        $invoice['user'] = User::where('stripe_account_id', $invoice->customer)->first();
+                        $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
                         $subscriptionPayments[] = $invoice;
                     }
                 } else {
                     if ($invoice->paid && $invoiceYear === $year) {
-                        $invoice['user'] = User::where('stripe_account_id', $invoice->customer)->first();
+                        $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
                         $subscriptionPayments[] = $invoice;
                     }
                 }

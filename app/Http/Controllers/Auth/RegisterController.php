@@ -172,7 +172,8 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'pwh' => $data['password'],
             'invitation_code' => generateBarcodeNumber(),
-            'stripe_checkout_session_id' => $data['stripe_checkout_session_id'] ?? null
+            'stripe_checkout_session_id' => $data['stripe_checkout_session_id'] ?? null,
+            'stripe_customer_id' => $data['stripe_customer_id'] ?? null
         ]);
 
         $rank = get_my_rank($user->id);
@@ -218,6 +219,9 @@ class RegisterController extends Controller
         $req = $request->all();
         if(session()->has('stripe_checkout_session_id')) {
             $req['stripe_checkout_session_id'] = session()->get('stripe_checkout_session_id');
+        }
+        if(session()->has('stripe_customer_id')) {
+            $req['stripe_customer_id'] = session()->get('stripe_customer_id');
         }
 
         event(new Registered($user = $this->create($req)));

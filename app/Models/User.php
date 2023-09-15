@@ -49,7 +49,8 @@ class User extends Authenticatable implements HasMedia
         'preferred_payout_method',
         'invitation_code',
         'stripe_charge_object',
-        'payment_retries'
+        'payment_retries',
+        'stripe_customer_id'
     ];
 
     /**
