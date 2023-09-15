@@ -228,11 +228,13 @@
                     </thead>
                     <tbody>
                         @foreach($incoming_payments_this_month as $payment)
-                            <tr>
-                                <td>{{($payment->user->profile->first_name ?? '') . ' ' . ($payment->user->profile->last_name ?? '')}}</td>
-                                <td>${{($payment->total / 100) - 12}}</td>
-                                <td>{{\Carbon\Carbon::createFromTimestamp($payment->date)}}</td>
-                            </tr>
+                            @if (!is_null($payment->user))
+                                <tr>
+                                    <td>{{($payment->user->profile->first_name ?? '') . ' ' . ($payment->user->profile->last_name ?? '')}}</td>
+                                    <td>${{($payment->total / 100) - 12}}</td>
+                                    <td>{{\Carbon\Carbon::createFromTimestamp($payment->date)}}</td>
+                                </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>
@@ -265,11 +267,13 @@
                     </thead>
                     <tbody>
                         @foreach($incoming_payments_this_year as $payment)
-                            <tr>
-                                <td>{{($payment->user->profile->first_name ?? '') . ' ' . ($payment->user->profile->last_name ?? '')}}</td>
-                                <td>${{($payment->total / 100) - 12}}</td>
-                                <td>{{\Carbon\Carbon::createFromTimestamp($payment->date)}}</td>
-                            </tr>
+                            @if (!is_null($payment->user))
+                                <tr>
+                                    <td>{{($payment->user->profile->first_name ?? '') . ' ' . ($payment->user->profile->last_name ?? '')}}</td>
+                                    <td>${{($payment->total / 100) - 12}}</td>
+                                    <td>{{\Carbon\Carbon::createFromTimestamp($payment->date)}}</td>
+                                </tr>
+                            @endif
                         @endforeach
                     </tbody>
                 </table>
