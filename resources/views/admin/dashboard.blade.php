@@ -79,7 +79,7 @@
                     <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3>Net Income</h3>
+                            <h3>Company Profit</h3>
                             <p>
                                 This Month: ${{$total_payments_this_month - $total_reward_amount_this_month}}
                             </p>
