@@ -27,6 +27,7 @@ class AdminController extends Controller
         $total_payments_this_year = $res['total'];
 
         $res = $this->getSubscriptionPayments(date('Y'), date('m'));
+        dd('done');
         $incoming_payments_this_month = $res['payments'];
         $total_payments_this_month = $res['total'];
 
@@ -86,7 +87,9 @@ class AdminController extends Controller
 
         $total = 0.0;
         foreach ($subscriptionPayments as $payment) {
-            $total += ($payment->total / 100);
+//            $total += ($payment->total / 100);
+            // -$2.00
+            $total += ($payment->total / 100) - 2;
         }
 
         // Output the subscription payments for the current year
