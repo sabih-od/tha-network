@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductReview;
 use App\Models\RewardLog;
+use App\Models\User;
 use Carbon\Carbon;
 
 class AdminController extends Controller
@@ -17,20 +18,32 @@ class AdminController extends Controller
         $res = $this->getRewardLogsByRange(Carbon::now()->startOfYear(), Carbon::now()->endOfYear());
         $rewards_this_year = $res['reward_logs'];
         $total_reward_amount_this_year = $res['total'];
-
+//
         $res = $this->getRewardLogsByRange(Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth());
         $rewards_this_month = $res['reward_logs'];
         $total_reward_amount_this_month = $res['total'];
-
+//
         $res = $this->getSubscriptionPayments(date('Y'));
         $incoming_payments_this_year = $res['payments'];
         $total_payments_this_year = $res['total'];
-
+//
         $res = $this->getSubscriptionPayments(date('Y'), date('m'));
         $incoming_payments_this_month = $res['payments'];
         $total_payments_this_month = $res['total'];
-
-        return view('admin.dashboard', compact('total_reward_amount_this_year', 'total_reward_amount_this_month', 'total_payments_this_year', 'total_payments_this_month'));
+//
+        return view('admin.dashboard',
+            compact(
+                'total_reward_amount_this_year',
+                'total_reward_amount_this_month',
+                'total_payments_this_year',
+                'total_payments_this_month',
+                'rewards_this_year',
+                'rewards_this_month',
+                'incoming_payments_this_month',
+                'incoming_payments_this_year',
+            )
+        );
+//        return view('admin.dashboard');
     }
 
     public function getRewardLogsByRange ($start, $end) {
@@ -74,10 +87,12 @@ class AdminController extends Controller
                 if (!is_null($month)) {
                     $invoiceMonth = date('m', $invoice->created);
                     if ($invoice->paid && $invoiceYear === $year && $invoiceMonth === $month) {
+                        $invoice['user'] = User::where('stripe_account_id', $invoice->customer)->first();
                         $subscriptionPayments[] = $invoice;
                     }
                 } else {
                     if ($invoice->paid && $invoiceYear === $year) {
+                        $invoice['user'] = User::where('stripe_account_id', $invoice->customer)->first();
                         $subscriptionPayments[] = $invoice;
                     }
                 }
