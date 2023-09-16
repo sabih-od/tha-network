@@ -17,7 +17,8 @@
                             <!--                        <img :src="asset('images/small-character.jpg')" alt="">-->
                             <img :src="notification.sender_pic ?? auth_image" alt="">
                         </figure>
-                        <p v-if="notification.body" v-html="notification.body">
+<!--                        {{notification.body}}-->
+                        <p v-if="notification.body" v-html="renderMessage(notification.body)">
 
                         </p>
                         <strong v-else>
@@ -46,6 +47,7 @@ import {Link, useForm, usePage} from '@inertiajs/inertia-vue3'
 import {Inertia} from "@inertiajs/inertia";
 import {useToast} from "vue-toastification";
 import utils from "../mixins/utils";
+import _ from "lodash";
 
 export default {
     name: "ChatMessagesCounterButton",
@@ -336,6 +338,9 @@ export default {
                     notification.body.includes('WOW, Last week was a Great Week for the following members') ||
                     notification.body.includes('We did not receive your monthly membership payment')
                 );
+        },
+        renderMessage(string) {
+            return _.unescape(string)
         },
     }
 }

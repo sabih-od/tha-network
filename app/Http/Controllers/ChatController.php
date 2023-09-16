@@ -130,7 +130,7 @@ class ChatController extends Controller
             })->all();
             $sender = User::with('profile')->find(Auth::id());
             foreach ($participants as $user_id) {
-                $body = "You have a new message!";
+                $body = "You have a new message from; " . $sender->profile->first_name . ': ' . "\n" . $request->message;
                 dispatch(new CreateNotification($channel->id, 'channel', $user_id, $body, $sender->id));
                 event(new NewNotification($user_id, $body, 'channel', $channel->id, $sender));
             }
