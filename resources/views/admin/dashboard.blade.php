@@ -53,15 +53,15 @@
                             <h3>Payments Received</h3>
                             <a href="#" type="button" id="btn_payments_this_month" style="color: inherit;">
                                 <p>
-    {{--                                This Month: ${{$total_payments_this_month}}--}}
-                                    This Month: $100
+                                    This Month: ${{$total_payments_this_month}}
+{{--                                    This Month: $100--}}
                                 </p>
                             </a>
                             <br/>
                             <a href="#" type="button" id="btn_payments_this_year" style="color: inherit;">
                                 <p>
-    {{--                                This Year: ${{$total_payments_this_year}}--}}
-                                    This Year: $100
+                                    This Year: ${{$total_payments_this_year}}
+{{--                                    This Year: $100--}}
                                 </p>
                             </a>
                         </div>
@@ -76,12 +76,12 @@
                         <div class="inner">
                             <h3>Gross Income</h3>
                             <p>
-{{--                                This Month: ${{$total_payments_this_month}}--}}
-                                This Month: $100
+                                This Month: ${{$total_payments_this_month}}
+{{--                                This Month: $100--}}
                             </p>
                             <p>
-{{--                                This Year: ${{$total_payments_this_year}}--}}
-                                This Year: $100
+                                This Year: ${{$total_payments_this_year}}
+{{--                                This Year: $100--}}
                             </p>
                         </div>
                         <div class="icon">
@@ -95,12 +95,12 @@
                         <div class="inner">
                             <h3>Company Profit</h3>
                             <p>
-{{--                                This Month: ${{$total_payments_this_month - $total_reward_amount_this_month}}--}}
-                                This Month: $100
+                                This Month: ${{$total_payments_this_month - $total_reward_amount_this_month}}
+{{--                                This Month: $100--}}
                             </p>
                             <p>
-{{--                                This Year: ${{$total_payments_this_year - $total_reward_amount_this_year}}--}}
-                                This Year: $100
+                                This Year: ${{$total_payments_this_year - $total_reward_amount_this_year}}
+{{--                                This Year: $100--}}
                             </p>
                         </div>
                         <div class="icon">
