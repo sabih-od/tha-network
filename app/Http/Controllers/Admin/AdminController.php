@@ -111,34 +111,37 @@ class AdminController extends Controller
             }
         }
 
-//        // Fetch all subscriptions using Stripe API
-//        $subscriptions = $stripe->subscriptions->all(['limit' => 100000]);
-//
-//        // Array to store subscription payments for the current year
-//        $subscriptionPayments = [];
-//
-//        foreach ($subscriptions->data as $subscription) {
-//            // Fetch the invoices for each subscription
-//            $invoices = $stripe->invoices->all(['subscription' => $subscription->id, 'limit' => 100000]);
-//
-//            foreach ($invoices->data as $invoice) {
-//                $customer = $stripe->customers->retrieve($invoice->customer);
-//                // Check if the invoice is paid and the payment was made in the current year
-//                $invoiceYear = date('Y', $invoice->created);
-//                if (!is_null($month)) {
-//                    $invoiceMonth = date('m', $invoice->created);
-//                    if ($invoice->paid && $invoiceYear === $year && $invoiceMonth === $month) {
-//                        $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
-//                        $subscriptionPayments[] = $invoice;
-//                    }
-//                } else {
-//                    if ($invoice->paid && $invoiceYear === $year) {
-//                        $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
-//                        $subscriptionPayments[] = $invoice;
-//                    }
-//                }
-//            }
-//        }
+        //include charges (first time)
+        $users_with_charge_object = get_user_with_charge_object();
+        foreach ($users_with_charge_object as $user_with_charge_object) {
+            try {
+                $decoded_charge_object = json_decode($user_with_charge_object->stripe_charge_object);
+                if ($decoded_charge_object->paid == false || $decoded_charge_object->amount < 2999) {
+                    continue;
+                }
+
+                // Check if the invoice is paid and the payment was made in the current year
+                $charge_year = date('Y', $decoded_charge_object->created);
+                if (!is_null($month)) {
+                    $charge_month = date('m', $decoded_charge_object->created);
+                    if ($charge_year === $year && $charge_month === $month) {
+                        $decoded_charge_object->total = $decoded_charge_object->amount;
+                        $decoded_charge_object->date = $decoded_charge_object->created;
+                        $decoded_charge_object->user = $user_with_charge_object;
+                        $subscriptionPayments[] = $decoded_charge_object;
+                    }
+                } else {
+                    if ($charge_year === $year) {
+                        $decoded_charge_object->total = $decoded_charge_object->amount;
+                        $decoded_charge_object->date = $decoded_charge_object->created;
+                        $decoded_charge_object->user = $user_with_charge_object;
+                        $subscriptionPayments[] = $decoded_charge_object;
+                    }
+                }
+            } catch (\Exception $e) {
+                continue;
+            }
+        }
 
         $total = 0.0;
         foreach ($subscriptionPayments as $payment) {

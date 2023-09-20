@@ -24,7 +24,7 @@
         <div class="container-fluid">
             <!-- Small boxes (Stat box) -->
             <div class="row">
-                <div class="col-lg-3 col-6">
+                <div class="col-lg-4 col-4">
                     <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
@@ -46,11 +46,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-6">
+                <div class="col-lg-4 col-4">
                     <!-- small box -->
                     <div class="small-box bg-info">
                         <div class="inner">
-                            <h3>Payments Received</h3>
+                            <h3>Payments Received (Gross Income)</h3>
                             <a href="#" type="button" id="btn_payments_this_month" style="color: inherit;">
                                 <p>
                                     This Month: ${{$total_payments_this_month}}
@@ -70,26 +70,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-success">
-                        <div class="inner">
-                            <h3>Gross Income</h3>
-                            <p>
-                                This Month: ${{$total_payments_this_month}}
+{{--                <div class="col-lg-4 col-4">--}}
+{{--                    <!-- small box -->--}}
+{{--                    <div class="small-box bg-success">--}}
+{{--                        <div class="inner">--}}
+{{--                            <h3>Gross Income</h3>--}}
+{{--                            <p>--}}
+{{--                                This Month: ${{$total_payments_this_month}}--}}
 {{--                                This Month: $100--}}
-                            </p>
-                            <p>
-                                This Year: ${{$total_payments_this_year}}
+{{--                            </p>--}}
+{{--                            <p>--}}
+{{--                                This Year: ${{$total_payments_this_year}}--}}
 {{--                                This Year: $100--}}
-                            </p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-stats-bars"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6">
+{{--                            </p>--}}
+{{--                        </div>--}}
+{{--                        <div class="icon">--}}
+{{--                            <i class="ion ion-stats-bars"></i>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+                <div class="col-lg-4 col-4">
                     <!-- small box -->
                     <div class="small-box bg-success">
                         <div class="inner">

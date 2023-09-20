@@ -914,10 +914,16 @@ function refund_charge($charge_id) {
     }
 }
 
-
 function get_active_subscription_ids () {
     return User::where([
         'role_id' => 2,
         'closed_on' => null
     ])->whereNotNull('stripe_checkout_session_id')->pluck('stripe_checkout_session_id');
+}
+
+function get_user_with_charge_object () {
+    return User::where([
+        'role_id' => 2,
+        'closed_on' => null
+    ])->with('profile')->whereNotNull('stripe_charge_object')->get();
 }
