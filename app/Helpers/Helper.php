@@ -913,3 +913,11 @@ function refund_charge($charge_id) {
         return false;
     }
 }
+
+
+function get_active_subscription_ids () {
+    return User::where([
+        'role_id' => 2,
+        'closed_on' => null
+    ])->whereNotNull('stripe_checkout_session_id')->pluck('stripe_checkout_session_id');
+}

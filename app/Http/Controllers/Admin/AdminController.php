@@ -10,6 +10,7 @@ use App\Models\ProductReview;
 use App\Models\RewardLog;
 use App\Models\User;
 use Carbon\Carbon;
+use Stripe\Exception\ApiErrorException;
 
 class AdminController extends Controller
 {
@@ -23,13 +24,19 @@ class AdminController extends Controller
         $rewards_this_month = $res['reward_logs'];
         $total_reward_amount_this_month = $res['total'];
 //
-        $res = $this->getSubscriptionPayments(date('Y'));
-        $incoming_payments_this_year = $res['payments'];
-        $total_payments_this_year = $res['total'];
-//
         $res = $this->getSubscriptionPayments(date('Y'), date('m'));
         $incoming_payments_this_month = $res['payments'];
         $total_payments_this_month = $res['total'];
+//
+        $res = $this->getSubscriptionPayments(date('Y'));
+        $incoming_payments_this_year = $res['payments'];
+        $total_payments_this_year = $res['total'];
+
+//        dump('$incoming_payments_this_month: ');
+//        dump($incoming_payments_this_month);
+//        dump('$incoming_payments_this_year: ');
+//        dump($incoming_payments_this_year);
+//        dd('done');
 //
         return view('admin.dashboard',
             compact(
@@ -71,34 +78,67 @@ class AdminController extends Controller
             env('STRIPE_SECRET_KEY')
         );
 
-        // Fetch all subscriptions using Stripe API
-        $subscriptions = $stripe->subscriptions->all(['limit' => 100000]);
+        $subscription_ids = get_active_subscription_ids();
+        foreach ($subscription_ids as $subscription_id) {
+            try {
+//                $subscription = $stripe->subscriptions->retrieve($subscription_id);
 
-        // Array to store subscription payments for the current year
-        $subscriptionPayments = [];
+                $invoices = $stripe->invoices->all(['subscription' => $subscription_id, 'limit' => 100000]);
 
-        foreach ($subscriptions->data as $subscription) {
-            // Fetch the invoices for each subscription
-            $invoices = $stripe->invoices->all(['subscription' => $subscription->id, 'limit' => 100000]);
-
-            foreach ($invoices->data as $invoice) {
-                $customer = $stripe->customers->retrieve($invoice->customer);
-                // Check if the invoice is paid and the payment was made in the current year
-                $invoiceYear = date('Y', $invoice->created);
-                if (!is_null($month)) {
-                    $invoiceMonth = date('m', $invoice->created);
-                    if ($invoice->paid && $invoiceYear === $year && $invoiceMonth === $month) {
-                        $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
-                        $subscriptionPayments[] = $invoice;
+                foreach ($invoices->data as $invoice) {
+                    if ($invoice->paid == false || $invoice->total < 2999) {
+                        continue;
                     }
-                } else {
-                    if ($invoice->paid && $invoiceYear === $year) {
-                        $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
-                        $subscriptionPayments[] = $invoice;
+
+                    $customer = $stripe->customers->retrieve($invoice->customer);
+                    // Check if the invoice is paid and the payment was made in the current year
+                    $invoiceYear = date('Y', $invoice->created);
+                    if (!is_null($month)) {
+                        $invoiceMonth = date('m', $invoice->created);
+                        if ($invoice->paid && $invoiceYear === $year && $invoiceMonth === $month) {
+                            $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
+                            $subscriptionPayments[] = $invoice;
+                        }
+                    } else {
+                        if ($invoice->paid && $invoiceYear === $year) {
+                            $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
+                            $subscriptionPayments[] = $invoice;
+                        }
                     }
                 }
+            } catch (ApiErrorException $e) {
+                continue;
             }
         }
+
+//        // Fetch all subscriptions using Stripe API
+//        $subscriptions = $stripe->subscriptions->all(['limit' => 100000]);
+//
+//        // Array to store subscription payments for the current year
+//        $subscriptionPayments = [];
+//
+//        foreach ($subscriptions->data as $subscription) {
+//            // Fetch the invoices for each subscription
+//            $invoices = $stripe->invoices->all(['subscription' => $subscription->id, 'limit' => 100000]);
+//
+//            foreach ($invoices->data as $invoice) {
+//                $customer = $stripe->customers->retrieve($invoice->customer);
+//                // Check if the invoice is paid and the payment was made in the current year
+//                $invoiceYear = date('Y', $invoice->created);
+//                if (!is_null($month)) {
+//                    $invoiceMonth = date('m', $invoice->created);
+//                    if ($invoice->paid && $invoiceYear === $year && $invoiceMonth === $month) {
+//                        $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
+//                        $subscriptionPayments[] = $invoice;
+//                    }
+//                } else {
+//                    if ($invoice->paid && $invoiceYear === $year) {
+//                        $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
+//                        $subscriptionPayments[] = $invoice;
+//                    }
+//                }
+//            }
+//        }
 
         $total = 0.0;
         foreach ($subscriptionPayments as $payment) {
