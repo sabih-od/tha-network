@@ -97,6 +97,7 @@ class AdminController extends Controller
 
         $subscription_ids = get_active_subscription_ids();
         $payment_count = 0;
+        $subscriptionPayments = [];
         foreach ($subscription_ids as $subscription_id) {
             try {
 //                $subscription = $stripe->subscriptions->retrieve($subscription_id);
