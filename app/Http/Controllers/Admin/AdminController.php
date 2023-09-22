@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdminWithdrawal;
 use App\Models\Customers;
 use App\Models\Order;
 use App\Models\Product;
@@ -27,16 +28,26 @@ class AdminController extends Controller
         $res = $this->getSubscriptionPayments(date('Y'), date('m'));
         $incoming_payments_this_month = $res['payments'];
         $total_payments_this_month = $res['total'];
+        $count_of_payments_this_month = $res['payments_count'];
 //
         $res = $this->getSubscriptionPayments(date('Y'));
         $incoming_payments_this_year = $res['payments'];
         $total_payments_this_year = $res['total'];
+        $count_of_payments_this_year = $res['payments_count'];
 
-//        dump('$incoming_payments_this_month: ');
-//        dump($incoming_payments_this_month);
-//        dump('$incoming_payments_this_year: ');
-//        dump($incoming_payments_this_year);
-//        dd('done');
+        $admin_withdrawals = AdminWithdrawal::query();
+        $admin_withdrawals_this_month = $admin_withdrawals->whereDate('date', '>=', Carbon::now()->startOfMonth())
+            ->whereDate('date', '<=', Carbon::now()->endOfMonth())
+            ->get();
+        $admin_withdrawals_this_year = $admin_withdrawals->whereDate('date', '>=', Carbon::now()->startOfYear())
+            ->whereDate('date', '<=', Carbon::now()->endOfYear())
+            ->get();
+        $total_admin_withdrawals_this_month = $admin_withdrawals->whereDate('date', '>=', Carbon::now()->startOfMonth())
+            ->whereDate('date', '<=', Carbon::now()->endOfMonth())
+            ->sum('amount');
+        $total_admin_withdrawals_this_year = $admin_withdrawals->whereDate('date', '>=', Carbon::now()->startOfYear())
+            ->whereDate('date', '<=', Carbon::now()->endOfYear())
+            ->sum('amount');
 //
         return view('admin.dashboard',
             compact(
@@ -48,6 +59,12 @@ class AdminController extends Controller
                 'rewards_this_month',
                 'incoming_payments_this_month',
                 'incoming_payments_this_year',
+                'count_of_payments_this_month',
+                'count_of_payments_this_year',
+                'admin_withdrawals_this_month',
+                'admin_withdrawals_this_year',
+                'total_admin_withdrawals_this_month',
+                'total_admin_withdrawals_this_year',
             )
         );
 //        return view('admin.dashboard');
@@ -79,6 +96,7 @@ class AdminController extends Controller
         );
 
         $subscription_ids = get_active_subscription_ids();
+        $payment_count = 0;
         foreach ($subscription_ids as $subscription_id) {
             try {
 //                $subscription = $stripe->subscriptions->retrieve($subscription_id);
@@ -97,12 +115,16 @@ class AdminController extends Controller
                         $invoiceMonth = date('m', $invoice->created);
                         if ($invoice->paid && $invoiceYear === $year && $invoiceMonth === $month) {
                             $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
+                            $invoice['total'] = ($invoice['total'] / 100);
                             $subscriptionPayments[] = $invoice;
+                            $payment_count += 1;
                         }
                     } else {
                         if ($invoice->paid && $invoiceYear === $year) {
                             $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
+                            $invoice['total'] = ($invoice['total'] / 100);
                             $subscriptionPayments[] = $invoice;
+                            $payment_count += 1;
                         }
                     }
                 }
@@ -125,17 +147,19 @@ class AdminController extends Controller
                 if (!is_null($month)) {
                     $charge_month = date('m', $decoded_charge_object->created);
                     if ($charge_year === $year && $charge_month === $month) {
-                        $decoded_charge_object->total = $decoded_charge_object->amount;
+                        $decoded_charge_object->total = ($decoded_charge_object->amount / 100);
                         $decoded_charge_object->date = $decoded_charge_object->created;
                         $decoded_charge_object->user = $user_with_charge_object;
                         $subscriptionPayments[] = $decoded_charge_object;
+                        $payment_count += 1;
                     }
                 } else {
                     if ($charge_year === $year) {
-                        $decoded_charge_object->total = $decoded_charge_object->amount;
+                        $decoded_charge_object->total = ($decoded_charge_object->amount / 100);
                         $decoded_charge_object->date = $decoded_charge_object->created;
                         $decoded_charge_object->user = $user_with_charge_object;
                         $subscriptionPayments[] = $decoded_charge_object;
+                        $payment_count += 1;
                     }
                 }
             } catch (\Exception $e) {
@@ -147,13 +171,15 @@ class AdminController extends Controller
         foreach ($subscriptionPayments as $payment) {
 //            $total += ($payment->total / 100);
             // -$2.00
-            $total += ($payment->total / 100) - 2;
+//            $total += ($payment->total / 100) - 2;
+            $total += $payment->total;
         }
 
         // Output the subscription payments for the current year
         return [
             'payments' => $subscriptionPayments,
             'total' => $total,
+            'payments_count' => $payment_count,
         ];
     }
 
