@@ -30,5 +30,7 @@ class AdminWithdrawalController extends Controller
         ]);
 
         AdminWithdrawal::create($request->all());
+
+        return redirect()->route('dashboard');
     }
 }

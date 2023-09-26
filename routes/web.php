@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminWithdrawalController;
 use App\Http\Controllers\Admin\CmsController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\CmsController as FrontCmsController;
@@ -102,6 +103,9 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
     Route::match(['get', 'post'], '/cms/terms', [CmsController::class, 'terms'])->name('admin.cms.terms');
     Route::match(['get', 'post'], '/cms/privacy', [CmsController::class, 'privacy'])->name('admin.cms.privacy');
     Route::match(['get', 'post'], '/cms/contact', [CmsController::class, 'contact'])->name('admin.cms.contact');
+
+    //admin withdrawal
+    Route::post('admin-withdrwal', [AdminWithdrawalController::class, 'create'])->name('admin.admin_withdrawal.create');
 });
 
 //Inertia routes
