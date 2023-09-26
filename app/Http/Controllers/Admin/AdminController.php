@@ -35,17 +35,16 @@ class AdminController extends Controller
         $total_payments_this_year = $res['total'];
         $count_of_payments_this_year = $res['payments_count'];
 
-        $admin_withdrawals = AdminWithdrawal::query();
-        $admin_withdrawals_this_month = $admin_withdrawals->whereDate('date', '>=', Carbon::now()->startOfMonth())
+        $admin_withdrawals_this_month = AdminWithdrawal::whereDate('date', '>=', Carbon::now()->startOfMonth())
             ->whereDate('date', '<=', Carbon::now()->endOfMonth())
             ->get();
-        $admin_withdrawals_this_year = $admin_withdrawals->whereDate('date', '>=', Carbon::now()->startOfYear())
+        $admin_withdrawals_this_year = AdminWithdrawal::whereDate('date', '>=', Carbon::now()->startOfYear())
             ->whereDate('date', '<=', Carbon::now()->endOfYear())
             ->get();
-        $total_admin_withdrawals_this_month = $admin_withdrawals->whereDate('date', '>=', Carbon::now()->startOfMonth())
+        $total_admin_withdrawals_this_month = AdminWithdrawal::whereDate('date', '>=', Carbon::now()->startOfMonth())
             ->whereDate('date', '<=', Carbon::now()->endOfMonth())
             ->sum('amount');
-        $total_admin_withdrawals_this_year = $admin_withdrawals->whereDate('date', '>=', Carbon::now()->startOfYear())
+        $total_admin_withdrawals_this_year = AdminWithdrawal::whereDate('date', '>=', Carbon::now()->startOfYear())
             ->whereDate('date', '<=', Carbon::now()->endOfYear())
             ->sum('amount');
 //

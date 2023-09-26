@@ -379,8 +379,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Company Withdrawals This Month</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+{{--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">--}}
+{{--                    <span aria-hidden="true">&times;</span>--}}
+{{--                </button>--}}
+                <button type="button" class="btn btn-sm btn-success btn_add_withdrawal">
+                    Add Withdrawal
                 </button>
             </div>
             <div class="modal-body">
@@ -414,8 +417,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">Company Withdrawals This Year</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+{{--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">--}}
+{{--                    <span aria-hidden="true">&times;</span>--}}
+{{--                </button>--}}
+                <button type="button" class="btn btn-sm btn-success btn_add_withdrawal">
+                    Add Withdrawal
                 </button>
             </div>
             <div class="modal-body">
@@ -438,6 +444,38 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{--add withdrawal modal--}}
+<div class="modal fade" id="modal_add_withdrawal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add Admin Withdrawal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{route('admin.admin_withdrawal.create')}}" method="POST">
+                    @csrf
+                    <div class="row">
+                        <div class="form-group col-12">
+                            <label for="amount">Amount</label>
+                            <input class="form-control" id="amount" type="number" name="amount" min="0.00" value="0.00" step="0.01" placeholder="Amount" required>
+                        </div>
+                        <div class="form-group col-12">
+                            <label for="date">Amount</label>
+                            <input class="form-control" id="date" type="date" name="date" placeholder="Asd" required>
+                        </div>
+                        <div class="form-group col-12 btn-block">
+                            <button class="btn btn-success" id="btn_store_withdrawal" type="submit">Submit</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -474,6 +512,15 @@
             $('#btn_company_profit_this_year').on('click', function () {
                 $('#modal_company_profit_this_year').modal('show');
             });
+
+            $('.btn_add_withdrawal').on('click', function () {
+                $('#modal_add_withdrawal').modal('show');
+            });
+
+            $('#btn_store_withdrawal').on('click', function () {
+                $(this).click();
+                $(this).prop('disabled', true);
+            })
         });
     </script>
 @endsection
