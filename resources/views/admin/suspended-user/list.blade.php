@@ -54,6 +54,7 @@
                                         <th>Last Name</th>
                                         <th>Email</th>
                                         <th>Created At</th>
+                                        <th>Suspended on</th>
 
                                         <th>Action</th>
                                     </tr>
@@ -148,6 +149,7 @@
                     {data: 'last_name', name: 'last_name'},
                     {data: 'email', name: 'email'},
                     {data: 'created_at', name: 'created_at'},
+                    {data: 'suspended_on', name: 'suspended_on'},
 
                     {data: 'action', name: 'action', orderable: false}
                 ],

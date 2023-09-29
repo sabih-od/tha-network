@@ -370,6 +370,9 @@ function suspend_accounts() {
             if(is_null($user->suspended_on)) {
                 $user->suspended_on = Carbon::today();
                 $user->save();
+
+                //pause subscription
+                toggle_user_subscription($user->id);
             }
         }
     }
