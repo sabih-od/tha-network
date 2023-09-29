@@ -56,6 +56,7 @@
 import utils from "../../mixins/utils";
 import {useForm, usePage} from "@inertiajs/inertia-vue3";
 import {useToast} from "vue-toastification";
+import {Inertia} from "@inertiajs/inertia";
 
 export default {
     name: "ForgotPassword",
@@ -81,6 +82,8 @@ export default {
                         "showDuration": "3000",
                     };
                     (useToast()).success('The credentials have been sent to your email.');
+
+                    Inertia.get(this.$route('login'));
                     this.form.reset()
                     // this.showSuccessMessage()
                 },
