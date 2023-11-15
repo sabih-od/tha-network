@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PaymentSettingsUpdated;
 use App\Events\PaypalPayoutConnected;
 use App\Events\StripePayoutConnected;
 use App\Helpers\WebResponses;
@@ -46,6 +47,20 @@ class StripeController extends Controller
         ]);
 
         event(new StripePayoutConnected($user->id, $string, 'App\Models\User', $notification->id, $user));
+
+        //send notification (payment change) to user
+        $string = "Dear user, your payment settings on Tha Network have been changed.";
+        $notification = Notification::create([
+            'user_id' => $user->id,
+            'notifiable_type' => 'App\Models\User',
+            'notifiable_id' => $user->id,
+            'body' => $string,
+            'sender_id' => $user->id
+        ]);
+        event(new PaymentSettingsUpdated($user->id, $string, 'App\Models\User', $notification->id, $user));
+
+        //send email (payment change) to user
+        send_mail($user->email, 'Tha Network | Payment Settings', $string);
 
 //        return $account_link->url;
         return WebResponses::success(
