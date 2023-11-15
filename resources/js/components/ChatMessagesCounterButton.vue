@@ -174,6 +174,9 @@ export default {
         //When you have connected to paypal payout account
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('PaypalPayoutConnected', this.addNotification);
+        //When you change payment settings
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('PaymentSettingsUpdated', this.addNotification);
 
         this.fetchNotificationData();
 
