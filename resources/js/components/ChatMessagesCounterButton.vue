@@ -137,6 +137,11 @@ export default {
             .listen('NetworkMemberClosure', function (data) {
                 _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/NetworkMemberClosure.png'))
             });
+        //When you change payment settings
+        this.$echo.private('App.Models.User.' + this.user.id)
+            .listen('PaymentSettingsUpdated', function (data) {
+                _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/NoReferralsForTheDay.png'))
+            });
 
         //When a user send you friend request.
         this.$echo.private('App.Models.User.' + this.user.id)
@@ -174,9 +179,6 @@ export default {
         //When you have connected to paypal payout account
         this.$echo.private('App.Models.User.' + this.user.id)
             .listen('PaypalPayoutConnected', this.addNotification);
-        //When you change payment settings
-        this.$echo.private('App.Models.User.' + this.user.id)
-            .listen('PaymentSettingsUpdated', this.addNotification);
 
         this.fetchNotificationData();
 
