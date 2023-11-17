@@ -40,6 +40,20 @@
         </div>
 
     </div>
+    <div :class="notification_modal.class" style="z-index: 999;">
+        <div class="notiImgCont">
+            <figure>
+                <img :src="notification_modal.img" alt="">
+            </figure>
+        </div>
+        <div class="notiBody">
+            <p v-html="notification_modal.text"></p>
+        </div>
+        <div class="notiFooter">
+            <Link v-if="notification_modal.redirect_url != '#'" @click.prevent="notification_modal.on_click" :href="notification_modal.redirect_url"><i class="fas fa-check"></i><span>Ok</span></Link>
+            <button v-else @click.prevent="hideNotification()"><i class="fas fa-check"></i><span>Ok</span></button>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -63,6 +77,13 @@ export default {
                 chat_type: 'individual',
                 user_id: null
             }),
+            notification_modal: {
+                text: '',
+                img: '',
+                class: 'notifyPopup',
+                redirect_url: "#",
+                on_click: this.hideNotification
+            },
         }
     },
     computed: {
@@ -137,11 +158,6 @@ export default {
             .listen('NetworkMemberClosure', function (data) {
                 _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/NetworkMemberClosure.png'))
             });
-        //When you change payment settings
-        this.$echo.private('App.Models.User.' + this.user.id)
-            .listen('PaymentSettingsUpdated', function (data) {
-                _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/NoReferralsForTheDay.png'))
-            });
 
         //When a user send you friend request.
         this.$echo.private('App.Models.User.' + this.user.id)
@@ -184,11 +200,18 @@ export default {
 
         this.$emitter.on('request_for_notifications', this.sendNotificationData);
         this.$emitter.on('request_chat_with_profile', this.requestChatWithProfile);
+        this.$emitter.on('payment_method_updated', function (data) {
+            _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/NoReferralsForTheDay.png'))
+        });
+        // //When you change payment settings
+        // this.$echo.private('App.Models.User.' + this.user.id)
+        //     .listen('PaymentSettingsUpdated', function (data) {
+        //         _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/NoReferralsForTheDay.png'))
+        //     });
 
     },
     methods: {
         addNotification(data, img = null) {
-            console.log('data', data);
             this.notifications = [
                 ...this.notifications,
                 data
@@ -198,7 +221,8 @@ export default {
             //show popup notification
             console.log('imgcheck', img != {});
             if (img != {}) {
-                this.$emitter.emit('show_image_notification', {img: img, text: data.body});
+                this.showNotification(img, data.body, '#');
+                // this.$emitter.emit('show_image_notification', {img: img, text: data.body});
             }
         },
         chatWithProfile(profile_id) {
@@ -346,6 +370,16 @@ export default {
         },
         renderMessage(string) {
             return _.unescape(string)
+        },
+        showNotification(img, text, redirect_url = "#", on_click = this.hideNotification) {
+            this.notification_modal.img = img;
+            this.notification_modal.text = text;
+            this.notification_modal.redirect_url = redirect_url;
+            this.notification_modal.on_click = on_click;
+            this.notification_modal.class = 'notifyPopup show';
+        },
+        hideNotification() {
+            this.notification_modal.class = 'notifyPopup'
         },
     }
 }
