@@ -9,6 +9,7 @@ use App\Helpers\WebResponses;
 use App\Models\Notification;
 use App\Models\User;
 use App\Traits\StripePayment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Stripe\StripeClient;
@@ -49,7 +50,7 @@ class StripeController extends Controller
         event(new StripePayoutConnected($user->id, $string, 'App\Models\User', $notification->id, $user));
 
         //send notification (payment change) to user
-        $string = "Dear user, your payment settings on Tha Network have been changed.";
+        $string = "Your payment method was updated on [".Carbon::now()->format('m-d-Y')."],  thank you for updating your payment information.";
         $notification = Notification::create([
             'user_id' => $user->id,
             'notifiable_type' => 'App\Models\User',
