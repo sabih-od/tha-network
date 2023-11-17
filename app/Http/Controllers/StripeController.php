@@ -32,8 +32,8 @@ class StripeController extends Controller
 
         $account_link = $stripe->accountLinks->create([
             'account' => $user->stripe_account_id,
-            'refresh_url' => route('editProfileForm'),
-            'return_url' => route('editProfileForm'),
+            'refresh_url' => (route('editProfileForm') . '?pmu=true'),
+            'return_url' => (route('editProfileForm') . '?pmu=true'),
             'type' => 'account_onboarding',
         ]);
 

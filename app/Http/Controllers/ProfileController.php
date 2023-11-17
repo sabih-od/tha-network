@@ -69,7 +69,7 @@ class ProfileController extends Controller
         $this->amount = count(User::where('role_id', 2)->get()) < 5000 ? 29.99 : 59.95;
     }
 
-    public function edit()
+    public function edit(Request $request)
     {
         try {
             $user = Auth::user();
@@ -91,6 +91,11 @@ class ProfileController extends Controller
 
             $stripe_portal_session = session()->get('stripe_portal_session') ?? null;
             session()->put('stripe_portal_session', null);
+            $payment_method_changed_notification = null;
+            if ($request->has('pmu')) {
+                $payment_method_changed_notification = Notification::where('user_id', Auth::id())->where('body', 'LIKE', '%Your payment method was updated%')->orderBy('created_at', 'DESC')->first();
+                $payment_method_changed_notification->body = 'Thank you for updating your payment information.';
+            }
             return Inertia::render('EditProfile', [
                 'user' => $user->only('name', 'email', 'created_at', 'pwh', 'role_id') ?? null,
                 'profile' => $user->profile ?? null,
@@ -105,6 +110,8 @@ class ProfileController extends Controller
                 'stripe_portal_session' => $stripe_portal_session,
                 'has_provided_stripe_payout_information' => $has_provided_stripe_payout_information,
                 'preferred_payout_method' => $user->preferred_payout_method,
+                'payment_method_updated' => (boolean)$request->has('pmu'),
+                'payment_method_notification' => $payment_method_changed_notification,
             ])->with('error', $has_provided_stripe_payout_information ? null : 'You must Create a Stripe account or log into your Stripe account by selecting the “Create Stripe Account” button before continuing.');
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());

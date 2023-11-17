@@ -171,6 +171,8 @@ export default {
         client_secret: String,
         monthly_payment_flash: String,
         has_made_monthly_payment: Boolean,
+        payment_method_updated: Boolean,
+        payment_method_notification: Object,
         stripe_account_id: String,
         paypal_account_details: String,
         stripe_checkout_session_id: String,
@@ -270,6 +272,10 @@ export default {
             }
             _t.preferred_payout_form.preferred_payout_method = _t.preferred_payout_form.preferred_payout_method === 'stripe' ? 'paypal' : 'stripe';
         });
+
+        if (this.payment_method_updated) {
+            this.$emitter.emit('payment_method_updated', this.payment_method_notification);
+        }
 
     },
     unmounted() {

@@ -113,7 +113,7 @@ require "auth.php";
 Route::group([
     'middleware' => ['auth', 'revalidate', 'closure', 'suspension']
 ], function () {
-    Route::get('edit-profile', [ProfileController::class, 'edit'])
+    Route::get('edit-profile/{pmu?}', [ProfileController::class, 'edit'])
         ->name('editProfileForm');
     Route::post('edit-profile', [ProfileController::class, 'update'])
         ->name('updateProfile');
