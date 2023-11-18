@@ -32,8 +32,8 @@ class StripeController extends Controller
 
         $account_link = $stripe->accountLinks->create([
             'account' => $user->stripe_account_id,
-            'refresh_url' => (route('editProfileForm') . '?pmu=true'),
-            'return_url' => (route('editProfileForm') . '?pmu=true'),
+            'refresh_url' => route('editProfileForm'),
+            'return_url' => route('editProfileForm'),
             'type' => 'account_onboarding',
         ]);
 
@@ -49,18 +49,8 @@ class StripeController extends Controller
 
         event(new StripePayoutConnected($user->id, $string, 'App\Models\User', $notification->id, $user));
 
-        //send notification (payment change) to user
-        $string = "Your payment method was updated on [".Carbon::now()->format('m-d-Y')."],  thank you for updating your payment information.";
-        $notification = Notification::create([
-            'user_id' => $user->id,
-            'notifiable_type' => 'App\Models\User',
-            'notifiable_id' => $user->id,
-            'body' => $string,
-            'sender_id' => $user->id
-        ]);
-        event(new PaymentSettingsUpdated($user->id, $string, 'App\Models\User', $notification->id, $user));
-
         //send email (payment change) to user
+        $string = "Your payment method was updated on [".Carbon::now()->format('m-d-Y')."],  thank you for updating your payment information.";
         send_mail($user->email, 'Tha Network | Payment Settings', $string);
 
 //        return $account_link->url;
