@@ -93,7 +93,7 @@ class ProfileController extends Controller
             session()->put('stripe_portal_session', null);
             $payment_method_changed_notification = null;
             if ($request->has('pmu')) {
-                $payment_method_changed_notification = Notification::where('user_id', Auth::id())->where('body', 'LIKE', '%Your payment method was updated%')->orderBy('created_at', 'DESC')->first();
+                $payment_method_changed_notification = Notification::where('user_id', Auth::id())->where('body', 'LIKE', '%You have successfully connected your Stripe account.%')->orderBy('created_at', 'DESC')->first();
                 $payment_method_changed_notification->body = 'Thank you for updating your payment information.';
             }
             return Inertia::render('EditProfile', [
