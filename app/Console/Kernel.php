@@ -72,17 +72,17 @@ class Kernel extends ConsoleKernel
 //        $schedule->call(function () {close_accounts();})->everyThirtyMinutes();
         //testing | suspend and close accounts
 
-        //monthly add goals
-        $schedule->call(function () {monthly_add_goals();})->monthlyOn(1, '00:00');
-        //set weekly goal
-        $schedule->call(function () {set_weekly_goal();})->weeklyOn(1, '00:00');
-        //last week's rankings
-        $schedule->call(function () {last_weeks_rankings();})->weeklyOn(1, '07:00');
-        //unable to meet weekly goal
-        $schedule->call(function () {unable_to_meet_weekly_goal();})->weeklyOn(7, '23:59');
-        //no referrals for the day
-//        $schedule->call(function () {no_referrals_for_the_day();})->dailyAt('23:59');
-        $schedule->call(function () {no_referrals_for_the_day();})->weeklyOn(1, '23:59');
+//        //monthly add goals
+//        $schedule->call(function () {monthly_add_goals();})->monthlyOn(1, '00:00');
+//        //set weekly goal
+//        $schedule->call(function () {set_weekly_goal();})->weeklyOn(1, '00:00');
+//        //last week's rankings
+//        $schedule->call(function () {last_weeks_rankings();})->weeklyOn(1, '07:00');
+//        //unable to meet weekly goal
+//        $schedule->call(function () {unable_to_meet_weekly_goal();})->weeklyOn(7, '23:59');
+//        //no referrals for the day
+////        $schedule->call(function () {no_referrals_for_the_day();})->dailyAt('23:59');
+//        $schedule->call(function () {no_referrals_for_the_day();})->weeklyOn(1, '23:59');
 //        // payment not made
 //        $dates = [3, 7, 14];
 //        foreach ($dates as $date) {
