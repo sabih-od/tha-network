@@ -127,7 +127,9 @@ function monthly_add_goals() {
     $users = get_eloquent_users();
     foreach ($users as $user) {
         $rank = get_my_rank($user->id);
-        $user->remaining_referrals = intval($user->remaining_referrals) + intval($rank->target);
+        //reset goals not add
+//        $user->remaining_referrals = intval($user->remaining_referrals) + intval($rank->target);
+        $user->remaining_referrals = intval($rank->target);
         $user->save();
     }
 }
