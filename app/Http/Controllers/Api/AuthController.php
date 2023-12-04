@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -35,14 +36,14 @@ class AuthController extends Controller
 
         $credentials = $request->has('email') ? $request->only(['email', 'password']) : $request->only(['username', 'password']);
 
-        if (!$token = auth('api')->attempt($credentials)) {
+        if (!$token = auth(Auth::guard()->getName())->attempt($credentials)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized'
             ], 401);
         }
 
-        $resp = get_user_profile(auth('api')->user()->id);
+        $resp = get_user_profile(auth(Auth::guard()->getName())->user()->id);
         $resp['token'] = $token;
 
 
@@ -60,7 +61,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        $resp = get_user_profile(auth('api')->user()->id ?? null);
+        $resp = get_user_profile(auth(Auth::guard()->getName())->user()->id ?? null);
 
 
         return response()->json([
@@ -77,7 +78,7 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        auth()->logout();
+        auth(Auth::guard()->getName())->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
     }
@@ -89,7 +90,7 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        return $this->respondWithToken(auth()->refresh());
+        return $this->respondWithToken(auth(Auth::guard()->getName())->refresh());
     }
 
     /**
@@ -104,7 +105,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60
+            'expires_in' => auth(Auth::guard()->getName())->factory()->getTTL() * 60
         ]);
     }
 }
