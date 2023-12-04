@@ -37,7 +37,7 @@ class AuthController extends Controller
         $credentials = $request->has('email') ? $request->only(['email', 'password']) : $request->only(['username', 'password']);
 
 //        if (!$token = auth('api')->attempt($credentials)) {
-        if (!$token = Auth::guard('api')->attempt($credentials)) {
+        if (!$token = auth('api')->attempt($credentials)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized'
@@ -52,6 +52,7 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Logged in successfully!',
             'data' => $resp,
+            'guard_name' => Auth::guard()->getName(),
         ]);
     }
 
