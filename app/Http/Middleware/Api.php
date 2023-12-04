@@ -16,7 +16,7 @@ class Api
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!auth('api')->check()) {
+        if (!auth()->guard('api')->check()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthenticated.',

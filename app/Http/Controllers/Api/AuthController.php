@@ -35,14 +35,14 @@ class AuthController extends Controller
 
         $credentials = $request->has('email') ? $request->only(['email', 'password']) : $request->only(['username', 'password']);
 
-        if (! $token = auth('api')->attempt($credentials)) {
+        if (! $token = auth()->guard('api')->attempt($credentials)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized'
             ], 401);
         }
 
-        $resp = get_user_profile(auth('api')->user()->id);
+        $resp = get_user_profile(auth()->guard('api')->user()->id);
         $resp['token'] = $token;
 
 
@@ -60,12 +60,12 @@ class AuthController extends Controller
      */
     public function me()
     {
-        $resp = get_user_profile(auth('api')->user()->id);
+        $resp = get_user_profile(auth()->guard('api')->user()->id);
 
 
         return response()->json([
             'success' => true,
-            'message' => 'Logged in successfully!',
+            'message' => 'Success',
             'data' => $resp,
         ]);
     }
@@ -104,7 +104,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60
+            'expires_in' => auth()->guard('api')->factory()->getTTL() * 60
         ]);
     }
 }
