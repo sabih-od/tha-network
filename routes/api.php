@@ -27,16 +27,16 @@ Route::get('temp', function () {
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
     //secure routes
-    Route::group(['middleware' => 'api2'], function () {
+//    Route::group(['middleware' => 'api2'], function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('refresh', [AuthController::class, 'refresh']);
-    });
+//    });
 });
 
 //w/o auth prefix
 Route::group([], function () {
     //secure routes
-    Route::group(['middleware' => 'api2'], function () {
+//    Route::group(['middleware' => 'api2'], function () {
         Route::get('me', [AuthController::class, 'me']);
-    });
+//    });
 });
