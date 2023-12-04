@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -35,14 +36,14 @@ class AuthController extends Controller
 
         $credentials = $request->has('email') ? $request->only(['email', 'password']) : $request->only(['username', 'password']);
 
-        if (! $token = auth()->guard('api')->attempt($credentials)) {
+        if (! $token = Auth::guard('api')->attempt($credentials)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized'
             ], 401);
         }
 
-        $resp = get_user_profile(auth()->guard('api')->user()->id);
+        $resp = get_user_profile(Auth::guard('api')->user()->id);
         $resp['token'] = $token;
 
 
@@ -60,7 +61,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        $resp = get_user_profile(auth()->guard('api')->user()->id);
+        $resp = get_user_profile(Auth::guard('api')->user()->id ?? null);
 
 
         return response()->json([
@@ -104,7 +105,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->guard('api')->factory()->getTTL() * 60
+            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60
         ]);
     }
 }
