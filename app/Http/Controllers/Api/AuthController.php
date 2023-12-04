@@ -52,7 +52,6 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Logged in successfully!',
             'data' => $resp,
-            'guard_name' => Auth::guard()->getName(),
         ]);
     }
 
