@@ -13,8 +13,22 @@
             }
         }
     },
+    "servers": [
+        {
+            "url": "http://tha-network.test/api",
+            "description": "Local"
+        },
+        {
+            "url": "https://service.demowebsitelinks.com/tha-network/public/api",
+            "description": "Staging"
+        },
+        {
+            "url": "https://thanetwork.org/api",
+            "description": "Live"
+        },
+    ],
     "paths": {
-        "/api/auth/login": {
+        "/auth/login": {
             "post": {
                 "tags": [
                     "Auth"
@@ -50,7 +64,7 @@
                 }
             }
         },
-        "/api/me": {
+        "/me": {
             "get": {
                 "tags": [
                     "Secure Routes"
