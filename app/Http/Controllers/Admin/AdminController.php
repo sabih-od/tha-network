@@ -111,13 +111,13 @@ class AdminController extends Controller
 
                     $customer = $stripe->customers->retrieve($invoice->customer);
                     // Check if the invoice is paid and the payment was made in the current year
-                    $invoiceYear = date('Y', $invoice->period_start);
+                    $invoiceYear = date('Y', $invoice->effective_at);
                     if (!is_null($month)) {
-                        $invoiceMonth = date('m', $invoice->period_start);
+                        $invoiceMonth = date('m', $invoice->effective_at);
                         if ($invoice->paid && $invoiceYear === $year && $invoiceMonth === $month) {
                             $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
                             $invoice['total'] = ($invoice['total'] / 100);
-                            $invoice['formatted_date'] = date('m', $invoice->period_start).'-'.date('d', $invoice->period_start).'-'.date('Y', $invoice->period_start);
+                            $invoice['formatted_date'] = date('m', $invoice->effective_at).'-'.date('d', $invoice->effective_at).'-'.date('Y', $invoice->effective_at);
                             $subscriptionPayments[] = $invoice;
                             $payment_count += 1;
                         }
@@ -125,7 +125,7 @@ class AdminController extends Controller
                         if ($invoice->paid && $invoiceYear === $year) {
                             $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
                             $invoice['total'] = ($invoice['total'] / 100);
-                            $invoice['formatted_date'] = date('m', $invoice->period_start).'-'.date('d', $invoice->period_start).'-'.date('Y', $invoice->period_start);
+                            $invoice['formatted_date'] = date('m', $invoice->effective_at).'-'.date('d', $invoice->effective_at).'-'.date('Y', $invoice->effective_at);
                             $subscriptionPayments[] = $invoice;
                             $payment_count += 1;
                         }
