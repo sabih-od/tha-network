@@ -117,6 +117,7 @@ class AdminController extends Controller
                         if ($invoice->paid && $invoiceYear === $year && $invoiceMonth === $month) {
                             $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
                             $invoice['total'] = ($invoice['total'] / 100);
+                            $invoice['formatted_date'] = date('m', $invoice->created).'-'.date('d', $invoice->created).'-'.date('Y', $invoice->created);
                             $subscriptionPayments[] = $invoice;
                             $payment_count += 1;
                         }
@@ -124,6 +125,7 @@ class AdminController extends Controller
                         if ($invoice->paid && $invoiceYear === $year) {
                             $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
                             $invoice['total'] = ($invoice['total'] / 100);
+                            $invoice['formatted_date'] = date('m', $invoice->created).'-'.date('d', $invoice->created).'-'.date('Y', $invoice->created);
                             $subscriptionPayments[] = $invoice;
                             $payment_count += 1;
                         }
@@ -152,6 +154,7 @@ class AdminController extends Controller
                         $decoded_charge_object->total = ($decoded_charge_object->amount / 100);
                         $decoded_charge_object->date = $decoded_charge_object->created;
                         $decoded_charge_object->user = $user_with_charge_object;
+                        $decoded_charge_object->formatted_date = date('m', $decoded_charge_object->created).'-'.date('d', $decoded_charge_object->created).'-'.date('Y', $decoded_charge_object->created);
                         $subscriptionPayments[] = $decoded_charge_object;
                         $payment_count += 1;
                     }
@@ -160,6 +163,7 @@ class AdminController extends Controller
                         $decoded_charge_object->total = ($decoded_charge_object->amount / 100);
                         $decoded_charge_object->date = $decoded_charge_object->created;
                         $decoded_charge_object->user = $user_with_charge_object;
+                        $decoded_charge_object->formatted_date = date('m', $decoded_charge_object->created).'-'.date('d', $decoded_charge_object->created).'-'.date('Y', $decoded_charge_object->created);
                         $subscriptionPayments[] = $decoded_charge_object;
                         $payment_count += 1;
                     }
