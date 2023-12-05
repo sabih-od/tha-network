@@ -242,7 +242,8 @@
                                 <tr>
                                     <td>{{($payment->user->profile->first_name ?? '') . ' ' . ($payment->user->profile->last_name ?? '')}}</td>
                                     <td>${{$payment->total - 11.99}}</td>
-                                    <td>{{\Carbon\Carbon::createFromTimestamp($payment->date)}}</td>
+{{--                                    <td>{{\Carbon\Carbon::createFromTimestamp($payment->date)}}</td>--}}
+                                    <td>{{$payment->formatted_date}}</td>
                                 </tr>
                             @endif
                         @endforeach
@@ -281,7 +282,8 @@
                                 <tr>
                                     <td>{{($payment->user->profile->first_name ?? '') . ' ' . ($payment->user->profile->last_name ?? '')}}</td>
                                     <td>${{$payment->total - 11.99}}</td>
-                                    <td>{{\Carbon\Carbon::createFromTimestamp($payment->date)}}</td>
+{{--                                    <td>{{\Carbon\Carbon::createFromTimestamp($payment->date)}}</td>--}}
+                                    <td>{{$payment->formatted_date}}</td>
                                 </tr>
                             @endif
                         @endforeach
@@ -320,7 +322,8 @@
                                 <tr>
                                     <td>{{($payment->user->profile->first_name ?? '') . ' ' . ($payment->user->profile->last_name ?? '')}}</td>
                                     <td>${{$payment->total}}</td>
-                                    <td>{{\Carbon\Carbon::createFromTimestamp($payment->date)}}</td>
+{{--                                    <td>{{\Carbon\Carbon::createFromTimestamp($payment->date)}}</td>--}}
+                                    <td>{{$payment->formatted_date}}</td>
                                 </tr>
                             @endif
                         @endforeach
@@ -359,7 +362,8 @@
                                 <tr>
                                     <td>{{($payment->user->profile->first_name ?? '') . ' ' . ($payment->user->profile->last_name ?? '')}}</td>
                                     <td>${{$payment->total}}</td>
-                                    <td>{{\Carbon\Carbon::createFromTimestamp($payment->date)}}</td>
+{{--                                    <td>{{\Carbon\Carbon::createFromTimestamp($payment->date)}}</td>--}}
+                                    <td>{{$payment->formatted_date}}</td>
                                 </tr>
                             @endif
                         @endforeach
