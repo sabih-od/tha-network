@@ -11,19 +11,20 @@ use App\Models\ProductReview;
 use App\Models\RewardLog;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Stripe\Exception\ApiErrorException;
 
 class AdminController extends Controller
 {
     public function dashboard()
     {
-        $res = $this->getRewardLogsByRange(Carbon::now()->startOfYear(), Carbon::now()->endOfYear());
-        $rewards_this_year = $res['reward_logs'];
-        $total_reward_amount_this_year = $res['total'];
-//
         $res = $this->getRewardLogsByRange(Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth());
         $rewards_this_month = $res['reward_logs'];
         $total_reward_amount_this_month = $res['total'];
+//
+        $res = $this->getRewardLogsByRange(Carbon::now()->startOfYear(), Carbon::now()->endOfYear());
+        $rewards_this_year = $res['reward_logs'];
+        $total_reward_amount_this_year = $res['total'];
 //
         $res = $this->getSubscriptionPayments(date('Y'), date('m'));
         $incoming_payments_this_month = $res['payments'];
@@ -129,6 +130,7 @@ class AdminController extends Controller
                     }
                 }
             } catch (ApiErrorException $e) {
+                Log::info('function getSubscriptionPayments failed. $subscription_id: ' . $subscription_id . ', error: ' . $e->getMessage());
                 continue;
             }
         }
@@ -163,6 +165,7 @@ class AdminController extends Controller
                     }
                 }
             } catch (\Exception $e) {
+                Log::info('function getSubscriptionPayments failed. $user_with_charge_object: ' . $user_with_charge_object . ', error: ' . $e->getMessage());
                 continue;
             }
         }

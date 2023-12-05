@@ -1,0 +1,96 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Tha Network | APIs",
+        "version": "1.0"
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
+    "servers": [
+        {
+            "url": "http://tha-network.test/api",
+            "description": "Local"
+        },
+        {
+            "url": "http://service.demowebsitelinks.com:3045/api",
+            "description": "Staging"
+        },
+        {
+            "url": "https://thanetwork.org/api",
+            "description": "Live"
+        },
+    ],
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "email": "asd444@mailinator.com",
+                                "username": "zywigodor",
+                                "password": "admin!@#"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "success": true,
+                                    "message": "Success!",
+                                    "data": [
+                                        "...."
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/me": {
+            "get": {
+                "tags": [
+                    "Secure Routes"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "success": true,
+                                    "message": "Success!",
+                                    "data": [
+                                        "...."
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -23,11 +23,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Inertia\Inertia;
 use PaypalPayoutsSDK\Core\PayPalHttpClient;
 use PaypalPayoutsSDK\Core\ProductionEnvironment;
 use PaypalPayoutsSDK\Core\SandboxEnvironment;
 use PaypalPayoutsSDK\Payouts\PayoutsPostRequest;
 use Stripe\Stripe;
+use Stripe\StripeClient;
 
 function last_active($user_id): string
 {
@@ -947,4 +949,40 @@ function get_user_with_charge_object () {
         'role_id' => 2,
         'closed_on' => null
     ])->with('profile')->whereNotNull('stripe_charge_object')->get();
+}
+
+//--------------------------API HELPERS
+function profileImg($user, $collection)
+{
+    $img = null;
+    if ($user) {
+        $img = $user->getFirstMedia($collection)->original_url ?? null;
+    }
+    return $img;
+}
+
+function get_user_profile ($id = null) {
+    $user = get_eloquent_user($id);
+
+    //check if user has linked any accounts to their stripe payout screen
+    $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
+    $has_provided_stripe_payout_information = false;
+    if ($user->stripe_account_id) {
+        $account = $stripe->accounts->retrieve($user->stripe_account_id);
+        $has_provided_stripe_payout_information = (bool)($account->external_accounts->total_count > 0);
+    }
+
+    $user_obj = $user->only('name', 'email', 'created_at', 'pwh', 'role_id');
+    $profile_obj = $user->profile->toArray() ?? null;
+
+    return array_merge($user_obj, $profile_obj, [
+        'profile_image' => profileImg($user, 'profile_image'),
+        'profile_cover' => profileImg($user, 'profile_cover'),
+        'has_made_monthly_payment' => has_made_monthly_payment($id),
+        'stripe_account_id' => $user->stripe_account_id,
+        'paypal_account_details' => $user->paypal_account_details,
+        'stripe_checkout_session_id' => $user->stripe_checkout_session_id,
+        'has_provided_stripe_payout_information' => $has_provided_stripe_payout_information,
+        'preferred_payout_method' => $user->preferred_payout_method,
+    ]);
 }
