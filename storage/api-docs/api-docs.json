@@ -19,7 +19,7 @@
             "description": "Local"
         },
         {
-            "url": "https://service.demowebsitelinks.com/tha-network/public/api",
+            "url": "http://service.demowebsitelinks.com:3045/api",
             "description": "Staging"
         },
         {
