@@ -111,13 +111,13 @@ class AdminController extends Controller
 
                     $customer = $stripe->customers->retrieve($invoice->customer);
                     // Check if the invoice is paid and the payment was made in the current year
-                    $invoiceYear = date('Y', $invoice->created);
+                    $invoiceYear = date('Y', $invoice->due_date);
                     if (!is_null($month)) {
-                        $invoiceMonth = date('m', $invoice->created);
+                        $invoiceMonth = date('m', $invoice->due_date);
                         if ($invoice->paid && $invoiceYear === $year && $invoiceMonth === $month) {
                             $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
                             $invoice['total'] = ($invoice['total'] / 100);
-                            $invoice['formatted_date'] = date('m', $invoice->created).'-'.date('d', $invoice->created).'-'.date('Y', $invoice->created);
+                            $invoice['formatted_date'] = date('m', $invoice->due_date).'-'.date('d', $invoice->due_date).'-'.date('Y', $invoice->due_date);
                             $subscriptionPayments[] = $invoice;
                             $payment_count += 1;
                         }
@@ -125,7 +125,7 @@ class AdminController extends Controller
                         if ($invoice->paid && $invoiceYear === $year) {
                             $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
                             $invoice['total'] = ($invoice['total'] / 100);
-                            $invoice['formatted_date'] = date('m', $invoice->created).'-'.date('d', $invoice->created).'-'.date('Y', $invoice->created);
+                            $invoice['formatted_date'] = date('m', $invoice->due_date).'-'.date('d', $invoice->due_date).'-'.date('Y', $invoice->due_date);
                             $subscriptionPayments[] = $invoice;
                             $payment_count += 1;
                         }
