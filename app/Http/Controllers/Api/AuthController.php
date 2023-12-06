@@ -11,6 +11,7 @@ use App\Models\NetworkMember;
 use App\Models\Notification;
 use App\Models\Referral;
 use App\Models\Reward;
+use App\Models\SendInvitation;
 use App\Models\ThaPayment;
 use App\Models\User;
 use App\Models\UserInvitation;
@@ -33,7 +34,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('api2', ['except' => ['login', 'register']]);
+        $this->middleware('api2', ['except' => ['login', 'register', 'getInvitationCode']]);
     }
 
     public function login(Request $request)
@@ -263,28 +264,78 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        auth(Auth::guard()->getName())->logout();
+        auth('api')->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
     }
 
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+    public function getInvitationCode (Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $validator = Validator::make($request->all(), [
+                'email' => [
+                    'required_if:email,in:send_code_type',
+                    'nullable',
+                    'string',
+                    'email',
+                    'max:255',
+                    Rule::unique('users')->whereNull('deleted_at'),
+                ],
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bad Request',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+            $admin = User::where('email', 'admin@thanetwork.com')->first();
+            $code = $admin ? $admin->invitation_code : $this->generateUniqueCode();
+
+            DB::beginTransaction();
+            $sendInvitation = SendInvitation::firstOrNew([
+                'email' => $request->email
+            ]);
+            $sendInvitation->save();
+            $sendInvitation->invitation()->forceDelete();
+            $sendInvitation->invitation()->create([
+                'code' => $code
+            ]);
+            DB::commit();
+
+            if (!$this->mailCode($request->email, 'Tha Network - Invitation Code!', $code)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Email not sent!'
+                ], 401);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => '',
+                'data' => [
+                    'invitation_code' => $code
+                ]
+            ], 200);
+        } catch (\Exception $e) {
+            Log::info('API FAILED (/auth/get-invitation-code) | Error: ' . $e->getMessage());
+
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Registration Failed.',
+                'error' => $e->getMessage()
+            ], 401);
+        }
+    }
+
     public function refresh()
     {
         return $this->respondWithToken(auth('api')->refresh());
     }
 
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     protected function respondWithToken($token)
     {
         return response()->json([
@@ -370,6 +421,101 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    public function mailCode($to, $subject, $code)
+    {
+//        $from = 'no-reply@tha-network.com';
+        $from = 'support@thanetwork.org';
+
+        // To send HTML mail, the Content-type header must be set
+        $headers = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+
+        // Create email headers
+        $headers .= 'From: ' . $from . "\r\n" .
+            'Reply-To: ' . $from . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
+
+        // Compose a simple HTML email message
+        $message = '<html><body>';
+        $message .= '<h1 style="color:#f40;">Welcome to Tha Network!</h1>';
+        $message .= '<p style="color:black;font-size:18px;">Please open up the link and use the invitation code given below to make an account: </p>';
+        $message .= '<br />' . $code . '<br />';
+        $message .= 'Link: <a href="'.route('loginForm', ['send-code' => 'success']).'">'.route('loginForm', ['send-code' => 'success']).'</a>';
+        $message .= '</body></html>';
+
+        $html = '<html lang="en">
+                    <head>
+                        <meta charset="UTF-8" />
+                        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <title>The Network Membership Pays</title>
+                    </head>
+
+                    <body style="padding: 0; margin: 0" style="max-width: 1170px; margin: auto">
+                        <table style="width: 1140px; margin: 2rem auto; border-spacing: 0">
+                            <tr style="margin-bottom: 20px; width: 100%">
+                                <a href="#"><img src="logo.png" class="img-fluid" alt="" style="display: block; max-width: 250px; margin: auto" /></a>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="width: 50%">
+                                    <span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code: '.$code.'</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="width: 50%">
+                                    <h6 style="font-size: 25px; margin: 30px 0 30px; text-align: center">Thanks for joining Tha Network</h6>
+                                    <a href="#" style="display: table; font-size: 22px; color: green; margin: auto">Because Membership Pays</a>
+                                    <span style="display: block; font-size: 20px; color: green; margin: 12px 0 0; text-align: center">$$$$$</span>
+                                    <img width="398" height="398" src="'.asset('images/notifications/PaymentMade.png').'" class="img-fluid" alt="img" style="display: table; margin: auto" />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3" style="width: 50%">
+                                    <p style="color: #333; margin: 30px 0 15px; line-height: 31px; font-size: 18px; text-align: center">To learn more about ThaNetwork follow us on our Social Media Platforms</p>
+                                    <!-- <p style="color: #333; margin: 10px 0; line-height: 26px">
+                                        <a href="#">Invitation Link</a>
+                                        Invitation Code 12345
+                                    </p> -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="width: 50%; text-align: center">
+                                    <a href="https://www.facebook.com/Tha-Network-150057600527324/" style="display: inline-block; margin: 0 6px">Facebook</a>
+                                    <a href="https://twitter.com/ThaNetwork4" style="display: inline-block; margin: 0 6px">Twitter</a>
+                                    <a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" style="display: inline-block; margin: 0 6px">Youtube</a>
+                                    <a href="https://www.tiktok.com/@_thanetwork_?lang=en" style="display: inline-block; margin: 0 6px">Tiktok</a>
+                                    <a href="https://www.instagram.com/_thanetwork_/" style="display: inline-block; margin: 0 6px">Instagram</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </body>
+                </html>';
+
+        // Sending email
+        try {
+            // return Mail::send([], [], function ($message) use ($to, $subject, $html) {
+            Mail::send([], [], function ($message) use ($to, $subject, $html) {
+                $message->to($to)
+                    ->subject($subject)
+                    ->setBody($html, 'text/html'); // for HTML rich messages
+            });
+
+            return (boolean)(count(Mail::failures()) == 0);
+        } catch (\Exception $e) {
+            Log::error('mailCode: Email not sent: ' . $e->getMessage());
+        }
+
+        return true;
+
+        // // Sending email
+        // if (mail($to, $subject, $html, $headers)) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
     }
 
 }
