@@ -996,7 +996,7 @@ function get_user_profile ($id = null) {
 
 function create_user ($data) {
     $user = User::create([
-        'user_invitation_id' => session('validate-code'),
+        'user_invitation_id' => session('validate-code') ?? 'validate-code',
         'username' => $data['username'],
         'email' => $data['email'],
         'password' => Hash::make($data['password']),

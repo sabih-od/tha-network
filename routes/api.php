@@ -26,6 +26,7 @@ Route::get('temp', function () {
 //auth prefix
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
+    Route::post('register', [AuthController::class, 'register']);
     //secure routes
 //    Route::group(['middleware' => 'api2'], function () {
         Route::post('logout', [AuthController::class, 'logout']);
