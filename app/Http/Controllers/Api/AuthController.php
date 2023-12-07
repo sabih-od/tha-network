@@ -27,11 +27,6 @@ use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
-    /**
-     * Create a new AuthController instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('api2', ['except' => ['login', 'register', 'getInvitationCode']]);
@@ -234,17 +229,12 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Registration Failed.',
+                'message' => 'Server error.',
                 'error' => $e->getMessage()
             ], 401);
         }
     }
 
-    /**
-     * Get the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function me()
     {
         $resp = get_user_profile(auth('api')->user()->id ?? null);
@@ -257,16 +247,16 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Log the user out (Invalidate the token).
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function logout()
     {
         auth('api')->logout();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Successfully logged out',
+            'data' => [],
+            'errors' => [],
+        ], 200);
     }
 
     public function getInvitationCode (Request $request)
@@ -291,7 +281,7 @@ class AuthController extends Controller
                     'errors' => $validator->errors()
                 ], 401);
             }
-            $admin = User::where('email', 'admin@thanetwork.com')->first();
+            $admin = User::where('role_id', 1)->first();
             $code = $admin ? $admin->invitation_code : $this->generateUniqueCode();
 
             DB::beginTransaction();
@@ -325,10 +315,44 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Registration Failed.',
+                'message' => 'Server error.',
                 'error' => $e->getMessage()
             ], 401);
         }
+    }
+
+    public function verifyInvitationCode (Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'invitation_code' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bad Request',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+
+        $admin = User::where('role_id', 1)->first() ?? null;
+        $code = !is_null($admin) ? $admin->invitation_code : null;
+
+        if (!is_null($code) && $request->invitation_code == $code || User::where('invitation_code', $request->invitation_code)->exists()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Invitation code is valid.',
+                'data' => [],
+                'errors' => [],
+            ], 200);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Invitation code is invalid.',
+            'data' => [],
+            'errors' => [],
+        ], 200);
     }
 
     public function refresh()

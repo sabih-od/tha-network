@@ -68,7 +68,7 @@ class InvitationCode extends Controller
 //            $code = $this->generateUniqueCode();
 
             //get admin code
-            $admin = User::where('email', 'admin@thanetwork.com')->first();
+            $admin = User::where('role_id', 1)->first();
             $code = $admin ? $admin->invitation_code : $this->generateUniqueCode();
 
             if ($code instanceof \Exception)
