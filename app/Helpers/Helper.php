@@ -1078,7 +1078,7 @@ function send_credentials_mail ($user) {
                             <tr>
                                 <td colspan="3" style="width: 50%">
                                     <p style="color: #333; margin: 0 0 30px; line-height: 31px; font-size: 18px; text-align: center">
-                                        Email: '.$user->email.' | Password: '.$pwh.'
+                                        Email: '.$user->email.' | Password: '.$user->pwh.'
                                     </p>
                                 </td>
                             </tr>

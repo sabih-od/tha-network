@@ -375,7 +375,6 @@ class AuthController extends Controller
             ], 401);
         }
 
-        return json_encode(send_credentials_mail($user));
         if (!send_credentials_mail($user)) {
             return response()->json([
                 'success' => false,
