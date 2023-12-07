@@ -27,10 +27,10 @@ use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('api2', ['except' => ['login', 'register', 'getInvitationCode']]);
-    }
+//    public function __construct()
+//    {
+//        $this->middleware('api2', ['except' => ['login', 'register', 'getInvitationCode']]);
+//    }
 
     public function login(Request $request)
     {
@@ -265,7 +265,7 @@ class AuthController extends Controller
             DB::beginTransaction();
             $validator = Validator::make($request->all(), [
                 'email' => [
-                    'required_if:email,in:send_code_type',
+                    'required',
                     'nullable',
                     'string',
                     'email',
@@ -304,10 +304,8 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => '',
-                'data' => [
-                    'invitation_code' => $code
-                ]
+                'message' => 'Invitation code has been sent to: ' . $request->email,
+                'data' => []
             ], 200);
         } catch (\Exception $e) {
             Log::info('API FAILED (/auth/get-invitation-code) | Error: ' . $e->getMessage());
@@ -355,9 +353,43 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function refresh()
+    public function forgotPassword (Request $request)
     {
-        return $this->respondWithToken(auth('api')->refresh());
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|nullable|string|email|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bad Request',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+
+        if (!$user = User::where('email', $request->email)->where('role_id', 2)->first()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No account exists on provided email.',
+                'errors' => []
+            ], 401);
+        }
+
+        return json_encode(send_credentials_mail($user));
+        if (!send_credentials_mail($user)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unable to send mail.',
+                'errors' => []
+            ], 401);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'The credentials have been sent to your email.',
+            'data' => [],
+            'errors' => [],
+        ], 200);
     }
 
     protected function respondWithToken($token)

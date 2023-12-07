@@ -25,9 +25,87 @@
         {
             "url": "https://thanetwork.org/api",
             "description": "Live"
-        },
+        }
     ],
     "paths": {
+        "/auth/get-invitation-code": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "email": "asd448@mailinator.com"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/auth/verify-invitation-code": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "invitation_code": "2277490383"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "invitation_code": "2277490383",
+                                "first_name": "Cedric",
+                                "last_name": "Maya",
+                                "gender": " 'Male' OR 'Female' ",
+                                "phone": "1234567890",
+                                "username": "asd444",
+                                "email": "asd444@mailinator.com",
+                                "password": "admin!@#2A",
+                                "password_confirmation": "admin!@#2A",
+                                "social_security_number": "1234567890"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "tags": [
@@ -48,26 +126,15 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "Generic response",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "success": true,
-                                    "message": "Success!",
-                                    "data": [
-                                        "...."
-                                    ]
-                                }
-                            }
-                        }
+                        "description": "Generic response"
                     }
                 }
             }
         },
-        "/me": {
+        "/auth/me": {
             "get": {
                 "tags": [
-                    "Secure Routes"
+                    "Auth"
                 ],
                 "security": [
                     {
@@ -76,18 +143,47 @@
                 ],
                 "responses": {
                     "default": {
-                        "description": "Generic response",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "success": true,
-                                    "message": "Success!",
-                                    "data": [
-                                        "...."
-                                    ]
-                                }
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/auth/forgot-password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "email": "asd444@mailinator.com"
                             }
                         }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
                     }
                 }
             }

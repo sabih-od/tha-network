@@ -29,17 +29,17 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('get-invitation-code', [AuthController::class, 'getInvitationCode']);
     Route::post('verify-invitation-code', [AuthController::class, 'verifyInvitationCode']);
+    Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
     //secure routes
-//    Route::group(['middleware' => 'api2'], function () {
+    Route::group(['middleware' => 'api2'], function () {
+        Route::get('me', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
-        Route::post('refresh', [AuthController::class, 'refresh']);
-//    });
+    });
 });
 
 //w/o auth prefix
 Route::group([], function () {
     //secure routes
 //    Route::group(['middleware' => 'api2'], function () {
-        Route::get('me', [AuthController::class, 'me']);
 //    });
 });
