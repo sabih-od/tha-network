@@ -291,6 +291,23 @@
                     }
                 }
             }
+        },
+        "/close-my-account": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
         }
     }
 }

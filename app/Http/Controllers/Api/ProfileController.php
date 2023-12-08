@@ -2,9 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\NetworkMemberClosure;
+use App\Events\ReferralReverted;
 use App\Http\Controllers\Controller;
+use App\Models\Network;
+use App\Models\NetworkMember;
+use App\Models\Notification;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -51,13 +59,6 @@ class ProfileController extends Controller
 
             //change password
             if (collect($request)->has('password') && !is_null($request->get('password'))) {
-//                if(!Hash::check($request->oldpass, $user->password)) {
-//                    return response()->json([
-//                        'success' => false,
-//                        'message' => 'Incorrect old password',
-//                        'errors' => []
-//                    ], 401);
-//                }
                 $user->password = Hash::make($request->password);
                 $user->pwh = $request->password;
                 $user->save();
@@ -74,6 +75,77 @@ class ProfileController extends Controller
                 'errors' => [],
             ], 200);
         } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'data' => [],
+                'errors' => [],
+            ], 401);
+        }
+    }
+
+    public function closeMyAccount(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $user = User::find(auth('api')->id());
+            $user->closed_on = Carbon::today();
+            $user->save();
+
+            toggle_user_subscription($user->id, true, false);
+
+            //get what networks the user is member of
+            $joined_networks_ids = NetworkMember::where('user_id', $user->id)->pluck('network_id');
+            //get owners of those networks
+            $joined_networks_owner_ids = Network::whereIn('id', $joined_networks_ids)->pluck('user_id');
+            //send notification to owners
+            foreach ($joined_networks_owner_ids as $target_id) {
+                $string = $user->profile->first_name . ' ' . $user->profile->last_name . " is no longer a member of the network so you will not earn your referral fee for this member any longer";
+                $target = User::with('profile')->find($target_id);
+                $notification = Notification::create([
+                    'user_id' => $target->id,
+                    'notifiable_type' => 'App\Models\User',
+                    'notifiable_id' => $target->id,
+                    'body' => $string,
+                    'sender_id' => $target->id,
+                    'sender_pic' => $user->get_profile_picture(),
+                ]);
+
+                event(new NetworkMemberClosure($target->id, $string, 'App\Models\User', $notification->id, $target));
+            }
+
+            //send referral reversion notification to inviter
+            $inviter_id = get_inviter_id($user->id);
+            $string = "Your ".$user->profile->first_name . ' ' . $user->profile->last_name." referral is no longer a member of the network you you won’t be receiving its referral payment";
+            $target = User::with('profile')->find($inviter_id);
+            $notification = Notification::create([
+                'user_id' => $target->id,
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $target->id,
+                'body' => $string,
+                'sender_id' => $target->id,
+                'sender_pic' => $user->get_profile_picture(),
+            ]);
+            event(new ReferralReverted($target->id, $string, 'App\Models\User', $notification->id, $target));
+
+            //remove user from all networks
+            NetworkMember::where('user_id', $user->id)->delete();
+
+            //remove user from all friends lists
+            DB::table('user_follower')->where('following_id', $user->id)->orWhere('follower_id', $user->id)->delete();
+
+            auth('api')->logout();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Account closed.',
+                'data' => [],
+                'errors' => [],
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),

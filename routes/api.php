@@ -40,5 +40,6 @@ Route::group([], function () {
         Route::post('send-invitation', [AuthController::class, 'sendInvitation']);
 
         Route::post('update-profile', [ProfileController::class, 'update']);
+        Route::get('close-my-account', [ProfileController::class, 'closeMyAccount']);
     });
 });
