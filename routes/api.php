@@ -35,11 +35,12 @@ Route::group([], function () {
 
     //secure routes
     Route::group(['middleware' => 'api2'], function () {
-        Route::get('me', [AuthController::class, 'me']);
+        Route::get('me', [ProfileController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('send-invitation', [AuthController::class, 'sendInvitation']);
 
         Route::post('update-profile', [ProfileController::class, 'update']);
         Route::get('close-my-account', [ProfileController::class, 'closeMyAccount']);
+        Route::post('update-banner', [ProfileController::class, 'updateBanner']);
     });
 });

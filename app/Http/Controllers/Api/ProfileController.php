@@ -20,6 +20,18 @@ use Illuminate\Validation\Rules\Password;
 
 class ProfileController extends Controller
 {
+    public function me()
+    {
+        $resp = get_user_profile(auth('api')->user()->id ?? null);
+
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Success',
+            'data' => $resp,
+        ]);
+    }
+
     public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -142,6 +154,50 @@ class ProfileController extends Controller
                 'success' => true,
                 'message' => 'Account closed.',
                 'data' => [],
+                'errors' => [],
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'data' => [],
+                'errors' => [],
+            ], 401);
+        }
+    }
+
+    public function updateBanner(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $validator = Validator::make($request->all(), [
+                'cover' => ['required', 'image', 'max:5120'],
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bad Request',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+
+
+            $user = auth('api')->user();
+            if ($user) {
+                $user->clearMediaCollection('profile_cover');
+                $user
+                    ->addMediaFromRequest('cover')
+                    ->toMediaCollection('profile_cover');
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Changed cover successfully!',
+                'data' => get_user_profile($user->id ?? null),
                 'errors' => [],
             ], 200);
         } catch (\Exception $e) {

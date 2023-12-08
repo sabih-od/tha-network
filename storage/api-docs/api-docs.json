@@ -308,6 +308,41 @@
                     }
                 }
             }
+        },
+        "/update-banner": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "cover": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "description": "The image file to upload"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
         }
     }
 }

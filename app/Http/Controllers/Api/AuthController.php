@@ -236,18 +236,6 @@ class AuthController extends Controller
         }
     }
 
-    public function me()
-    {
-        $resp = get_user_profile(auth('api')->user()->id ?? null);
-
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Success',
-            'data' => $resp,
-        ]);
-    }
-
     public function logout()
     {
         auth('api')->logout();
