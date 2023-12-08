@@ -1123,7 +1123,7 @@ function stripe_charge ($token_id) {
     }
 }
 
-function stripe_subscription($request, $charge_date, $isMonthsFirst) {
+function stripe_subscription ($request, $charge_date, $isMonthsFirst) {
     $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
 
     //create product
@@ -1198,7 +1198,7 @@ function stripe_subscription($request, $charge_date, $isMonthsFirst) {
     ];
 }
 
-function invitation_mail_code($to, $subject, $username, $name, $role_id, $guard = 'web')
+function invitation_mail_code ($to, $subject, $username, $name, $role_id, $guard = 'web')
 {
     $user = $guard == 'web' ? Auth::user() : auth('api')->user();
 
@@ -1287,4 +1287,12 @@ function invitation_mail_code($to, $subject, $username, $name, $role_id, $guard 
     }
 
     return true;
+}
+
+function get_channel_id ($user_1_id, $user_2_id) {
+    if ($channel = Channel::where('participants', 'LIKE', '%'.$user_1_id.'%')->where('participants', 'LIKE', '%'.$user_2_id.'%')) {
+        return $channel->id;
+    }
+
+    return false;
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UserController;
@@ -47,5 +48,8 @@ Route::group([], function () {
 
         //user
         Route::post('users/search', [UserController::class, 'search']);
+
+        //chat
+        Route::post('chat/channels', [ChatController::class, 'channels']);
     });
 });
