@@ -88,23 +88,6 @@
                 }
             }
         },
-        "/me": {
-            "get": {
-                "tags": [
-                    "Auth"
-                ],
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ],
-                "responses": {
-                    "default": {
-                        "description": "Generic response"
-                    }
-                }
-            }
-        },
         "/logout": {
             "post": {
                 "tags": [
@@ -218,6 +201,23 @@
                 }
             }
         },
+        "/me": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
         "/send-invitation": {
             "post": {
                 "tags": [
@@ -240,6 +240,47 @@
                                     "asd303@mailinator.com",
                                     "asd304@mailinator.com"
                                 ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/update-profile": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "bio" : ".....",
+                                "marital_status": "[ 'married' OR 'single' ]",
+                                "gender" :  "[ 'Male' OR 'Female' ]",
+                                "first_name": "John",
+                                "last_name" :  "Doe",
+                                "phone": "1234",
+                                "email" :  "jdoe@maillinator.com",
+                                "username": "jDoe",
+                                "address" :  ".....",
+                                "country": "US",
+                                "city" :  "Chicago",
+                                "postal_code": "12345",
+                                "password" :  "admin!@#",
+                                "password_confirmation" :  "admin!@#"
                             }
                         }
                     }
