@@ -1003,7 +1003,8 @@ function create_user ($data) {
         'pwh' => $data['password'],
         'invitation_code' => generateBarcodeNumber(),
         'stripe_checkout_session_id' => $data['stripe_checkout_session_id'] ?? null,
-        'stripe_customer_id' => $data['stripe_customer_id'] ?? null
+        'stripe_customer_id' => $data['stripe_customer_id'] ?? null,
+        'stripe_charge_object' => (is_string($data['stripe_charge_object']) ? $data['stripe_charge_object'] :  json_encode($data['stripe_charge_object'])) ?? null
     ]);
 
     $rank = get_my_rank($user->id);
@@ -1097,4 +1098,102 @@ function send_credentials_mail ($user) {
                 </html>';
 
     return mail($user->email, 'Forgot Password | Tha-Network', $html, $headers);
+}
+
+function get_subscription_amount () {
+    return count(User::where('role_id', 2)->get()) < 5000 ? 29.99 : 59.95;
+}
+
+function stripe_charge ($token_id) {
+    $stripe = new \Stripe\StripeClient(
+        env('STRIPE_SECRET_KEY')
+    );
+
+    try {
+        return $stripe->charges->create([
+            'amount' => get_subscription_amount() * 100,
+            'currency' => 'usd',
+            'source' => $token_id,
+            'description' => 'Tha Network - Subscription Charge',
+        ]);
+    } catch (\Stripe\Exception\ApiErrorException $e) {
+        return json_decode(json_encode([
+            "status" => $e->getMessage()
+        ]));
+    }
+}
+
+function stripe_subscription($request, $charge_date, $isMonthsFirst) {
+    $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
+
+    //create product
+    $product = $stripe->products->create([
+        'name' => 'THA Network monthly subscription',
+    ]);
+
+    //create price
+    $price = $stripe->prices->create([
+        'unit_amount' => get_subscription_amount() * 100,
+        'currency' => 'usd',
+        'recurring' => ['interval' => 'month'],
+        'product' => $product->id,
+    ]);
+
+    //create customer
+    $customer = $stripe->customers->create([
+        'name' => 'Tha network member',
+    ]);
+
+    //create payment method
+    $payment_method = $stripe->paymentMethods->create([
+        'type' => 'card',
+        'card' => [
+            'number' => $request->card_number,
+            'exp_month' => $request->exp_month,
+            'exp_year' => $request->exp_year,
+            'cvc' => $request->cvc,
+        ],
+    ]);
+
+    // Retrieve payment method details
+    $payment_method = $stripe->paymentMethods->retrieve($payment_method->id);
+
+    // Check if the card is active
+    $checks = $payment_method->card->checks;
+    if ($checks->cvc_check == 'fail' || $checks->address_line1_check == 'fail') {
+        // Return an error or handle the invalid card scenario as desired
+        return false;
+    }
+
+    //attach payment method to customer
+    $payment_method = $stripe->paymentMethods->attach(
+        $payment_method->id,
+        [
+            'customer' => $customer->id
+        ]
+    );
+
+    //update customer
+    $customer = $stripe->customers->update(
+        $customer->id,
+        [
+            'invoice_settings' => [
+                'default_payment_method' => $payment_method->id
+            ]
+        ]
+    );
+
+    //create subscription
+    $subscription_array['customer'] = $customer->id;
+    $subscription_array['items'] = [['price' => $price->id]];
+    if (!$isMonthsFirst) {
+        $subscription_array['trial_end'] = strval($charge_date->timestamp);
+    }
+
+    $subscription = $stripe->subscriptions->create($subscription_array);
+
+    return [
+        'subscription' => $subscription,
+        'stripe_customer_id' => $customer->id
+    ];
 }

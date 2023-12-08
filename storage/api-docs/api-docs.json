@@ -86,6 +86,9 @@
                         "application/json": {
                             "example": {
                                 "invitation_code": "2277490383",
+                                "stripe_charge_object": "{...}",
+                                "stripe_customer_id": "cus_123123123",
+                                "stripe_checkout_session_id": "sub_1NfUeOKWX6MBBv9PH1iKh7KX",
                                 "first_name": "Cedric",
                                 "last_name": "Maya",
                                 "gender": " 'Male' OR 'Female' ",
@@ -177,6 +180,33 @@
                         "application/json": {
                             "example": {
                                 "email": "asd444@mailinator.com"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/subscribe": {
+            "post": {
+                "tags": [
+                    "Payments"
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "card_number": "4242424242424242",
+                                "exp_month": "12",
+                                "exp_year": "24",
+                                "cvc": "123",
+                                "token_id": "t_1231312321312321"
                             }
                         }
                     }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,7 @@ Route::group(['prefix' => 'auth'], function () {
 
 //w/o auth prefix
 Route::group([], function () {
+    Route::post('subscribe', [PaymentController::class, 'subscribe']);
     //secure routes
 //    Route::group(['middleware' => 'api2'], function () {
 //    });
