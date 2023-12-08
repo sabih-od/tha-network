@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Events\NewMemberSignup;
 use App\Events\RankPromoted;
 use App\Events\ReferralCompleted;
+use App\Events\ReferralSent;
 use App\Http\Controllers\Controller;
 use App\Models\Network;
 use App\Models\NetworkMember;
@@ -14,7 +15,7 @@ use App\Models\Reward;
 use App\Models\SendInvitation;
 use App\Models\ThaPayment;
 use App\Models\User;
-use App\Models\UserInvitation;
+use App\Rules\EmailArray;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -229,8 +230,8 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Server error.',
-                'error' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'errors' => []
             ], 401);
         }
     }
@@ -313,8 +314,8 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Server error.',
-                'error' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'errors' => []
             ], 401);
         }
     }
@@ -389,6 +390,83 @@ class AuthController extends Controller
             'data' => [],
             'errors' => [],
         ], 200);
+    }
+
+    public function sendInvitation (Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'emails' => [
+                'required',
+                new EmailArray(),
+            ]
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bad Request',
+                'errors' => $validator->errors()
+            ], 401);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $user = auth('api')->user();
+            foreach ($request->emails as $email) {
+                if (!invitation_mail_code($email, 'Tha Network - Invitation Code!', $user->username, ($user->first_name . ' ' . $user->last_name), $user->role_id, 'api')) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Emails not sent!',
+                        'errors' => []
+                    ], 401);
+                }
+
+                //Create referral
+                Referral::create([
+                    'user_id' => auth('api')->user()->id,
+                    'email' => $email
+                ]);
+            }
+
+            //check for user's network. create new if not created already
+            $network_check = Network::where('user_id', auth('api')->user()->id)->get();
+            if(count($network_check) == 0) {
+                Network::create([
+                    'user_id' => auth('api')->user()->id
+                ]);
+            }
+
+            //send referral creation notification
+            $string = "Great Job! Your Referral was sent!! Keep up the good work!!! ";
+            $notification = Notification::create([
+                'user_id' => auth('api')->user()->id,
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => auth('api')->user()->id,
+                'body' => $string,
+                'sender_id' => auth('api')->user()->id
+            ]);
+
+            event(new ReferralSent(auth('api')->user()->id, $string, 'App\Models\User', $notification->id, User::with('profile')->find(auth('api')->user()->id)));
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'The invitation(s) have been sent.',
+                'data' => [],
+                'errors' => [],
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'data' => [],
+                'errors' => [],
+            ], 401);
+        }
     }
 
     protected function respondWithToken($token)

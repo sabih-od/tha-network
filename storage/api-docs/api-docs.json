@@ -28,7 +28,7 @@
         }
     ],
     "paths": {
-        "/auth/get-invitation-code": {
+        "/login": {
             "post": {
                 "tags": [
                     "Auth"
@@ -39,7 +39,9 @@
                     "content": {
                         "application/json": {
                             "example": {
-                                "email": "asd448@mailinator.com"
+                                "email": "asd444@mailinator.com",
+                                "username": "zywigodor",
+                                "password": "admin!@#"
                             }
                         }
                     }
@@ -51,30 +53,7 @@
                 }
             }
         },
-        "/auth/verify-invitation-code": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "requestBody": {
-                    "description": "Your request body description",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "example": {
-                                "invitation_code": "2277490383"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": "Generic response"
-                    }
-                }
-            }
-        },
-        "/auth/register": {
+        "/register": {
             "post": {
                 "tags": [
                     "Auth"
@@ -109,32 +88,7 @@
                 }
             }
         },
-        "/auth/login": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "requestBody": {
-                    "description": "Your request body description",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "example": {
-                                "email": "asd444@mailinator.com",
-                                "username": "zywigodor",
-                                "password": "admin!@#"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "default": {
-                        "description": "Generic response"
-                    }
-                }
-            }
-        },
-        "/auth/me": {
+        "/me": {
             "get": {
                 "tags": [
                     "Auth"
@@ -151,7 +105,7 @@
                 }
             }
         },
-        "/auth/logout": {
+        "/logout": {
             "post": {
                 "tags": [
                     "Auth"
@@ -168,7 +122,53 @@
                 }
             }
         },
-        "/auth/forgot-password": {
+        "/get-invitation-code": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "email": "asd448@mailinator.com"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/verify-invitation-code": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "invitation_code": "2277490383"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/forgot-password": {
             "post": {
                 "tags": [
                     "Auth"
@@ -207,6 +207,39 @@
                                 "exp_year": "24",
                                 "cvc": "123",
                                 "token_id": "t_1231312321312321"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/send-invitation": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "emails": [
+                                    "asd301@mailinator.com",
+                                    "asd302@mailinator.com",
+                                    "asd303@mailinator.com",
+                                    "asd304@mailinator.com"
+                                ]
                             }
                         }
                     }

@@ -38,8 +38,8 @@ class PaymentController extends Controller
             if ($stripe_charge_object->status != 'succeeded') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Stripe charge failed.',
-                    'error' => 'Stripe charge: ' . $stripe_charge_object->status
+                    'message' => 'Stripe charge failed, error: ' . $stripe_charge_object->status,
+                    'errors' => []
                 ], 401);
             }
 
@@ -63,7 +63,7 @@ class PaymentController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Invalid/Inactive Card provided',
-                'error' => 'Invalid/Inactive Card provided'
+                'errors' => []
             ], 401);
         }
 

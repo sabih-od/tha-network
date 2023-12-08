@@ -24,24 +24,18 @@ Route::get('temp', function () {
     return (dd('here'));
 });
 
-//auth prefix
-Route::group(['prefix' => 'auth'], function () {
+Route::group([], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
     Route::post('get-invitation-code', [AuthController::class, 'getInvitationCode']);
     Route::post('verify-invitation-code', [AuthController::class, 'verifyInvitationCode']);
     Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('subscribe', [PaymentController::class, 'subscribe']);
+
     //secure routes
     Route::group(['middleware' => 'api2'], function () {
         Route::get('me', [AuthController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
+        Route::post('send-invitation', [AuthController::class, 'sendInvitation']);
     });
-});
-
-//w/o auth prefix
-Route::group([], function () {
-    Route::post('subscribe', [PaymentController::class, 'subscribe']);
-    //secure routes
-//    Route::group(['middleware' => 'api2'], function () {
-//    });
 });
