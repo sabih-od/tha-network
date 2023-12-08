@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,8 +40,12 @@ Route::group([], function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('send-invitation', [AuthController::class, 'sendInvitation']);
 
+        //profile
         Route::post('update-profile', [ProfileController::class, 'update']);
         Route::get('close-my-account', [ProfileController::class, 'closeMyAccount']);
         Route::post('update-banner', [ProfileController::class, 'updateBanner']);
+
+        //user
+        Route::post('users/search', [UserController::class, 'search']);
     });
 });

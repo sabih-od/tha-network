@@ -343,6 +343,34 @@
                     }
                 }
             }
+        },
+        "/users/search": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "search" : "Maya"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
         }
     }
 }
