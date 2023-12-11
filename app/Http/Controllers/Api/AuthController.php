@@ -58,7 +58,7 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $resp = get_user_profile(auth('api')->user()->id);
+        $resp = get_user_profile(auth('api')->user()->id, false);
         $resp['token'] = $token;
 
 

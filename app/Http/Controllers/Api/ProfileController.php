@@ -11,7 +11,6 @@ use App\Models\Notification;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -22,7 +21,7 @@ class ProfileController extends Controller
 {
     public function me()
     {
-        $resp = get_user_profile(auth('api')->user()->id ?? null);
+        $resp = get_user_profile(auth('api')->user()->id ?? null, false);
 
 
         return response()->json([
@@ -197,7 +196,7 @@ class ProfileController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Changed cover successfully!',
-                'data' => get_user_profile($user->id ?? null),
+                'data' => get_user_profile($user->id ?? null, false),
                 'errors' => [],
             ], 200);
         } catch (\Exception $e) {

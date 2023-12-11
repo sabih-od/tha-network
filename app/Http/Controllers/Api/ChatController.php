@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Channel;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class ChatController extends Controller
 {
@@ -30,12 +32,67 @@ class ChatController extends Controller
                 ->latest()
                 ->simplePaginate(10)
                 ->through(function ($item, $key) {
-                    $item = get_user_profile($item->id);
-                    $item->channel_id = get_channel_id(auth('api')->id(), $item->id);
+                    $channel_id = get_channel_id(auth('api')->id(), $item->id);
+                    $item = get_user_profile($item->id, false);
+                    $item['channel_id'] = $channel_id;
+
                     return $item;
                 });
 
             return response()->json(array_merge([ 'success' => true ], $users->toArray()), 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'data' => [],
+                'errors' => [],
+            ], 401);
+        }
+    }
+
+    public function messages(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'channel_id' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bad Request',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+
+            if (!$channel = Channel::find($request->channel_id)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Channel not found',
+                    'data' => [],
+                    'errors' => [],
+                ], 401);
+            }
+
+            $messages = $channel
+                ->messages()->orderBy('created_at', 'DESC')
+                ->select('id', 'content', 'sender_id', 'created_at', 'channel_id')
+                ->with(['sender' => function ($q) {
+                    $q->select('id', 'username');
+                }])
+                ->whereDoesntHave('userDelete', function ($q) {
+                    $q->where('user_id', auth('api')->id());
+                })->when($userDelete = $channel->userDelete()->where('user_id', auth('api')->id())->first(), function ($q) use ($userDelete) {
+                    return $q->where('created_at', '>', $userDelete->created_at);
+                })->latest()
+                ->simplePaginate(10)
+                ->through(function ($item, $key) {
+                    $item->sender = get_user_profile($item->sender_id, false);
+                    return $item;
+                });
+
+            return response()->json(array_merge([ 'success' => true ], $messages->toArray()), 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([

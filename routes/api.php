@@ -51,5 +51,6 @@ Route::group([], function () {
 
         //chat
         Route::post('chat/channels', [ChatController::class, 'channels']);
+        Route::post('chat/messages', [ChatController::class, 'messages']);
     });
 });

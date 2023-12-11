@@ -399,6 +399,34 @@
                     }
                 }
             }
+        },
+        "/chat/messages": {
+            "post": {
+                "tags": [
+                    "Chat"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "channel_id" : "49209ef9-13b7-483f-9253-6f910d3cd4b4"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
         }
     }
 }

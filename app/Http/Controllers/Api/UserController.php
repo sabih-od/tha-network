@@ -29,7 +29,7 @@ class UserController extends Controller
                 ->latest()
                 ->simplePaginate(10)
                 ->through(function ($item, $key) {
-                    return get_user_profile($item->id);
+                    return get_user_profile($item->id, false);
                 });
 
             return response()->json(array_merge([ 'success' => true ], $users->toArray()), 200);

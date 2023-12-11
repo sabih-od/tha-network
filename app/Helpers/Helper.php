@@ -968,28 +968,30 @@ function profileImg($user, $collection)
     return $img;
 }
 
-function get_user_profile ($id = null) {
+function get_user_profile ($id = null, $add_stripe_information = true) {
     $user = get_eloquent_user($id);
 
     //check if user has linked any accounts to their stripe payout screen
-    $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
-    $has_provided_stripe_payout_information = false;
-    if ($user->stripe_account_id) {
-        $account = $stripe->accounts->retrieve($user->stripe_account_id);
-        $has_provided_stripe_payout_information = (bool)($account->external_accounts->total_count > 0);
+    if ($add_stripe_information) {
+        $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
+        $has_provided_stripe_payout_information = false;
+        if ($user->stripe_account_id) {
+            $account = $stripe->accounts->retrieve($user->stripe_account_id);
+            $has_provided_stripe_payout_information = (bool)($account->external_accounts->total_count > 0);
+        }
     }
 
-    $user_obj = $user->only('name', 'email', 'created_at', 'pwh', 'role_id');
+    $user_obj = $user->only('id', 'name', 'email', 'created_at', 'pwh', 'role_id');
     $profile_obj = $user->profile->toArray() ?? null;
+    $stripe_array = $add_stripe_information ? [ 'has_provided_stripe_payout_information' => $has_provided_stripe_payout_information ] : [];
 
-    return array_merge($user_obj, $profile_obj, [
+    return array_merge($user_obj, $profile_obj, $stripe_array, [
         'profile_image' => profileImg($user, 'profile_image'),
         'profile_cover' => profileImg($user, 'profile_cover'),
         'has_made_monthly_payment' => has_made_monthly_payment($id),
         'stripe_account_id' => $user->stripe_account_id,
         'paypal_account_details' => $user->paypal_account_details,
         'stripe_checkout_session_id' => $user->stripe_checkout_session_id,
-        'has_provided_stripe_payout_information' => $has_provided_stripe_payout_information,
         'preferred_payout_method' => $user->preferred_payout_method,
     ]);
 }
@@ -1290,9 +1292,9 @@ function invitation_mail_code ($to, $subject, $username, $name, $role_id, $guard
 }
 
 function get_channel_id ($user_1_id, $user_2_id) {
-    if ($channel = Channel::where('participants', 'LIKE', '%'.$user_1_id.'%')->where('participants', 'LIKE', '%'.$user_2_id.'%')) {
+    if ($channel = Channel::where('participants', 'LIKE', '%'.$user_1_id.'%')->where('participants', 'LIKE', '%'.$user_2_id.'%')->first()) {
         return $channel->id;
     }
 
-    return false;
+    return null;
 }
