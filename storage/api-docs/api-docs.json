@@ -268,23 +268,6 @@
                 }
             }
         },
-        "/new-members-this-week": {
-            "get": {
-                "tags": [
-                    "Auth"
-                ],
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ],
-                "responses": {
-                    "default": {
-                        "description": "Generic response"
-                    }
-                }
-            }
-        },
         "/update-profile": {
             "post": {
                 "tags": [
@@ -399,6 +382,40 @@
                         }
                     }
                 },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/new-members-this-week": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/people-in-my-network": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "responses": {
                     "default": {
                         "description": "Generic response"

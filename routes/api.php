@@ -43,7 +43,6 @@ Route::group([], function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('send-invitation', [AuthController::class, 'sendInvitation']);
         Route::get('get-weekly-goals', [AuthController::class, 'getWeeklyGoals']);
-        Route::get('new-members-this-week', [AuthController::class, 'newMembersThisWeek']);
 
         //profile
         Route::post('update-profile', [ProfileController::class, 'update']);
@@ -52,6 +51,8 @@ Route::group([], function () {
 
         //user
         Route::post('users/search', [UserController::class, 'search']);
+        Route::get('new-members-this-week', [UserController::class, 'newMembersThisWeek']);
+        Route::get('people-in-my-network', [UserController::class, 'peopleInMyNetwork']);
 
         //chat
         Route::post('chat/channels', [ChatController::class, 'channels']);
