@@ -251,6 +251,23 @@
                 }
             }
         },
+        "/get-weekly-goals": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
         "/update-profile": {
             "post": {
                 "tags": [

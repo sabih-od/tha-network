@@ -66,7 +66,7 @@ class ChatController extends Controller
                 ], 401);
             }
 
-            if (!$channel = Channel::find($request->channel_id)) {
+            if (!$channel = Channel::where('id', $request->channel_id)->where('participants', 'LIKE', '%'.auth('api')->id().'%')) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Channel not found',

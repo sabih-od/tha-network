@@ -28,6 +28,7 @@ Route::get('temp', function () {
 });
 
 Route::group([], function () {
+    //auth
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
     Route::post('get-invitation-code', [AuthController::class, 'getInvitationCode']);
@@ -37,9 +38,11 @@ Route::group([], function () {
 
     //secure routes
     Route::group(['middleware' => 'api2'], function () {
+        //auth
         Route::get('me', [ProfileController::class, 'me']);
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('send-invitation', [AuthController::class, 'sendInvitation']);
+        Route::get('get-weekly-goals', [AuthController::class, 'getWeeklyGoals']);
 
         //profile
         Route::post('update-profile', [ProfileController::class, 'update']);

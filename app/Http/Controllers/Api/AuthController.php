@@ -457,6 +457,26 @@ class AuthController extends Controller
         }
     }
 
+    public function getWeeklyGoals (Request $request)
+    {
+        try {
+            return response()->json([
+                'success' => true,
+                'message' => '',
+                'data' => get_weekly_goals(auth('api')->id()),
+                'errors' => [],
+            ], 200);
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'data' => [],
+                'errors' => [],
+            ], 401);
+        }
+    }
+
     protected function respondWithToken($token)
     {
         return response()->json([
