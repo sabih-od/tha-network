@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -116,6 +117,44 @@ class UserController extends Controller
             return response()->json(array_merge([ 'success' => true ], $users->toArray()), 200);
         } catch (\Exception $e) {
             DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'data' => [],
+                'errors' => [],
+            ], 401);
+        }
+    }
+
+    public function block (Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'user_id' => ['required', 'string', Rule::exists('users', 'id')->whereNull('deleted_at')],
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bad Request',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+
+            $user = Auth::user();
+            $block_user = User::find($request->user_id);
+
+            $user->toggleBlock($block_user);
+
+            $hasBlocked = $user->hasBlocked($block_user) ? 'blocked' : 'unblocked';
+
+            return response()->json([
+                'success' => true,
+                'data' => [],
+                'message' => "User $hasBlocked successfully!",
+                'errors' => [],
+            ], 200);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),

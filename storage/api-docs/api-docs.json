@@ -389,6 +389,34 @@
                 }
             }
         },
+        "/users/block": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "user_id" : "7142c0e4-2851-4be7-8ea3-99efcfaa8f5b"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
         "/new-members-this-week": {
             "get": {
                 "tags": [

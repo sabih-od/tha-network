@@ -51,6 +51,7 @@ Route::group([], function () {
 
         //user
         Route::post('users/search', [UserController::class, 'search']);
+        Route::post('users/block', [UserController::class, 'block']);
         Route::get('new-members-this-week', [UserController::class, 'newMembersThisWeek']);
         Route::get('people-in-my-network', [UserController::class, 'peopleInMyNetwork']);
 
