@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChatController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UserController;
@@ -58,5 +59,8 @@ Route::group([], function () {
         //chat
         Route::post('chat/channels', [ChatController::class, 'channels']);
         Route::post('chat/messages', [ChatController::class, 'messages']);
+
+        //notifications
+        Route::get('notifications', [NotificationController::class, 'all']);
     });
 });

@@ -86,11 +86,11 @@ class ChatController extends Controller
                 })->when($userDelete = $channel->userDelete()->where('user_id', auth('api')->id())->first(), function ($q) use ($userDelete) {
                     return $q->where('created_at', '>', $userDelete->created_at);
                 })->latest()
-                ->simplePaginate(10)
-                ->through(function ($item, $key) {
-                    $item->sender = get_user_profile($item->sender_id, false);
-                    return $item;
-                });
+                ->simplePaginate(10);
+//                ->through(function ($item, $key) {
+//                    $item->sender = get_user_profile($item->sender_id, false);
+//                    return $item;
+//                });
 
             return response()->json(array_merge([ 'success' => true ], $messages->toArray()), 200);
         } catch (\Exception $e) {
