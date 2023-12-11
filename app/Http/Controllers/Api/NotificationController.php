@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class NotificationController extends Controller
 {
@@ -43,6 +45,48 @@ class NotificationController extends Controller
                 'success' => true,
                 'message' => '',
                 'data' => $unread_notification_count,
+                'errors' => [],
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'data' => [],
+                'errors' => [],
+            ], 401);
+        }
+    }
+
+    public function markAsRead (Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'notification_id' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bad Request',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+
+            if (!$notification = Notification::where('user_id', auth('api')->id())->where('id', $request->notification_id)->first()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Notification not found.',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+
+            $notification->viewed = 1;
+            $notification->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Notification marked as read.',
+                'data' => [],
                 'errors' => [],
             ], 200);
         } catch (\Exception $e) {
