@@ -43,6 +43,7 @@ Route::group([], function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::post('send-invitation', [AuthController::class, 'sendInvitation']);
         Route::get('get-weekly-goals', [AuthController::class, 'getWeeklyGoals']);
+        Route::get('new-members-this-week', [AuthController::class, 'newMembersThisWeek']);
 
         //profile
         Route::post('update-profile', [ProfileController::class, 'update']);
