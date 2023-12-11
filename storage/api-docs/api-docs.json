@@ -585,6 +585,23 @@
                     }
                 }
             }
+        },
+        "/settings": {
+            "get": {
+                "tags": [
+                    "Settings"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
         }
     }
 }

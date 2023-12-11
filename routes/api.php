@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -65,5 +66,8 @@ Route::group([], function () {
         Route::get('unread-notifications-count', [NotificationController::class, 'unreadNotificationsCount']);
         Route::post('notification/mark-as-read', [NotificationController::class, 'markAsRead']);
         Route::get('notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
+
+        //settings
+        Route::get('settings', [SettingController::class, 'settings']);
     });
 });
