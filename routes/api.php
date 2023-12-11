@@ -64,6 +64,6 @@ Route::group([], function () {
         Route::get('notifications', [NotificationController::class, 'all']);
         Route::get('unread-notifications-count', [NotificationController::class, 'unreadNotificationsCount']);
         Route::post('notification/mark-as-read', [NotificationController::class, 'markAsRead']);
-        Route::get('notification/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
+        Route::get('notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
     });
 });

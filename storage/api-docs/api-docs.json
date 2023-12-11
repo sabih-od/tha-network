@@ -569,7 +569,7 @@
                 }
             }
         },
-        "/notification/mark-all-as-read": {
+        "/notifications/mark-all-as-read": {
             "get": {
                 "tags": [
                     "Notifications"
