@@ -98,4 +98,27 @@ class NotificationController extends Controller
             ], 401);
         }
     }
+
+    public function markAllAsRead (Request $request)
+    {
+        try {
+            Notification::where('user_id', auth('api')->id())->where('viewed', 0)->update([
+                'viewed' => 1
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Notifications marked as read.',
+                'data' => [],
+                'errors' => [],
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'data' => [],
+                'errors' => [],
+            ], 401);
+        }
+    }
 }
