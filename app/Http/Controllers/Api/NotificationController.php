@@ -29,4 +29,29 @@ class NotificationController extends Controller
             ], 401);
         }
     }
+
+    public function unreadNotificationsCount (Request $request)
+    {
+        try {
+            $unread_notification_count = Notification::where([
+                ['user_id', auth('api')->id()],
+                ['viewed', 0]
+//            ])->groupBy('sender_id')->count();
+            ])->count();
+
+            return response()->json([
+                'success' => true,
+                'message' => '',
+                'data' => $unread_notification_count,
+                'errors' => [],
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'data' => [],
+                'errors' => [],
+            ], 401);
+        }
+    }
 }

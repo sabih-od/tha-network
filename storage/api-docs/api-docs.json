@@ -524,5 +524,22 @@
                 }
             }
         },
+        "/unread-notifications-count": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        }
     }
 }

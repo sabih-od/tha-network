@@ -62,5 +62,6 @@ Route::group([], function () {
 
         //notifications
         Route::get('notifications', [NotificationController::class, 'all']);
+        Route::get('unread-notifications-count', [NotificationController::class, 'unreadNotificationsCount']);
     });
 });
