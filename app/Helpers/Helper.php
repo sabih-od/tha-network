@@ -12,6 +12,7 @@ use App\Models\Goal;
 use App\Models\Network;
 use App\Models\NetworkMember;
 use App\Models\Notification;
+use App\Models\Post;
 use App\Models\Referral;
 use App\Models\Reward;
 use App\Models\RewardLog;
@@ -1297,4 +1298,57 @@ function get_channel_id ($user_1_id, $user_2_id) {
     }
 
     return null;
+}
+
+function get_post ($post_id) {
+    if (!$post = Post::find($post_id)) {
+        return false;
+    }
+    $auth_user = auth('api')->user();
+
+    // add media in item
+    $post->getMedia('post_upload');
+    $files = [];
+    foreach ($post->media as $media) {
+        $files[] = [
+            'mime_type' => $media->mime_type,
+            'url' => $media->original_url,
+        ];
+    }
+    $post->media_items = $files;
+
+    $auth_user->attachLikeStatus($post);
+
+    $likers = $post->likers()->latest()->simplePaginate(3);
+    $r_likers = [];
+    foreach ($likers as $user) {
+        $r_likers[] = get_user_profile($user->id, false);
+    }
+    $post->recent_likes = $r_likers;
+
+    // share post data
+    if ($post->sharedPost) {
+        $post->sharedPost->getMedia('post_upload');
+        $s_files = [];
+        foreach ($post->sharedPost->media as $media) {
+            $s_files[] = [
+                'mime_type' => $media->mime_type,
+                'url' => $media->original_url,
+            ];
+        }
+        $post->sharedPost->media_items = $s_files;
+        // add profile image in item
+        if ($post->sharedPost->user) {
+            $post->sharedPost->user = get_user_profile($post->sharedPost->user->id, false);
+        }
+    }
+
+    $target_user = User::find($post->user->id);
+
+    //add author
+    $post->user = get_user_profile($post->user_id, false);
+
+    $post->is_blocked = $auth_user->isBlockedBy($target_user) || $auth_user->hasBlocked($target_user) || $target_user->isBlockedBy($auth_user) || $target_user->hasBlocked($auth_user);
+
+    return $post;
 }
