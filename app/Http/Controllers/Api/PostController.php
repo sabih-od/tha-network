@@ -271,4 +271,52 @@ class PostController extends Controller
             ], 401);
         }
     }
+
+    public function delete (Request $request, $id)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'id' => [
+                    'required',
+                    Rule::exists('posts')
+                        ->whereNull('deleted_at')
+                        ->where('user_id', auth('api')->id())
+                ]
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bad Request',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+
+            if (!$post = Post::find($id)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Post not found',
+                    'errors' => []
+                ], 401);
+            }
+
+            $post->clearMediaCollection('post_upload');
+            $post->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Post deleted successfully.',
+                'data' => [],
+                'errors' => [],
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'data' => [],
+                'errors' => [],
+            ], 401);
+        }
+    }
 }
