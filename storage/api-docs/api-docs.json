@@ -602,6 +602,23 @@
                     }
                 }
             }
+        },
+        "/posts": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\SettingController;
 use App\Http\Controllers\Api\UserController;
@@ -69,5 +70,8 @@ Route::group([], function () {
 
         //settings
         Route::get('settings', [SettingController::class, 'settings']);
+
+        //post
+        Route::get('posts', [PostController::class, 'list']);
     });
 });
