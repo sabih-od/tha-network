@@ -74,5 +74,6 @@ Route::group([], function () {
         //post
         Route::get('posts', [PostController::class, 'list']);
         Route::post('post/create', [PostController::class, 'create']);
+        Route::post('post/update/{id}', [PostController::class, 'update']);
     });
 });

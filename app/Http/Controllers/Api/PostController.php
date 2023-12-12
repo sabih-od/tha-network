@@ -161,7 +161,103 @@ class PostController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => '',
+                'message' => 'Post created successfully.',
+                'data' => $post->toArray(),
+                'errors' => [],
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'data' => [],
+                'errors' => [],
+            ], 401);
+        }
+    }
+
+    public function update (Request $request, $id)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'content' => ['nullable', 'string'],
+                'files' => ['nullable', 'max:5'],
+                'post_id' => ['nullable', Rule::exists('posts', 'id')->whereNull('deleted_at')],
+                'files.*.file' => [function ($attribute, $value, $fail) {
+                    if (!$value) return;
+                    $is_image = Validator::make(
+                        ['upload' => $value],
+                        ['upload' => 'image']
+                    )->passes();
+
+                    $is_video = Validator::make(
+                        ['upload' => $value],
+                        ['upload' => 'mimetypes:video/avi,video/mpeg,video/quicktime,video/mp4']
+                    )->passes();
+
+                    if (!$is_video && !$is_image) {
+                        $fail(':attribute must be image or video.');
+                    }
+
+                    if ($is_video) {
+                        $validator = Validator::make(
+                            ['video' => $value],
+                            ['video' => "max:102400"]
+                        );
+                        if ($validator->fails()) {
+                            $fail(":attribute must be 10 megabytes or less.");
+                        }
+                    }
+
+                    if ($is_image) {
+                        $validator = Validator::make(
+                            ['image' => $value],
+                            ['image' => "max:102400"]
+                        );
+                        if ($validator->fails()) {
+                            $fail(":attribute must be 10 megabytes or less.");
+                        }
+                    }
+                }],
+                'location' => 'sometimes',
+                'feeling_text' => 'sometimes',
+                'feeling_icon' => 'sometimes'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bad Request',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+
+            if (!$post = Post::find($id)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Post not found',
+                    'errors' => []
+                ], 401);
+            }
+
+            $post->content = $request['content'];
+            $post->location = $request['location'];
+            $post->feeling_text = $request['feeling_text'];
+            $post->feeling_icon = $request['feeling_icon'];
+            $post->save();
+
+            if (isset($request['files'])) {
+                $post->clearMediaCollection('post_upload');
+                $post->addMultipleMediaFromRequest(['files'])->each(function ($fileAdder) {
+                    $fileAdder->toMediaCollection('post_upload');
+                });
+            }
+
+            $post = get_post($post->id);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Post updated successfully.',
                 'data' => $post->toArray(),
                 'errors' => [],
             ], 200);

@@ -652,6 +652,51 @@
                     }
                 }
             }
+        },
+        "/post/update/{id}": {
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "The ID of the post to be updated"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "content" : "This is post content.",
+                                "files" : [
+                                    "Example binary file.jpg",
+                                    "Example binary file.mp4"
+                                ],
+                                "post_id": "49209ef9-13b7-483f-9253-6f910d3cd4b4"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
         }
     }
 }
