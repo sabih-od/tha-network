@@ -852,9 +852,10 @@ function smart_retries () {
             Log::info('latest invoice status: ' . $latest_invoice->status);
 
             if ($latest_invoice->status == "draft" || $latest_invoice->status == "unpaid") {
-                $stripe->invoices->update($latest_invoice->id, [
-                    'status' => 'open'
-                ]);
+                $stripe->invoices->finalizeInvoice($latest_invoice->id);
+//                $stripe->invoices->update($latest_invoice->id, [
+//                    'status' => 'open'
+//                ]);
                 $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
             }
 
