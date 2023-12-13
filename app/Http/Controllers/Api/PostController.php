@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\CommentOnPost;
 use App\Events\PostLiked;
 use App\Http\Controllers\Controller;
 use App\Models\Notification;
@@ -381,6 +382,67 @@ class PostController extends Controller
                 'errors' => [],
             ], 200);
         } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'data' => [],
+                'errors' => [],
+            ], 401);
+        }
+    }
+
+    public function comment (Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $validator = Validator::make($request->all(), [
+                'post_id' => ['required', 'string', Rule::exists('posts', 'id')->whereNull('deleted_at')],
+                'comment' => 'required|string'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bad Request',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+
+            $user = auth('api')->user();
+            $post = Post::find($request->post_id);
+            $auth = User::with('profile')->find($user->id);
+            $target = $post->user;
+
+            $post->comments()->create([
+                'user_id' => $user->id,
+                'comment' => $request->comment
+            ]);
+
+            //notification when comment on post
+            if($auth->id != $target->id) {
+                $string = ($auth->profile->first_name . ' ' . $auth->profile->last_name) . " commented on your post.";
+                $notification = Notification::create([
+                    'user_id' => $target->id,
+                    'notifiable_type' => 'App\Models\User',
+                    'notifiable_id' => $target->id,
+                    'body' => $string,
+                    'sender_id' => $target->id,
+                    'post_id' => $post->id,
+                    'sender_pic' => $user->get_profile_picture(),
+                ]);
+                event(new CommentOnPost($target->id, $string, 'App\Models\User', $notification->id, $target));
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Comment posted successfully!',
+                'data' => [],
+                'errors' => [],
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),

@@ -77,5 +77,6 @@ Route::group([], function () {
         Route::post('post/update/{id}', [PostController::class, 'update']);
         Route::post('post/delete/{id}', [PostController::class, 'delete']);
         Route::post('post/like/{id}', [PostController::class, 'like']);
+        Route::post('post/comment', [PostController::class, 'comment']);
     });
 });
