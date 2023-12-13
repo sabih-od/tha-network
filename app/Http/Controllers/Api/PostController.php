@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\PostLiked;
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -15,6 +17,7 @@ class PostController extends Controller
     public function list (Request $request)
     {
         try {
+            DB::beginTransaction();
             $auth_user = auth('api')->user();
             $posts = Post::select('id', 'content', 'location', 'feeling_text', 'feeling_icon', 'user_id', 'created_at', 'post_id')
                 ->with([
@@ -77,6 +80,7 @@ class PostController extends Controller
                     return $item;
                 });
 
+            DB::commit();
             return response()->json(array_merge([ 'success' => true ], $posts->toArray()), 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -92,6 +96,7 @@ class PostController extends Controller
     public function create (Request $request)
     {
         try {
+            DB::beginTransaction();
             $validator = Validator::make($request->all(), [
                 'content' => ['nullable', 'string'],
                 'files' => ['nullable', 'max:5'],
@@ -159,6 +164,7 @@ class PostController extends Controller
 
             $post = get_post($post->id);
 
+            DB::commit();
             return response()->json([
                 'success' => true,
                 'message' => 'Post created successfully.',
@@ -179,6 +185,7 @@ class PostController extends Controller
     public function update (Request $request, $id)
     {
         try {
+            DB::beginTransaction();
             $validator = Validator::make($request->all(), [
                 'content' => ['nullable', 'string'],
                 'files' => ['nullable', 'max:5'],
@@ -255,6 +262,8 @@ class PostController extends Controller
 
             $post = get_post($post->id);
 
+            DB::commit();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Post updated successfully.',
@@ -310,7 +319,68 @@ class PostController extends Controller
                 'errors' => [],
             ], 200);
         } catch (\Exception $e) {
-            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'data' => [],
+                'errors' => [],
+            ], 401);
+        }
+    }
+
+    public function like (Request $request, $id)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'id' => [
+                    'required',
+                    Rule::exists('posts')
+                        ->whereNull('deleted_at')
+                        ->where('user_id', auth('api')->id())
+                ]
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bad Request',
+                    'errors' => $validator->errors()
+                ], 401);
+            }
+
+
+            $user = auth('api')->user();
+            $post = Post::find($id);
+            $auth = User::with('profile')->find($user->id);
+            $target = $post->user;
+
+            $user->toggleLike($post);
+            $isLike = $user->hasLiked($post) ? 'liked' : 'unliked';
+
+            //notification when post liked
+            if($isLike == 'liked') {
+                if($auth->id != $target->id) {
+                    $string = ($auth->profile->first_name . ' ' . $auth->profile->last_name) . " has liked your post.";
+                    $notification = Notification::create([
+                        'user_id' => $target->id,
+                        'notifiable_type' => 'App\Models\User',
+                        'notifiable_id' => $target->id,
+                        'body' => $string,
+                        'sender_id' => $target->id,
+                        'post_id' => $post->id,
+                        'sender_pic' => $user->get_profile_picture(),
+                    ]);
+                    event(new PostLiked($target->id, $string, 'App\Models\User', $notification->id, $target));
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => "Post $isLike successfully!",
+                'data' => [],
+                'errors' => [],
+            ], 200);
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),

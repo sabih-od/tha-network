@@ -75,6 +75,7 @@ Route::group([], function () {
         Route::get('posts', [PostController::class, 'list']);
         Route::post('post/create', [PostController::class, 'create']);
         Route::post('post/update/{id}', [PostController::class, 'update']);
-        Route::post('post/delete/{id}', [PostController::class, 'update']);
+        Route::post('post/delete/{id}', [PostController::class, 'delete']);
+        Route::post('post/like/{id}', [PostController::class, 'like']);
     });
 });
