@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\FriendRequestController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PostController;
@@ -83,5 +84,10 @@ Route::group([], function () {
         //comment
         Route::post('comment/like', [CommentController::class, 'like']);
         Route::post('comment/delete', [CommentController::class, 'delete']);
+
+        //friend-requests
+        Route::post('friend-requests', [FriendRequestController::class, 'friendRequests']);
+        Route::post('friend-requests/accept', [FriendRequestController::class, 'accept']);
+        Route::post('friend-requests/reject', [FriendRequestController::class, 'reject']);
     });
 });

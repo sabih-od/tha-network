@@ -840,6 +840,90 @@
                     }
                 }
             }
+        },
+        "/friend-requests": {
+            "post": {
+                "tags": [
+                    "Friend Requests"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "search": "John Doe"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/friend-requests/accept": {
+            "post": {
+                "tags": [
+                    "Friend Requests"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "user_id": "49209ef9-13b7-483f-9253-6f910d3cd4b4"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/friend-requests/reject": {
+            "post": {
+                "tags": [
+                    "Friend Requests"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "user_id": "49209ef9-13b7-483f-9253-6f910d3cd4b4"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
         }
     }
 }

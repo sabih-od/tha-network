@@ -41,7 +41,6 @@ class ChatController extends Controller
 
             return response()->json(array_merge([ 'success' => true ], $users->toArray()), 200);
         } catch (\Exception $e) {
-            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -94,7 +93,6 @@ class ChatController extends Controller
 
             return response()->json(array_merge([ 'success' => true ], $messages->toArray()), 200);
         } catch (\Exception $e) {
-            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),

@@ -37,7 +37,6 @@ class UserController extends Controller
 
             return response()->json(array_merge([ 'success' => true ], $users->toArray()), 200);
         } catch (\Exception $e) {
-            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -72,7 +71,6 @@ class UserController extends Controller
 
             return response()->json(array_merge([ 'success' => true ], $users->toArray()), 200);
         } catch (\Exception $e) {
-            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -116,7 +114,6 @@ class UserController extends Controller
 
             return response()->json(array_merge([ 'success' => true ], $users->toArray()), 200);
         } catch (\Exception $e) {
-            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
