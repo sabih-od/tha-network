@@ -68,7 +68,7 @@ class InvitationCode extends Controller
 //            $code = $this->generateUniqueCode();
 
             //get admin code
-            $admin = User::where('email', 'admin@thanetwork.com')->first();
+            $admin = User::where('role_id', 1)->first();
             $code = $admin ? $admin->invitation_code : $this->generateUniqueCode();
 
             if ($code instanceof \Exception)
@@ -293,113 +293,6 @@ class InvitationCode extends Controller
         // }
     }
 
-    public function invitationMailCode($to, $subject, $username, $name, $role_id)
-    {
-        Log::info('invitationMailCode function start to: '.$to.', subject: '.$subject.', username: '.$username);
-        $invitation_code = Auth::user()->invitation_code ? '<span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code: '.Auth::user()->invitation_code.'</span>' : '';
-//        $from = 'no-reply@tha-network.com';
-        $from = 'support@thanetwork.org';
-
-        // To send HTML mail, the Content-type header must be set
-        $headers = 'MIME-Version: 1.0' . "\r\n";
-        $headers .= 'Content-type: text/html; charset=utf8' . "\r\n";
-
-        // Create email headers
-        $headers .= 'From: ' . $from . "\r\n" .
-            'Reply-To: ' . $from . "\r\n" .
-            'X-Mailer: PHP/' . phpversion();
-
-        // Compose a simple HTML email message
-//        $message = '<html><body>';
-//        $message .= '<p style="color:black;font-size:18px;">Hi,</p><br /><br />';
-//        $message .= `<p style="color:black;font-size:18px;">You have been invited to join `.$name ?? $username.`'s network. You can join by clicking on the invitation link below.</p><br /><br />`;
-//        $message .= '<p style="color:black;font-size:18px;">Invitation Link: <a href="'.route('joinByInvite', $username).'">'.route('joinByInvite', $username).'</a></p><br /><br />';
-//        $message .= '<p style="color:black;font-size:18px;">Regards,</p><br />';
-//        $message .= '<p style="color:black;font-size:18px;">Team Tha Network</p><br />';
-//        $message .= '</body></html>';
-
-        $inviter_string = ($role_id == 1) ? '' : '<strong style="color: #ff0000;">' .$name.'</strong> invited you to join their network. ';
-
-        $html = '<html lang="en">
-                    <head>
-                        <meta charset="UTF-8" />
-                        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                        <title>The Network Membership Pays</title>
-                    </head>
-
-                    <body style="padding: 0; margin: 0" style="max-width: 1170px; margin: auto">
-                        <table style="width: 1140px; margin: 2rem auto; border-spacing: 0">
-                            <tr style="margin-bottom: 20px; width: 100%">
-                                <a href="#"><img src="logo.png" class="img-fluid" alt="" style="display: block; max-width: 250px; margin: auto" /></a>
-                            </tr>
-                            <tr>
-                                <td colspan="3" style="width: 50%">
-                                    <p style="color: #333; margin: 0 0 30px; line-height: 31px; font-size: 18px; text-align: center">
-                                        Welcome to <a href="https://thanetwork.org">ThaNetwork.org</a>, '.$inviter_string.'To learn more about your Invitation click the link below or visit <a href="https://thanetwork.org">www.thanetwork.org</a> and login using the Invitation code below..
-                                    </p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" style="width: 50%">
-                                    <a href="'.route('joinByInvite', $username).'" style="font-size: 23px; color: blue; font-weight: 600; display: table; margin: auto">Invitation Link</a>
-                                    '.$invitation_code.'
-                                    <!-- <span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code 12345</span> -->
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" style="width: 50%">
-                                    <h6 style="font-size: 25px; margin: 30px 0 30px; text-align: center">Thanks for joining Tha Network</h6>
-                                    <a href="#" style="display: table; font-size: 22px; color: green; margin: auto">Because Membership Pays</a>
-                                    <span style="display: block; font-size: 20px; color: green; margin: 12px 0 0; text-align: center">$$$$$</span>
-                                    <img width="398" height="398" src="'.asset('images/notifications/PaymentMade.png').'" class="img-fluid" alt="img" style="display: table; margin: auto" />
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td colspan="3" style="width: 50%">
-                                    <p style="color: #333; margin: 30px 0 15px; line-height: 31px; font-size: 18px; text-align: center">To learn more about ThaNetwork follow us on our Social Media Platforms</p>
-                                    <!-- <p style="color: #333; margin: 10px 0; line-height: 26px">
-                                        <a href="#">Invitation Link</a>
-                                        Invitation Code 12345
-                                    </p> -->
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" style="width: 50%; text-align: center">
-                                    <a href="https://www.facebook.com/Tha-Network-150057600527324/" style="display: inline-block; margin: 0 6px">Facebook</a>
-                                    <a href="https://twitter.com/ThaNetwork4" style="display: inline-block; margin: 0 6px">Twitter</a>
-                                    <a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" style="display: inline-block; margin: 0 6px">Youtube</a>
-                                    <a href="https://www.tiktok.com/@_thanetwork_?lang=en" style="display: inline-block; margin: 0 6px">Tiktok</a>
-                                    <a href="https://www.instagram.com/_thanetwork_/" style="display: inline-block; margin: 0 6px">Instagram</a>
-                                </td>
-                            </tr>
-                        </table>
-                    </body>
-                </html>';
-
-        // Sending email
-
-        try {
-            Mail::send([], [], function ($message) use ($to, $subject, $html) {
-                $message->to($to)
-                    ->subject($subject)
-                    ->setBody($html, 'text/html'); // for HTML rich messages
-            });
-        } catch (\Exception $e) {
-            Log::error('invitationMailCode: Email not sent: ' . $e->getMessage());
-        }
-
-        return true;
-
-        // if (mail($to, $subject, $html, $headers)) {
-        //     return true;
-        // } else {
-        //     return false;
-        // }
-        Log::info('invitationMailCode function start to: '.$to.', subject: '.$subject.', username: '.$username);
-    }
-
     public function sendInvitation(Request $request) {
         // dd($request->all());
         $data = $request->validate([
@@ -420,7 +313,8 @@ class InvitationCode extends Controller
             //
 
             foreach ($request->emails as $email) {
-                if (!$this->invitationMailCode($email, 'Tha Network - Invitation Code!', $request->username, $request->name, Auth::user()->role_id))
+//                if (!$this->invitationMailCode($email, 'Tha Network - Invitation Code!', $request->username, $request->name, Auth::user()->role_id))
+                if (!invitation_mail_code($email, 'Tha Network - Invitation Code!', $request->username, $request->name, Auth::user()->role_id))
                     return WebResponses::exception("Emails not sent!");
 
                 //Create referral
@@ -758,62 +652,7 @@ class InvitationCode extends Controller
                 return WebResponses::exception('No account exists on provided email.');
             }
 
-            $pwh = $user->pwh;
-
-//            $from = 'no-reply@tha-network.com';
-            $from = 'support@thanetwork.org';
-
-            // To send HTML mail, the Content-type header must be set
-            $headers = 'MIME-Version: 1.0' . "\r\n";
-            $headers .= 'Content-type: text/html; charset=utf8' . "\r\n";
-
-            // Create email headers
-            $headers .= 'From: ' . $from . "\r\n" .
-                'Reply-To: ' . $from . "\r\n" .
-                'X-Mailer: PHP/' . phpversion();
-
-            $html = '<html lang="en">
-                    <head>
-                        <meta charset="UTF-8" />
-                        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                        <title>The Network Membership Pays</title>
-                    </head>
-
-                    <body style="padding: 0; margin: 0" style="max-width: 1170px; margin: auto">
-                        <table style="width: 1140px; margin: 2rem auto; border-spacing: 0">
-                            <tr style="margin-bottom: 20px; width: 100%">
-                                <a href="#"><img src="logo.png" class="img-fluid" alt="" style="display: block; max-width: 250px; margin: auto" /></a>
-                            </tr>
-                            <tr>
-                                <td colspan="3" style="width: 50%">
-                                    <p style="color: #333; margin: 0 0 30px; line-height: 31px; font-size: 18px; text-align: center">
-                                        Your Tha-Network Account Credentials Are Below
-                                    </p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" style="width: 50%">
-                                    <p style="color: #333; margin: 0 0 30px; line-height: 31px; font-size: 18px; text-align: center">
-                                        Email: '.$request->email.' | Password: '.$pwh.'
-                                    </p>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td colspan="3" style="width: 50%; text-align: center">
-                                    <a href="https://www.facebook.com/Tha-Network-150057600527324/" style="display: inline-block; margin: 0 6px">Facebook</a>
-                                    <a href="https://twitter.com/ThaNetwork4" style="display: inline-block; margin: 0 6px">Twitter</a>
-                                    <a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" style="display: inline-block; margin: 0 6px">Youtube</a>
-                                    <a href="https://www.tiktok.com/@_thanetwork_?lang=en" style="display: inline-block; margin: 0 6px">Tiktok</a>
-                                    <a href="https://www.instagram.com/_thanetwork_/" style="display: inline-block; margin: 0 6px">Instagram</a>
-                                </td>
-                            </tr>
-                        </table>
-                    </body>
-                </html>';
-
-            if (!mail($request->email, 'Forgot Password | Tha-Network', $html, $headers)) {
+            if (!send_credentials_mail($user)) {
                 return WebResponses::exception('Unable to send mail.');
             }
         } catch (\Exception $e) {

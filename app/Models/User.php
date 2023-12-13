@@ -16,6 +16,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Overtrue\LaravelFollow\Followable;
 use LaravelInteraction\Block\Concerns\Blockable;
 use LaravelInteraction\Block\Concerns\Blocker;
+use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements HasMedia, JWTSubject
@@ -30,6 +31,7 @@ class User extends Authenticatable implements HasMedia, JWTSubject
         Followable,
         Blockable,
         Blocker,
+        HasJsonRelationships,
         Notifiable;
 
     /**
@@ -122,6 +124,11 @@ class User extends Authenticatable implements HasMedia, JWTSubject
     public function network()
     {
         return $this->hasOne(Network::class);
+    }
+
+    public function channels ()
+    {
+        return $this->hasManyJson(Channel::class, 'participants');
     }
 
     public function posts()

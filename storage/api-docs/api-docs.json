@@ -25,10 +25,10 @@
         {
             "url": "https://thanetwork.org/api",
             "description": "Live"
-        },
+        }
     ],
     "paths": {
-        "/auth/login": {
+        "/login": {
             "post": {
                 "tags": [
                     "Auth"
@@ -48,26 +48,50 @@
                 },
                 "responses": {
                     "default": {
-                        "description": "Generic response",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "success": true,
-                                    "message": "Success!",
-                                    "data": [
-                                        "...."
-                                    ]
-                                }
-                            }
-                        }
+                        "description": "Generic response"
                     }
                 }
             }
         },
-        "/me": {
-            "get": {
+        "/register": {
+            "post": {
                 "tags": [
-                    "Secure Routes"
+                    "Auth"
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "invitation_code": "2277490383",
+                                "stripe_charge_object": "{...}",
+                                "stripe_customer_id": "cus_123123123",
+                                "stripe_checkout_session_id": "sub_1NfUeOKWX6MBBv9PH1iKh7KX",
+                                "first_name": "Cedric",
+                                "last_name": "Maya",
+                                "gender": " 'Male' OR 'Female' ",
+                                "phone": "1234567890",
+                                "username": "asd444",
+                                "email": "asd444@mailinator.com",
+                                "password": "admin!@#2A",
+                                "password_confirmation": "admin!@#2A",
+                                "social_security_number": "1234567890"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
                 ],
                 "security": [
                     {
@@ -76,18 +100,658 @@
                 ],
                 "responses": {
                     "default": {
-                        "description": "Generic response",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "success": true,
-                                    "message": "Success!",
-                                    "data": [
-                                        "...."
-                                    ]
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/get-invitation-code": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "email": "asd448@mailinator.com"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/verify-invitation-code": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "invitation_code": "2277490383"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/forgot-password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "email": "asd444@mailinator.com"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/subscribe": {
+            "post": {
+                "tags": [
+                    "Payments"
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "card_number": "4242424242424242",
+                                "exp_month": "12",
+                                "exp_year": "24",
+                                "cvc": "123",
+                                "token_id": "t_1231312321312321"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/me": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/send-invitation": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "emails": [
+                                    "asd301@mailinator.com",
+                                    "asd302@mailinator.com",
+                                    "asd303@mailinator.com",
+                                    "asd304@mailinator.com"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/get-weekly-goals": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/update-profile": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "bio" : ".....",
+                                "marital_status": "[ 'married' OR 'single' ]",
+                                "gender" :  "[ 'Male' OR 'Female' ]",
+                                "first_name": "John",
+                                "last_name" :  "Doe",
+                                "phone": "1234",
+                                "email" :  "jdoe@maillinator.com",
+                                "username": "jDoe",
+                                "address" :  ".....",
+                                "country": "US",
+                                "city" :  "Chicago",
+                                "postal_code": "12345",
+                                "password" :  "admin!@#",
+                                "password_confirmation" :  "admin!@#"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/close-my-account": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/update-banner": {
+            "post": {
+                "tags": [
+                    "Profile"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "cover": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "description": "The image file to upload"
+                                    }
                                 }
                             }
                         }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/users/search": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "search" : "Maya"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/users/block": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "user_id" : "7142c0e4-2851-4be7-8ea3-99efcfaa8f5b"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/new-members-this-week": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/people-in-my-network": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/chat/channels": {
+            "post": {
+                "tags": [
+                    "Chat"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "search" : "Maya"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/chat/messages": {
+            "post": {
+                "tags": [
+                    "Chat"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "channel_id" : "49209ef9-13b7-483f-9253-6f910d3cd4b4"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/notifications": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/unread-notifications-count": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/notification/mark-as-read": {
+            "post": {
+                "tags": [
+                    "Notifications"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "notification_id" : "49209ef9-13b7-483f-9253-6f910d3cd4b4"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/notifications/mark-all-as-read": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/settings": {
+            "get": {
+                "tags": [
+                    "Settings"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/posts": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/post/create": {
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "content" : "This is post content.",
+                                "files" : [
+                                    "Example binary file.jpg",
+                                    "Example binary file.mp4"
+                                ],
+                                "post_id": "49209ef9-13b7-483f-9253-6f910d3cd4b4"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/post/update/{id}": {
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "The ID of the post to be updated"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Your request body description",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "content" : "This is post content.",
+                                "files" : [
+                                    "Example binary file.jpg",
+                                    "Example binary file.mp4"
+                                ],
+                                "post_id": "49209ef9-13b7-483f-9253-6f910d3cd4b4"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/post/delete/{id}": {
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "The ID of the post to be updated"
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
+                    }
+                }
+            }
+        },
+        "/post/like/{id}": {
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "description": "The ID of the post to be updated"
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "Generic response"
                     }
                 }
             }

@@ -165,49 +165,50 @@ class RegisterController extends Controller
 
     protected function create(array $data)
     {
-        $user = User::create([
-            'user_invitation_id' => session('validate-code'),
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'pwh' => $data['password'],
-            'invitation_code' => generateBarcodeNumber(),
-            'stripe_checkout_session_id' => $data['stripe_checkout_session_id'] ?? null,
-            'stripe_customer_id' => $data['stripe_customer_id'] ?? null
-        ]);
-
-        $rank = get_my_rank($user->id);
-        $user->remaining_referrals = intval($user->remaining_referrals) + intval($rank->target);
-        $user->stripe_charge_object =  json_encode(session()->get('stripe_charge_object')) ?? null;
-        $user->save();
-
-        //create avatar based on gender
-        $avatar_url = $data['gender'] == 'Male' ? public_path('images/avatars/male-avatar.png') : public_path('images/avatars/female-avatar.png');
-        $user
-            ->addMedia($avatar_url)
-            ->preservingOriginal()
-            ->toMediaCollection('profile_image');
-        //create profile
-        $user->profile()->create([
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'phone' => $data['phone'],
-            'social_security_number' => $data['social_security_number'],
-            'gender' => $data['gender'],
-        ]);
-
-        //notification: lets set weekly goal
-        $string = "Your Weekly goals have been set. Complete your goals to get promoted to the next grade";
-        $notification = Notification::create([
-            'user_id' => $user->id,
-            'notifiable_type' => 'App\Models\User',
-            'notifiable_id' => $user->id,
-            'body' => $string,
-            'sender_id' => $user->id
-        ]);
-        event(new SetWeeklyGoal($user->id, $string, 'App\Models\User', $notification->id, $user));
-
-        return $user;
+        return create_user($data);
+//        $user = User::create([
+//            'user_invitation_id' => session('validate-code'),
+//            'username' => $data['username'],
+//            'email' => $data['email'],
+//            'password' => Hash::make($data['password']),
+//            'pwh' => $data['password'],
+//            'invitation_code' => generateBarcodeNumber(),
+//            'stripe_checkout_session_id' => $data['stripe_checkout_session_id'] ?? null,
+//            'stripe_customer_id' => $data['stripe_customer_id'] ?? null
+//        ]);
+//
+//        $rank = get_my_rank($user->id);
+//        $user->remaining_referrals = intval($user->remaining_referrals) + intval($rank->target);
+//        $user->stripe_charge_object =  json_encode(session()->get('stripe_charge_object')) ?? null;
+//        $user->save();
+//
+//        //create avatar based on gender
+//        $avatar_url = $data['gender'] == 'Male' ? public_path('images/avatars/male-avatar.png') : public_path('images/avatars/female-avatar.png');
+//        $user
+//            ->addMedia($avatar_url)
+//            ->preservingOriginal()
+//            ->toMediaCollection('profile_image');
+//        //create profile
+//        $user->profile()->create([
+//            'first_name' => $data['first_name'],
+//            'last_name' => $data['last_name'],
+//            'phone' => $data['phone'],
+//            'social_security_number' => $data['social_security_number'],
+//            'gender' => $data['gender'],
+//        ]);
+//
+//        //notification: lets set weekly goal
+//        $string = "Your Weekly goals have been set. Complete your goals to get promoted to the next grade";
+//        $notification = Notification::create([
+//            'user_id' => $user->id,
+//            'notifiable_type' => 'App\Models\User',
+//            'notifiable_id' => $user->id,
+//            'body' => $string,
+//            'sender_id' => $user->id
+//        ]);
+//        event(new SetWeeklyGoal($user->id, $string, 'App\Models\User', $notification->id, $user));
+//
+//        return $user;
     }
 
 

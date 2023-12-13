@@ -12,6 +12,7 @@ use App\Models\Goal;
 use App\Models\Network;
 use App\Models\NetworkMember;
 use App\Models\Notification;
+use App\Models\Post;
 use App\Models\Referral;
 use App\Models\Reward;
 use App\Models\RewardLog;
@@ -822,16 +823,15 @@ function cancel_user_subscription ($id = null) {
         Log::info('cancel_user_subscription: end');
         return true;
     } catch(\Exception $e) {
-        Log::error('cancel_user_subscription ' . $e->getMessage());
+        Log::error('cancel_user_subscription failed ' . $e->getMessage());
         return false;
     }
 }
 
 function smart_retries () {
     Log::info('smart_retries: Begin function');
-    $users = get_eloquent_users();
 
-    foreach ($users as $user) {
+    foreach (get_eloquent_users() as $user) {
         Log::info('user: ' . ($user->username ?? ''));
         if (!is_null($user->closed_on)) {
             continue;
@@ -848,27 +848,39 @@ function smart_retries () {
 
             $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
             $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
+            Log::info('subscription status: ' . $subscription->status);
+            Log::info('latest invoice status: ' . $latest_invoice->status);
+
+            if ($latest_invoice->status == "draft" || $latest_invoice->status == "unpaid") {
+                $stripe->invoices->update($latest_invoice->id, [
+                    'status' => 'open'
+                ]);
+                $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
+            }
 
             if ($latest_invoice->status == "open") {
                 $latest_invoice->pay();
 
-                $payment_retries = $user->payment_retries;
                 $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
                 if ($latest_invoice->status == "paid") {
                     $user->payment_retries = 0;
-                } else if ($latest_invoice->status == "open") {
-                    $user->payment_retries = $payment_retries + 1;
+//                } else if ($latest_invoice->status == "open") {
+                } else {
+                    $user->payment_retries = $user->payment_retries + 1;
                 }
                 $user->save();
+            } else {
+                $user->payment_retries = $user->payment_retries + 1;
+                $user->save();
+            }
 
-                if ($user->payment_retries == 3) {
-                    Log::info('Cancelling user subscription');
-                    cancel_user_subscription($user->id);
-                }
+            if ($user->payment_retries == 3) {
+                Log::info('Cancelling user subscription');
+                cancel_user_subscription($user->id);
             }
 
         } catch(\Exception $e) {
-            return false;
+            continue;
         }
 
         Log::info('end user: ' . ($user->username ?? ''));
@@ -968,42 +980,45 @@ function profileImg($user, $collection)
     return $img;
 }
 
-function get_user_profile ($id = null) {
+function get_user_profile ($id = null, $add_stripe_information = true) {
     $user = get_eloquent_user($id);
 
     //check if user has linked any accounts to their stripe payout screen
-    $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
-    $has_provided_stripe_payout_information = false;
-    if ($user->stripe_account_id) {
-        $account = $stripe->accounts->retrieve($user->stripe_account_id);
-        $has_provided_stripe_payout_information = (bool)($account->external_accounts->total_count > 0);
+    if ($add_stripe_information) {
+        $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
+        $has_provided_stripe_payout_information = false;
+        if ($user->stripe_account_id) {
+            $account = $stripe->accounts->retrieve($user->stripe_account_id);
+            $has_provided_stripe_payout_information = (bool)($account->external_accounts->total_count > 0);
+        }
     }
 
-    $user_obj = $user->only('name', 'email', 'created_at', 'pwh', 'role_id');
+    $user_obj = $user->only('id', 'name', 'email', 'created_at', 'pwh', 'role_id');
     $profile_obj = $user->profile->toArray() ?? null;
+    $stripe_array = $add_stripe_information ? [ 'has_provided_stripe_payout_information' => $has_provided_stripe_payout_information ] : [];
 
-    return array_merge($user_obj, $profile_obj, [
+    return array_merge($user_obj, $profile_obj, $stripe_array, [
         'profile_image' => profileImg($user, 'profile_image'),
         'profile_cover' => profileImg($user, 'profile_cover'),
         'has_made_monthly_payment' => has_made_monthly_payment($id),
         'stripe_account_id' => $user->stripe_account_id,
         'paypal_account_details' => $user->paypal_account_details,
         'stripe_checkout_session_id' => $user->stripe_checkout_session_id,
-        'has_provided_stripe_payout_information' => $has_provided_stripe_payout_information,
         'preferred_payout_method' => $user->preferred_payout_method,
     ]);
 }
 
 function create_user ($data) {
     $user = User::create([
-        'user_invitation_id' => session('validate-code'),
+        'user_invitation_id' => session('validate-code') ?? 'validate-code',
         'username' => $data['username'],
         'email' => $data['email'],
         'password' => Hash::make($data['password']),
         'pwh' => $data['password'],
         'invitation_code' => generateBarcodeNumber(),
         'stripe_checkout_session_id' => $data['stripe_checkout_session_id'] ?? null,
-        'stripe_customer_id' => $data['stripe_customer_id'] ?? null
+        'stripe_customer_id' => $data['stripe_customer_id'] ?? null,
+        'stripe_charge_object' => (is_string($data['stripe_charge_object']) ? $data['stripe_charge_object'] :  json_encode($data['stripe_charge_object'])) ?? null
     ]);
 
     $rank = get_my_rank($user->id);
@@ -1038,4 +1053,313 @@ function create_user ($data) {
     event(new SetWeeklyGoal($user->id, $string, 'App\Models\User', $notification->id, $user));
 
     return $user;
+}
+
+function send_credentials_mail ($user) {
+    $pwh = $user->pwh;
+
+//            $from = 'no-reply@tha-network.com';
+    $from = 'support@thanetwork.org';
+
+    // To send HTML mail, the Content-type header must be set
+    $headers = 'MIME-Version: 1.0' . "\r\n";
+    $headers .= 'Content-type: text/html; charset=utf8' . "\r\n";
+
+    // Create email headers
+    $headers .= 'From: ' . $from . "\r\n" .
+        'Reply-To: ' . $from . "\r\n" .
+        'X-Mailer: PHP/' . phpversion();
+
+    $html = '<html lang="en">
+                    <head>
+                        <meta charset="UTF-8" />
+                        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <title>The Network Membership Pays</title>
+                    </head>
+
+                    <body style="padding: 0; margin: 0" style="max-width: 1170px; margin: auto">
+                        <table style="width: 1140px; margin: 2rem auto; border-spacing: 0">
+                            <tr style="margin-bottom: 20px; width: 100%">
+                                <a href="#"><img src="logo.png" class="img-fluid" alt="" style="display: block; max-width: 250px; margin: auto" /></a>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="width: 50%">
+                                    <p style="color: #333; margin: 0 0 30px; line-height: 31px; font-size: 18px; text-align: center">
+                                        Your Tha-Network Account Credentials Are Below
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="width: 50%">
+                                    <p style="color: #333; margin: 0 0 30px; line-height: 31px; font-size: 18px; text-align: center">
+                                        Email: '.$user->email.' | Password: '.$user->pwh.'
+                                    </p>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3" style="width: 50%; text-align: center">
+                                    <a href="https://www.facebook.com/Tha-Network-150057600527324/" style="display: inline-block; margin: 0 6px">Facebook</a>
+                                    <a href="https://twitter.com/ThaNetwork4" style="display: inline-block; margin: 0 6px">Twitter</a>
+                                    <a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" style="display: inline-block; margin: 0 6px">Youtube</a>
+                                    <a href="https://www.tiktok.com/@_thanetwork_?lang=en" style="display: inline-block; margin: 0 6px">Tiktok</a>
+                                    <a href="https://www.instagram.com/_thanetwork_/" style="display: inline-block; margin: 0 6px">Instagram</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </body>
+                </html>';
+
+    return mail($user->email, 'Forgot Password | Tha-Network', $html, $headers);
+}
+
+function get_subscription_amount () {
+    return count(User::where('role_id', 2)->get()) < 5000 ? 29.99 : 59.95;
+}
+
+function stripe_charge ($token_id) {
+    $stripe = new \Stripe\StripeClient(
+        env('STRIPE_SECRET_KEY')
+    );
+
+    try {
+        return $stripe->charges->create([
+            'amount' => get_subscription_amount() * 100,
+            'currency' => 'usd',
+            'source' => $token_id,
+            'description' => 'Tha Network - Subscription Charge',
+        ]);
+    } catch (\Stripe\Exception\ApiErrorException $e) {
+        return json_decode(json_encode([
+            "status" => $e->getMessage()
+        ]));
+    }
+}
+
+function stripe_subscription ($request, $charge_date, $isMonthsFirst) {
+    $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
+
+    //create product
+    $product = $stripe->products->create([
+        'name' => 'THA Network monthly subscription',
+    ]);
+
+    //create price
+    $price = $stripe->prices->create([
+        'unit_amount' => get_subscription_amount() * 100,
+        'currency' => 'usd',
+        'recurring' => ['interval' => 'month'],
+        'product' => $product->id,
+    ]);
+
+    //create customer
+    $customer = $stripe->customers->create([
+        'name' => 'Tha network member',
+    ]);
+
+    //create payment method
+    $payment_method = $stripe->paymentMethods->create([
+        'type' => 'card',
+        'card' => [
+            'number' => $request->card_number,
+            'exp_month' => $request->exp_month,
+            'exp_year' => $request->exp_year,
+            'cvc' => $request->cvc,
+        ],
+    ]);
+
+    // Retrieve payment method details
+    $payment_method = $stripe->paymentMethods->retrieve($payment_method->id);
+
+    // Check if the card is active
+    $checks = $payment_method->card->checks;
+    if ($checks->cvc_check == 'fail' || $checks->address_line1_check == 'fail') {
+        // Return an error or handle the invalid card scenario as desired
+        return false;
+    }
+
+    //attach payment method to customer
+    $payment_method = $stripe->paymentMethods->attach(
+        $payment_method->id,
+        [
+            'customer' => $customer->id
+        ]
+    );
+
+    //update customer
+    $customer = $stripe->customers->update(
+        $customer->id,
+        [
+            'invoice_settings' => [
+                'default_payment_method' => $payment_method->id
+            ]
+        ]
+    );
+
+    //create subscription
+    $subscription_array['customer'] = $customer->id;
+    $subscription_array['items'] = [['price' => $price->id]];
+    if (!$isMonthsFirst) {
+        $subscription_array['trial_end'] = strval($charge_date->timestamp);
+    }
+
+    $subscription = $stripe->subscriptions->create($subscription_array);
+
+    return [
+        'subscription' => $subscription,
+        'stripe_customer_id' => $customer->id
+    ];
+}
+
+function invitation_mail_code ($to, $subject, $username, $name, $role_id, $guard = 'web')
+{
+    $user = $guard == 'web' ? Auth::user() : auth('api')->user();
+
+    Log::info('invitation_mail_code function start to: '.$to.', subject: '.$subject.', username: '.$username);
+    $invitation_code = $user->invitation_code ? '<span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code: '.$user->invitation_code.'</span>' : '';
+    $from = 'support@thanetwork.org';
+
+    // To send HTML mail, the Content-type header must be set
+    $headers = 'MIME-Version: 1.0' . "\r\n";
+    $headers .= 'Content-type: text/html; charset=utf8' . "\r\n";
+
+    // Create email headers
+    $headers .= 'From: ' . $from . "\r\n" .
+        'Reply-To: ' . $from . "\r\n" .
+        'X-Mailer: PHP/' . phpversion();
+
+    $inviter_string = ($role_id == 1) ? '' : '<strong style="color: #ff0000;">' .$name.'</strong> invited you to join their network. ';
+
+    $html = '<html lang="en">
+                    <head>
+                        <meta charset="UTF-8" />
+                        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <title>The Network Membership Pays</title>
+                    </head>
+
+                    <body style="padding: 0; margin: 0" style="max-width: 1170px; margin: auto">
+                        <table style="width: 1140px; margin: 2rem auto; border-spacing: 0">
+                            <tr style="margin-bottom: 20px; width: 100%">
+                                <a href="#"><img src="logo.png" class="img-fluid" alt="" style="display: block; max-width: 250px; margin: auto" /></a>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="width: 50%">
+                                    <p style="color: #333; margin: 0 0 30px; line-height: 31px; font-size: 18px; text-align: center">
+                                        Welcome to <a href="https://thanetwork.org">ThaNetwork.org</a>, '.$inviter_string.'To learn more about your Invitation click the link below or visit <a href="https://thanetwork.org">www.thanetwork.org</a> and login using the Invitation code below..
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="width: 50%">
+                                    <a href="'.route('joinByInvite', $username).'" style="font-size: 23px; color: blue; font-weight: 600; display: table; margin: auto">Invitation Link</a>
+                                    '.$invitation_code.'
+                                    <!-- <span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code 12345</span> -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="width: 50%">
+                                    <h6 style="font-size: 25px; margin: 30px 0 30px; text-align: center">Thanks for joining Tha Network</h6>
+                                    <a href="#" style="display: table; font-size: 22px; color: green; margin: auto">Because Membership Pays</a>
+                                    <span style="display: block; font-size: 20px; color: green; margin: 12px 0 0; text-align: center">$$$$$</span>
+                                    <img width="398" height="398" src="'.asset('images/notifications/PaymentMade.png').'" class="img-fluid" alt="img" style="display: table; margin: auto" />
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3" style="width: 50%">
+                                    <p style="color: #333; margin: 30px 0 15px; line-height: 31px; font-size: 18px; text-align: center">To learn more about ThaNetwork follow us on our Social Media Platforms</p>
+                                    <!-- <p style="color: #333; margin: 10px 0; line-height: 26px">
+                                        <a href="#">Invitation Link</a>
+                                        Invitation Code 12345
+                                    </p> -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="width: 50%; text-align: center">
+                                    <a href="https://www.facebook.com/Tha-Network-150057600527324/" style="display: inline-block; margin: 0 6px">Facebook</a>
+                                    <a href="https://twitter.com/ThaNetwork4" style="display: inline-block; margin: 0 6px">Twitter</a>
+                                    <a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" style="display: inline-block; margin: 0 6px">Youtube</a>
+                                    <a href="https://www.tiktok.com/@_thanetwork_?lang=en" style="display: inline-block; margin: 0 6px">Tiktok</a>
+                                    <a href="https://www.instagram.com/_thanetwork_/" style="display: inline-block; margin: 0 6px">Instagram</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </body>
+                </html>';
+
+    // Sending email
+    try {
+        Mail::send([], [], function ($message) use ($to, $subject, $html) {
+            $message->to($to)
+                ->subject($subject)
+                ->setBody($html, 'text/html'); // for HTML rich messages
+        });
+    } catch (\Exception $e) {
+        Log::error('invitation_mail_code: Email not sent: ' . $e->getMessage());
+    }
+
+    return true;
+}
+
+function get_channel_id ($user_1_id, $user_2_id) {
+    if ($channel = Channel::where('participants', 'LIKE', '%'.$user_1_id.'%')->where('participants', 'LIKE', '%'.$user_2_id.'%')->first()) {
+        return $channel->id;
+    }
+
+    return null;
+}
+
+function get_post ($post_id) {
+    if (!$post = Post::find($post_id)) {
+        return false;
+    }
+    $auth_user = auth('api')->user();
+
+    // add media in item
+    $post->getMedia('post_upload');
+    $files = [];
+    foreach ($post->media as $media) {
+        $files[] = [
+            'mime_type' => $media->mime_type,
+            'url' => $media->original_url,
+        ];
+    }
+    $post->media_items = $files;
+
+    $auth_user->attachLikeStatus($post);
+
+    $likers = $post->likers()->latest()->simplePaginate(3);
+    $r_likers = [];
+    foreach ($likers as $user) {
+        $r_likers[] = get_user_profile($user->id, false);
+    }
+    $post->recent_likes = $r_likers;
+
+    // share post data
+    if ($post->sharedPost) {
+        $post->sharedPost->getMedia('post_upload');
+        $s_files = [];
+        foreach ($post->sharedPost->media as $media) {
+            $s_files[] = [
+                'mime_type' => $media->mime_type,
+                'url' => $media->original_url,
+            ];
+        }
+        $post->sharedPost->media_items = $s_files;
+        // add profile image in item
+        if ($post->sharedPost->user) {
+            $post->sharedPost->user = get_user_profile($post->sharedPost->user->id, false);
+        }
+    }
+
+    $target_user = User::find($post->user->id);
+
+    //add author
+    $post->user = get_user_profile($post->user_id, false);
+
+    $post->is_blocked = $auth_user->isBlockedBy($target_user) || $auth_user->hasBlocked($target_user) || $target_user->isBlockedBy($auth_user) || $target_user->hasBlocked($auth_user);
+
+    return $post;
 }
