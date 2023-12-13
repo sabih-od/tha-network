@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChatController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PostController;
@@ -78,5 +79,9 @@ Route::group([], function () {
         Route::post('post/delete/{id}', [PostController::class, 'delete']);
         Route::post('post/like/{id}', [PostController::class, 'like']);
         Route::post('post/comment', [PostController::class, 'comment']);
+
+        //comment
+        Route::post('comment/like', [CommentController::class, 'like']);
+        Route::post('comment/delete', [CommentController::class, 'delete']);
     });
 });
