@@ -823,16 +823,15 @@ function cancel_user_subscription ($id = null) {
         Log::info('cancel_user_subscription: end');
         return true;
     } catch(\Exception $e) {
-        Log::error('cancel_user_subscription ' . $e->getMessage());
+        Log::error('cancel_user_subscription failed ' . $e->getMessage());
         return false;
     }
 }
 
 function smart_retries () {
     Log::info('smart_retries: Begin function');
-    $users = get_eloquent_users();
 
-    foreach ($users as $user) {
+    foreach (get_eloquent_users() as $user) {
         Log::info('user: ' . ($user->username ?? ''));
         if (!is_null($user->closed_on)) {
             continue;
@@ -849,27 +848,39 @@ function smart_retries () {
 
             $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
             $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
+            Log::info('subscription status: ' . $subscription->status);
+            Log::info('latest invoice status: ' . $latest_invoice->status);
+
+            if ($latest_invoice->status == "draft" || $latest_invoice->status == "unpaid") {
+                $stripe->invoices->update($latest_invoice->id, [
+                    'status' => 'open'
+                ]);
+                $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
+            }
 
             if ($latest_invoice->status == "open") {
                 $latest_invoice->pay();
 
-                $payment_retries = $user->payment_retries;
                 $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
                 if ($latest_invoice->status == "paid") {
                     $user->payment_retries = 0;
-                } else if ($latest_invoice->status == "open") {
-                    $user->payment_retries = $payment_retries + 1;
+//                } else if ($latest_invoice->status == "open") {
+                } else {
+                    $user->payment_retries = $user->payment_retries + 1;
                 }
                 $user->save();
+            } else {
+                $user->payment_retries = $user->payment_retries + 1;
+                $user->save();
+            }
 
-                if ($user->payment_retries == 3) {
-                    Log::info('Cancelling user subscription');
-                    cancel_user_subscription($user->id);
-                }
+            if ($user->payment_retries == 3) {
+                Log::info('Cancelling user subscription');
+                cancel_user_subscription($user->id);
             }
 
         } catch(\Exception $e) {
-            return false;
+            continue;
         }
 
         Log::info('end user: ' . ($user->username ?? ''));
