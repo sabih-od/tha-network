@@ -913,8 +913,9 @@ function np_email () {
 
             //comment if buggy
             if ($latest_invoice->status == "draft") {
-                $stripe->invoices->update($latest_invoice->id, [ 'status' => 'open' ]);
-                $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
+                $stripe->invoices->finalizeInvoice($latest_invoice->id);
+//                $stripe->invoices->update($latest_invoice->id, [ 'status' => 'open' ]);
+//                $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
             }
 
             if ($latest_invoice->status == "open") {

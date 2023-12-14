@@ -272,7 +272,6 @@ class AuthController extends Controller
             $admin = User::where('role_id', 1)->first();
             $code = $admin ? $admin->invitation_code : $this->generateUniqueCode();
 
-            DB::beginTransaction();
             $sendInvitation = SendInvitation::firstOrNew([
                 'email' => $request->email
             ]);
@@ -296,6 +295,7 @@ class AuthController extends Controller
                 'data' => []
             ], 200);
         } catch (\Exception $e) {
+            DB::rollBack();
             Log::info('API FAILED (/auth/get-invitation-code) | Error: ' . $e->getMessage());
 
 
