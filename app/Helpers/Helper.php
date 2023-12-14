@@ -911,11 +911,12 @@ function np_email () {
             $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
             $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
 
-//            //comment if buggy
-//            if ($latest_invoice->status == "draft") {
+            //comment if buggy
+            if ($latest_invoice->status == "draft") {
+                $stripe->invoices->finalizeInvoice($latest_invoice->id);
 //                $stripe->invoices->update($latest_invoice->id, [ 'status' => 'open' ]);
 //                $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
-//            }
+            }
 
             if ($latest_invoice->status == "open") {
                 $string = "Hi,\r\n We did not receive your monthly membership payment.  Update your payment information before the 7th of the month. Once payment is received your membership status will be updated and you will continue to receive referral payments on the normal payout date.\r\n
