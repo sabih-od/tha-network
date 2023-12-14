@@ -112,7 +112,8 @@ export default {
         goals: Object,
         level_details: Object,
         paypal_account_details: String,
-        has_provided_stripe_payout_information: Object
+        has_provided_stripe_payout_information: Object,
+        earnings: String,
     },
     computed: {
         myPostText() {
@@ -137,6 +138,7 @@ export default {
         }
     },
     mounted() {
+        this.$emitter.emit('earnings', this.earnings)
         //show popup notification
         let _t = this;
         this.$emitter.on('show_image_notification', function ({img, text, redirect_url = "#"}) {
