@@ -110,6 +110,7 @@ class AdminController extends Controller
                     }
 
                     $customer = $stripe->customers->retrieve($invoice->customer);
+                    $charge = $stripe->charges->retrieve($invoice->charge);
                     // Check if the invoice is paid and the payment was made in the current year
                     $invoiceYear = date('Y', $invoice->effective_at);
                     if (!is_null($month)) {
@@ -117,7 +118,8 @@ class AdminController extends Controller
                         if ($invoice->paid && $invoiceYear === $year && $invoiceMonth === $month) {
                             $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
                             $invoice['total'] = ($invoice['total'] / 100);
-                            $invoice['formatted_date'] = date('m', $invoice->effective_at).'-'.date('d', $invoice->effective_at).'-'.date('Y', $invoice->effective_at);
+//                            $invoice['formatted_date'] = date('m', $invoice->effective_at).'-'.date('d', $invoice->effective_at).'-'.date('Y', $invoice->effective_at);
+                            $invoice['formatted_date'] = (Carbon::parse($charge->created)->format('M d, Y.')) ?? '';
                             $subscriptionPayments[] = $invoice;
                             $payment_count += 1;
                         }
@@ -125,7 +127,8 @@ class AdminController extends Controller
                         if ($invoice->paid && $invoiceYear === $year) {
                             $invoice['user'] = User::where('stripe_customer_id', $invoice->customer)->first();
                             $invoice['total'] = ($invoice['total'] / 100);
-                            $invoice['formatted_date'] = date('m', $invoice->effective_at).'-'.date('d', $invoice->effective_at).'-'.date('Y', $invoice->effective_at);
+//                            $invoice['formatted_date'] = date('m', $invoice->effective_at).'-'.date('d', $invoice->effective_at).'-'.date('Y', $invoice->effective_at);
+                            $invoice['formatted_date'] = (Carbon::parse($charge->created)->format('M d, Y.'));
                             $subscriptionPayments[] = $invoice;
                             $payment_count += 1;
                         }
@@ -154,7 +157,8 @@ class AdminController extends Controller
                         $decoded_charge_object->total = ($decoded_charge_object->amount / 100);
                         $decoded_charge_object->date = $decoded_charge_object->created;
                         $decoded_charge_object->user = $user_with_charge_object;
-                        $decoded_charge_object->formatted_date = date('m', $decoded_charge_object->created).'-'.date('d', $decoded_charge_object->created).'-'.date('Y', $decoded_charge_object->created);
+//                        $decoded_charge_object->formatted_date = date('m', $decoded_charge_object->created).'-'.date('d', $decoded_charge_object->created).'-'.date('Y', $decoded_charge_object->created);
+                        $decoded_charge_object->formatted_date = (Carbon::parse($decoded_charge_object->created)->format('M d, Y.'));
                         $subscriptionPayments[] = $decoded_charge_object;
                         $payment_count += 1;
                     }
@@ -163,7 +167,8 @@ class AdminController extends Controller
                         $decoded_charge_object->total = ($decoded_charge_object->amount / 100);
                         $decoded_charge_object->date = $decoded_charge_object->created;
                         $decoded_charge_object->user = $user_with_charge_object;
-                        $decoded_charge_object->formatted_date = date('m', $decoded_charge_object->created).'-'.date('d', $decoded_charge_object->created).'-'.date('Y', $decoded_charge_object->created);
+//                        $decoded_charge_object->formatted_date = date('m', $decoded_charge_object->created).'-'.date('d', $decoded_charge_object->created).'-'.date('Y', $decoded_charge_object->created);
+                        $decoded_charge_object->formatted_date = (Carbon::parse($decoded_charge_object->created)->format('M d, Y.'));
                         $subscriptionPayments[] = $decoded_charge_object;
                         $payment_count += 1;
                     }
