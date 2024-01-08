@@ -859,7 +859,10 @@ function smart_retries () {
                 $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
             }
 
-            if ($latest_invoice->status == "open") {
+            if ($latest_invoice->status == "paid") {
+                $user->payment_retries = 0;
+                $user->save();
+            } else if ($latest_invoice->status == "open") {
                 $latest_invoice->pay();
 
                 $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
@@ -876,7 +879,8 @@ function smart_retries () {
             }
 
             if ($user->payment_retries == 3) {
-                Log::info('Cancelling user subscription');
+                Log::info('
+                Cancelling user subscription');
                 cancel_user_subscription($user->id);
             }
 
