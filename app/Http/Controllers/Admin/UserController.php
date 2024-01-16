@@ -221,6 +221,14 @@ class UserController extends Controller
                     $invoices = $stripe->invoices->all([
                         'subscription' => $subscription->id,
                     ]);
+
+                    //main1146's patch
+                    if ($user->username == 'main1146') {
+                        $invoices = array_merge($invoices, $stripe->invoices->all([
+                            'subscription' => 'sub_1NvT7EFNDZX6ZunfSRfICA1a',
+                        ]));
+                    }
+
                     foreach ($invoices as $invoice) {
                         if (!is_null($invoice->charge)) {
                             $charge = $stripe->charges->retrieve($invoice->charge);
