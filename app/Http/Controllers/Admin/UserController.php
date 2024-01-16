@@ -226,7 +226,7 @@ class UserController extends Controller
                     if ($user->username == 'main1146') {
                         $invoices = array_merge($invoices, $stripe->invoices->all([
                             'subscription' => 'sub_1NvT7EFNDZX6ZunfSRfICA1a',
-                        ]));
+                        ]))->toArray();
                     }
 
                     foreach ($invoices as $invoice) {
