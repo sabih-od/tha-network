@@ -223,13 +223,38 @@ class UserController extends Controller
                     ]);
 
                     //main1146's patch
-                    dd($stripe->invoices->all([
-                        'subscription' => 'sub_1NvT7EFNDZX6ZunfSRfICA1a',
-                    ]));
                     if ($user->username == 'main1146') {
-                        $invoices = array_merge($invoices, $stripe->invoices->all([
+                        $additional_invoices = $stripe->invoices->all([
                             'subscription' => 'sub_1NvT7EFNDZX6ZunfSRfICA1a',
-                        ]));
+                        ]);
+
+                        foreach ($additional_invoices as $invoice) {
+                            if (!is_null($invoice->charge)) {
+                                $charge = $stripe->charges->retrieve($invoice->charge);
+                                switch ($charge->status) {
+                                    case "succeeded":
+                                        $status = '<span class="badge badge-pill badge-success">Succeeded</span>';
+                                        break;
+                                    case "pending":
+                                        $status = '<span class="badge badge-pill badge-warning">Pending</span>';
+                                        break;
+                                    case "failed":
+                                        $status = '<span class="badge badge-pill badge-danger">Failed</span>';
+                                        break;
+                                    default:
+                                        $status = '';
+                                        break;
+                                }
+
+                                $payments []= [
+                                    'amount' => ('$' . $charge->amount / 100) ?? '',
+                                    'date' => (Carbon::parse($charge->created)->format('M d, Y.')) ?? '',
+                                    'status' =>  $status,
+                                ];
+
+                                $total_payment += ($charge->amount / 100);
+                            }
+                        }
                     }
 
                     foreach ($invoices as $invoice) {
