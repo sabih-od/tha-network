@@ -443,7 +443,8 @@ function close_accounts() {
                 }
 
                 //remove user from all networks
-                NetworkMember::where('user_id', $user->id)->delete();
+                //logic change 19-01-2024
+//                NetworkMember::where('user_id', $user->id)->delete();
 
                 //remove user from all friends lists
                 DB::table('user_follower')->where('following_id', $user->id)->orWhere('follower_id', $user->id)->delete();
