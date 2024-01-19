@@ -1417,3 +1417,29 @@ function get_post ($post_id) {
 
     return $post;
 }
+
+function get_inviter_by_subscription_id ($subscription_id) {
+    if (
+        !$user = User::where([
+            'role_id' => 2,
+            'closed_on' => null,
+            'stripe_checkout_session_id' => $subscription_id
+        ])->first()
+    ) { return false; }
+
+    if (!$referral = Referral::where('email', $user->email)->first()) { return false; }
+
+    if (!$user = User::where('id', $referral->user_id)->first()) { return false; }
+
+    return $user;
+}
+
+function get_inviter_by_user_id ($user_id) {
+    if (!$user = User::find($user_id)) { return false; }
+
+    if (!$referral = Referral::where('email', $user->email)->first()) { return false; }
+
+    if (!$user = User::where('id', $referral->user_id)->first()) { return false; }
+
+    return $user;
+}
