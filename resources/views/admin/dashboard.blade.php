@@ -53,14 +53,16 @@
                             <h3>Net Profit</h3>
                             <a href="#" type="button" id="btn_payments_this_month" style="color: inherit;">
                                 <p>
-                                    This Month: ${{ $total_payments_this_month - ($count_of_payments_this_month * 11.99) }}
+{{--                                    This Month: ${{ $total_payments_this_month - ($count_of_payments_this_month * 11.99) }}--}}
+                                    This Month: ${{ $total_payments_this_month }}
 {{--                                    This Month: $100--}}
                                 </p>
                             </a>
                             <br/>
                             <a href="#" type="button" id="btn_payments_this_year" style="color: inherit;">
                                 <p>
-                                    This Year: ${{ $total_payments_this_year - ($count_of_payments_this_year * 11.99) }}
+{{--                                    This Year: ${{ $total_payments_this_year - ($count_of_payments_this_year * 11.99) }}--}}
+                                    This Year: ${{ $total_payments_this_year }}
 {{--                                    This Year: $100--}}
                                 </p>
                             </a>
@@ -77,14 +79,16 @@
                             <h3>Gross Income</h3>
                             <a href="#" type="button" id="btn_gross_income_this_month" style="color: inherit;">
                                 <p>
-                                    This Month: ${{$total_payments_this_month}}
+{{--                                    This Month: ${{$total_payments_this_month}}--}}
+                                    This Month: ${{$gross_total_payments_this_month}}
     {{--                                This Month: $100--}}
                                 </p>
                             </a>
                             <br/>
                             <a href="#" type="button" id="btn_gross_income_this_year" style="color: inherit;">
                                 <p>
-                                    This Year: ${{$total_payments_this_year}}
+{{--                                    This Year: ${{$total_payments_this_year}}--}}
+                                    This Year: ${{$gross_total_payments_this_year}}
     {{--                                This Year: $100--}}
                                 </p>
                             </a>
@@ -101,14 +105,16 @@
                             <h3>Company Profit</h3>
                             <a href="#" type="button" id="btn_company_profit_this_month" style="color: inherit;">
                                 <p>
-                                    This Month: ${{ $total_payments_this_month - ($count_of_payments_this_month * 11.99) - $total_admin_withdrawals_this_month }}
+{{--                                    This Month: ${{ $total_payments_this_month - ($count_of_payments_this_month * 11.99) - $total_admin_withdrawals_this_month }}--}}
+                                    This Month: ${{ $total_payments_this_month - $total_admin_withdrawals_this_month }}
     {{--                                This Month: $100--}}
                                 </p>
                             </a>
                             <br/>
                             <a href="#" type="button" id="btn_company_profit_this_year" style="color: inherit;">
                                 <p>
-                                    This Year: ${{ $total_payments_this_year - ($count_of_payments_this_year * 11.99) - $total_admin_withdrawals_this_year }}
+{{--                                    This Year: ${{ $total_payments_this_year - ($count_of_payments_this_year * 11.99) - $total_admin_withdrawals_this_year }}--}}
+                                    This Year: ${{ $total_payments_this_year - $total_admin_withdrawals_this_year }}
     {{--                                This Year: $100--}}
                                 </p>
                             </a>
@@ -241,7 +247,8 @@
                             @if (!is_null($payment->user))
                                 <tr>
                                     <td>{{($payment->user->profile->first_name ?? '') . ' ' . ($payment->user->profile->last_name ?? '')}}</td>
-                                    <td>${{$payment->total - 11.99}}</td>
+{{--                                    <td>${{$payment->total - 11.99}}</td>--}}
+                                    <td>${{$payment->total}}</td>
 {{--                                    <td>{{\Carbon\Carbon::createFromTimestamp($payment->date)}}</td>--}}
                                     <td>{{$payment->formatted_date}}</td>
                                 </tr>
@@ -281,7 +288,8 @@
                             @if (!is_null($payment->user))
                                 <tr>
                                     <td>{{($payment->user->profile->first_name ?? '') . ' ' . ($payment->user->profile->last_name ?? '')}}</td>
-                                    <td>${{$payment->total - 11.99}}</td>
+{{--                                    <td>${{$payment->total - 11.99}}</td>--}}
+                                    <td>${{$payment->total}}</td>
 {{--                                    <td>{{\Carbon\Carbon::createFromTimestamp($payment->date)}}</td>--}}
                                     <td>{{$payment->formatted_date}}</td>
                                 </tr>
@@ -321,7 +329,8 @@
                             @if (!is_null($payment->user))
                                 <tr>
                                     <td>{{($payment->user->profile->first_name ?? '') . ' ' . ($payment->user->profile->last_name ?? '')}}</td>
-                                    <td>${{$payment->total}}</td>
+{{--                                    <td>${{$payment->total}}</td>--}}
+                                    <td>${{$payment->gross_total}}</td>
 {{--                                    <td>{{\Carbon\Carbon::createFromTimestamp($payment->date)}}</td>--}}
                                     <td>{{$payment->formatted_date}}</td>
                                 </tr>
