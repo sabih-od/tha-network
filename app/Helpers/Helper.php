@@ -977,6 +977,53 @@ function get_user_with_charge_object () {
     ])->with('profile')->whereNotNull('stripe_charge_object')->get();
 }
 
+function get_my_monthly_earnings () {
+    $monthly_earnings = 0.0;
+    foreach (
+        RewardLog::whereHas('reward', function ($q) {
+            return $q->whereHas('user')->whereHas('invited_user')->where('user_id', Auth::id());
+        })
+            ->orderBy('created_at', 'DESC')
+            ->whereDate('created_at', '>=', Carbon::today()->firstOfMonth())
+            ->whereDate('created_at', '<=', Carbon::today()->endOfMonth())
+            ->get() as $reward_log
+    ) {
+        $monthly_earnings += $reward_log->reward->amount;
+    }
+
+    return $monthly_earnings;
+}
+
+function get_my_year_to_date_earnings () {
+    $year_to_date_earnings = 0.0;
+    foreach (
+        RewardLog::whereHas('reward', function ($q) {
+            return $q->whereHas('user')->whereHas('invited_user')->where('user_id', Auth::id());
+        })
+            ->orderBy('created_at', 'DESC')
+            ->whereDate('created_at', '>=', Carbon::today()->firstOfMonth())
+            ->whereDate('created_at', '<=', Carbon::today()->day(15))
+            ->get() as $reward_log
+    ) {
+        $year_to_date_earnings += $reward_log->reward->amount;
+    }
+
+    return $year_to_date_earnings;
+}
+
+function get_my_gross_earnings () {
+    $gross_earnings = 0.0;
+    foreach (
+        RewardLog::whereHas('reward', function ($q) {
+            return $q->whereHas('user')->whereHas('invited_user')->where('user_id', Auth::id());
+        })->orderBy('created_at', 'DESC')->get() as $reward_log
+    ) {
+        $gross_earnings += $reward_log->reward->amount;
+    }
+
+    return $gross_earnings;
+}
+
 //--------------------------API HELPERS
 function profileImg($user, $collection)
 {
