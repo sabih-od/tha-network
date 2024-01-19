@@ -74,7 +74,10 @@ class HomeController extends Controller
             'level_details' => get_my_level(Auth::user()->id),
             'paypal_account_details' => auth()->check() ? auth()->user()->paypal_account_details : '',
             'has_provided_stripe_payout_information' => $has_provided_stripe_payout_information,
-            'earnings' => '$' . strval($earnings)
+            'earnings' => '$' . strval($earnings),
+            'monthly_earnings' => get_my_monthly_earnings(),
+            'year_to_date_earnings' => get_my_year_to_date_earnings(),
+            'gross_earnings' => get_my_gross_earnings(),
         ]);
     }
 

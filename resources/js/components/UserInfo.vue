@@ -9,7 +9,8 @@
             <!--                <i class="fas fa-camera"></i><input type="file">-->
             <!--            </div>-->
         </div>
-        <h2>{{ name + '('+(this.level_details.level ?? 'Bronze')+' level) | Earnings: ' + this.earnings}} <span>@{{ user?.username }}</span></h2>
+<!--        <h2>{{ name + '('+(this.level_details.level ?? 'Bronze')+' level) | Earnings: ' + this.earnings}} <span>@{{ user?.username }}</span></h2>-->
+        <h2>{{ name + '('+(this.level_details.level ?? 'Bronze')+' level)' }} <span>Monthly earnings: ${{ this.monthly_earnings }} | Year to date earnings: ${{ this.year_to_date_earnings }} | Gross earnings: ${{ this.gross_earnings }}</span> <span>@{{ user?.username }}</span></h2>
         <teleport to="body">
             <CreateAvatar/>
         </teleport>
@@ -65,13 +66,25 @@ export default {
             }),
             temp_profile_image: this.auth_image,
             level_details: {},
-            earnings: ''
+            earnings: '',
+            monthly_earnings: '',
+            year_to_date_earnings: '',
+            gross_earnings: '',
         }
     },
     mounted() {
         let _t = this;
         this.$emitter.on('earnings', (data) => {
             _t.earnings = data;
+        });
+        this.$emitter.on('monthly_earnings', (data) => {
+            _t.monthly_earnings = data;
+        });
+        this.$emitter.on('year_to_date_earnings', (data) => {
+            _t.year_to_date_earnings = data;
+        });
+        this.$emitter.on('gross_earnings', (data) => {
+            _t.gross_earnings = data;
         });
         this.temp_profile_image = this.auth_image;
 
