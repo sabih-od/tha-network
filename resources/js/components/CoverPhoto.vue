@@ -25,6 +25,8 @@
                         <a href="#" class="awardWrap profilePage">
                             <img :src="level_details.trophy" alt="">
                         </a>
+                        <h6 class="text-right"><b>Year to date earnings: ${{ this.year_to_date_earnings }}</b></h6>
+                        <h6 class="text-right"><b>Gross earnings: ${{ this.gross_earnings }}</b></h6>
                         <div class="btn-group">
                             <!--                            <a href="#" class="themeBtn">Message</a>-->
                             <button v-if="!edit_profile_active && (paypal_account_details || has_provided_stripe_payout_information)" class="themeBtn btn_invite"
@@ -125,6 +127,12 @@ export default {
             _t.paypal_account_details = data.paypal_account_details;
             _t.has_provided_stripe_payout_information = data.has_provided_stripe_payout_information;
         });
+        this.$emitter.on('year_to_date_earnings', (data) => {
+            _t.year_to_date_earnings = data;
+        });
+        this.$emitter.on('gross_earnings', (data) => {
+            _t.gross_earnings = data;
+        });
     },
     data() {
         return {
@@ -140,6 +148,8 @@ export default {
             level_details: {},
             paypal_account_details: '',
             has_provided_stripe_payout_information: false,
+            year_to_date_earnings: '',
+            gross_earnings: '',
         }
     },
     methods: {

@@ -10,7 +10,9 @@
             <!--            </div>-->
         </div>
 <!--        <h2>{{ name + '('+(this.level_details.level ?? 'Bronze')+' level) | Earnings: ' + this.earnings}} <span>@{{ user?.username }}</span></h2>-->
-        <h2>{{ name + '('+(this.level_details.level ?? 'Bronze')+' level)' }} <span>Monthly earnings: ${{ this.monthly_earnings }} | Year to date earnings: ${{ this.year_to_date_earnings }} | Gross earnings: ${{ this.gross_earnings }}</span> <span>@{{ user?.username }}</span></h2>
+<!--        <h2>{{ name + '('+(this.level_details.level ?? 'Bronze')+' level)' }} <span>Monthly earnings: ${{ this.monthly_earnings }} | Year to date earnings: ${{ this.year_to_date_earnings }} | Gross earnings: ${{ this.gross_earnings }}</span> <span>@{{ user?.username }}</span></h2>-->
+<!--        <h2>{{ name + '('+(this.level_details.level ?? 'Bronze')+' level)' }} <span>Year to date earnings: ${{ this.year_to_date_earnings }} | Gross earnings: ${{ this.gross_earnings }}</span> <span>@{{ user?.username }}</span></h2>-->
+        <h2>{{ name + '('+(this.level_details.level ?? 'Bronze')+' level)'}} <span>@{{ user?.username }}</span></h2>
         <teleport to="body">
             <CreateAvatar/>
         </teleport>
