@@ -123,6 +123,8 @@ export default {
         profile_image: Object,
         level_details: Object,
         is_in_my_network: Boolean,
+        year_to_date_earnings: String,
+        gross_earnings: String,
     },
     methods: {
         toggleBioSeeMore () {
@@ -140,6 +142,10 @@ export default {
             _t.bio_teaser = _t.profile.bio.substring(0, 20);
             _t.bio_see_more = (_t.para_bio_lines > 4);
         }, 50);
+
+        //earnings
+        this.$emitter.emit('year_to_date_earnings', this.year_to_date_earnings)
+        this.$emitter.emit('gross_earnings', this.gross_earnings)
 
         //hide blocked users and people in my network areas
         this.$emitter.emit('setPeopleInMyNetworkFlagOff', false);

@@ -994,15 +994,21 @@ function get_my_monthly_earnings () {
     return $monthly_earnings;
 }
 
-function get_my_year_to_date_earnings () {
+function get_year_to_date_earnings ($user_id = null) {
+    $user_id = is_null($user_id) ? Auth::id() : $user_id;
+
     $year_to_date_earnings = 0.0;
 
     $ceiling_date = Carbon::create(Carbon::now()->year, 1, 1);
-    $floor_date = Carbon::create(Carbon::now()->year, 12, 15);
+
+    $floor_date = (
+        Carbon::today() < Carbon::create(Carbon::now()->year, Carbon::now()->month, 15)
+    )
+        ? Carbon::create(Carbon::now()->year, Carbon::now()->month, 11) : Carbon::now();
 
     foreach (
-        RewardLog::whereHas('reward', function ($q) {
-            return $q->whereHas('user')->whereHas('invited_user')->where('user_id', Auth::id());
+        RewardLog::whereHas('reward', function ($q) use ($user_id) {
+            return $q->whereHas('user')->whereHas('invited_user')->where('user_id', $user_id);
         })
             ->orderBy('created_at', 'DESC')
 //            ->whereDate('created_at', '>=', Carbon::today()->firstOfMonth())
@@ -1017,12 +1023,24 @@ function get_my_year_to_date_earnings () {
     return $year_to_date_earnings;
 }
 
-function get_my_gross_earnings () {
+function get_gross_earnings ($user_id = null) {
+    $user_id = is_null($user_id) ? Auth::id() : $user_id;
+
     $gross_earnings = 0.0;
+
+    $floor_date = (
+        Carbon::today() < Carbon::create(Carbon::now()->year, Carbon::now()->month, 15)
+    )
+        ? Carbon::create(Carbon::now()->year, Carbon::now()->month, 11) : null;
+
     foreach (
-        RewardLog::whereHas('reward', function ($q) {
-            return $q->whereHas('user')->whereHas('invited_user')->where('user_id', Auth::id());
-        })->orderBy('created_at', 'DESC')->get() as $reward_log
+        RewardLog::whereHas('reward', function ($q) use ($user_id) {
+            return $q->whereHas('user')->whereHas('invited_user')->where('user_id', $user_id);
+        })
+        ->when(!is_null($floor_date), function ($q) use ($floor_date) {
+            return $q->whereDate('created_at', '<=', $floor_date);
+        })
+        ->orderBy('created_at', 'DESC')->get() as $reward_log
     ) {
         $gross_earnings += $reward_log->reward->amount;
     }

@@ -377,7 +377,9 @@ class ProfileController extends Controller
                 'network_count' => $user->network()->exists() ? count($user->network->members) : 0,
                 'user_is_blocked' => $auth_user->hasBlocked($user),
                 'is_in_my_network' => is_in_my_network($user->id),
-                'level_details' => get_my_level($user->id)
+                'level_details' => get_my_level($user->id),
+                'year_to_date_earnings' => get_year_to_date_earnings($user->id),
+                'gross_earnings' => get_gross_earnings($user->id),
             ]);
         } catch (\Exception $e) {
             return redirect()->route('home')->with('error', $e->getMessage());
