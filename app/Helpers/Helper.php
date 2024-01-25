@@ -997,6 +997,7 @@ function get_my_monthly_earnings () {
 function get_my_year_to_date_earnings () {
     $year_to_date_earnings = 0.0;
 
+    $ceiling_date = Carbon::create(Carbon::now()->year, 1, 1);
     $floor_date = Carbon::create(Carbon::now()->year, 12, 15);
 
     foreach (
@@ -1004,8 +1005,9 @@ function get_my_year_to_date_earnings () {
             return $q->whereHas('user')->whereHas('invited_user')->where('user_id', Auth::id());
         })
             ->orderBy('created_at', 'DESC')
-            ->whereDate('created_at', '>=', Carbon::today()->firstOfMonth())
+//            ->whereDate('created_at', '>=', Carbon::today()->firstOfMonth())
 //            ->whereDate('created_at', '<=', Carbon::today()->day(15))
+            ->whereDate('created_at', '>=', $ceiling_date)
             ->whereDate('created_at', '<=', $floor_date)
             ->get() as $reward_log
     ) {
