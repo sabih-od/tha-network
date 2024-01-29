@@ -446,6 +446,14 @@ export default {
     width: calc(100% - 40px);
 }
 
+
+@media (max-width: 575.98px) {
+    .dropdown-menu .dropdown-item p {
+        font-size: 0.75rem;
+        line-height: 1;
+    }
+}
+
 .dropdown-menu .dropdown-item:hover p {
     color: #fff;
 }
