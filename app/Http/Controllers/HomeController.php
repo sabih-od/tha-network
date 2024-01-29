@@ -76,8 +76,8 @@ class HomeController extends Controller
             'has_provided_stripe_payout_information' => $has_provided_stripe_payout_information,
             'earnings' => '$' . strval($earnings),
             'monthly_earnings' => get_my_monthly_earnings(),
-            'year_to_date_earnings' => get_my_year_to_date_earnings(),
-            'gross_earnings' => get_my_gross_earnings(),
+            'year_to_date_earnings' => get_year_to_date_earnings(),
+            'gross_earnings' => get_gross_earnings(),
         ]);
     }
 
