@@ -32,6 +32,14 @@ class SetWeeklyGoals implements ShouldQueue
      */
     public function handle()
     {
+//        NEW WORK EACH WEEk WEEKLY GOAL SHOULD BE RESET TO  25
+            $users = \App\Models\User::all();
+            foreach ($users as $user){
+                $user->remaining_referrals = 25;
+                $user->save();
+            }
+
+
         Log::info('JOB (set_weekly_goal()) at: ' . Carbon::now());
         set_weekly_goal();
     }

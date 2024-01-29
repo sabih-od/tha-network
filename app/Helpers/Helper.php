@@ -146,7 +146,8 @@ function get_weekly_goals($id = null): array
     $end_of_this_month = (Carbon::now())->endOfMonth();
     $weeks_remaining = $today->diffInWeeks($end_of_this_month) + 1;
 
-    $weekly_goals = intval($user->remaining_referrals / $weeks_remaining);
+//    $weekly_goals = intval($user->remaining_referrals / $weeks_remaining);
+    $weekly_goals = intval($user->remaining_referrals);
     $referrals_made = $user->completed_referrals_this_week()->count();
     $remaining_goals = $weekly_goals - $referrals_made;
 
@@ -267,6 +268,9 @@ function no_referrals_for_the_day() {
         }
     }
 }
+
+
+
 
 function set_weekly_goal() {
     $users = get_eloquent_users();
