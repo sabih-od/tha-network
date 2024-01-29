@@ -439,10 +439,10 @@ export default {
     margin: 0;
     font-size: 0.875rem;
     font-weight: 500;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    /*display: -webkit-box;*/
+    /*-webkit-line-clamp: 2;*/
+    /*-webkit-box-orient: vertical;*/
+    /*overflow: hidden;*/
     width: calc(100% - 40px);
 }
 

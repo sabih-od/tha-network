@@ -35,7 +35,11 @@ use Inertia\Inertia;
 });*/
 
 Route::get('/temp', function () {
-
+//    $users = \App\Models\User::all();
+//        foreach ($users as $user){
+//            $user->remaining_referrals = 25;
+//            $user->save();
+//        }
 })->name('temp');
 
 Route::get('get/redis', function () {
