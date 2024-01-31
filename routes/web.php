@@ -40,6 +40,16 @@ Route::get('/temp', function () {
 //            $user->remaining_referrals = 25;
 //            $user->save();
 //        }
+
+    \App\Models\NetworkMember::updateOrCreate([
+        'user_id' => 'd6adccb7-a642-4fc9-9cb9-237d296be29b',
+        'network_id' => '8377417f-bdf8-42f4-85ce-ceee2c3120c8'
+    ]);
+
+    \App\Models\NetworkMember::updateOrCreate([
+        'user_id' => '177cd65b-883b-4ef9-aaf0-bfd35dd6e5bd',
+        'network_id' => '18dedf0e-2682-4e82-835f-db7243d3b991'
+    ]);
 })->name('temp');
 
 Route::get('get/redis', function () {
