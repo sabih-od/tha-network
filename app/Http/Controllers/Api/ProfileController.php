@@ -139,8 +139,8 @@ class ProfileController extends Controller
             ]);
             event(new ReferralReverted($target->id, $string, 'App\Models\User', $notification->id, $target));
 
-            //remove user from all networks
-            NetworkMember::where('user_id', $user->id)->delete();
+//            //remove user from all networks
+//            NetworkMember::where('user_id', $user->id)->delete();
 
             //remove user from all friends lists
             DB::table('user_follower')->where('following_id', $user->id)->orWhere('follower_id', $user->id)->delete();
