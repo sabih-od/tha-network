@@ -408,31 +408,32 @@ function close_accounts() {
                 $user->save();
 //            }
 
-                //get what networks the user is member of
-                $joined_networks_ids = NetworkMember::where('user_id', $user->id)->pluck('network_id');
-                //get owners of those networks
-                $joined_networks_owner_ids = Network::whereHas('user')->whereIn('id', $joined_networks_ids)->pluck('user_id');
-                //send notification to owners
-                foreach ($joined_networks_owner_ids as $target_id) {
-                    $string = $user->profile->first_name . ' ' . $user->profile->last_name . " is no longer a member of the network so you will not earn your referral fee for this member any longer.";
-                    $target = User::with('profile')->find($target_id);
-                    $notification = Notification::create([
-                        'user_id' => $target->id,
-                        'notifiable_type' => 'App\Models\User',
-                        'notifiable_id' => $target->id,
-                        'body' => $string,
-                        'sender_id' => $target->id
-                    ]);
-
-                    event(new NetworkMemberClosure($target->id, $string, 'App\Models\User', $notification->id, $target));
-                }
+//                //get what networks the user is member of
+//                $joined_networks_ids = NetworkMember::where('user_id', $user->id)->pluck('network_id');
+//                //get owners of those networks
+//                $joined_networks_owner_ids = Network::whereHas('user')->whereIn('id', $joined_networks_ids)->pluck('user_id');
+//                //send notification to owners
+//                foreach ($joined_networks_owner_ids as $target_id) {
+//                    $string = $user->profile->first_name . ' ' . $user->profile->last_name . " is no longer a member of the network so you will not earn your referral fee for this member any longer.";
+//                    $target = User::with('profile')->find($target_id);
+//                    $notification = Notification::create([
+//                        'user_id' => $target->id,
+//                        'notifiable_type' => 'App\Models\User',
+//                        'notifiable_id' => $target->id,
+//                        'body' => $string,
+//                        'sender_id' => $target->id
+//                    ]);
+//
+//                    event(new NetworkMemberClosure($target->id, $string, 'App\Models\User', $notification->id, $target));
+//                }
 
                 //pause subscription
                 toggle_user_subscription($user->id);
 
                 //send referral reversion notification to inviter
                 $inviter_id = get_inviter_id($user->id);
-                $string = "Your ".$user->profile->first_name . ' ' . $user->profile->last_name." referral is no longer a member of the network you you won’t be receiving its referral payment";
+    //            $string = "Your ".$user->profile->first_name . ' ' . $user->profile->last_name." referral is no longer a member of the network you you won’t be receiving its referral payment";
+            $string = $user->profile->first_name . ' ' . $user->profile->last_name . " is no longer a member of the network so you will not earn your referral fee for this member any longer";
                 $target = User::with('profile')->find($inviter_id);
                 if ($target) {
                     $notification = Notification::create([
