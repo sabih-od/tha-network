@@ -23,7 +23,7 @@ trait ChatData
                 $q->where('id', Auth::id());
             })
             ->whereHas('creator', function ($q) {
-                $q->where('id', '!=', Auth::id())->whereNull('closed_on');
+                $q->whereNull('closed_on');
             })
             ->withCount([
                 'notifications' => function ($q) {
