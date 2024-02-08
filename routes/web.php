@@ -270,6 +270,8 @@ Route::middleware('has.provided.stripe.info')->group(function () {
 
     Route::get('/privacy', [FrontCmsController::class, 'privacy'])->name('privacy');
 
+    Route::get('/faqs', [FrontCmsController::class, 'faqs'])->name('faqs');
+
     Route::get('/terms', [FrontCmsController::class, 'terms'])->name('terms');
 
     Route::get('/benefits', [FrontCmsController::class, 'benefits'])->name('benefits');

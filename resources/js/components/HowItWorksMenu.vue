@@ -42,6 +42,10 @@
                         <li :class="page === 'Privacy'? 'nav-item active' : 'nav-item'">
                             <Link class="nav-link" :href="$route('privacy')">Privacy Policy</Link>
                         </li>
+
+                        <li :class="page === 'Privacy'? 'nav-item active' : 'nav-item'">
+                            <Link class="nav-link" :href="$route('faqs')">FAQs</Link>
+                        </li>
 <!--                        <li  :class="page === 'Contact'? 'nav-item active' : 'nav-item'">-->
 <!--                            <Link class="nav-link" :href="$route('contact')">Contact Us</Link>-->
 <!--                        </li>-->

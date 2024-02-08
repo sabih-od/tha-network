@@ -58,6 +58,11 @@ class CmsController extends Controller
         ]);
     }
 
+    public function faqs (Request $request)
+    {
+        return Inertia::render('Faqs', []);
+    }
+
     public function contact (Request $request)
     {
         $contact = Page::where('name', 'Contact')->first();
