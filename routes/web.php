@@ -124,6 +124,7 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
     Route::match(['get', 'post'], '/cms/terms', [CmsController::class, 'terms'])->name('admin.cms.terms');
     Route::match(['get', 'post'], '/cms/privacy', [CmsController::class, 'privacy'])->name('admin.cms.privacy');
     Route::match(['get', 'post'], '/cms/contact', [CmsController::class, 'contact'])->name('admin.cms.contact');
+    Route::match(['get', 'post'], '/cms/faqs', [CmsController::class, 'faqs'])->name('admin.cms.faqs');
 
     //admin withdrawal
     Route::post('admin-withdrwal', [AdminWithdrawalController::class, 'create'])->name('admin.admin_withdrawal.create');
