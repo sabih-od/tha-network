@@ -60,7 +60,11 @@ class CmsController extends Controller
 
     public function faqs (Request $request)
     {
-        return Inertia::render('Faqs', []);
+        $faqs_page = Page::where('name', 'FAQS')->first();
+        $data = json_decode($faqs_page->content ?? []);
+        return Inertia::render('Faqs', [
+            'data' => $data
+        ]);
     }
 
     public function contact (Request $request)

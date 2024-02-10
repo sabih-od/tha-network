@@ -498,6 +498,7 @@ class CmsController extends Controller
             if ($privacy && $privacy->content) {
                 $data = json_decode($privacy->content);
             }
+
             return view('admin.cms.privacy', compact('privacy', 'data'));
         } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
@@ -551,6 +552,42 @@ class CmsController extends Controller
                 $data = json_decode($contact->content);
             }
             return view('admin.cms.contact', compact('contact', 'data'));
+        } catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
+    public function faqs(Request $request)
+    {
+        try {
+            if ($request->method() == 'POST') {
+                $faqs_page = Page::firstOrCreate([
+                    'name' => 'FAQS',
+                    'slug' => 'faqs',
+                ], []);
+
+                $faqs = [];
+                foreach ($request->questions as $key => $question) {
+                    $faqs []= [
+                        'question' => $question,
+                        'answer' => $request->answers[$key],
+                    ];
+                }
+
+                $faqs_page->content = json_encode([
+                    'faqs' => $faqs
+                ]);
+                $faqs_page->save();
+
+                return back()->with('success', 'Page Updated Successfully');
+            }
+
+            $faqs = Page::where('name', 'FAQS')->first();
+            $data = [];
+            if ($faqs && $faqs->content) {
+                $data = json_decode($faqs->content);
+            }
+            return view('admin.cms.faqs', compact('faqs', 'data'));
         } catch (\Exception $exception) {
             return back()->with('error', $exception->getMessage());
         }
