@@ -147,7 +147,7 @@
             let faqs = JSON.parse('{{$faqs->content}}'.replaceAll('&quot;', '"')).faqs;
             render_faqs(faqs);
 
-            $('.btn_remove_faq').on('click', function () {
+            $('body').on('click', '.btn_remove_faq', function () {
                 faqs = faqs.filter((faq) => {
                     return faq.question !== $('#wrapper-question-' + $(this).data('id')).find('textarea').val();
                 });
@@ -181,8 +181,8 @@
                                         <label>A`+toSingleDigit(key + 1)+`:</label>
                                         <textarea class="form-control" name="answers[]" cols="30" rows="2" required>`+faq.answer+`</textarea>
                                     </div>
-                                    <div class="form-group col-md-2 btn_remove_faq" data-id="`+toSingleDigit(key)+`">
-                                        <button type="button">
+                                    <div class="form-group col-md-2">
+                                        <button type="button" class="btn_remove_faq" data-id="`+toSingleDigit(key)+`">
                                             x
                                         </button>
                                     </div>`;
