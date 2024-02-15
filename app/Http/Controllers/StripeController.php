@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PaymentSettingsUpdated;
 use App\Events\PaypalPayoutConnected;
 use App\Events\StripePayoutConnected;
 use App\Helpers\WebResponses;
 use App\Models\Notification;
 use App\Models\User;
 use App\Traits\StripePayment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Stripe\StripeClient;
@@ -46,6 +48,10 @@ class StripeController extends Controller
         ]);
 
         event(new StripePayoutConnected($user->id, $string, 'App\Models\User', $notification->id, $user));
+
+        //send email (payment change) to user
+        $string = "Your payment method was updated on [".Carbon::now()->format('m-d-Y')."],  thank you for updating your payment information.";
+        send_mail($user->email, 'Tha Network | Payment Settings', $string);
 
 //        return $account_link->url;
         return WebResponses::success(

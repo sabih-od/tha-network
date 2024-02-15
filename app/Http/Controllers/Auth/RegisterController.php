@@ -165,48 +165,50 @@ class RegisterController extends Controller
 
     protected function create(array $data)
     {
-        $user = User::create([
-            'user_invitation_id' => session('validate-code'),
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'pwh' => $data['password'],
-            'invitation_code' => generateBarcodeNumber(),
-            'stripe_checkout_session_id' => $data['stripe_checkout_session_id'] ?? null
-        ]);
-
-        $rank = get_my_rank($user->id);
-        $user->remaining_referrals = intval($user->remaining_referrals) + intval($rank->target);
-        $user->stripe_charge_object =  json_encode(session()->get('stripe_charge_object')) ?? null;
-        $user->save();
-
-        //create avatar based on gender
-        $avatar_url = $data['gender'] == 'Male' ? public_path('images/avatars/male-avatar.png') : public_path('images/avatars/female-avatar.png');
-        $user
-            ->addMedia($avatar_url)
-            ->preservingOriginal()
-            ->toMediaCollection('profile_image');
-        //create profile
-        $user->profile()->create([
-            'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'phone' => $data['phone'],
-            'social_security_number' => $data['social_security_number'],
-            'gender' => $data['gender'],
-        ]);
-
-        //notification: lets set weekly goal
-        $string = "Your Weekly goals has been set. Complete your goals to get promoted to the next grade";
-        $notification = Notification::create([
-            'user_id' => $user->id,
-            'notifiable_type' => 'App\Models\User',
-            'notifiable_id' => $user->id,
-            'body' => $string,
-            'sender_id' => $user->id
-        ]);
-        event(new SetWeeklyGoal($user->id, $string, 'App\Models\User', $notification->id, $user));
-
-        return $user;
+        return create_user($data);
+//        $user = User::create([
+//            'user_invitation_id' => session('validate-code'),
+//            'username' => $data['username'],
+//            'email' => $data['email'],
+//            'password' => Hash::make($data['password']),
+//            'pwh' => $data['password'],
+//            'invitation_code' => generateBarcodeNumber(),
+//            'stripe_checkout_session_id' => $data['stripe_checkout_session_id'] ?? null,
+//            'stripe_customer_id' => $data['stripe_customer_id'] ?? null
+//        ]);
+//
+//        $rank = get_my_rank($user->id);
+//        $user->remaining_referrals = intval($user->remaining_referrals) + intval($rank->target);
+//        $user->stripe_charge_object =  json_encode(session()->get('stripe_charge_object')) ?? null;
+//        $user->save();
+//
+//        //create avatar based on gender
+//        $avatar_url = $data['gender'] == 'Male' ? public_path('images/avatars/male-avatar.png') : public_path('images/avatars/female-avatar.png');
+//        $user
+//            ->addMedia($avatar_url)
+//            ->preservingOriginal()
+//            ->toMediaCollection('profile_image');
+//        //create profile
+//        $user->profile()->create([
+//            'first_name' => $data['first_name'],
+//            'last_name' => $data['last_name'],
+//            'phone' => $data['phone'],
+//            'social_security_number' => $data['social_security_number'],
+//            'gender' => $data['gender'],
+//        ]);
+//
+//        //notification: lets set weekly goal
+//        $string = "Your Weekly goals have been set. Complete your goals to get promoted to the next grade";
+//        $notification = Notification::create([
+//            'user_id' => $user->id,
+//            'notifiable_type' => 'App\Models\User',
+//            'notifiable_id' => $user->id,
+//            'body' => $string,
+//            'sender_id' => $user->id
+//        ]);
+//        event(new SetWeeklyGoal($user->id, $string, 'App\Models\User', $notification->id, $user));
+//
+//        return $user;
     }
 
 
@@ -218,6 +220,9 @@ class RegisterController extends Controller
         $req = $request->all();
         if(session()->has('stripe_checkout_session_id')) {
             $req['stripe_checkout_session_id'] = session()->get('stripe_checkout_session_id');
+        }
+        if(session()->has('stripe_customer_id')) {
+            $req['stripe_customer_id'] = session()->get('stripe_customer_id');
         }
 
         event(new Registered($user = $this->create($req)));
@@ -394,13 +399,13 @@ class RegisterController extends Controller
                             <tr>
                                 <td colspan="3" style="width: 50%">
                                     <p style="color: #333; margin: 0 0 30px; line-height: 31px; font-size: 18px; text-align: center">
-                                        Welcome to <a href="https://thanetwork.org">ThaNetwork.org</a>,To learn more about your Invitation click the link below or visit <a href="https://thanetwork.org">www.thanetwork.org</a> and login using the Invitation code below..
+                                        Welcome to <a href="https://thanetwork.org">ThaNetwork.org</a>, You may now enter the site and start earning CASH!!
                                     </p>
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="3" style="width: 50%">
-                                    <h6 style="font-size: 25px; margin: 30px 0 30px; text-align: center">Join ThaNetwork Today</h6>
+                                    <h6 style="font-size: 25px; margin: 30px 0 30px; text-align: center">Thanks for joining Tha Network</h6>
                                     <a href="#" style="display: table; font-size: 22px; color: green; margin: auto">Because Membership Pays</a>
                                     <span style="display: block; font-size: 20px; color: green; margin: 12px 0 0; text-align: center">$$$$$</span>
                                     <img width="398" height="398" src="'.asset('images/notifications/PaymentMade.png').'" class="img-fluid" alt="img" style="display: table; margin: auto" />

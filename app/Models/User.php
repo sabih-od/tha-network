@@ -16,8 +16,10 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Overtrue\LaravelFollow\Followable;
 use LaravelInteraction\Block\Concerns\Blockable;
 use LaravelInteraction\Block\Concerns\Blocker;
+use Staudenmeir\EloquentJsonRelations\HasJsonRelationships;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements HasMedia
+class User extends Authenticatable implements HasMedia, JWTSubject
 {
     use HasApiTokens,
         HasFactory,
@@ -28,7 +30,9 @@ class User extends Authenticatable implements HasMedia
         InteractsWithMedia,
         Followable,
         Blockable,
-        Blocker;
+        Blocker,
+        HasJsonRelationships,
+        Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -48,7 +52,9 @@ class User extends Authenticatable implements HasMedia
         'pwh',
         'preferred_payout_method',
         'invitation_code',
-        'stripe_charge_object'
+        'stripe_charge_object',
+        'payment_retries',
+        'stripe_customer_id'
     ];
 
     /**
@@ -88,6 +94,27 @@ class User extends Authenticatable implements HasMedia
 //            $query->invitation_code = generateBarcodeNumber();
 //        });
 //    }
+    // Rest omitted for brevity
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 
     public function profile()
     {
@@ -97,6 +124,11 @@ class User extends Authenticatable implements HasMedia
     public function network()
     {
         return $this->hasOne(Network::class);
+    }
+
+    public function channels ()
+    {
+        return $this->hasManyJson(Channel::class, 'participants');
     }
 
     public function posts()
@@ -145,5 +177,10 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(Referral::class)
             ->where('status', true)
             ->whereDate('updated_at', Carbon::today());
+    }
+
+    public function rewards()
+    {
+        return $this->hasMany(Reward::class);
     }
 }

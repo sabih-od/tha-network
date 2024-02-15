@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RewardLog;
 use App\Traits\CommentData;
 use App\Traits\PostData;
 use Illuminate\Http\Request;
@@ -42,6 +43,16 @@ class HomeController extends Controller
             $has_provided_stripe_payout_information = (bool)($account->external_accounts->total_count > 0);
         }
 
+        //reward logs
+        $reward_logs = RewardLog::whereHas('reward', function ($q) {
+            return $q->whereHas('user')->whereHas('invited_user')->where('user_id', Auth::id());
+        })->orderBy('created_at', 'DESC')->get();
+
+        $earnings = 0;
+        foreach ($reward_logs as $reward_log) {
+            $earnings += $reward_log->reward->amount;
+        }
+
         return Inertia::render('Home', [
             'user' => Auth::user()->only('id', 'username', 'email', 'created_at') ?? null,
             'profile' => $profile,
@@ -63,6 +74,10 @@ class HomeController extends Controller
             'level_details' => get_my_level(Auth::user()->id),
             'paypal_account_details' => auth()->check() ? auth()->user()->paypal_account_details : '',
             'has_provided_stripe_payout_information' => $has_provided_stripe_payout_information,
+            'earnings' => '$' . strval($earnings),
+            'monthly_earnings' => get_my_monthly_earnings(),
+            'year_to_date_earnings' => get_year_to_date_earnings(),
+            'gross_earnings' => get_gross_earnings(),
         ]);
     }
 

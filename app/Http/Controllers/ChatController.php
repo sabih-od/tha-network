@@ -22,6 +22,10 @@ class ChatController extends Controller
     public function index(Request $request)
     {
         try {
+            $channel_to_click= null;
+            if ($request->has('sender_id')) {
+                $channel_to_click = Channel::whereJsoncontains('participants', Auth::id())->whereJsoncontains('participants', $request->get('sender_id'))->first() ?? null;
+            }
             return Inertia::render('Chat', [
                 "users" => Inertia::lazy(function () use ($request) {
                     return $this->getFollowsData($request);
@@ -35,7 +39,8 @@ class ChatController extends Controller
                 "messages" => Inertia::lazy(function () use ($request) {
                     return $this->getMessagesData($request);
                 }),
-                "profile_id" => $request->has('profile_id') ? $request->get('profile_id') : null
+                "profile_id" => $request->has('profile_id') ? $request->get('profile_id') : null,
+                "channel_to_click" => $channel_to_click->id ?? null
 
                 /*'user' => $user->only('name', 'email', 'created_at') ?? null,
                 'profile' => $user->profile ?? null,
@@ -125,7 +130,7 @@ class ChatController extends Controller
             })->all();
             $sender = User::with('profile')->find(Auth::id());
             foreach ($participants as $user_id) {
-                $body = "You have a new message!";
+                $body = "You have a new message from; " . $sender->profile->first_name . ': ' . "\n" . $request->message;
                 dispatch(new CreateNotification($channel->id, 'channel', $user_id, $body, $sender->id));
                 event(new NewNotification($user_id, $body, 'channel', $channel->id, $sender));
             }

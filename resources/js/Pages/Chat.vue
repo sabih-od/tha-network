@@ -19,7 +19,7 @@
         <div class="slctlft descriptnbg">
             <div class="container p-md-0">
                 <div class="row messangerSec">
-                    <ChatListing ref="chatListingRef"></ChatListing>
+                    <ChatListing ref="chatListingRef" :channel_to_click="channel_to_click"></ChatListing>
 
                     <div class="col-md-8 p-md-0 dse" id="chatbox">
                         <ChatMessages></ChatMessages>
@@ -102,6 +102,7 @@ export default {
     layout: ChatLayout,
     props: {
         profile_id: Object,
+        channel_to_click: String
     },
     components: {
         ChatListing,

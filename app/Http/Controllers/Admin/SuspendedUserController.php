@@ -20,6 +20,10 @@ class SuspendedUserController extends Controller
                         $formatedDate = Carbon::createFromFormat('Y-m-d H:i:s', $data->created_at)->format('m-d-Y');
                         return $formatedDate;
                     })
+                    ->editColumn('suspended_on', function($data){
+                        $formatedDate = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::parse($data->suspended_on))->format('m-d-Y');
+                        return $formatedDate;
+                    })
                     ->editColumn('first_name', function($data){
                         return $data->profile->first_name ?? '';
                     })

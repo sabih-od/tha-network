@@ -879,11 +879,11 @@ footer .links li a:hover {
 }
 
 .dropdown.nav-icons .dropdown-item:hover {
-    background-color: var(--primary);
-    color: var(--white);
+    background-color: var(--primary) !important;
+    color: var(--white) !important;
 }
 
-.nav-icons:hover {
+.nav-icons:hover, .nav-icons.show {
     background: var(--primary);
     color: var(--white);
 }

@@ -39,7 +39,7 @@ class HasProvidedStripeInfo
                 'stripe_portal_session' => session()->get('stripe_portal_session') ?? null,
                 'has_provided_stripe_payout_information' => false,
                 'preferred_payout_method' => $user->preferred_payout_method,
-            ])->with('error', 'You Must Provide  Stripe account information before proceeding.  If you do not have a stripe account create one and return to this page and enter the information.');
+            ])->with('error', 'You must Create a Stripe account or log into your Stripe account by selecting the “Create Stripe Account” button before continuing.');
         }
 
         return $next($request);

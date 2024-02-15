@@ -147,37 +147,6 @@
 
         <section class="planSec">
             <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="planImgs">
-                            <img :src="data.section_3_plan_1_image" class="plan1" alt="">
-                            <img :src="data.section_3_plan_2_image" class="plan2" alt="">
-                            <img :src="data.section_3_plan_3_image" class="plan3" alt="">
-                            <img :src="data.section_3_plan_4_image" class="plan4" alt="">
-                            <img :src="data.section_3_plan_5_image" class="plan5" alt="">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <h2 class="secHeading mb-4">{{ data.section_3_title }}</h2>
-                        <ul>
-                            <li>
-                                <p>{{data.section_3_description_line_1}}</p>
-                            </li>
-                            <li>
-                                <p>{{data.section_3_description_line_2}}</p>
-                            </li>
-                        </ul>
-                        <p class="text-center">
-                            <strong>{{data.section_3_description_line_3}}</strong>
-                        </p>
-                        <!--                        <a href="login.php" class="themeBtn">Join Us</a>-->
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="planSec">
-            <div class="container">
                 <div class="row aic">
                     <div class="col-md-4 offset-md-4">
                         <div class="content text-center">
@@ -189,7 +158,6 @@
                 </div>
             </div>
         </section>
-
 
         <!-- Begin: Footer -->
         <footer>

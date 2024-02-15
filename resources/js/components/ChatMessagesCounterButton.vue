@@ -8,28 +8,51 @@
         <!--notifications-->
         <div class="dropdown-menu notiMenu" aria-labelledby="profileDropDown">
             <span v-if="notifications.length == 0" class="dropdown-item">No new messages</span>
-            <Link v-else v-for="notification in notifications" class="dropdown-item" replace
-                  @click.prevent="notification.post_id != null ? (this.fetchPostOnTop(notification.post_id)) : (!notification.body.includes('friend request') && notification.sender.id != user.id ? chatWithProfile(notification.sender.id) : '')"
-                  :href="notification.body.includes('friend request') ? $route('userProfile', notification.sender_id) : '#'">
-                <div class="notiCont">
-                    <figure>
-                        <!--                        <img :src="asset('images/small-character.jpg')" alt="">-->
-                        <img :src="notification.sender_pic ?? auth_image" alt="">
-                    </figure>
-                    <p v-if="notification.body" v-html="notification.body">
+            <div v-else v-for="notification in notifications" class="dropdown-item">
+                <Link replace
+                      @click.prevent="notification.post_id != null ? (this.fetchPostOnTop(notification.post_id)) : (!notification.body.includes('friend request') && notification.sender.id != user.id ? chatWithProfile(notification.sender.id) : '')"
+                      :href="notification.body.includes('friend request') ? $route('userProfile', notification.sender_id) : '#'">
+                    <div class="notiCont">
+                        <figure>
+                            <!--                        <img :src="asset('images/small-character.jpg')" alt="">-->
+                            <img :src="notification.sender_pic ?? auth_image" alt="">
+                        </figure>
+<!--                        {{notification.body}}-->
+                        <p v-if="notification.body" v-html="renderMessage(notification.body)">
 
-                    </p>
-                    <strong v-else>
-                        New message from
-                        {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
-                    </strong>
+                        </p>
+                        <strong v-else>
+                            New message from
+                            {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
+                        </strong>
+                    </div>
+                </Link>
+                <div v-if="showCenterImage(notification)">
+                    <img :src="getCenterImageUrl(notification)" alt="" class="notiThumb">
                 </div>
-            </Link>
+                <button @click="deleteNotification(notification.id)" class="deleteBtn">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
             <Link v-if="notifications.length != 0" class="dropdown-item" replace @click.prevent="clearNotifications()">
                 Mark all as read
             </Link>
         </div>
 
+    </div>
+    <div :class="notification_modal.class" style="z-index: 999;">
+        <div class="notiImgCont">
+            <figure>
+                <img :src="notification_modal.img" alt="">
+            </figure>
+        </div>
+        <div class="notiBody">
+            <p v-html="notification_modal.text"></p>
+        </div>
+        <div class="notiFooter">
+            <Link v-if="notification_modal.redirect_url != '#'" @click.prevent="notification_modal.on_click" :href="notification_modal.redirect_url"><i class="fas fa-check"></i><span>Ok</span></Link>
+            <button v-else @click.prevent="hideNotification()"><i class="fas fa-check"></i><span>Ok</span></button>
+        </div>
     </div>
 </template>
 
@@ -38,6 +61,7 @@ import {Link, useForm, usePage} from '@inertiajs/inertia-vue3'
 import {Inertia} from "@inertiajs/inertia";
 import {useToast} from "vue-toastification";
 import utils from "../mixins/utils";
+import _ from "lodash";
 
 export default {
     name: "ChatMessagesCounterButton",
@@ -53,6 +77,13 @@ export default {
                 chat_type: 'individual',
                 user_id: null
             }),
+            notification_modal: {
+                text: '',
+                img: '',
+                class: 'notifyPopup',
+                redirect_url: "#",
+                on_click: this.hideNotification
+            },
         }
     },
     computed: {
@@ -169,11 +200,18 @@ export default {
 
         this.$emitter.on('request_for_notifications', this.sendNotificationData);
         this.$emitter.on('request_chat_with_profile', this.requestChatWithProfile);
+        this.$emitter.on('payment_method_updated', function (data) {
+            _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/NoReferralsForTheDay.png'))
+        });
+        // //When you change payment settings
+        // this.$echo.private('App.Models.User.' + this.user.id)
+        //     .listen('PaymentSettingsUpdated', function (data) {
+        //         _t.addNotification(data, _t.$store.getters['Utils/public_asset']('images/notifications/NoReferralsForTheDay.png'))
+        //     });
 
     },
     methods: {
         addNotification(data, img = null) {
-            console.log('data', data);
             this.notifications = [
                 ...this.notifications,
                 data
@@ -183,7 +221,8 @@ export default {
             //show popup notification
             console.log('imgcheck', img != {});
             if (img != {}) {
-                this.$emitter.emit('show_image_notification', {img: img, text: data.body});
+                this.showNotification(img, data.body, '#');
+                // this.$emitter.emit('show_image_notification', {img: img, text: data.body});
             }
         },
         chatWithProfile(profile_id) {
@@ -260,7 +299,88 @@ export default {
             $([document.documentElement, document.body]).animate({
                 scrollTop: $("#ref_post_list_item0").offset().top
             }, 2000);
-        }
+        },
+        deleteNotification(notification_id) {
+            Inertia.post(this.$route('deleteNotification'), {
+                notification_id: notification_id
+            }, {
+                replace: true,
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: () => {
+                    this.notifications = this.notifications.filter(notification => notification.id != notification_id);
+                    (useToast()).success('Notification has been deleted');
+                },
+            });
+        },
+        getCenterImageUrl (notification) {
+            if (!notification.body) {
+                return '';
+            }
+
+            if (notification.body.includes('goals have been set')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/SetWeeklyGoal.png');
+            }
+
+            if (notification.body.includes('Welcome To Tha Network')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/NewMemberSignup.png');
+            }
+
+            if (notification.body.includes('You did not meet your weekly goal this week')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/UnableToMeetWeeklyGoal.png');
+            }
+
+            if (notification.body.includes('you haven’t sent any referrals today')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/NoReferralsForTheDay.png');
+            }
+
+            if (notification.body.includes('Great Job! Your Referral was sent!!')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/ReferralSent.png');
+            }
+
+            if (notification.body.includes('just joined your network')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/ReferralCompleted.png');
+            }
+
+            if (notification.body.includes('is no longer a member of the network')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/NetworkMemberClosure.png');
+            }
+
+            if (notification.body.includes('WOW, Last week was a Great Week for the following members')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/WeeklyRankingNotification.png');
+            }
+
+            if (notification.body.includes('We did not receive your monthly membership payment')) {
+                return this.$store.getters['Utils/public_asset']('images/notifications/PaymentNotMade.png');
+            }
+        },
+        showCenterImage(notification) {
+            return notification.body
+                && (
+                    notification.body.includes('goals have been set') ||
+                    notification.body.includes('Welcome To Tha Network') ||
+                    notification.body.includes('You did not meet your weekly goal this week') ||
+                    notification.body.includes('you haven’t sent any referrals today') ||
+                    notification.body.includes('Great Job! Your Referral was sent!!') ||
+                    notification.body.includes('just joined your network') ||
+                    notification.body.includes('is no longer a member of the network') ||
+                    notification.body.includes('WOW, Last week was a Great Week for the following members') ||
+                    notification.body.includes('We did not receive your monthly membership payment')
+                );
+        },
+        renderMessage(string) {
+            return _.unescape(string)
+        },
+        showNotification(img, text, redirect_url = "#", on_click = this.hideNotification) {
+            this.notification_modal.img = img;
+            this.notification_modal.text = text;
+            this.notification_modal.redirect_url = redirect_url;
+            this.notification_modal.on_click = on_click;
+            this.notification_modal.class = 'notifyPopup show';
+        },
+        hideNotification() {
+            this.notification_modal.class = 'notifyPopup'
+        },
     }
 }
 </script>
@@ -293,6 +413,22 @@ export default {
 .dropdown-menu .dropdown-item {
     white-space: initial !important;
     background: #ddd;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.dropdown-menu .dropdown-item > a{
+    flex: 0 1 calc(100% - 50px);
+}
+.dropdown-menu .dropdown-item .deleteBtn{
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    color: red;
+    flex: 0 1 50px;
+    display:flex;
+    align-items:center;
+    justify-content: center;
 }
 
 .dropdown-menu .dropdown-item + .dropdown-item {
@@ -303,11 +439,19 @@ export default {
     margin: 0;
     font-size: 0.875rem;
     font-weight: 500;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    /*display: -webkit-box;*/
+    /*-webkit-line-clamp: 2;*/
+    /*-webkit-box-orient: vertical;*/
+    /*overflow: hidden;*/
     width: calc(100% - 40px);
+}
+
+
+@media (max-width: 575.98px) {
+    .dropdown-menu .dropdown-item p {
+        font-size: 0.75rem;
+        line-height: 1;
+    }
 }
 
 .dropdown-menu .dropdown-item:hover p {

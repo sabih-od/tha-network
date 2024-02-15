@@ -29,9 +29,9 @@
                             <!--button-->
                             <button type="button" class="btn btn-success btn-sm"
                                     :disabled="preferred_payout_form.preferred_payout_method === 'paypal'"
-                                    @click.prevent="connectStripeAccount()">{{ (this.stripe_account_id &&
+                                    @click.prevent="connectStripeAccount()">{{ (this.stripe_account_id == null) ? 'Create Stripe Account' : ((this.stripe_account_id &&
                                 this.has_provided_stripe_payout_information &&
-                                preferred_payout_form.preferred_payout_method !== 'paypal') ? 'Connected' : 'Connect' }}
+                                preferred_payout_form.preferred_payout_method !== 'paypal') ? 'Connected' : 'Connect') }}
                             </button>
                             <br/>
 
@@ -171,6 +171,8 @@ export default {
         client_secret: String,
         monthly_payment_flash: String,
         has_made_monthly_payment: Boolean,
+        payment_method_updated: Boolean,
+        payment_method_notification: Object,
         stripe_account_id: String,
         paypal_account_details: String,
         stripe_checkout_session_id: String,
@@ -271,6 +273,10 @@ export default {
             _t.preferred_payout_form.preferred_payout_method = _t.preferred_payout_form.preferred_payout_method === 'stripe' ? 'paypal' : 'stripe';
         });
 
+        if (this.payment_method_updated) {
+            this.$emitter.emit('payment_method_updated', this.payment_method_notification);
+        }
+
     },
     unmounted() {
         //un-hide message button
@@ -318,7 +324,7 @@ export default {
             //if newly registered - profile completed (SetWeeklyGoal)
             if (this.$store.getters['Misc/isNewlyRegistered']) {
                 let img = this.$store.getters['Utils/public_asset']('images/notifications/SetWeeklyGoal.png');
-                let text = 'Your Weekly goals has been set. Complete your goals to get promoted to the next grade';
+                let text = 'Your Weekly goals have been set. Complete your goals to get promoted to the next grade';
                 this.showNotification(img, text);
 
                 let _t = this;

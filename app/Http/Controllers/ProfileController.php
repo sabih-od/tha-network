@@ -69,7 +69,7 @@ class ProfileController extends Controller
         $this->amount = count(User::where('role_id', 2)->get()) < 5000 ? 29.99 : 59.95;
     }
 
-    public function edit()
+    public function edit(Request $request)
     {
         try {
             $user = Auth::user();
@@ -91,6 +91,11 @@ class ProfileController extends Controller
 
             $stripe_portal_session = session()->get('stripe_portal_session') ?? null;
             session()->put('stripe_portal_session', null);
+            $payment_method_changed_notification = null;
+            if ($request->has('pmu')) {
+                $payment_method_changed_notification = Notification::where('user_id', Auth::id())->where('body', 'LIKE', '%You have successfully connected your Stripe account.%')->orderBy('created_at', 'DESC')->first();
+                $payment_method_changed_notification->body = 'Thank you for updating your payment information.';
+            }
             return Inertia::render('EditProfile', [
                 'user' => $user->only('name', 'email', 'created_at', 'pwh', 'role_id') ?? null,
                 'profile' => $user->profile ?? null,
@@ -105,7 +110,9 @@ class ProfileController extends Controller
                 'stripe_portal_session' => $stripe_portal_session,
                 'has_provided_stripe_payout_information' => $has_provided_stripe_payout_information,
                 'preferred_payout_method' => $user->preferred_payout_method,
-            ])->with('error', $has_provided_stripe_payout_information ? null : 'You Must Provide  Stripe account information before proceeding.  If you do not have a stripe account create one and return to this page and enter the information.');
+                'payment_method_updated' => (boolean)$request->has('pmu'),
+                'payment_method_notification' => $payment_method_changed_notification,
+            ])->with('error', $has_provided_stripe_payout_information ? null : 'You must Create a Stripe account or log into your Stripe account by selecting the “Create Stripe Account” button before continuing.');
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());
         }
@@ -370,7 +377,9 @@ class ProfileController extends Controller
                 'network_count' => $user->network()->exists() ? count($user->network->members) : 0,
                 'user_is_blocked' => $auth_user->hasBlocked($user),
                 'is_in_my_network' => is_in_my_network($user->id),
-                'level_details' => get_my_level($user->id)
+                'level_details' => get_my_level($user->id),
+                'year_to_date_earnings' => get_year_to_date_earnings($user->id),
+                'gross_earnings' => get_gross_earnings($user->id),
             ]);
         } catch (\Exception $e) {
             return redirect()->route('home')->with('error', $e->getMessage());
@@ -396,29 +405,30 @@ class ProfileController extends Controller
 
             toggle_user_subscription($user->id, true, false);
 
-            //get what networks the user is member of
-            $joined_networks_ids = NetworkMember::where('user_id', $user->id)->pluck('network_id');
-            //get owners of those networks
-            $joined_networks_owner_ids = Network::whereIn('id', $joined_networks_ids)->pluck('user_id');
-            //send notification to owners
-            foreach ($joined_networks_owner_ids as $target_id) {
-                $string = $user->profile->first_name . ' ' . $user->profile->last_name . " is no longer a member of the network so you will not earn your referral fee for this member any longer";
-                $target = User::with('profile')->find($target_id);
-                $notification = Notification::create([
-                    'user_id' => $target->id,
-                    'notifiable_type' => 'App\Models\User',
-                    'notifiable_id' => $target->id,
-                    'body' => $string,
-                    'sender_id' => $target->id,
-                    'sender_pic' => $user->get_profile_picture(),
-                ]);
-
-                event(new NetworkMemberClosure($target->id, $string, 'App\Models\User', $notification->id, $target));
-            }
+//            //get what networks the user is member of
+//            $joined_networks_ids = NetworkMember::where('user_id', $user->id)->pluck('network_id');
+//            //get owners of those networks
+//            $joined_networks_owner_ids = Network::whereIn('id', $joined_networks_ids)->pluck('user_id');
+//            //send notification to owners
+//            foreach ($joined_networks_owner_ids as $target_id) {
+//                $string = $user->profile->first_name . ' ' . $user->profile->last_name . " is no longer a member of the network so you will not earn your referral fee for this member any longer";
+//                $target = User::with('profile')->find($target_id);
+//                $notification = Notification::create([
+//                    'user_id' => $target->id,
+//                    'notifiable_type' => 'App\Models\User',
+//                    'notifiable_id' => $target->id,
+//                    'body' => $string,
+//                    'sender_id' => $target->id,
+//                    'sender_pic' => $user->get_profile_picture(),
+//                ]);
+//
+//                event(new NetworkMemberClosure($target->id, $string, 'App\Models\User', $notification->id, $target));
+//            }
 
             //send referral reversion notification to inviter
             $inviter_id = get_inviter_id($user->id);
-            $string = "Your ".$user->profile->first_name . ' ' . $user->profile->last_name." referral is no longer a member of the network you you won’t be receiving its referral payment";
+//            $string = "Your ".$user->profile->first_name . ' ' . $user->profile->last_name." referral is no longer a member of the network you you won’t be receiving its referral payment";
+            $string = $user->profile->first_name . ' ' . $user->profile->last_name . " is no longer a member of the network so you will not earn your referral fee for this member any longer";
             $target = User::with('profile')->find($inviter_id);
             $notification = Notification::create([
                 'user_id' => $target->id,
@@ -430,8 +440,8 @@ class ProfileController extends Controller
             ]);
             event(new ReferralReverted($target->id, $string, 'App\Models\User', $notification->id, $target));
 
-            //remove user from all networks
-            NetworkMember::where('user_id', $user->id)->delete();
+//            //remove user from all networks
+//            NetworkMember::where('user_id', $user->id)->delete();
 
             //remove user from all friends lists
             DB::table('user_follower')->where('following_id', $user->id)->orWhere('follower_id', $user->id)->delete();

@@ -112,7 +112,11 @@ export default {
         goals: Object,
         level_details: Object,
         paypal_account_details: String,
-        has_provided_stripe_payout_information: Object
+        has_provided_stripe_payout_information: Object,
+        earnings: String,
+        monthly_earnings: String,
+        year_to_date_earnings: String,
+        gross_earnings: String,
     },
     computed: {
         myPostText() {
@@ -137,6 +141,10 @@ export default {
         }
     },
     mounted() {
+        this.$emitter.emit('earnings', this.earnings)
+        this.$emitter.emit('monthly_earnings', this.monthly_earnings)
+        this.$emitter.emit('year_to_date_earnings', this.year_to_date_earnings)
+        this.$emitter.emit('gross_earnings', this.gross_earnings)
         //show popup notification
         let _t = this;
         this.$emitter.on('show_image_notification', function ({img, text, redirect_url = "#"}) {

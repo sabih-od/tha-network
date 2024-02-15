@@ -34,10 +34,12 @@
                 <div class="tab-pane fade show active" id="one-pane" role="tabpanel" aria-labelledby="one-tab">
                     <div class="userList" v-for="notification in unread_notifications">
                         <div class="userInfo" v-if="notification.sender.id != user.id">
-                            <Link href="#" @click.prevent="chatWithProfile(notification.sender.id)"><img :src="notification.sender.profile_image ? notification.sender.profile_image : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
+<!--                            <Link href="#" @click.prevent="chatWithProfile(notification.sender.id)"><img :src="notification.sender.profile_image ? notification.sender.profile_image : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>-->
+<!--                            <Link :href="$route('userProfile', notification.sender.id)"><img :src="notification.sender.profile_image ? notification.sender.profile_image : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>-->
+                            <Link :href="$route('chatIndex') + '?sender_id=' + notification.sender.id"><img :src="notification.sender.profile_image ? notification.sender.profile_image : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
                             <h3>
                                 {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
-                                <a href="#">{{ notification.last_activity_readable }}</a>
+                                <Link :href="$route('chatIndex') + '?sender_id=' + notification.sender.id">{{ notification.last_activity_readable }}</Link>
                             </h3>
                             <p class="m-0">{{notification.sender.username ? '@' + notification.sender.username : ''}}</p>
                         </div>
@@ -50,10 +52,11 @@
                 <div class="tab-pane fade" id="two-pane" role="tabpanel" aria-labelledby="two-tab">
                     <div class="userList" v-for="notification in read_notifications">
                         <div class="userInfo" v-if="notification.sender.id != user.id">
-                            <Link href="#" @click.prevent="chatWithProfile(notification.sender.id)"><img :src="notification.sender.profile_image ? notification.sender.profile_image : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
+<!--                            <Link href="#" @click.prevent="chatWithProfile(notification.sender.id)"><img :src="notification.sender.profile_image ? notification.sender.profile_image : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>-->
+                            <Link :href="$route('chatIndex') + '?sender_id=' + notification.sender.id"><img :src="notification.sender.profile_image ? notification.sender.profile_image : asset('images/char-usr.png')" class="rounded-circle" alt=""></Link>
                             <h3>
                                 {{ notification.sender.profile.first_name + ' ' + notification.sender.profile.last_name }}
-                                <a href="#">{{ notification.last_activity_readable }}</a>
+                                <a :href="$route('chatIndex') + '?sender_id=' + notification.sender.id">{{ notification.last_activity_readable }}</a>
                             </h3>
                             <p class="m-0">{{notification.sender.username ? '@' + notification.sender.username : ''}}</p>
                         </div>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminWithdrawalController;
 use App\Http\Controllers\Admin\CmsController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\CmsController as FrontCmsController;
@@ -34,35 +35,28 @@ use Inertia\Inertia;
 });*/
 
 Route::get('/temp', function () {
-//    //create profile for admin
-//    $admin = User::where('email', 'admin@thanetwork.com')->first();
-//    if ($admin) {
-//        //create avatar based on gender
-//        $avatar_url = public_path('images/avatars/male-avatar.png');
-//        $admin
-//            ->addMedia($avatar_url)
-//            ->preservingOriginal()
-//            ->toMediaCollection('profile_image');
-//        //create profile
-//        if (!$admin->profile()->exists()) {
-//            $admin->profile()->create([
-//                'first_name' => 'Admin',
-//                'last_name' => 'User',
-//                'phone' => '123456789',
-//                'social_security_number' => '123456789',
-//                'gender' => 'Male',
-//            ]);
+//    $users = \App\Models\User::all();
+//        foreach ($users as $user){
+//            $user->remaining_referrals = 25;
+//            $user->save();
 //        }
-//    }
-
-//    commission_distribution();
-//    $stripe = new \Stripe\StripeClient(
-//        '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'
-//    );
 //
-//    $subscription = $stripe->subscriptions->retrieve('sub_1N3KRTFNDZX6ZunfTLGhbR8q');
+//    \App\Models\NetworkMember::updateOrCreate([
+//        'user_id' => 'd6adccb7-a642-4fc9-9cb9-237d296be29b',
+//        'network_id' => '8377417f-bdf8-42f4-85ce-ceee2c3120c8'
+//    ]);
 //
-//    dd($subscription);
+//    \App\Models\NetworkMember::updateOrCreate([
+//        'user_id' => '177cd65b-883b-4ef9-aaf0-bfd35dd6e5bd',
+//        'network_id' => '18dedf0e-2682-4e82-835f-db7243d3b991'
+//    ]);
+//
+//    $u1 = \App\Models\User::find('d6adccb7-a642-4fc9-9cb9-237d296be29b');
+//    $u2 = \App\Models\User::find('177cd65b-883b-4ef9-aaf0-bfd35dd6e5bd');
+//    $u1->follow($u2);
+//    $u2->follow($u1);
+//    $u1->unblock($u2);
+//    $u2->unblock($u1);
 })->name('temp');
 
 Route::get('get/redis', function () {
@@ -101,7 +95,9 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
     Route::delete('users/destroy/{id}', 'UserController@destroy')->name('admin.user.delete');
     Route::get('users/suspend/{id}', 'UserController@suspend')->name('admin.user.suspend');
     Route::get('users/close/{id}', 'UserController@close')->name('admin.user.close');
+    Route::get('users/detail/{id}', 'UserController@detail')->name('admin.user.detail');
     Route::get('user-posts/{id}', 'UserController@userPosts')->name('admin.user.userPosts');
+    Route::get('user-comments/{id}', 'UserController@userComments')->name('admin.user.userComments');
     Route::get('user-rewards/{id}', 'UserController@userRewards')->name('admin.user.userRewards');
     Route::delete('user-posts/destroy/{id}', 'UserController@postDestroy');
 
@@ -128,6 +124,10 @@ Route::namespace('App\Http\Controllers\Admin')->prefix('/admin')->middleware('ad
     Route::match(['get', 'post'], '/cms/terms', [CmsController::class, 'terms'])->name('admin.cms.terms');
     Route::match(['get', 'post'], '/cms/privacy', [CmsController::class, 'privacy'])->name('admin.cms.privacy');
     Route::match(['get', 'post'], '/cms/contact', [CmsController::class, 'contact'])->name('admin.cms.contact');
+    Route::match(['get', 'post'], '/cms/faqs', [CmsController::class, 'faqs'])->name('admin.cms.faqs');
+
+    //admin withdrawal
+    Route::post('admin-withdrwal', [AdminWithdrawalController::class, 'create'])->name('admin.admin_withdrawal.create');
 });
 
 //Inertia routes
@@ -135,7 +135,7 @@ require "auth.php";
 Route::group([
     'middleware' => ['auth', 'revalidate', 'closure', 'suspension']
 ], function () {
-    Route::get('edit-profile', [ProfileController::class, 'edit'])
+    Route::get('edit-profile/{pmu?}', [ProfileController::class, 'edit'])
         ->name('editProfileForm');
     Route::post('edit-profile', [ProfileController::class, 'update'])
         ->name('updateProfile');
@@ -219,6 +219,8 @@ Route::group([
         ->name('channelNotificationViewed');
     Route::post('clear-notifications', [NotificationController::class, 'clearNotifications'])
         ->name('clearNotifications');
+    Route::post('delete-notification', [NotificationController::class, 'deleteNotification'])
+        ->name('deleteNotification');
 
 
     // Friend Request routes
@@ -268,6 +270,8 @@ Route::middleware('has.provided.stripe.info')->group(function () {
     Route::get('/contact', [FrontCmsController::class, 'contact'])->name('contact');
 
     Route::get('/privacy', [FrontCmsController::class, 'privacy'])->name('privacy');
+
+    Route::get('/faqs', [FrontCmsController::class, 'faqs'])->name('faqs');
 
     Route::get('/terms', [FrontCmsController::class, 'terms'])->name('terms');
 

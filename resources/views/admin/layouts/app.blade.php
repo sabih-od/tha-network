@@ -179,7 +179,7 @@
                         </a>
                     </li>
 
-                    <li class="nav-item has-treeview {{ request()->IS('admin/cms/about-us') || request()->IS('admin/cms/home') || request()->IS('admin/cms/benefits') || request()->IS('admin/cms/terms') || request()->IS('admin/cms/privacy') || request()->IS('admin/cms/contact')  ? 'menu-is-opening menu-open' : '' }}">
+                    <li class="nav-item has-treeview {{ request()->IS('admin/cms/about-us') || request()->IS('admin/cms/home') || request()->IS('admin/cms/benefits') || request()->IS('admin/cms/terms') || request()->IS('admin/cms/privacy') || request()->IS('admin/cms/contact') || request()->IS('admin/cms/faqs')  ? 'menu-is-opening menu-open' : '' }}">
                         <a href="#" class="nav-link ">
                             <i class="nav-icon fas fa-tags fw"></i>
                             <p>
@@ -240,6 +240,15 @@
                                     <i class="nav-icon fas fa-angle-double-right"></i>
                                     <p>
                                         Contact
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin.cms.faqs')}}"
+                                   class="nav-link {{ request()->IS('admin/cms/faqs') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-angle-double-right"></i>
+                                    <p>
+                                        FAQs
                                     </p>
                                 </a>
                             </li>
