@@ -7,8 +7,9 @@
 @section('section')
     <style>
         .img-upload #image-preview {
-            width: 240px;
-            height: 240px;
+            width: 100%;
+            height: 400px;
+            background-size: cover !important;
             border: 1px dashed #000;
             color: #ecf0f1;
             position: relative;
@@ -17,41 +18,31 @@
         }
 
         .img-upload #image-preview input {
-            width: 120px;
-            height: 40px;
+            width: 100%;
+            height: 100%;
             z-index: 10;
             position: absolute;
-            top: 60%;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            margin-left: 0px;
+            transform: translate(-50%,-50%);
             cursor: pointer;
             opacity: 0;
         }
 
-        .img-upload #image-preview label {
-            padding: 0px;
-            z-index: 5;
-            width: 130px;
-            height: 40px;
+        .img-upload #image-preview label {            
+            z-index: 5;                        
+            padding: 0.5em 1.125em;
             background-color: #ffffff;
             color: #143250;
-            font-size: 14px;
-            line-height: 40px;
-            top: 60%;
-            left: 50%;
-            transform: translateX(-50%);
-            right: 0;
-            margin-left: 0px;
-            bottom: 0px;
-            margin-bottom: 0px;
-            text-align: center;
+            font-size: 1.125rem;            
             position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);                                    
             cursor: pointer;
             -webkit-transition: all 0.3s ease-in;
             -o-transition: all 0.3s ease-in;
-            transition: all 0.3s ease-in;
-            /* box-shadow: 0px 0px 15px #eaeaea; */
+            transition: all 0.3s ease-in;            
             box-shadow: 0px 0px 10px rgb(0 0 0 / 10%);
         }
 
@@ -98,19 +89,17 @@
                                                 <h3>Banner</h3>
                                             </div>
                                         </div>
-                                        <div class="form-group col-md-12">
-                                            <div class="col-md-4">
-                                                <label>Banner Image</label>
-                                                <div class="img-upload">
-                                                    <div id="image-preview" class="img-preview"
-                                                         style="background: url({{ $data->banner_image }});">
-                                                        <label for="image-upload" class="img-label"
-                                                               id="image-label">{{ __('Upload Image') }}</label>
-                                                        <input type="file" name="banner_image" class="img-upload"
-                                                               id="image-upload">
-                                                    </div>
+                                        <div class="form-group col-md-12">                                            
+                                            <label>Banner Image</label>
+                                            <div class="img-upload">
+                                                <div id="image-preview" class="img-preview"
+                                                     style="background: url({{ $data->banner_image }});">
+                                                    <label for="image-upload" class="img-label"
+                                                           id="image-label">{{ __('Upload Image') }}</label>
+                                                    <input type="file" name="banner_image" class="img-upload"
+                                                           id="image-upload">
                                                 </div>
-                                            </div>
+                                            </div>                                            
                                         </div>
                                         <div class="form-group col-md-12">
                                             <label for="name">Circle Title</label>

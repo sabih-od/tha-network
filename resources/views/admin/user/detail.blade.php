@@ -32,7 +32,7 @@
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-lg-6">
 
                         <!-- /.card -->
 
@@ -44,7 +44,7 @@
                                 </div>
                             </div>
                         <!-- /.card-header -->
-                            <div class="card-body">
+                            <div class="card-body table-responsive">
                                 <table id="example1" class="table table-bordered">
                                     <thead>
                                         <tr style="text-align: center">
@@ -70,10 +70,8 @@
                         <!-- /.card -->
                     </div>
 
-                    <div class="col-8"></div>
-
                     {{--payments--}}
-                    <div class="col-4">
+                    <div class="col-lg-6">
                         <div class="card">
                             <div class="card-header">
                                 <h3>
@@ -82,7 +80,7 @@
                                 </h3>
                             </div>
 
-                            <div class="card-body">
+                            <div class="card-body table-responsive">
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                     <tr style="text-align: center">
@@ -106,13 +104,13 @@
                     </div>
 
                     {{--refferrals--}}
-                    <div class="col-4">
+                    <div class="col-lg-6">
                         <div class="card">
                             <div class="card-header">
                                 <h3>Referrals</h3>
                             </div>
 
-                            <div class="card-body">
+                            <div class="card-body table-responsive">
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                         <tr style="text-align: center">
@@ -136,7 +134,7 @@
                     </div>
 
                     {{--rewards--}}
-                    <div class="col-4">
+                    <div class="col-lg-6">
                         <div class="card">
                             <div class="card-header">
                                 <h3>
@@ -145,7 +143,7 @@
                                 </h3>
                             </div>
 
-                            <div class="card-body">
+                            <div class="card-body table-responsive">
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                         <tr style="text-align: center">

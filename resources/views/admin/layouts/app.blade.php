@@ -32,6 +32,8 @@
     <link rel="stylesheet" href="{{URL::asset('admin/plugins/daterangepicker/daterangepicker.css')}}">
     <!-- summernote -->
     <link rel="stylesheet" href="{{URL::asset('admin/plugins/summernote/summernote-bs4.min.css')}}">
+    <!-- responsive  -->
+    <link rel="stylesheet" href="{{URL::asset('admin/css/responsive.css')}}">
 {{--  table colors remove--}}
 <!-- Datatables -->
     <link href="{{ asset('admin/datatables/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">

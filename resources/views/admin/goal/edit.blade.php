@@ -35,7 +35,7 @@
                                 @csrf
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             @foreach($goals as $key => $goal)
                                                 <div class="form-group">
                                                     <label for="name">Grade {{$key + 1}}: {{$goal->name}}</label>
