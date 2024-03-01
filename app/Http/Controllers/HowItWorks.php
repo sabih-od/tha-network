@@ -93,15 +93,19 @@ class HowItWorks extends Controller
         if (!session()->has('inviter_id'))
             session()->put('validate-code', 'validate-code');
 //            return redirect()->route('loginForm');
-
         //if registered by following invitation link
 //        if(session()->has('inviter_id')) {
+
             $payment = Payment::create([
                 'amount' => $this->amount,
                 'client_secret' => session('client-secret'),
                 'payable_type' => 'App\Models\Payment',
-                'payable_id' => session()->has('inviter_id') ? session()->get('inviter_id') : 'registered-with-code'
+                'payable_id' => session()->has('inviter_id') ? session()->get('inviter_id') : 'registered-with-code',
+                'stripe_checkout_session_id' => session()->has('stripe_checkout_session_id') ? session()->get('stripe_checkout_session_id') : null,
+                'stripe_charge_object' => session()->has('stripe_charge_object') ? json_encode(session()->get('stripe_charge_object')) : null,
+                'stripe_customer_id' => session()->has('stripe_customer_id') ? session()->get('stripe_customer_id') : null
             ]);
+
 //        }
 
         session()->put('tha_payment_amount', $this->amount);

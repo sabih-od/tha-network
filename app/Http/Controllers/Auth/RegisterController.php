@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Network;
 use App\Models\NetworkMember;
 use App\Models\Notification;
+use App\Models\Payment;
 use App\Models\Referral;
 use App\Models\Reward;
 use App\Models\SendInvitation;
@@ -64,23 +65,28 @@ class RegisterController extends Controller
         $this->middleware('is.validate.code');
     }
 
-    public function showRegistrationForm()
+    public function showRegistrationForm(Request $request)
     {
         $userInv = UserInvitation::where('id', session('validate-code'))
             ->whereHas('payment')
             ->whereNull('deleted_at')
             ->exists();
         if ($userInv) {
-            return Inertia::render('Auth/Register');
+            return Inertia::render('Auth/Register', [
+                'stripe_checkout_session_id' => $request->stripe_checkout_session_id,
+            ]);
         }
         //checking for inviter info as well
         else if (session()->has('inviter_id')) {
             return Inertia::render('Auth/Register', [
                 'inviter_id' => session()->get('inviter_id'),
-                'email' => 'asd'
+                'email' => 'asd',
+                'stripe_checkout_session_id' => $request->stripe_checkout_session_id,
             ]);
         } else if(session()->has('validate-code') && session()->get('validate-code') == 'validate-code') {
-            return Inertia::render('Auth/Register');
+            return Inertia::render('Auth/Register', [
+                'stripe_checkout_session_id' => $request->stripe_checkout_session_id,
+            ]);
         }
         else
             return redirect(route('loginForm'));
@@ -218,12 +224,21 @@ class RegisterController extends Controller
         $this->validator($request->all())->validate();
 
         $req = $request->all();
-        if(session()->has('stripe_checkout_session_id')) {
-            $req['stripe_checkout_session_id'] = session()->get('stripe_checkout_session_id');
-        }
-        if(session()->has('stripe_customer_id')) {
-            $req['stripe_customer_id'] = session()->get('stripe_customer_id');
-        }
+
+            if (isset($req['stripe_subscription_id'])){
+                $checkPayment = Payment::where('stripe_checkout_session_id', $req['stripe_subscription_id'])->first();
+                    $req['stripe_checkout_session_id'] = $checkPayment->stripe_checkout_session_id;
+                $req['stripe_customer_id'] = $checkPayment->stripe_customer_id;
+                $req['stripe_charge_object'] = $checkPayment->stripe_charge_object;
+            }
+          else{
+                if(session()->has('stripe_checkout_session_id')) {
+                    $req['stripe_checkout_session_id'] = session()->get('stripe_checkout_session_id');
+                }
+                if(session()->has('stripe_customer_id')) {
+                    $req['stripe_customer_id'] = session()->get('stripe_customer_id');
+                }
+            }
 
         event(new Registered($user = $this->create($req)));
 

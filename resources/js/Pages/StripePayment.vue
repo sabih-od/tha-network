@@ -134,6 +134,7 @@
                                 {{ form_loading ? 'Please Wait' : 'Subscribe' }}
                             </button>
                             <span v-else>Not available in your country.</span>
+
                         </form>
                     </div>
                 </div>

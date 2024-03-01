@@ -1102,12 +1102,12 @@ function create_user ($data) {
         'stripe_checkout_session_id' => $data['stripe_checkout_session_id'] ?? null,
         'stripe_customer_id' => $data['stripe_customer_id'] ?? null,
 //        'stripe_charge_object' => ($data['stripe_charge_object'] && is_string($data['stripe_charge_object']) ? $data['stripe_charge_object'] :  json_encode($data['stripe_charge_object'])) ?? null
-        'stripe_charge_object' => isset($data['stripe_charge_object']) ? $data['stripe_charge_object'] : null
+        'stripe_charge_object' => isset($data['stripe_charge_object']) ? $data['stripe_charge_object'] : json_encode(session()->get('stripe_charge_object'))
     ]);
 
     $rank = get_my_rank($user->id);
     $user->remaining_referrals = intval($user->remaining_referrals) + intval($rank->target);
-    $user->stripe_charge_object =  json_encode(session()->get('stripe_charge_object')) ?? null;
+//    $user->stripe_charge_object =  json_encode(session()->get('stripe_charge_object')) ?? null;
     $user->save();
 
     //create avatar based on gender

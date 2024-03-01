@@ -14,14 +14,14 @@
     <section class="loginSection">
         <div class="loginWrap">
             <div class="row mx-md-0 no-gutters position-relative align-items-center">
-                <div class="col-md-7">
+                <div class="col-md-6">
                     <figure>
                         <img :src="asset('images/loginImg.png')" class="w-100 bg-img" alt="" >
                         <img :src="asset('images/user-logo.png')" class="login-logo" alt="">
                     </figure>
                 </div>
 
-                <div class="col-md-5">
+                <div class="col-md-6">
                     <div class="contentWrap py-0">
                         <a href="#"><img :src="asset('images/logo.png')" alt="logo"></a>
                         <ul class="nav login-tabs" id="myTab" role="tablist" :hidden="isCode">
@@ -34,6 +34,11 @@
                                 <a class="nav-link" :class="{'active': isCode}" id="two-tab" data-toggle="tab"
                                    href="#two-pane" role="tab"
                                    aria-controls="two-pane" aria-selected="false">Invitation Code</a>
+                            </li>
+                            <li>
+                                <a class="nav-link" id="two-tab" data-toggle="tab"
+                                   href="#three-pane" role="tab"
+                                   aria-controls="two-pane" aria-selected="false">Already Payment</a>
                             </li>
                         </ul>
                         <div class="tab-content" id="myTabContent">
@@ -80,6 +85,20 @@
                                                class="form-control">
                                     </div>
                                     <button type="submit" class="themeBtn" :disabled="codeForm.processing">
+                                        {{ form.processing ? 'Please wait...' : 'Submit' }}
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="tab-pane fade" id="three-pane" role="tabpanel"
+                                 aria-labelledby="three-tab">
+                                <form @submit.prevent="verifyChargeId">
+                                    <div class="form-group">
+                                        <label for="code">Enter your Stripe Subscription Id</label>
+                                        <p style="font-size: 12px !important;">Note: (You can find your Stripe subscription ID in your Stripe account.)</p>
+                                        <input type="text" v-model="alreadyPayment.stripe_subscription_id" id="code" placeholder=""
+                                               class="form-control">
+                                    </div>
+                                    <button type="submit" class="themeBtn" :disabled="alreadyPayment.processing">
                                         {{ form.processing ? 'Please wait...' : 'Submit' }}
                                     </button>
                                 </form>
@@ -192,6 +211,9 @@ export default {
             codeForm: useForm('codeForm', {
                 code: ''
             }),
+            alreadyPayment: useForm('alreadyPayment', {
+                stripe_subscription_id: ''
+            }),
             video_classes: 'introVideo fullScreen',
             video_Styling: ''
         }
@@ -216,6 +238,18 @@ export default {
                 replace: true,
                 onSuccess: () => {
                     this.codeForm.reset()
+                },
+                onFinish: () => {
+                    this.showErrorMessage()
+                }
+            })
+        },
+        verifyChargeId() {
+            if (this.alreadyPayment.processing) return;
+            this.alreadyPayment.post(this.$route('verifyStripeCharge'), {
+                replace: true,
+                onSuccess: () => {
+                    this.alreadyPayment.reset()
                 },
                 onFinish: () => {
                     this.showErrorMessage()

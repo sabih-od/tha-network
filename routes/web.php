@@ -57,6 +57,16 @@ Route::get('/temp', function () {
 //    $u2->follow($u1);
 //    $u1->unblock($u2);
 //    $u2->unblock($u1);
+    $stripe = new \Stripe\StripeClient(
+        env('STRIPE_SECRET_KEY')
+    );
+
+    $subscription = $stripe->subscriptions->retrieve('sub_1OWON5FNDZX6Zunf8MNX4Tbu');
+    dump($subscription->billing_cycle_anchor);
+    $subscription->billing_cycle_anchor = strtotime('2024-03-01');
+    $subscription->save();
+    dump($subscription->billing_cycle_anchor);
+    dd($subscription);
 })->name('temp');
 
 Route::get('get/redis', function () {

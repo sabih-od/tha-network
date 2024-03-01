@@ -8,6 +8,7 @@ use App\Helpers\WebResponses;
 use App\Models\Network;
 use App\Models\Notification;
 use App\Models\Page;
+use App\Models\Payment;
 use App\Models\Referral;
 use App\Models\SendInvitation;
 use App\Models\User;
@@ -174,6 +175,26 @@ class InvitationCode extends Controller
 //                route('paymentShow')
                 route('work')
             );
+        } catch (\Exception $e) {
+            return WebResponses::exception($e->getMessage());
+        }
+    }
+
+    public function verifyStripeCharge(Request $request)
+    {
+        try {
+            $userSubscription = User::where('stripe_checkout_session_id', $request->stripe_subscription_id)->first();
+
+            if ($userSubscription) {
+                throw new \Exception('User is already registered with this subscription.');
+            }
+            $payment = Payment::where('stripe_checkout_session_id', $request->stripe_subscription_id)->first();
+            if ($payment) {
+                return redirect()->route('registerForm' , ['stripe_checkout_session_id' => $request->stripe_subscription_id])
+                    ->with('Subscription check successfully');
+            } else {
+                throw new \Exception('Subscription not found.');
+            }
         } catch (\Exception $e) {
             return WebResponses::exception($e->getMessage());
         }

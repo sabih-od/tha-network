@@ -8,7 +8,6 @@
                         <img :src="asset('images/user-logo.png')" class="login-logo" alt="">
                     </figure>
                 </div>
-
                 <div class="col-md-5">
                     <div class="contentWrap">
                         <a href="#"><img :src="asset('images/logo.png')" alt="logo"></a>
@@ -135,11 +134,13 @@ export default {
     mixins: [utils],
     props: {
         errors: Object,
-        inviter_id: null
+        inviter_id: null ,
+        stripe_checkout_session_id: null
     },
 
     mounted() {
         console.log(this.inviter_id);
+        console.log("this.stripe_checkout_session_id" , this.stripe_checkout_session_id);
         this.showPaymentMadeNotification();
 
         //format social security number
@@ -169,7 +170,8 @@ export default {
                 password: '',
                 password_confirmation: '',
                 social_security_number: '',
-                inviter_id: this.inviter
+                inviter_id: this.inviter,
+                stripe_checkout_session_id: this.stripe_checkout_session_id
             }),
             notification_modal: {
                 text: '',

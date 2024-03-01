@@ -23,6 +23,8 @@ Route::group(['middleware' => ['revalidate']], function () {
             ->name('sendInvitationCode');
         Route::post('verify-code', [InvitationCode::class, 'verifyCode'])
             ->name('verifyCode');
+           Route::post('verify-stripe-charge', [InvitationCode::class, 'verifyStripeCharge'])
+               ->name('verifyStripeCharge');
         Route::post('create-stripe-checkout-session', [InvitationCode::class, 'createStripeCheckoutSession'])
             ->name('createStripeCheckoutSession');
         Route::get('forgot-password', [InvitationCode::class, 'showForgotPasswordForm'])
