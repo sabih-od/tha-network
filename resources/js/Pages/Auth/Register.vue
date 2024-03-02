@@ -8,7 +8,6 @@
                         <img :src="asset('images/user-logo.png')" class="login-logo" alt="">
                     </figure>
                 </div>
-
                 <div class="col-md-5">
                     <div class="contentWrap">
                         <a href="#"><img :src="asset('images/logo.png')" alt="logo"></a>
@@ -51,7 +50,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label for="email">Email</label>
-                                        <input type="email" id="email" v-model="form.email" placeholder=""
+                                        <input type="email" id="email" readonly v-model="form.email" placeholder=""
                                                class="form-control">
                                     </div>
                                 </div>
@@ -135,11 +134,14 @@ export default {
     mixins: [utils],
     props: {
         errors: Object,
-        inviter_id: null
+        inviter_id: null ,
+        stripe_checkout_session_id: null,
+        customer_email : null
     },
 
     mounted() {
         console.log(this.inviter_id);
+        console.log("this.stripe_checkout_session_id" , this.customer_email);
         this.showPaymentMadeNotification();
 
         //format social security number
@@ -164,12 +166,13 @@ export default {
                 last_name: '',
                 gender: '',
                 username: '',
-                email: '',
+                email: this.customer_email,
                 phone: '',
                 password: '',
                 password_confirmation: '',
                 social_security_number: '',
-                inviter_id: this.inviter
+                inviter_id: this.inviter,
+                stripe_checkout_session_id: this.stripe_checkout_session_id
             }),
             notification_modal: {
                 text: '',

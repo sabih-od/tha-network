@@ -198,7 +198,7 @@ class AdminController extends Controller
 //            $total += $payment->total;
 
             $payment->gross_total = $payment->total;
-            $payment->total = $payment->is_company_invite ? $payment->total : ($payment->total - 11.99);
+            $payment->total = isset($payment->is_company_invite) && $payment->is_company_invite ? $payment->total : ($payment->total - 11.99);
 
             $total += $payment->total;
             $gross_total += $payment->gross_total;

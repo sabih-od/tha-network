@@ -8,6 +8,7 @@ use App\Helpers\WebResponses;
 use App\Models\Network;
 use App\Models\Notification;
 use App\Models\Page;
+use App\Models\Payment;
 use App\Models\Referral;
 use App\Models\SendInvitation;
 use App\Models\User;
@@ -174,6 +175,26 @@ class InvitationCode extends Controller
 //                route('paymentShow')
                 route('work')
             );
+        } catch (\Exception $e) {
+            return WebResponses::exception($e->getMessage());
+        }
+    }
+
+    public function verifyStripeCharge(Request $request)
+    {
+        try {
+            $userSubscription = User::where('stripe_checkout_session_id', $request->stripe_subscription_id)->first();
+
+            if ($userSubscription) {
+                throw new \Exception('User is already registered with this subscription.');
+            }
+            $payment = Payment::where('stripe_checkout_session_id', $request->stripe_subscription_id)->first();
+            if ($payment) {
+                return redirect()->route('registerForm' , ['stripe_checkout_session_id' => $request->stripe_subscription_id , 'customer_email' => $payment->customer_email])
+                    ->with('Subscription check successfully');
+            } else {
+                throw new \Exception('Subscription not found.');
+            }
         } catch (\Exception $e) {
             return WebResponses::exception($e->getMessage());
         }
@@ -404,7 +425,9 @@ class InvitationCode extends Controller
 
     public function createStripeCheckoutSession(Request $request)
     {
+
         try {
+
             $request->validate([
                 'card_number' => 'required_without:token_id',
                 'exp_month' => 'required_without:token_id',
@@ -412,7 +435,6 @@ class InvitationCode extends Controller
                 'cvc' => 'required_without:token_id',
                 'token_id' => 'required_without:card_number,exp_month,exp_year,cvc',
             ]);
-
             //if today is 1st
 //            if (Carbon::today()->day == 1) {
             if (!$request->has('token_id')) {
@@ -457,7 +479,7 @@ class InvitationCode extends Controller
             session()->put('stripe_checkout_session_id', $subscription->id);
 
             if($subscription)
-                return redirect()->route('stripeSuccessPayment');
+                return redirect()->route('stripeSuccessPayment', ['customer_email' => $request->customer_email]);
         } catch (\Exception $e) {
             return Inertia::render('StripePayment', ['error' => $e->getMessage()]);
         }
