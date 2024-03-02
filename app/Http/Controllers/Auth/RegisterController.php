@@ -74,6 +74,7 @@ class RegisterController extends Controller
         if ($userInv) {
             return Inertia::render('Auth/Register', [
                 'stripe_checkout_session_id' => $request->stripe_checkout_session_id,
+                'customer_email' => $request->customer_email,
             ]);
         }
         //checking for inviter info as well
@@ -82,10 +83,12 @@ class RegisterController extends Controller
                 'inviter_id' => session()->get('inviter_id'),
                 'email' => 'asd',
                 'stripe_checkout_session_id' => $request->stripe_checkout_session_id,
+                'customer_email' => $request->customer_email,
             ]);
         } else if(session()->has('validate-code') && session()->get('validate-code') == 'validate-code') {
             return Inertia::render('Auth/Register', [
                 'stripe_checkout_session_id' => $request->stripe_checkout_session_id,
+                'customer_email' => $request->customer_email,
             ]);
         }
         else

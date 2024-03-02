@@ -37,7 +37,11 @@
 
                         <form v-if="isMonthsFirst">
                             <!-- Add a hidden field with the lookup_key of your Price -->
-
+                            <div class="form-group">
+                                <label for="">Email</label>
+                                <input type="email" name="customer_email" v-model="customer_email" class="form-control"
+                                       placeholder="tha-network@gmail.com">
+                            </div>
                             <div class="form-group">
                                 <label for="">Card Number</label>
                                 <input type="number" name="card_no" v-model="card_number" class="form-control"
@@ -96,7 +100,11 @@
 
                         <form v-else>
                             <!-- Add a hidden field with the lookup_key of your Price -->
-
+                            <div class="form-group">
+                                <label for="">Email</label>
+                                <input type="email" name="customer_email" v-model="customer_email" class="form-control"
+                                       placeholder="tha-network@gmail.com">
+                            </div>
                             <div class="form-group">
                                 <label for="">Card Number</label>
                                 <input type="number" name="card_no" v-model="card_number" class="form-control"
@@ -187,6 +195,7 @@ export default {
     },
     data() {
         return {
+            customer_email: '',
             card_number: '',
             exp_month: '',
             exp_year: '',
@@ -245,6 +254,7 @@ export default {
             }
             this.form_loading = true;
             Inertia.post(this.$route('createStripeCheckoutSession'), {
+                customer_email: this.customer_email,
                 card_number: this.card_number,
                 exp_month: this.exp_month,
                 exp_year: this.exp_year,
@@ -292,6 +302,7 @@ export default {
                 if (res.id) {
                     Inertia.post(this.$route('createStripeCheckoutSession'), {
                         token_id: res.id,
+                        customer_email: this.customer_email,
                         card_number: this.card_number,
                         exp_month: this.exp_month,
                         exp_year: this.exp_year,

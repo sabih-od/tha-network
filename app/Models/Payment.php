@@ -19,6 +19,7 @@ class Payment extends Model
         'payable_id',
         'stripe_checkout_session_id',
         'stripe_charge_object',
-        'stripe_customer_id'
+        'stripe_customer_id',
+        'customer_email'
     ];
 }

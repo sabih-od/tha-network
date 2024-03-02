@@ -50,7 +50,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label for="email">Email</label>
-                                        <input type="email" id="email" v-model="form.email" placeholder=""
+                                        <input type="email" id="email" readonly v-model="form.email" placeholder=""
                                                class="form-control">
                                     </div>
                                 </div>
@@ -135,12 +135,13 @@ export default {
     props: {
         errors: Object,
         inviter_id: null ,
-        stripe_checkout_session_id: null
+        stripe_checkout_session_id: null,
+        customer_email : null
     },
 
     mounted() {
         console.log(this.inviter_id);
-        console.log("this.stripe_checkout_session_id" , this.stripe_checkout_session_id);
+        console.log("this.stripe_checkout_session_id" , this.customer_email);
         this.showPaymentMadeNotification();
 
         //format social security number
@@ -165,7 +166,7 @@ export default {
                 last_name: '',
                 gender: '',
                 username: '',
-                email: '',
+                email: this.customer_email,
                 phone: '',
                 password: '',
                 password_confirmation: '',
