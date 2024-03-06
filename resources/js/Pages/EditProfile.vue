@@ -27,7 +27,7 @@
                             <!--                            <br />-->
 
                             <!--button-->
-                            <button type="button" class="btn btn-success btn-sm"
+                            <button type="button" class="btn btn-success "
                                     :disabled="preferred_payout_form.preferred_payout_method === 'paypal'"
                                     @click.prevent="connectStripeAccount()">{{ (this.stripe_account_id == null) ? 'Create Stripe Account' : ((this.stripe_account_id &&
                                 this.has_provided_stripe_payout_information &&

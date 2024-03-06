@@ -38,7 +38,7 @@
                             <li>
                                 <a class="nav-link" id="two-tab" data-toggle="tab"
                                    href="#three-pane" role="tab"
-                                   aria-controls="two-pane" aria-selected="false">Already Payment</a>
+                                   aria-controls="two-pane" aria-selected="false">Continue Creating Your Profile</a>
                             </li>
                         </ul>
                         <div class="tab-content" id="myTabContent">
@@ -93,8 +93,8 @@
                                  aria-labelledby="three-tab">
                                 <form @submit.prevent="verifyChargeId">
                                     <div class="form-group">
-                                        <label for="code">Enter your Stripe Subscription Id</label>
-                                        <p style="font-size: 12px !important;">Note: (You can find your Stripe subscription ID in your Stripe account.)</p>
+                                        <label for="code">Enter your Stripe Subscription ID</label>
+                                        <p style="font-size: 12px !important;">Note: (If you were unable to create your profile page after joining the site, please use the Subscription ID that was emailed to you from the "Thanks for Payment" email.)</p>
                                         <input type="text" v-model="alreadyPayment.stripe_subscription_id" id="code" placeholder=""
                                                class="form-control">
                                     </div>

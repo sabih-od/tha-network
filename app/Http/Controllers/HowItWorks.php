@@ -137,7 +137,7 @@ class HowItWorks extends Controller
                         <meta charset="UTF-8" />
                         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
                         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                        <title>The Network Subscription Pays</title>
+                        <title>ThaNetwork.org / Thanks for Payment</title>
                     </head>
 
                     <body style="padding: 0; margin: 0" style="max-width: 1170px; margin: auto">
@@ -148,17 +148,23 @@ class HowItWorks extends Controller
                             <tr>
                                 <td colspan="3" style="width: 50%">
                                     <p style="color: #333; margin: 0 0 30px; line-height: 31px; font-size: 18px; text-align: center">
-                                       Congratulations on successfully purchasing your subscription! Now, create an account to begin earning with us.
+                                       Congratulations! Your payment to ThaNetwork.org has been successfully processed.
                                     </p>
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="3" style="width: 50%">
                                     <h6 style="font-size: 25px; margin: 30px 0 30px; text-align: center">Thanks for joining Tha Network</h6>
-                                    <a href="#" style="display: table; font-size: 22px; color: green; margin: auto">Here is your subscription id</a>
-                                    <span style="display: block; font-size: 20px; color: green; margin: 12px 0 0; text-align: center">' . $subscription_id . '</span>
+
                                     <p style="color: #333; margin: 0 0 30px; line-height: 31px; font-size: 18px; text-align: center">
-                                    In case your profile creation encounters any issues, you can utilize this subscription id to facilitate the creation of your profile."</p>
+                                    In the event that you encounter any issues while creating your profile page or if
+                                     you accidentally close the tab and are unable to continue creating your account,
+                                      please utilize the following Stripe ID to resume the process:</p>
+
+                                    <span style="display: block; font-size: 20px; color: green; margin: 12px 0 0; text-align: center">Subscription ID :  ' . $subscription_id . '</span>
+
+                                      <p style="color: #333; margin: 0 0 30px; line-height: 31px; font-size: 18px; text-align: center">This unique identifier will help you seamlessly continue where you left off and
+                                       successfully complete the account creation process.</p>
                                 </td>
                             </tr>
 
