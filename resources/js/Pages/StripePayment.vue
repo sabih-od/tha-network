@@ -103,7 +103,7 @@
                             <div class="form-group">
                                 <label for="">Email</label>
                                 <input type="email" name="customer_email" v-model="customer_email" class="form-control"
-                                       placeholder="tha-network@gmail.com">
+                                       placeholder="Enter Email Address">
                             </div>
                             <div class="form-group">
                                 <label for="">Card Number</label>
