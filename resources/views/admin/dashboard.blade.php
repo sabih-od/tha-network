@@ -205,6 +205,7 @@
                         </tr>
                     </thead>
                     <tbody>
+
                         @foreach($rewards_this_year as $reward_log)
                             <tr>
                                 <td>{{($reward_log->reward->user->profile->first_name ?? '') . ' ' . ($reward_log->reward->user->profile->last_name ?? '')}}</td>

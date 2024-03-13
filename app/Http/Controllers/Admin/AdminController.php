@@ -8,6 +8,7 @@ use App\Models\Customers;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductReview;
+use App\Models\Reward;
 use App\Models\RewardLog;
 use App\Models\User;
 use Carbon\Carbon;
@@ -124,7 +125,8 @@ class AdminController extends Controller
                             $invoice['total'] = ($invoice['total'] / 100);
 //                            $invoice['formatted_date'] = date('m', $invoice->effective_at).'-'.date('d', $invoice->effective_at).'-'.date('Y', $invoice->effective_at);
                             $invoice['formatted_date'] = (Carbon::parse($charge->created)->format('M d, Y.')) ?? '';
-                            $invoice['is_company_invite'] = ($inviter->role_id == 1);
+                            $invited_by = Reward::where('on_inviting' , $invoice['user']->id)->with('user')->first();
+                            $invoice['is_company_invite'] = isset($invited_by) && $invited_by->user->role_id == 1;
                             $subscriptionPayments[] = $invoice;
                             $payment_count += 1;
                         }
@@ -134,7 +136,8 @@ class AdminController extends Controller
                             $invoice['total'] = ($invoice['total'] / 100);
 //                            $invoice['formatted_date'] = date('m', $invoice->effective_at).'-'.date('d', $invoice->effective_at).'-'.date('Y', $invoice->effective_at);
                             $invoice['formatted_date'] = (Carbon::parse($charge->created)->format('M d, Y.'));
-                            $invoice['is_company_invite'] = ($inviter->role_id == 1);
+                            $invited_by = Reward::where('on_inviting' , $invoice['user']->id)->with('user')->first();
+                            $invoice['is_company_invite'] = isset($invited_by) && $invited_by->user->role_id == 1;
                             $subscriptionPayments[] = $invoice;
                             $payment_count += 1;
                         }
@@ -167,7 +170,8 @@ class AdminController extends Controller
                         $decoded_charge_object->user = $user_with_charge_object;
 //                        $decoded_charge_object->formatted_date = date('m', $decoded_charge_object->created).'-'.date('d', $decoded_charge_object->created).'-'.date('Y', $decoded_charge_object->created);
                         $decoded_charge_object->formatted_date = (Carbon::parse($decoded_charge_object->created)->format('M d, Y.'));
-                        $invoice['is_company_invite'] = ($inviter->role_id == 1);
+                        $invited_by = Reward::where('on_inviting' , $decoded_charge_object->user->id)->with('user')->first();
+                        $decoded_charge_object->is_company_invite = isset($invited_by) && $invited_by->user->role_id == 1;;
                         $subscriptionPayments[] = $decoded_charge_object;
                         $payment_count += 1;
                     }
@@ -178,7 +182,8 @@ class AdminController extends Controller
                         $decoded_charge_object->user = $user_with_charge_object;
 //                        $decoded_charge_object->formatted_date = date('m', $decoded_charge_object->created).'-'.date('d', $decoded_charge_object->created).'-'.date('Y', $decoded_charge_object->created);
                         $decoded_charge_object->formatted_date = (Carbon::parse($decoded_charge_object->created)->format('M d, Y.'));
-                        $invoice['is_company_invite'] = ($inviter->role_id == 1);
+                        $invited_by = Reward::where('on_inviting' , $decoded_charge_object->user->id)->with('user')->first();
+                        $decoded_charge_object->is_company_invite = isset($invited_by) && $invited_by->user->role_id == 1;;
                         $subscriptionPayments[] = $decoded_charge_object;
                         $payment_count += 1;
                     }
@@ -188,6 +193,7 @@ class AdminController extends Controller
                 continue;
             }
         }
+
 
         $total = 0.0;
         $gross_total = 0.0;
