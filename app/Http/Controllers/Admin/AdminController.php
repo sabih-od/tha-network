@@ -33,6 +33,7 @@ class AdminController extends Controller
         $gross_total_payments_this_month = $res['gross_total'];
         $count_of_payments_this_month = $res['payments_count'];
 //
+
         $res = $this->getSubscriptionPayments(date('Y'));
         $incoming_payments_this_year = $res['payments'];
         $total_payments_this_year = $res['total'];
@@ -204,7 +205,7 @@ class AdminController extends Controller
 //            $total += $payment->total;
 
             $payment->gross_total = $payment->total;
-            $payment->total = isset($payment->is_company_invite) && $payment->is_company_invite ? $payment->total : ($payment->total - 11.99);
+            $payment->total = isset($payment->is_company_invite) && $payment->is_company_invite ? $payment->total - 1.99 : ($payment->total - 11.99);
 
             $total += $payment->total;
             $gross_total += $payment->gross_total;
