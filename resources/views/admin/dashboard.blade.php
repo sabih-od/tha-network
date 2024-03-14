@@ -371,7 +371,7 @@
                             @if (!is_null($payment->user))
                                 <tr>
                                     <td>{{($payment->user->profile->first_name ?? '') . ' ' . ($payment->user->profile->last_name ?? '')}}</td>
-                                    <td>${{$payment->total}}</td>
+                                    <td>${{$payment->gross_total}}</td>
 {{--                                    <td>{{\Carbon\Carbon::createFromTimestamp($payment->date)}}</td>--}}
                                     <td>{{$payment->formatted_date}}</td>
                                 </tr>
