@@ -149,7 +149,9 @@ function get_weekly_goals($id = null): array
 //    $weekly_goals = intval($user->remaining_referrals / $weeks_remaining);
     $weekly_goals = intval($user->remaining_referrals);
     $referrals_made = $user->completed_referrals_this_week()->count();
-    $remaining_goals = $weekly_goals - $referrals_made;
+
+//    $remaining_goals = $weekly_goals - $referrals_made;
+    $remaining_goals = 25 - $referrals_made;
 
     $monday = Carbon::now()->startOfWeek();
     $tuesday = $monday->copy()->addDay();
