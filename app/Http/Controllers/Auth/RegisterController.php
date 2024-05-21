@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class RegisterController extends Controller
@@ -227,6 +228,9 @@ class RegisterController extends Controller
         $this->validator($request->all())->validate();
 
         $req = $request->all();
+        if ($req['email'] !== $req['confirm_email']) {
+           return redirect()->back()->with('error', 'confirm_email and email must be same');
+        }
 
             if (isset($req['stripe_subscription_id'])){
                 $checkPayment = Payment::where('stripe_checkout_session_id', $req['stripe_subscription_id'])->first();
