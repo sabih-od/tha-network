@@ -54,6 +54,7 @@
                                                class="form-control">
                                     </div>
                                 </div>
+
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label for="email">Confirm Email</label>

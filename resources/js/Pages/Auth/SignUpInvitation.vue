@@ -35,6 +35,10 @@
                                         <label for="email">Email</label>
                                         <input type="text" v-model="form.email" id="email" placeholder="" class="form-control" :required="form.send_code_type == 'email'">
                                     </div>
+                                    <div class="form-group">
+                                        <label for="confirm_email">Confirm Email</label>
+                                        <input type="text" v-model="form.confirm_email" id="confirm_email" placeholder="" class="form-control" >
+                                    </div>
 <!--                                    <div class="form-group" v-if="form.send_code_type == 'phone'">-->
 <!--                                        <label for="phone">Phone Number</label>-->
 <!--                                        <input type="text" v-model="form.phone" id="phone" placeholder="" class="form-control" :required="form.send_code_type == 'phone'">-->
@@ -64,10 +68,12 @@ export default {
         return {
             send_code_types: {
                 'email': 'Email',
+                'confirm_email': 'Confirm Email',
                 'phone': 'Phone',
             },
             form: useForm({
                 email: "",
+                confirm_email: "",
                 phone: "",
                 send_code_type: "email"
             })

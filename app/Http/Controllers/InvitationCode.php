@@ -52,6 +52,13 @@ class InvitationCode extends Controller
                 'max:255',
                 Rule::unique('users')->whereNull('deleted_at'),
             ],
+            'confirm_email' => [
+                'required_if:confirm_email,in:send_code_type',
+                'nullable',
+                'string',
+                'email',
+                'max:255',
+            ],
             'phone' => [
                 'required_if:phone,in:send_code_type',
                 'nullable',
@@ -66,6 +73,9 @@ class InvitationCode extends Controller
             'email.unique' => 'This user is already registered on the website.'
         ]);
         try {
+            if ($data['email'] !== $data['confirm_email']) {
+                return redirect()->back()->with('error', 'confirm_email and email must be same');
+            }
 //            $code = $this->generateUniqueCode();
 
             //get admin code
@@ -427,7 +437,9 @@ class InvitationCode extends Controller
     {
 
         try {
-
+            if ($request->customer_email !== $request->confirm_customer_email) {
+                return back()->withErrors(['error' => 'Confirm email and email must be the same']);
+            }
             $request->validate([
                 'card_number' => 'required_without:token_id',
                 'exp_month' => 'required_without:token_id',
