@@ -43,6 +43,11 @@
                                        placeholder="Enter Email Address">
                             </div>
                             <div class="form-group">
+                                <label for="confirm_customer_email">Confirm Email</label>
+                                <input type="email" name="confirm_customer_email" v-model="confirm_customer_email" class="form-control"
+                                       placeholder="Enter Email Address">
+                            </div>
+                            <div class="form-group">
                                 <label for="">Card Number</label>
                                 <input type="number" name="card_no" v-model="card_number" class="form-control"
                                        placeholder="XXXX-XXXX-XXXX-XXXX">
@@ -103,6 +108,11 @@
                             <div class="form-group">
                                 <label for="">Email</label>
                                 <input type="email" name="customer_email" v-model="customer_email" class="form-control"
+                                       placeholder="Enter Email Address">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm_customer_email">Confirm Email</label>
+                                <input type="email" name="confirm_customer_email" v-model="confirm_customer_email" class="form-control"
                                        placeholder="Enter Email Address">
                             </div>
                             <div class="form-group">
@@ -196,6 +206,7 @@ export default {
     data() {
         return {
             customer_email: '',
+            confirm_customer_email: '',
             card_number: '',
             exp_month: '',
             exp_year: '',
@@ -255,6 +266,7 @@ export default {
             this.form_loading = true;
             Inertia.post(this.$route('createStripeCheckoutSession'), {
                 customer_email: this.customer_email,
+                confirm_customer_email: this.confirm_customer_email,
                 card_number: this.card_number,
                 exp_month: this.exp_month,
                 exp_year: this.exp_year,
@@ -303,6 +315,7 @@ export default {
                     Inertia.post(this.$route('createStripeCheckoutSession'), {
                         token_id: res.id,
                         customer_email: this.customer_email,
+                        confirm_customer_email: this.confirm_customer_email,
                         card_number: this.card_number,
                         exp_month: this.exp_month,
                         exp_year: this.exp_year,
