@@ -72,10 +72,11 @@ class InvitationCode extends Controller
         ],[
             'email.unique' => 'This user is already registered on the website.'
         ]);
+        if ($request->send_code_type === 'email' && $data['email'] !== $data['confirm_email']) {
+            return redirect()->back()->withErrors(['error' => 'Confirm email and email must be the same'])->withInput();
+        }
         try {
-            if ($data['email'] !== $data['confirm_email']) {
-                return redirect()->back()->with('error', 'confirm_email and email must be same');
-            }
+
 //            $code = $this->generateUniqueCode();
 
             //get admin code
