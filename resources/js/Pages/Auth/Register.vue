@@ -57,13 +57,6 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
-                                        <label for="email">Confirm Email</label>
-                                        <input type="email" id="confirm_email"  v-model="form.confirm_email" placeholder=""
-                                               class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mb-2">
                                         <label for="phone">Phone</label>
                                         <input type="number"  id="phone" v-model="form.phone" placeholder=""
                                                class="form-control">
@@ -175,7 +168,6 @@ export default {
                 gender: '',
                 username: '',
                 email: this.customer_email,
-                confirm_email: '',
                 phone: '',
                 password: '',
                 password_confirmation: '',
