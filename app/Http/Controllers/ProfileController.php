@@ -62,11 +62,15 @@ class ProfileController extends Controller
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());
         }
     }
+
     private $amount;
 
     public function __construct()
     {
-        $this->amount = count(User::where('role_id', 2)->get()) < 5000 ? 29.99 : 59.95;
+        //Commit on client demand
+        //$this->amount = count(User::where('role_id', 2)->get()) < 5000 ? 29.99 : 59.95;
+
+        $this->amount = 29.99;
     }
 
     public function edit(Request $request)
@@ -196,7 +200,7 @@ class ProfileController extends Controller
 
             //change password
             if (collect($data)->has('password')) {
-                if(!Hash::check($request->oldpass, $user->password)) {
+                if (!Hash::check($request->oldpass, $user->password)) {
                     return WebResponses::exception('Incorrect old password');
                 }
                 $user->password = Hash::make($request->password);
@@ -210,7 +214,7 @@ class ProfileController extends Controller
                 collect($data)->except(['email', 'username', 'preferred_payout_method'])->all()
             );
 
-            if($request->has('clear_all') && $request->clear_all == true) {
+            if ($request->has('clear_all') && $request->clear_all == true) {
                 $user->clearMediaCollection('profile_image');
                 $user
                     ->addMedia(public_path('images/avatars/male-avatar.png'))
@@ -237,7 +241,7 @@ class ProfileController extends Controller
             $user = Auth::user();
             if ($user) {
                 $user->clearMediaCollection('profile_image');
-                if($request->has('url') && $request->get('url') != null) {
+                if ($request->has('url') && $request->get('url') != null) {
                     $user
                         ->addMediaFromUrl($request->get('url'))
                         ->toMediaCollection('profile_image');
@@ -330,10 +334,10 @@ class ProfileController extends Controller
             if (is_null($user) || $user->hasBlocked($auth_user))
                 return redirect()->route('home')->with('error', "Invalid user id!");
 
-            if($id == Auth::id())
+            if ($id == Auth::id())
                 return redirect()->route('profile')->with('error', "Invalid user id!");
 
-        //request sent check
+            //request sent check
             $request_sent_check = FriendRequest::where('user_id', Auth::id())->where('target_id', $id)->get();
             $request_received_check = FriendRequest::where('user_id', $id)->where('target_id', Auth::id())->get();
 
@@ -369,7 +373,7 @@ class ProfileController extends Controller
                 'replies' => Inertia::lazy(function () use ($request) {
                     return $this->getReplyData($request->comment_id ?? null);
                 }),
-                'is_auth_friend' => function() use ($user) {
+                'is_auth_friend' => function () use ($user) {
                     $auth = User::find(Auth::id());
                     return $auth->isFollowing($user) || $auth->isFollowedBy($user);
                 },
