@@ -33,7 +33,9 @@ class InvitationCode extends Controller
 
     public function __construct()
     {
-        $this->amount = count(User::where('role_id', 2)->get()) < 5000 ? 29.99 : 59.95;
+        //Commit on client demand
+        // $this->amount = count(User::where('role_id', 2)->get()) < 5000 ? 29.99 : 59.95;
+        $this->amount = 29.99;
     }
 
     public function showInvitationCodeForm()
@@ -69,7 +71,7 @@ class InvitationCode extends Controller
                 'required',
                 'in:email,phone'
             ],
-        ],[
+        ], [
             'email.unique' => 'This user is already registered on the website.'
         ]);
         if ($request->send_code_type === 'email' && $data['email'] !== $data['confirm_email']) {
@@ -201,7 +203,7 @@ class InvitationCode extends Controller
             }
             $payment = Payment::where('stripe_checkout_session_id', $request->stripe_subscription_id)->first();
             if ($payment) {
-                return redirect()->route('registerForm' , ['stripe_checkout_session_id' => $request->stripe_subscription_id , 'customer_email' => $payment->customer_email])
+                return redirect()->route('registerForm', ['stripe_checkout_session_id' => $request->stripe_subscription_id, 'customer_email' => $payment->customer_email])
                     ->with('Subscription check successfully');
             } else {
                 throw new \Exception('Subscription not found.');
@@ -249,7 +251,7 @@ class InvitationCode extends Controller
         $message .= '<h1 style="color:#f40;">Welcome to Tha Network!</h1>';
         $message .= '<p style="color:black;font-size:18px;">Please open up the link and use the invitation code given below to make an account: </p>';
         $message .= '<br />' . $code . '<br />';
-        $message .= 'Link: <a href="'.route('loginForm', ['send-code' => 'success']).'">'.route('loginForm', ['send-code' => 'success']).'</a>';
+        $message .= 'Link: <a href="' . route('loginForm', ['send-code' => 'success']) . '">' . route('loginForm', ['send-code' => 'success']) . '</a>';
         $message .= '</body></html>';
 
         $html = '<html lang="en">
@@ -267,7 +269,7 @@ class InvitationCode extends Controller
                             </tr>
                             <tr>
                                 <td colspan="3" style="width: 50%">
-                                    <span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code: '.$code.'</span>
+                                    <span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code: ' . $code . '</span>
                                 </td>
                             </tr>
                             <tr>
@@ -275,7 +277,7 @@ class InvitationCode extends Controller
                                     <h6 style="font-size: 25px; margin: 30px 0 30px; text-align: center">Thanks for joining Tha Network</h6>
                                     <a href="#" style="display: table; font-size: 22px; color: green; margin: auto">Because Membership Pays</a>
                                     <span style="display: block; font-size: 20px; color: green; margin: 12px 0 0; text-align: center">$$$$$</span>
-                                    <img width="398" height="398" src="'.asset('images/notifications/PaymentMade.png').'" class="img-fluid" alt="img" style="display: table; margin: auto" />
+                                    <img width="398" height="398" src="' . asset('images/notifications/PaymentMade.png') . '" class="img-fluid" alt="img" style="display: table; margin: auto" />
                                 </td>
                             </tr>
 
@@ -325,7 +327,8 @@ class InvitationCode extends Controller
         // }
     }
 
-    public function sendInvitation(Request $request) {
+    public function sendInvitation(Request $request)
+    {
         // dd($request->all());
         $data = $request->validate([
             'emails' => [
@@ -362,7 +365,7 @@ class InvitationCode extends Controller
 
             //check for user's network. create new if not created already
             $network_check = Network::where('user_id', Auth::id())->get();
-            if(count($network_check) == 0) {
+            if (count($network_check) == 0) {
                 Network::create([
                     'user_id' => Auth::id()
                 ]);
@@ -394,7 +397,8 @@ class InvitationCode extends Controller
         }
     }
 
-    public function join(Request $request, $username) {
+    public function join(Request $request, $username)
+    {
         try {
             //cms data
             $home = Page::where('name', 'Home')->first();
@@ -491,7 +495,7 @@ class InvitationCode extends Controller
             //put checkout session id in session
             session()->put('stripe_checkout_session_id', $subscription->id);
 
-            if($subscription)
+            if ($subscription)
                 return redirect()->route('stripeSuccessPayment', ['customer_email' => $request->customer_email]);
         } catch (\Exception $e) {
             return Inertia::render('StripePayment', ['error' => $e->getMessage()]);
@@ -539,7 +543,7 @@ class InvitationCode extends Controller
             event(new StripePayoutConnected($user->id, $string, 'App\Models\User', $notification->id, $user));
 
             //send email (payment change) to user
-            $string = "Your payment method was updated on [".Carbon::now()->format('m-d-Y')."],  thank you for updating your payment information.";
+            $string = "Your payment method was updated on [" . Carbon::now()->format('m-d-Y') . "],  thank you for updating your payment information.";
             send_mail($user->email, 'Tha Network | Payment Settings', $string);
 
 //            return redirect()->route('editProfileForm');
@@ -553,7 +557,7 @@ class InvitationCode extends Controller
         }
     }
 
-    protected function createStripeSubscription (Request $request, $charge_date, $isMonthsFirst, $token_id = null)
+    protected function createStripeSubscription(Request $request, $charge_date, $isMonthsFirst, $token_id = null)
     {
         $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
 
@@ -627,7 +631,7 @@ class InvitationCode extends Controller
         return $subscription;
     }
 
-    protected function stripeCharge (Request $request, $token_id)
+    protected function stripeCharge(Request $request, $token_id)
     {
         $stripe = new \Stripe\StripeClient(
             env('STRIPE_SECRET_KEY')

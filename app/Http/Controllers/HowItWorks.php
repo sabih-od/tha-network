@@ -22,7 +22,9 @@ class HowItWorks extends Controller
 
     public function __construct()
     {
-        $this->amount = count(User::where('role_id', 2)->get()) < 5000 ? 29.99 : 59.99;
+        //Commit on client demand
+        //$this->amount = count(User::where('role_id', 2)->get()) < 5000 ? 29.99 : 59.99;
+        $this->amount = 29.99;
         $this->middleware('is.validate.code')->except('monthlySuccessPayment');
     }
 
@@ -68,7 +70,7 @@ class HowItWorks extends Controller
             return redirect()->route('loginForm');
 
         //if registered by following invitation link
-        if(session()->has('inviter_id') && is_null($userInv)) {
+        if (session()->has('inviter_id') && is_null($userInv)) {
             $payment = Payment::create([
                 'amount' => $this->amount,
                 'client_secret' => session('client-secret'),
@@ -98,28 +100,28 @@ class HowItWorks extends Controller
         //if registered by following invitation link
 //        if(session()->has('inviter_id')) {
 
-            $payment = Payment::create([
-                'amount' => $this->amount,
-                'client_secret' => session('client-secret'),
-                'payable_type' => 'App\Models\Payment',
-                'payable_id' => session()->has('inviter_id') ? session()->get('inviter_id') : 'registered-with-code',
-                'stripe_checkout_session_id' => session()->has('stripe_checkout_session_id') ? session()->get('stripe_checkout_session_id') : null,
-                'stripe_charge_object' => session()->has('stripe_charge_object') ? json_encode(session()->get('stripe_charge_object')) : null,
-                'stripe_customer_id' => session()->has('stripe_customer_id') ? session()->get('stripe_customer_id') : null,
-                'customer_email' =>  isset($request->customer_email) ? $request->customer_email :  null
-            ]);
+        $payment = Payment::create([
+            'amount' => $this->amount,
+            'client_secret' => session('client-secret'),
+            'payable_type' => 'App\Models\Payment',
+            'payable_id' => session()->has('inviter_id') ? session()->get('inviter_id') : 'registered-with-code',
+            'stripe_checkout_session_id' => session()->has('stripe_checkout_session_id') ? session()->get('stripe_checkout_session_id') : null,
+            'stripe_charge_object' => session()->has('stripe_charge_object') ? json_encode(session()->get('stripe_charge_object')) : null,
+            'stripe_customer_id' => session()->has('stripe_customer_id') ? session()->get('stripe_customer_id') : null,
+            'customer_email' => isset($request->customer_email) ? $request->customer_email : null
+        ]);
 
 //        }
 
         session()->put('tha_payment_amount', $this->amount);
 
-        $this->sendPaymentSuccessfullEmail($request->customer_email ,
+        $this->sendPaymentSuccessfullEmail($request->customer_email,
             session()->has('stripe_checkout_session_id') ? session()->get('stripe_checkout_session_id') : null);
 
-        return redirect()->route('registerForm' , ['customer_email'  => $request->customer_email]);
+        return redirect()->route('registerForm', ['customer_email' => $request->customer_email]);
     }
 
-    public function sendPaymentSuccessfullEmail($to  , $subscription_id)
+    public function sendPaymentSuccessfullEmail($to, $subscription_id)
     {
         $from = 'support@thanetwork.org';
 
