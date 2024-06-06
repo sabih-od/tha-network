@@ -91,7 +91,6 @@ class HowItWorks extends Controller
 
     public function stripeSuccessPayment(Request $request)
     {
-
         //        dd(session()->has('inviter_id'));
         //checking for inviter in session
         if (!session()->has('inviter_id'))

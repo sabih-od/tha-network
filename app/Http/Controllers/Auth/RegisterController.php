@@ -84,6 +84,9 @@ class RegisterController extends Controller
                 'email' => 'asd',
                 'stripe_checkout_session_id' => $request->stripe_checkout_session_id,
                 'customer_email' => $request->customer_email,
+                'customer_first_name' => $request->customer_first_name,
+                'customer_last_name' => $request->customer_last_name,
+                'customer_address' => $request->customer_address,
             ]);
         } else if (session()->has('validate-code') && session()->get('validate-code') == 'validate-code') {
             return Inertia::render('Auth/Register', [
