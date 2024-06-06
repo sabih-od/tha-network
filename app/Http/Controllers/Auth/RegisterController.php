@@ -77,8 +77,7 @@ class RegisterController extends Controller
                 'stripe_checkout_session_id' => $request->stripe_checkout_session_id,
                 'customer_email' => $request->customer_email,
             ]);
-        }
-        //checking for inviter info as well
+        } //checking for inviter info as well
         else if (session()->has('inviter_id')) {
             return Inertia::render('Auth/Register', [
                 'inviter_id' => session()->get('inviter_id'),
@@ -86,13 +85,15 @@ class RegisterController extends Controller
                 'stripe_checkout_session_id' => $request->stripe_checkout_session_id,
                 'customer_email' => $request->customer_email,
             ]);
-        } else if(session()->has('validate-code') && session()->get('validate-code') == 'validate-code') {
+        } else if (session()->has('validate-code') && session()->get('validate-code') == 'validate-code') {
             return Inertia::render('Auth/Register', [
                 'stripe_checkout_session_id' => $request->stripe_checkout_session_id,
                 'customer_email' => $request->customer_email,
+                'customer_first_name' => $request->customer_first_name,
+                'customer_last_name' => $request->customer_last_name,
+                'customer_address' => $request->customer_address,
             ]);
-        }
-        else
+        } else
             return redirect(route('loginForm'));
     }
 
@@ -230,28 +231,27 @@ class RegisterController extends Controller
         $req = $request->all();
 
 
-            if (isset($req['stripe_subscription_id'])){
-                $checkPayment = Payment::where('stripe_checkout_session_id', $req['stripe_subscription_id'])->first();
-                    $req['stripe_checkout_session_id'] = $checkPayment->stripe_checkout_session_id;
-                $req['stripe_customer_id'] = $checkPayment->stripe_customer_id;
-                $req['stripe_charge_object'] = $checkPayment->stripe_charge_object;
+        if (isset($req['stripe_subscription_id'])) {
+            $checkPayment = Payment::where('stripe_checkout_session_id', $req['stripe_subscription_id'])->first();
+            $req['stripe_checkout_session_id'] = $checkPayment->stripe_checkout_session_id;
+            $req['stripe_customer_id'] = $checkPayment->stripe_customer_id;
+            $req['stripe_charge_object'] = $checkPayment->stripe_charge_object;
+        } else {
+            if (session()->has('stripe_checkout_session_id')) {
+                $req['stripe_checkout_session_id'] = session()->get('stripe_checkout_session_id');
             }
-          else{
-                if(session()->has('stripe_checkout_session_id')) {
-                    $req['stripe_checkout_session_id'] = session()->get('stripe_checkout_session_id');
-                }
-                if(session()->has('stripe_customer_id')) {
-                    $req['stripe_customer_id'] = session()->get('stripe_customer_id');
-                }
+            if (session()->has('stripe_customer_id')) {
+                $req['stripe_customer_id'] = session()->get('stripe_customer_id');
             }
+        }
 
         event(new Registered($user = $this->create($req)));
 
         //if user was invited by link: add to their friend list
-        if(session()->has('inviter_id')) {
+        if (session()->has('inviter_id')) {
             $inviter_id = session()->get('inviter_id');
             $check = User::with('profile')->where('id', $inviter_id)->get();
-            if(count($check) > 0) {
+            if (count($check) > 0) {
                 $inviter = User::with('profile', 'network')->find($inviter_id);
                 $user = User::with('profile')->find($user->id);
 
@@ -260,7 +260,7 @@ class RegisterController extends Controller
 
                 //check for inviter's network. create new if not created already
                 $network_check = Network::where('user_id', $inviter->id)->get();
-                if(count($network_check) == 0) {
+                if (count($network_check) == 0) {
                     $inviter_network = Network::create([
                         'user_id' => $inviter->id
                     ]);
@@ -270,7 +270,7 @@ class RegisterController extends Controller
 
                 //add to inviters network
                 NetworkMember::create([
-                    'user_id' =>  $user->id,
+                    'user_id' => $user->id,
                     'network_id' => $inviter_network->id,
                 ]);
 
@@ -279,7 +279,7 @@ class RegisterController extends Controller
                     'user_id' => $user->id
                 ]);
                 NetworkMember::create([
-                    'user_id' =>  $inviter->id,
+                    'user_id' => $inviter->id,
                     'network_id' => $new_network->id,
                 ]);
 
@@ -290,7 +290,7 @@ class RegisterController extends Controller
                     'status' => false,
                 ])->first();
 
-                if(!$referral) {
+                if (!$referral) {
                     $referral = Referral::create([
                         'user_id' => $inviter_id,
                         'email' => $request->email,
@@ -307,7 +307,7 @@ class RegisterController extends Controller
                 $new_rank = get_my_rank($inviter->id);
 
                 //notification if rank changed
-                if($new_rank->target > $prev_rank->target || $new_rank->target != $prev_rank->target) {
+                if ($new_rank->target > $prev_rank->target || $new_rank->target != $prev_rank->target) {
                     $string = "Congratulations, you've been promoted to the next rank keep up the good work!!!";
                     $notification = Notification::create([
                         'user_id' => $inviter->id,
@@ -336,7 +336,7 @@ class RegisterController extends Controller
 //                $inviter->save();
                 //create payout log
 
-                if ($inviter->role_id == 2){
+                if ($inviter->role_id == 2) {
                     Reward::create([
                         'user_id' => $inviter->id,
                         'amount' => session()->get('tha_payment_amount') == 29.99 ? 10.00 : 39.99,
@@ -430,7 +430,7 @@ class RegisterController extends Controller
                                     <h6 style="font-size: 25px; margin: 30px 0 30px; text-align: center">Thanks for joining Tha Network</h6>
                                     <a href="#" style="display: table; font-size: 22px; color: green; margin: auto">Because Membership Pays</a>
                                     <span style="display: block; font-size: 20px; color: green; margin: 12px 0 0; text-align: center">$$$$$</span>
-                                    <img width="398" height="398" src="'.asset('images/notifications/PaymentMade.png').'" class="img-fluid" alt="img" style="display: table; margin: auto" />
+                                    <img width="398" height="398" src="' . asset('images/notifications/PaymentMade.png') . '" class="img-fluid" alt="img" style="display: table; margin: auto" />
                                 </td>
                             </tr>
 

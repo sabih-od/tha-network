@@ -38,15 +38,37 @@
                         <form v-if="isMonthsFirst">
                             <!-- Add a hidden field with the lookup_key of your Price -->
                             <div class="form-group">
+                                <label for="">First Name</label>
+                                <input type="text" name="customer_first_name" v-model="customer_first_name"
+                                       class="form-control"
+                                       placeholder="Enter Last Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Last Name</label>
+                                <input type="text" name="customer_last_name" v-model="customer_last_name"
+                                       class="form-control"
+                                       placeholder="Enter First Name">
+                            </div>
+                            <div class="form-group">
                                 <label for="">Email</label>
                                 <input type="email" name="customer_email" v-model="customer_email" class="form-control"
                                        placeholder="Enter Email Address">
                             </div>
+
                             <div class="form-group">
                                 <label for="confirm_customer_email">Confirm Email</label>
-                                <input type="email" name="confirm_customer_email" v-model="confirm_customer_email" class="form-control"
+                                <input type="email" name="confirm_customer_email" v-model="confirm_customer_email"
+                                       class="form-control"
                                        placeholder="Enter Email Address">
                             </div>
+
+                            <div class="form-group">
+                                <label for="">Address</label>
+                                <textarea type="text" name="customer_address" v-model="customer_address"
+                                          class="form-control"
+                                          placeholder="Enter Address"></textarea>
+                            </div>
+
                             <div class="form-group">
                                 <label for="">Card Number</label>
                                 <input type="number" name="card_no" v-model="card_number" class="form-control"
@@ -79,11 +101,25 @@
                                         </p>
                                     </span>
                             </div>
-                            <button v-if="!is_excluded_country" class="themeBtn" id="checkout-and-portal-button"
-                                    type="button" @click.prevent="stripe_subscribe" :disabled="form_loading">
-                                {{ form_loading ? 'Please Wait' : 'Subscribe' }}
-                            </button>
-                            <span v-else>Not available in your country.</span>
+                            <!--                            <button v-if="!is_excluded_country" class="themeBtn" id="checkout-and-portal-button"-->
+                            <!--                                    type="button" @click.prevent="stripe_subscribe" :disabled="form_loading">-->
+                            <!--                                {{ form_loading ? 'Please Wait' : 'Subscribe' }}-->
+                            <!--                            </button>-->
+
+                            <div class="d-flex align-items-center justify-content-between">
+                                <button v-if="!is_excluded_country" class="themeBtn" id="checkout-and-portal-button"
+                                        type="button" @click.prevent="checkStripeSupportCountry"
+                                        :disabled="form_loading">
+                                    {{ form_loading ? 'Please Wait' : 'Subscribe' }}
+                                </button>
+
+                                <span v-else>Not available in your country.</span>
+
+                                <button class="themeBtn backBtn" @click="backToHome" type="button">
+                                    <i class="fas fa-chevron-left mr-1"></i> Home
+                                </button>
+                            </div>
+
                         </form>
 
                         <!--                        <form v-else action="/charge" method="post" id="payment-form">-->
@@ -106,15 +142,38 @@
                         <form v-else>
                             <!-- Add a hidden field with the lookup_key of your Price -->
                             <div class="form-group">
+                                <label for="">First Name</label>
+                                <input type="text" name="customer_first_name" v-model="customer_first_name"
+                                       class="form-control"
+                                       placeholder="Enter Last Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="">Last Name</label>
+                                <input type="text" name="customer_last_name" v-model="customer_last_name"
+                                       class="form-control"
+                                       placeholder="Enter First Name">
+                            </div>
+                            <div class="form-group">
                                 <label for="">Email</label>
                                 <input type="email" name="customer_email" v-model="customer_email" class="form-control"
                                        placeholder="Enter Email Address">
                             </div>
+
                             <div class="form-group">
                                 <label for="confirm_customer_email">Confirm Email</label>
-                                <input type="email" name="confirm_customer_email" v-model="confirm_customer_email" class="form-control"
+                                <input type="email" name="confirm_customer_email" v-model="confirm_customer_email"
+                                       class="form-control"
                                        placeholder="Enter Email Address">
                             </div>
+
+                            <div class="form-group">
+                                <label for="">Address</label>
+                                <textarea type="text" name="customer_address" v-model="customer_address"
+                                          class="form-control"
+                                          placeholder="Enter Address"></textarea>
+                            </div>
+
+
                             <div class="form-group">
                                 <label for="">Card Number</label>
                                 <input type="number" name="card_no" v-model="card_number" class="form-control"
@@ -144,14 +203,29 @@
                                                                                          @click.prevent="showTerms"
                                                                                          replace>Terms & Conditions</a>
                                             </label>
+
                                         </p>
                                     </span>
                             </div>
-                            <button v-if="!is_excluded_country" class="themeBtn" id="checkout-and-portal-button"
-                                    type="button" @click.prevent="stripeCharge" :disabled="form_loading">
-                                {{ form_loading ? 'Please Wait' : 'Subscribe' }}
-                            </button>
-                            <span v-else>Not available in your country.</span>
+                            <!--                            <button v-if="!is_excluded_country" class="themeBtn" id="checkout-and-portal-button"-->
+                            <!--                                    type="button" @click.prevent="stripeCharge" :disabled="form_loading">-->
+                            <!--                                {{ form_loading ? 'Please Wait' : 'Subscribe' }}-->
+                            <!--                            </button>-->
+
+                            <div class="d-flex align-items-center justify-content-between">
+                                <button v-if="!is_excluded_country" class="themeBtn" id="checkout-and-portal-button"
+                                        type="button" @click.prevent="checkStripeSupportCountry"
+                                        :disabled="form_loading">
+                                    {{ form_loading ? 'Please Wait' : 'Subscribe' }}
+                                </button>
+
+                                <span v-else>Not available in your country.</span>
+
+                                <button class="themeBtn backBtn" @click="backToHome" type="button">
+                                    <i class="fas fa-chevron-left mr-1"></i> Home
+                                </button>
+                            </div>
+
 
                         </form>
                     </div>
@@ -162,6 +236,29 @@
     <teleport to="body">
         <TermsModal/>
     </teleport>
+
+    <div class="modal fade modal_stripe_country_support" ref="modal_stripe_country_support"
+         id="modal_stripe_country_support"
+         tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"> What Country do you reside in</h5>
+                </div>
+                <div class="modal-body">
+                    <p class="pt-2">Please enter your country name so we can verify that Stripe's support?
+                    </p>
+                    <input type="text" class="form-control pt-2" v-model="client_stripe_country"
+                           placeholder="Please enter country" required/>
+
+
+                    <button class="themeBtn mt-4 float-right" @click="vaidateStripeSupport">Submit</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <script>
@@ -201,11 +298,14 @@ export default {
     },
     components: {
         Link,
-        TermsModal
+        TermsModal,
     },
     data() {
         return {
             customer_email: '',
+            customer_first_name: '',
+            customer_last_name: '',
+            customer_address: '',
             confirm_customer_email: '',
             card_number: '',
             exp_month: '',
@@ -214,6 +314,54 @@ export default {
             form_loading: false,
             agree_terms: false,
             is_excluded_country: false,
+            client_stripe_country: '',
+            supportedCountries: [
+                "australia",
+                "austria",
+                "belgium",
+                "brazil",
+                "bulgaria",
+                "canada",
+                "croatia",
+                "cyprus",
+                "czech-republic",
+                "denmark",
+                "estonia",
+                "finland",
+                "france",
+                "germany",
+                "gibraltar",
+                "greece",
+                "hong-kong",
+                "hungary",
+                "ireland",
+                "italy",
+                "japan",
+                "latvia",
+                "liechtenstein",
+                "lithuania",
+                "luxembourg",
+                "malaysia",
+                "malta",
+                "mexico",
+                "netherlands",
+                "new-zealand",
+                "norway",
+                "poland",
+                "portugal",
+                "romania",
+                "singapore",
+                "slovakia",
+                "slovenia",
+                "spain",
+                "sweden",
+                "switzerland",
+                "thailand",
+                "united-arab emirates",
+                "united-kingdom",
+                "united-states"
+            ]
+
         }
     },
     mounted() {
@@ -256,16 +404,54 @@ export default {
 
             _t.is_excluded_country = (excluded_countries.includes(response.country));
         }, "jsonp");
+
     },
     methods: {
+
+        backToHome() {
+            Inertia.get(this.$route('howItWorks'), {}, {})
+
+        },
+
+        checkStripeSupportCountry() {
+            $('.modal_stripe_country_support').modal('show');
+
+        },
+
+        async vaidateStripeSupport() {
+            const country = this.client_stripe_country.toLowerCase().replace(/\s+/g, '-');
+            if (this.supportedCountries.includes(country)) {
+                $('.modal_stripe_country_support').modal('hide');
+                (useToast()).success('Country validate successfully, Please wait!');
+
+                if (this.isMonthsFirst) {
+                    await this.stripe_subscribe();
+                } else {
+                    await this.stripeCharge();
+                }
+
+            } else {
+                $('.modal_stripe_country_support').modal('hide');
+
+                // Inertia.get(this.$route('home'), {}, {})
+
+                (useToast()).error('ThaNetwork.org does not currently provide membership in your residing country' +
+                    ' Thank You for your interest!');
+            }
+        },
+
         async stripe_subscribe() {
             if (!this.agree_terms) {
                 (useToast()).error('You must acknowledge the Terms and Conditions by checking the box above before continuing.');
                 return;
             }
+
             this.form_loading = true;
             Inertia.post(this.$route('createStripeCheckoutSession'), {
                 customer_email: this.customer_email,
+                customer_first_name: this.customer_first_name,
+                customer_last_name: this.customer_last_name,
+                customer_address: this.customer_address,
                 confirm_customer_email: this.confirm_customer_email,
                 card_number: this.card_number,
                 exp_month: this.exp_month,
@@ -294,11 +480,13 @@ export default {
                 },
             })
         },
+
         async stripeCharge() {
             if (!this.agree_terms) {
                 (useToast()).error('You must acknowledge the Terms and Conditions by checking the box above before continuing.');
                 return;
             }
+
             // const stripe = await Stripe('pk_test_0rY5rGJ7GN1xEhCB40mAcWjg');
             this.form_loading = true;
             const stripe = require('stripe')(process.env.MIX_STRIPE_SECRET_KEY);
@@ -315,6 +503,9 @@ export default {
                     Inertia.post(this.$route('createStripeCheckoutSession'), {
                         token_id: res.id,
                         customer_email: this.customer_email,
+                        customer_first_name: this.customer_first_name,
+                        customer_last_name: this.customer_last_name,
+                        customer_address: this.customer_address,
                         confirm_customer_email: this.confirm_customer_email,
                         card_number: this.card_number,
                         exp_month: this.exp_month,
@@ -331,6 +522,7 @@ export default {
                             this.form_loading = false;
                         },
                         onError: (e) => {
+                            console.log("e", e)
                             this.form_loading = false;
 
                             if (e && e.error) {
@@ -345,6 +537,7 @@ export default {
                 }
             });
         },
+
         showTerms() {
             $('.modal_terms').modal('show');
         }

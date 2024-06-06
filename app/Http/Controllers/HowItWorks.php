@@ -118,7 +118,12 @@ class HowItWorks extends Controller
         $this->sendPaymentSuccessfullEmail($request->customer_email,
             session()->has('stripe_checkout_session_id') ? session()->get('stripe_checkout_session_id') : null);
 
-        return redirect()->route('registerForm', ['customer_email' => $request->customer_email]);
+        return redirect()->route('registerForm', [
+            'customer_email' => $request->customer_email,
+            'customer_first_name' => $request->customer_first_name,
+            'customer_last_name' => $request->customer_last_name,
+            'customer_address' => $request->customer_address,
+        ]);
     }
 
     public function sendPaymentSuccessfullEmail($to, $subscription_id)
