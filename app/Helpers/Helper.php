@@ -1152,6 +1152,7 @@ function create_user($data)
     $user->profile()->create([
         'first_name' => $data['first_name'],
         'last_name' => $data['last_name'],
+        'address' => $data['address'],
         'phone' => $data['phone'],
         'social_security_number' => $data['social_security_number'],
         'gender' => $data['gender'],
@@ -1166,6 +1167,7 @@ function create_user($data)
         'body' => $string,
         'sender_id' => $user->id
     ]);
+
     event(new SetWeeklyGoal($user->id, $string, 'App\Models\User', $notification->id, $user));
 
     return $user;

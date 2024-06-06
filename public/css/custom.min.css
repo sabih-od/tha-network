@@ -686,8 +686,9 @@ footer .links li a:hover {
 }
 
 .loginWrap .contentWrap {
-    padding: 12rem 3rem 2rem;
-    max-width: 90%;
+    padding: 12rem 8rem 2rem 3rem;
+    max-width: 100%;
+    position: relative;
 }
 
 .loginWrap .contentWrap h2 {
@@ -2851,4 +2852,10 @@ ul.chatCont {
 
 .messangerSec .friend-drawer .dropdown .dropdown-menu {
     width: max-content;
+}
+
+.backBtn{
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
 }

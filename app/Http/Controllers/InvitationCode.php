@@ -496,7 +496,12 @@ class InvitationCode extends Controller
             session()->put('stripe_checkout_session_id', $subscription->id);
 
             if ($subscription)
-                return redirect()->route('stripeSuccessPayment', ['customer_email' => $request->customer_email]);
+                return redirect()->route('stripeSuccessPayment', [
+                    'customer_email' => $request->customer_email,
+                    'customer_first_name' => $request->customer_first_name,
+                    'customer_last_name' => $request->customer_last_name,
+                    'customer_address' => $request->customer_address,
+                ]);
         } catch (\Exception $e) {
             return Inertia::render('StripePayment', ['error' => $e->getMessage()]);
         }

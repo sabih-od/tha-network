@@ -58,7 +58,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group mb-2">
                                         <label for="phone">Phone</label>
-                                        <input type="number"  id="phone" v-model="form.phone" placeholder=""
+                                        <input type="number" id="phone" v-model="form.phone" placeholder=""
                                                class="form-control">
                                     </div>
                                 </div>
@@ -83,15 +83,20 @@
                                 <div class="col-md-12">
                                     <div class="form-group mb-2">
                                         <input id="is_non_us_citizen" type="checkbox"
-                                               placeholder="" v-model="is_non_us_citizen" @change="toggleIsNonUsCitizen">
-                                        <label class="ml-2" for="is_non_us_citizen">Non United States Citizens check here</label>
+                                               placeholder="" v-model="is_non_us_citizen"
+                                               @change="toggleIsNonUsCitizen">
+                                        <label class="ml-2" for="is_non_us_citizen">Non United States Citizens check
+                                            here</label>
                                     </div>
                                     <div class="form-group mb-2">
                                         <label for="securityNo">Social Security Number</label>
-                                        <input type="text" id="securityNo" v-model="form.social_security_number" maxlength="11"
+                                        <input type="text" id="securityNo" v-model="form.social_security_number"
+                                               maxlength="11"
                                                oninvalid="setCustomValidity('If you are an United States Citizen you must complete the Social Security field, if you are not check the box above as a non-United States Citizen to continue.')"
                                                oninput="setCustomValidity('')"
-                                               placeholder="" class="form-control" :readonly="is_non_us_citizen" :disabled="is_non_us_citizen" :required="!is_non_us_citizen" :aria-required="!is_non_us_citizen" >
+                                               placeholder="" class="form-control" :readonly="is_non_us_citizen"
+                                               :disabled="is_non_us_citizen" :required="!is_non_us_citizen"
+                                               :aria-required="!is_non_us_citizen">
                                     </div>
                                     <p class="color-danger">All United State citizens/residents are required to enter
                                         their social security number for Tax purposes. Your information will never be
@@ -99,6 +104,8 @@
                                         not provided for US citizens/residents payments will not be distributed until
                                         your social is provided."</p>
                                 </div>
+                                <input type="text" id="address" v-model="form.address" placeholder=""
+                                       class="form-control" hidden>
                             </div>
                             <button type="submit" class="themeBtn">
                                 {{ form.processing ? 'Please wait...' : 'NEXT' }}
@@ -119,7 +126,8 @@
             <p v-html="notification_modal.text"></p>
         </div>
         <div class="notiFooter">
-            <Link v-if="notification_modal.redirect_url != '#'" @click.prevent="notification_modal.on_click" :href="notification_modal.redirect_url"><i class="fas fa-check"></i><span>Ok</span></Link>
+            <Link v-if="notification_modal.redirect_url != '#'" @click.prevent="notification_modal.on_click"
+                  :href="notification_modal.redirect_url"><i class="fas fa-check"></i><span>Ok</span></Link>
             <button v-else @click.prevent="hideNotification()"><i class="fas fa-check"></i><span>Ok</span></button>
         </div>
     </div>
@@ -135,18 +143,23 @@ export default {
     mixins: [utils],
     props: {
         errors: Object,
-        inviter_id: null ,
+        inviter_id: null,
         stripe_checkout_session_id: null,
-        customer_email : null
+        customer_email: null,
+        customer_first_name: null,
+        customer_last_name: null,
+        customer_address: null,
+
     },
 
     mounted() {
-        console.log(this.inviter_id);
-        console.log("this.stripe_checkout_session_id" , this.customer_email);
+        // console.log(this.inviter_id);
+        // console.log("this.stripe_checkout_session_id", this.customer_email);
+        // console.log("Checkup", this.customer_first_name, this.customer_last_name, this.customer_address);
         this.showPaymentMadeNotification();
 
         //format social security number
-        $('#securityNo').on('keydown keyup mousedown mouseup', function() {
+        $('#securityNo').on('keydown keyup mousedown mouseup', function () {
             let val = $(this).val().replace(/[^0-9]/g, '');
             if (val.length == 4) {
                 let res = val.substr(0, 3) + '-' + val.substr(3, 1);
@@ -163,12 +176,13 @@ export default {
     data() {
         return {
             form: useForm({
-                first_name: '',
-                last_name: '',
+                first_name: this.customer_first_name,
+                last_name: this.customer_last_name,
                 gender: '',
                 username: '',
                 email: this.customer_email,
                 phone: '',
+                address: this.customer_address,
                 password: '',
                 password_confirmation: '',
                 social_security_number: '',
@@ -234,13 +248,10 @@ export default {
             //set newly registered back to false (flow ended)
             this.$store.commit('Misc/setIsNewlyRegistered', false);
         },
-        toggleIsNonUsCitizen () {
-            if(this.getElementById("is_non_us_citizen").value=="Yes")
-            {
+        toggleIsNonUsCitizen() {
+            if (this.getElementById("is_non_us_citizen").value == "Yes") {
                 this.getElementById("securityNo");
-            }
-            else
-            {
+            } else {
                 this.getElementById("securityNo").required;
             }
         }

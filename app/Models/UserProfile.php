@@ -18,5 +18,6 @@ class UserProfile extends Model
         'marital_status',
         'bio',
         'gender',
+        'address'
     ];
 }
