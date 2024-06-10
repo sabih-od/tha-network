@@ -41,13 +41,13 @@
                                 <label for="">First Name</label>
                                 <input type="text" name="customer_first_name" v-model="customer_first_name"
                                        class="form-control"
-                                       placeholder="Enter Last Name">
+                                       placeholder="Enter First Name">
                             </div>
                             <div class="form-group">
                                 <label for="">Last Name</label>
                                 <input type="text" name="customer_last_name" v-model="customer_last_name"
                                        class="form-control"
-                                       placeholder="Enter First Name">
+                                       placeholder="Enter Last Name">
                             </div>
                             <div class="form-group">
                                 <label for="">Email</label>
@@ -85,7 +85,7 @@
                                        placeholder="XXXX">
                             </div>
                             <div class="form-group">
-                                <label for="">CCV Code</label>
+                                <label for="">CVV Code</label>
                                 <input type="password" name="cvv" v-model="cvc" class="form-control" maxlength="3"
                                        placeholder="XXX">
                             </div>
@@ -145,13 +145,13 @@
                                 <label for="">First Name</label>
                                 <input type="text" name="customer_first_name" v-model="customer_first_name"
                                        class="form-control"
-                                       placeholder="Enter Last Name">
+                                       placeholder="Enter First Name">
                             </div>
                             <div class="form-group">
                                 <label for="">Last Name</label>
                                 <input type="text" name="customer_last_name" v-model="customer_last_name"
                                        class="form-control"
-                                       placeholder="Enter First Name">
+                                       placeholder="Enter Last Name">
                             </div>
                             <div class="form-group">
                                 <label for="">Email</label>
@@ -190,7 +190,7 @@
                                        placeholder="XXXX">
                             </div>
                             <div class="form-group">
-                                <label for="">CCV Code</label>
+                                <label for="">CVV Code</label>
                                 <input type="password" name="cvv" v-model="cvc" class="form-control" maxlength="3"
                                        placeholder="XXX">
                             </div>
@@ -246,14 +246,11 @@
                     <h5 class="modal-title" id="exampleModalLabel"> What Country do you reside in</h5>
                 </div>
                 <div class="modal-body">
-                    <p class="pt-2">Please enter your country name so we can verify that Stripe's support?
-                    </p>
+                    <p class="pt-2">Please enter your country of residence to verify service coverage in your area.</p>
                     <input type="text" class="form-control pt-2" v-model="client_stripe_country"
-                           placeholder="Please enter country" required/>
-
+                           placeholder="Please enter country" required @keyup.enter="vaidateStripeSupport"/>
 
                     <button class="themeBtn mt-4 float-right" @click="vaidateStripeSupport">Submit</button>
-
                 </div>
             </div>
         </div>
