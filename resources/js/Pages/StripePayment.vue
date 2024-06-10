@@ -237,18 +237,25 @@
         <TermsModal/>
     </teleport>
 
-    <div class="modal fade modal_stripe_country_support" ref="modal_stripe_country_support"
+    <div class="modal fade modal_stripe_country_support mt-5" ref="modal_stripe_country_support"
          id="modal_stripe_country_support"
          tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel"> What Country do you reside in</h5>
                 </div>
                 <div class="modal-body">
-                    <p class="pt-2">Please enter your country of residence to verify service coverage in your area.</p>
-                    <input type="text" class="form-control pt-2" v-model="client_stripe_country"
-                           placeholder="Please enter country" required @keyup.enter="vaidateStripeSupport"/>
+                    <p class="pt-2">Please select your country of residence to verify service coverage in your area.</p>
+                    <!--                    <input type="text" class="form-control pt-2" v-model="client_stripe_country"-->
+                    <!--                           placeholder="Please enter country" required @keyup.enter="vaidateStripeSupport"/>-->
+
+                    <select class="form-control pt-2" v-model="client_stripe_country" required>
+                        <option value="" disabled>Please select a country</option>
+                        <option v-for="country in supportedCountries" :key="country" :value="country">
+                            {{ formatCountryName(country) }}
+                        </option>
+                    </select>
 
                     <button class="themeBtn mt-4 float-right" @click="vaidateStripeSupport">Submit</button>
                 </div>
@@ -260,12 +267,9 @@
 
 <script>
 import utils from "../mixins/utils";
-import {Link, usePage} from "@inertiajs/inertia-vue3";
+import {Link} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
-import _ from "lodash";
 import {useToast} from "vue-toastification";
-import {loadStripe} from '@stripe/stripe-js';
-import * as Stripe from "stripe";
 import TermsModal from "../components/TermsModal";
 
 export default {
@@ -405,6 +409,10 @@ export default {
     },
     methods: {
 
+        formatCountryName(country) {
+            return country.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        },
+
         backToHome() {
             Inertia.get(this.$route('howItWorks'), {}, {})
 
@@ -416,24 +424,38 @@ export default {
         },
 
         async vaidateStripeSupport() {
-            const country = this.client_stripe_country.toLowerCase().replace(/\s+/g, '-');
-            if (this.supportedCountries.includes(country)) {
-                $('.modal_stripe_country_support').modal('hide');
-                (useToast()).success('Country validate successfully, Please wait!');
+            // INPUT COUNTRY VALIDATION
+            // const country = this.client_stripe_country.toLowerCase().replace(/\s+/g, '-');
+            // if (this.supportedCountries.includes(country)) {
+            //     $('.modal_stripe_country_support').modal('hide');
+            //     (useToast()).success('Country validate successfully, Please wait!');
+            //
+            //     if (this.isMonthsFirst) {
+            //         await this.stripe_subscribe();
+            //     } else {
+            //         await this.stripeCharge();
+            //     }
+            // } else {
+            //     $('.modal_stripe_country_support').modal('hide');
+            //
+            //     // Inertia.get(this.$route('home'), {}, {})
+            //     (useToast()).error('ThaNetwork.org does not currently provide membership in your residing country' +
+            //         ' Thank You for your interest!');
+            // }
 
+            const country = this.client_stripe_country;
+            if (country != '') {
+                $('.modal_stripe_country_support').modal('hide');
                 if (this.isMonthsFirst) {
                     await this.stripe_subscribe();
                 } else {
                     await this.stripeCharge();
                 }
-
             } else {
                 $('.modal_stripe_country_support').modal('hide');
 
                 // Inertia.get(this.$route('home'), {}, {})
-
-                (useToast()).error('ThaNetwork.org does not currently provide membership in your residing country' +
-                    ' Thank You for your interest!');
+                (useToast()).error("ThaNetwork.org currently doesn't support membership in all countries. Please select a country from the list provided. Thank you for your interest!");
             }
         },
 
@@ -442,8 +464,10 @@ export default {
                 (useToast()).error('You must acknowledge the Terms and Conditions by checking the box above before continuing.');
                 return;
             }
+            (useToast()).success('Country validate successfully, Please wait!');
 
             this.form_loading = true;
+
             Inertia.post(this.$route('createStripeCheckoutSession'), {
                 customer_email: this.customer_email,
                 customer_first_name: this.customer_first_name,
@@ -465,6 +489,8 @@ export default {
                     this.form_loading = false;
                 },
                 onError: (e) => {
+                    console.log("eee", e)
+
                     this.form_loading = false;
 
                     if (e && e.error) {
@@ -496,7 +522,15 @@ export default {
                     cvc: this.cvc
                 }
             }).then(res => {
-                if (res.id) {
+                (useToast()).success('Country validate successfully, Please wait!');
+
+                if (res.error) {
+                    // Handle validation errors from Stripe
+                    console.log("Stripe validation error:", res.error.message);
+                    (useToast()).clear();
+                    (useToast()).error(res.error.message);
+                    this.form_loading = false;
+                } else if (res.id) {
                     Inertia.post(this.$route('createStripeCheckoutSession'), {
                         token_id: res.id,
                         customer_email: this.customer_email,
@@ -532,7 +566,14 @@ export default {
                         },
                     })
                 }
+            }).catch(error => {
+                // Handle unexpected errors
+                console.log("Unexpected error:", error);
+                (useToast()).clear();
+                (useToast()).error("An error occurred while processing your card. Please try again with correct card details.");
+                this.form_loading = false;
             });
+
         },
 
         showTerms() {
