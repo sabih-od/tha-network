@@ -2859,3 +2859,14 @@ ul.chatCont {
     top: 1rem;
     right: 1rem;
 }
+
+
+.headline {
+    padding: 1.5rem 0;
+    background: var(--secondary);
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--white);
+    text-transform: uppercase;
+    text-shadow: 0px 0px 4px var(--black);
+}
