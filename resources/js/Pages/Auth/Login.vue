@@ -11,12 +11,17 @@
     <!--            <button id="skip" class="themeBtn" @click.prevent="skipVideo"><i class="far fa-forward"></i><span>Skip</span></button>-->
     <!--        </div>-->
     <!--    </figure>-->
+
+    <marquee direction="right" behavior="alternate" class="headline">Under maintenance: Please refrain from creating new accounts until maintenance is complete.
+    </marquee>
+
     <section class="loginSection">
+
         <div class="loginWrap">
             <div class="row mx-md-0 no-gutters position-relative align-items-center">
                 <div class="col-md-6">
                     <figure>
-                        <img :src="asset('images/loginImg.png')" class="w-100 bg-img" alt="" >
+                        <img :src="asset('images/loginImg.png')" class="w-100 bg-img" alt="">
                         <img :src="asset('images/user-logo.png')" class="login-logo" alt="">
                     </figure>
                 </div>
@@ -94,8 +99,11 @@
                                 <form @submit.prevent="verifyChargeId">
                                     <div class="form-group">
                                         <label for="code">Enter your Stripe Subscription ID</label>
-                                        <p style="font-size: 12px !important;">Note: (If you were unable to create your profile page after joining the site, please use the Subscription ID that was emailed to you from the "Thanks for Payment" email.)</p>
-                                        <input type="text" v-model="alreadyPayment.stripe_subscription_id" id="code" placeholder=""
+                                        <p style="font-size: 12px !important;">Note: (If you were unable to create your
+                                            profile page after joining the site, please use the Subscription ID that was
+                                            emailed to you from the "Thanks for Payment" email.)</p>
+                                        <input type="text" v-model="alreadyPayment.stripe_subscription_id" id="code"
+                                               placeholder=""
                                                class="form-control">
                                     </div>
                                     <button type="submit" class="themeBtn" :disabled="alreadyPayment.processing">
@@ -105,15 +113,20 @@
                             </div>
                         </div>
                         <ul class="list-unstyled footerSocial justify-content-start mt-4">
-                            <li><a href="https://www.facebook.com/Tha-Network-150057600527324/" target="_blank" class="themeBtn p-0"><i
+                            <li><a href="https://www.facebook.com/Tha-Network-150057600527324/" target="_blank"
+                                   class="themeBtn p-0"><i
                                 class="fab fa-facebook-f"></i></a></li>
-                            <li><a href="https://twitter.com/ThaNetwork4" target="_blank" class="themeBtn p-0"><i class="fab fa-twitter"></i></a>
+                            <li><a href="https://twitter.com/ThaNetwork4" target="_blank" class="themeBtn p-0"><i
+                                class="fab fa-twitter"></i></a>
                             </li>
-                            <li><a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" target="_blank" class="themeBtn p-0"><i
+                            <li><a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" target="_blank"
+                                   class="themeBtn p-0"><i
                                 class="fab fa-youtube"></i></a></li>
-                            <li><a href="https://www.tiktok.com/@_thanetwork_?lang=en" target="_blank" class="themeBtn p-0"><img
+                            <li><a href="https://www.tiktok.com/@_thanetwork_?lang=en" target="_blank"
+                                   class="themeBtn p-0"><img
                                 :src="asset('images/simple-tiktok.png')" alt=""></a></li>
-                            <li><a href="https://www.instagram.com/_thanetwork_/" target="_blank" class="themeBtn p-0"><i
+                            <li><a href="https://www.instagram.com/_thanetwork_/" target="_blank"
+                                   class="themeBtn p-0"><i
                                 class="fab fa-instagram"></i></a></li>
                         </ul>
                     </div>
@@ -122,47 +135,47 @@
         </div>
     </section>
 
-<!--    <footer>-->
-<!--        <div class="container-md">-->
-<!--            <div class="row">-->
-<!--                <div class="col-lg-12 col-md-12 col-sm-12 wow fadeInLeft" data-wow-delay="1.2s">-->
-<!--                    <a href="#" class="d-block text-center"><img :src="asset('images/logo.png')" alt="logo"></a>-->
-<!--                    <ul class="links">-->
-<!--                        <li>-->
-<!--                            <Link href="">How It Works</Link>-->
-<!--                        </li>-->
-<!--                        <li>-->
-<!--                            <Link href="">Membership Benefits</Link>-->
-<!--                        </li>-->
-<!--                        <li>-->
-<!--                            <Link href="">Terms & Conditions</Link>-->
-<!--                        </li>-->
-<!--                        <li>-->
-<!--                            <Link href="">Privacy Policy</Link>-->
-<!--                        </li>-->
-<!--                        &lt;!&ndash;                            <li><Link :href="$route('contact')">Contact Us</Link></li>&ndash;&gt;-->
-<!--                    </ul>-->
-<!--                    <ul class="list-unstyled footerSocial">-->
-<!--                        <li><a href="https://www.facebook.com/Tha-Network-150057600527324/" target="_blank"><i-->
-<!--                            class="fab fa-facebook-f"></i></a></li>-->
-<!--                        <li><a href="https://twitter.com/ThaNetwork4" target="_blank"><i class="fab fa-twitter"></i></a>-->
-<!--                        </li>-->
-<!--                        <li><a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" target="_blank"><i-->
-<!--                            class="fab fa-youtube"></i></a></li>-->
-<!--                        <li><a href="https://www.tiktok.com/@_thanetwork_?lang=en" target="_blank"><img-->
-<!--                            :src="asset('images/simple-tiktok.png')" alt=""></a></li>-->
-<!--                        <li><a href="https://www.instagram.com/_thanetwork_/" target="_blank"><i-->
-<!--                            class="fab fa-instagram"></i></a></li>-->
-<!--                    </ul>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="row copyRight">-->
-<!--                <div class="col-lg-12 col-md-12 wow fadeInLeft" data-wow-delay="0.5s">-->
-<!--                    <p>Copyright © 2022 ThaNetwork</p>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </footer>-->
+    <!--    <footer>-->
+    <!--        <div class="container-md">-->
+    <!--            <div class="row">-->
+    <!--                <div class="col-lg-12 col-md-12 col-sm-12 wow fadeInLeft" data-wow-delay="1.2s">-->
+    <!--                    <a href="#" class="d-block text-center"><img :src="asset('images/logo.png')" alt="logo"></a>-->
+    <!--                    <ul class="links">-->
+    <!--                        <li>-->
+    <!--                            <Link href="">How It Works</Link>-->
+    <!--                        </li>-->
+    <!--                        <li>-->
+    <!--                            <Link href="">Membership Benefits</Link>-->
+    <!--                        </li>-->
+    <!--                        <li>-->
+    <!--                            <Link href="">Terms & Conditions</Link>-->
+    <!--                        </li>-->
+    <!--                        <li>-->
+    <!--                            <Link href="">Privacy Policy</Link>-->
+    <!--                        </li>-->
+    <!--                        &lt;!&ndash;                            <li><Link :href="$route('contact')">Contact Us</Link></li>&ndash;&gt;-->
+    <!--                    </ul>-->
+    <!--                    <ul class="list-unstyled footerSocial">-->
+    <!--                        <li><a href="https://www.facebook.com/Tha-Network-150057600527324/" target="_blank"><i-->
+    <!--                            class="fab fa-facebook-f"></i></a></li>-->
+    <!--                        <li><a href="https://twitter.com/ThaNetwork4" target="_blank"><i class="fab fa-twitter"></i></a>-->
+    <!--                        </li>-->
+    <!--                        <li><a href="https://www.youtube.com/channel/UCBf0MeQqY_T1Oqtw2qOK7Fg" target="_blank"><i-->
+    <!--                            class="fab fa-youtube"></i></a></li>-->
+    <!--                        <li><a href="https://www.tiktok.com/@_thanetwork_?lang=en" target="_blank"><img-->
+    <!--                            :src="asset('images/simple-tiktok.png')" alt=""></a></li>-->
+    <!--                        <li><a href="https://www.instagram.com/_thanetwork_/" target="_blank"><i-->
+    <!--                            class="fab fa-instagram"></i></a></li>-->
+    <!--                    </ul>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--            <div class="row copyRight">-->
+    <!--                <div class="col-lg-12 col-md-12 wow fadeInLeft" data-wow-delay="0.5s">-->
+    <!--                    <p>Copyright © 2022 ThaNetwork</p>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </footer>-->
     <teleport to="body">
         <TermsModal/>
     </teleport>
