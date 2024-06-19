@@ -252,6 +252,15 @@
                                     </p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin.cms.maintenance.banner')}}"
+                                   class="nav-link {{ request()->IS('admin/cms/maintenance-banner') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-angle-double-right"></i>
+                                    <p>
+                                        Maintenance Banner
+                                    </p>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-item">

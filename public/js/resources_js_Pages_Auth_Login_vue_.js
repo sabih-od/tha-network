@@ -6,7 +6,7 @@
   \********************************************/
 /***/ (() => {
 
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open 'C:\\laragon\\www\\shahrukh\\tha-network\\resources\\js\\Pages\\Auth\\Login.vue~'");
+throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/home/muhammadsaqib/projects/tha-network/resources/js/Pages/Auth/Login.vue~'");
 
 /***/ })
 

@@ -17,17 +17,26 @@
 
                             <li><i class="fas fa-user-friends"></i> Friends: {{ friends_count }}</li>
 
-<!--                            <li><i class="fas fa-clock"></i> Connections: {{ network_count }}</li>-->
+                            <!--                            <li><i class="fas fa-clock"></i> Connections: {{ network_count }}</li>-->
 
-                            <li v-if="profile?.city && profile?.country"><i class="fas fa-home"></i> Lives in {{ profile?.city + ', ' + profile?.country + '.'}}</li>
+                            <li v-if="profile?.city && profile?.country"><i class="fas fa-home"></i> Lives in
+                                {{ profile?.city + ', ' + profile?.country + '.' }}
+                            </li>
 
-                            <li><i class="fas fa-heart" v-if="profile?.marital_status"></i> {{ profile?.marital_status }}</li>
-                            <li><i class="fas fa-clock"></i> Joined {{ new Date(user.created_at).toLocaleString('en-us',{month:'short', year:'numeric'}) }}</li>
-                            <li><i class="fas fa-bullseye-arrow"></i> Weekly Goal {{ goals.weekly_goals }} Referral(s)</li>
-<!--                            <li><img :src="asset('images/followers.png')" alt=""> Followed by 2,838 people</li>-->
-<!--                            <li>-->
-<!--                                <p class="ml-4">See More Details...</p>-->
-<!--                            </li>-->
+                            <li><i class="fas fa-heart" v-if="profile?.marital_status"></i> {{
+                                    profile?.marital_status
+                                }}
+                            </li>
+                            <li><i class="fas fa-clock"></i> Joined {{
+                                    new Date(user.created_at).toLocaleString('en-us', {month: 'short', year: 'numeric'})
+                                }}
+                            </li>
+                            <li><i class="fas fa-bullseye-arrow"></i> Weekly Goal {{ goals.weekly_goals }} Referral(s)
+                            </li>
+                            <!--                            <li><img :src="asset('images/followers.png')" alt=""> Followed by 2,838 people</li>-->
+                            <!--                            <li>-->
+                            <!--                                <p class="ml-4">See More Details...</p>-->
+                            <!--                            </li>-->
                         </ul>
                         <Link class="btnDesign" replace :href="$route('editProfileForm')">Edit Info Details</Link>
                     </div>
@@ -36,19 +45,22 @@
 
                 <!-- Center Section -->
                 <div class="col-md-6 order-md-1 order-2">
-                    <FriendStorySlider/>
+                    <div class="postWrapper">
+                        <FriendStorySlider/>
 
-                    <PostForm id="ref_post_form"/>
+                        <PostForm id="ref_post_form"/>
 
-                    <PostsList/>
+                        <PostsList/>
+                    </div>
                 </div>
                 <!-- Center Section -->
 
                 <!-- Right Section -->
                 <div class="col-md-3 order-md-3 order-1">
-                    <a href="#" @click.prevent="myPost" class="btnDesign postBtn mb-4 w-100 text-center myPostText">{{ myPostText }}</a>
+                    <a href="#" @click.prevent="myPost"
+                       class="btnDesign postBtn mb-4 w-100 text-center myPostText">{{ myPostText }}</a>
 
-                    <WeeklyGoals :goals="goals" />
+                    <WeeklyGoals :goals="goals"/>
 
                     <NewMembersList/>
 
@@ -69,7 +81,8 @@
             <p v-html="notification_modal.text"></p>
         </div>
         <div class="notiFooter">
-            <Link @click.prevent="hideNotification" :href="notification_modal.redirect_url"><i class="fas fa-check"></i><span>Ok</span></Link>
+            <Link @click.prevent="hideNotification" :href="notification_modal.redirect_url"><i class="fas fa-check"></i><span>Ok</span>
+            </Link>
         </div>
     </div>
 </template>
@@ -121,7 +134,7 @@ export default {
     computed: {
         myPostText() {
             // if(this.is_my_posts)
-            if(this.$store.getters['Misc/getIsMyPosts'])
+            if (this.$store.getters['Misc/getIsMyPosts'])
                 return 'View All Posts'
             return 'My Posts'
         }
@@ -153,7 +166,7 @@ export default {
 
         this.$emitter.on('change_my_posts_button_text', function (is_my_posts) {
             // console.log("is_my_posts === true && is_my_posts !== 'View All Posts'", is_my_posts === true && is_my_posts !== 'View All Posts')
-            if(is_my_posts === true) {
+            if (is_my_posts === true) {
                 // alert('if');
                 $('.myPostText').html('View All Posts');
                 _t.is_my_posts = !_t.is_my_posts;
@@ -180,7 +193,7 @@ export default {
         // }
 
         //if blocked users area flag is on
-        if(this.$store.getters['Misc/getBlockedUsersFlag']) {
+        if (this.$store.getters['Misc/getBlockedUsersFlag']) {
             console.log('checkkkkkkkkkkkkkkkkkkkkkk');
             $([document.documentElement, document.body]).animate({
                 scrollTop: 1079

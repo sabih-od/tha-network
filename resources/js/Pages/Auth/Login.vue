@@ -12,8 +12,6 @@
     <!--        </div>-->
     <!--    </figure>-->
 
-    <marquee direction="right" behavior="alternate" class="headline">Under maintenance: Please refrain from creating new accounts until maintenance is complete.
-    </marquee>
 
     <section class="loginSection">
 
@@ -47,6 +45,9 @@
                             </li>
                         </ul>
                         <div class="tab-content" id="myTabContent">
+                            <marquee v-if="maintenance_banner && maintenance_banner.is_active == 1" direction="left" class="headline">
+                                {{ maintenance_banner.banner_text }}
+                            </marquee>
                             <div class="tab-pane fade" :class="{'active show': !isCode}" id="one-pane" role="tabpanel"
                                  aria-labelledby="one-tab">
                                 <form @submit.prevent="submit">
@@ -191,6 +192,7 @@ export default {
     mixins: [utils],
     props: {
         errors: Object,
+        maintenance_banner: Object,
     },
     components: {
         Link,

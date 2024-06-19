@@ -66,32 +66,32 @@ class CmsController extends Controller
                 ], []);
 
                 //banner_image
-                if($request->has('banner_image')) {
+                if ($request->has('banner_image')) {
                     $about->clearMediaCollection('about_banner_images');
                     $about->addMediaFromRequest('banner_image')->toMediaCollection('about_banner_images');
                 }
                 //section_1_image
-                if($request->has('section_1_image')) {
+                if ($request->has('section_1_image')) {
                     $about->clearMediaCollection('about_section_1_images');
                     $about->addMediaFromRequest('section_1_image')->toMediaCollection('about_section_1_images');
                 }
                 //section_2_image
-                if($request->has('section_2_image')) {
+                if ($request->has('section_2_image')) {
                     $about->clearMediaCollection('about_section_2_images');
                     $about->addMediaFromRequest('section_2_image')->toMediaCollection('about_section_2_images');
                 }
                 //section_3_image
-                if($request->has('section_3_image')) {
+                if ($request->has('section_3_image')) {
                     $about->clearMediaCollection('about_section_3_images');
                     $about->addMediaFromRequest('section_3_image')->toMediaCollection('about_section_3_images');
                 }
                 //section_4_image
-                if($request->has('section_4_image')) {
+                if ($request->has('section_4_image')) {
                     $about->clearMediaCollection('about_section_4_images');
                     $about->addMediaFromRequest('section_4_image')->toMediaCollection('about_section_4_images');
                 }
                 //section_5_image
-                if($request->has('section_5_image')) {
+                if ($request->has('section_5_image')) {
                     $about->clearMediaCollection('about_section_5_images');
                     $about->addMediaFromRequest('section_5_image')->toMediaCollection('about_section_5_images');
                 }
@@ -197,52 +197,52 @@ class CmsController extends Controller
                 ], []);
 
                 //banner_image
-                if($request->has('banner_image')) {
+                if ($request->has('banner_image')) {
                     $home->clearMediaCollection('home_banner_images');
                     $home->addMediaFromRequest('banner_image')->toMediaCollection('home_banner_images');
                 }
                 //element_1_image
-                if($request->has('element_1_image')) {
+                if ($request->has('element_1_image')) {
                     $home->clearMediaCollection('home_element_1_images');
                     $home->addMediaFromRequest('element_1_image')->toMediaCollection('home_element_1_images');
                 }
                 //element_2_image
-                if($request->has('element_2_image')) {
+                if ($request->has('element_2_image')) {
                     $home->clearMediaCollection('home_element_2_images');
                     $home->addMediaFromRequest('element_2_image')->toMediaCollection('home_element_2_images');
                 }
                 //element_3_image
-                if($request->has('element_3_image')) {
+                if ($request->has('element_3_image')) {
                     $home->clearMediaCollection('home_element_3_images');
                     $home->addMediaFromRequest('element_3_image')->toMediaCollection('home_element_3_images');
                 }
                 //element_3_image_2
-                if($request->has('element_3_image_2')) {
+                if ($request->has('element_3_image_2')) {
                     $home->clearMediaCollection('home_element_3_image_2s');
                     $home->addMediaFromRequest('element_3_image_2')->toMediaCollection('home_element_3_image_2s');
                 }
                 //section_3_plan_1_image
-                if($request->has('section_3_plan_1_image')) {
+                if ($request->has('section_3_plan_1_image')) {
                     $home->clearMediaCollection('home_section_3_plan_1_images');
                     $home->addMediaFromRequest('section_3_plan_1_image')->toMediaCollection('home_section_3_plan_1_images');
                 }
                 //section_3_plan_2_image
-                if($request->has('section_3_plan_2_image')) {
+                if ($request->has('section_3_plan_2_image')) {
                     $home->clearMediaCollection('home_section_3_plan_2_images');
                     $home->addMediaFromRequest('section_3_plan_2_image')->toMediaCollection('home_section_3_plan_2_images');
                 }
                 //section_3_plan_3_image
-                if($request->has('section_3_plan_3_image')) {
+                if ($request->has('section_3_plan_3_image')) {
                     $home->clearMediaCollection('home_section_3_plan_3_images');
                     $home->addMediaFromRequest('section_3_plan_3_image')->toMediaCollection('home_section_3_plan_3_images');
                 }
                 //section_3_plan_4_image
-                if($request->has('section_3_plan_4_image')) {
+                if ($request->has('section_3_plan_4_image')) {
                     $home->clearMediaCollection('home_section_3_plan_4_images');
                     $home->addMediaFromRequest('section_3_plan_4_image')->toMediaCollection('home_section_3_plan_4_images');
                 }
                 //section_3_plan_5_image
-                if($request->has('section_3_plan_5_image')) {
+                if ($request->has('section_3_plan_5_image')) {
                     $home->clearMediaCollection('home_section_3_plan_5_images');
                     $home->addMediaFromRequest('section_3_plan_5_image')->toMediaCollection('home_section_3_plan_5_images');
                 }
@@ -339,27 +339,27 @@ class CmsController extends Controller
                 ], []);
 
                 //banner_image
-                if($request->has('banner_image')) {
+                if ($request->has('banner_image')) {
                     $benefits->clearMediaCollection('benefits_banner_images');
                     $benefits->addMediaFromRequest('banner_image')->toMediaCollection('benefits_banner_images');
                 }
                 //section_2_image
-                if($request->has('section_2_image')) {
+                if ($request->has('section_2_image')) {
                     $benefits->clearMediaCollection('benefits_section_2_images');
                     $benefits->addMediaFromRequest('section_2_image')->toMediaCollection('benefits_section_2_images');
                 }
                 //section_3_image
-                if($request->has('section_3_image')) {
+                if ($request->has('section_3_image')) {
                     $benefits->clearMediaCollection('benefits_section_3_images');
                     $benefits->addMediaFromRequest('section_3_image')->toMediaCollection('benefits_section_3_images');
                 }
                 //section_4_image
-                if($request->has('section_4_image')) {
+                if ($request->has('section_4_image')) {
                     $benefits->clearMediaCollection('benefits_section_4_images');
                     $benefits->addMediaFromRequest('section_4_image')->toMediaCollection('benefits_section_4_images');
                 }
                 //section_4_image_2
-                if($request->has('section_4_image_2')) {
+                if ($request->has('section_4_image_2')) {
                     $benefits->clearMediaCollection('benefits_section_4_image_2s');
                     $benefits->addMediaFromRequest('section_4_image_2')->toMediaCollection('benefits_section_4_image_2s');
                 }
@@ -426,7 +426,7 @@ class CmsController extends Controller
                 ], []);
 
                 //banner_image
-                if($request->has('banner_image')) {
+                if ($request->has('banner_image')) {
                     $terms->clearMediaCollection('terms_banner_images');
                     $terms->addMediaFromRequest('banner_image')->toMediaCollection('terms_banner_images');
                 }
@@ -476,7 +476,7 @@ class CmsController extends Controller
                 ], []);
 
                 //banner_image
-                if($request->has('banner_image')) {
+                if ($request->has('banner_image')) {
                     $privacy->clearMediaCollection('privacy_banner_images');
                     $privacy->addMediaFromRequest('banner_image')->toMediaCollection('privacy_banner_images');
                 }
@@ -528,7 +528,7 @@ class CmsController extends Controller
                 ], []);
 
                 //banner_image
-                if($request->has('banner_image')) {
+                if ($request->has('banner_image')) {
                     $contact->clearMediaCollection('contact_banner_images');
                     $contact->addMediaFromRequest('banner_image')->toMediaCollection('contact_banner_images');
                 }
@@ -568,7 +568,7 @@ class CmsController extends Controller
 
                 $faqs = [];
                 foreach ($request->questions as $key => $question) {
-                    $faqs []= [
+                    $faqs [] = [
                         'question' => $question,
                         'answer' => $request->answers[$key],
                     ];
@@ -592,4 +592,36 @@ class CmsController extends Controller
             return back()->with('error', $exception->getMessage());
         }
     }
+
+    public function maintenanceBanner(Request $request)
+    {
+        try {
+            if ($request->method() == 'POST') {
+                $maintenance_banner = Page::firstOrCreate([
+                    'name' => 'Maintenance Banner',
+                    'slug' => 'maintenance-banner',
+                ], []);
+
+                $banner = [
+                    'is_active' => $request->banner_status,
+                    'banner_text' => $request->banner_text,
+                ];
+
+                $maintenance_banner->content = json_encode($banner);
+                $maintenance_banner->save();
+
+                return back()->with('success', 'Banner Updated Successfully');
+            }
+
+            $maintenance_banner = Page::where('name', 'Maintenance Banner')->first();
+            $data = [];
+            if ($maintenance_banner && $maintenance_banner->content) {
+                $data = json_decode($maintenance_banner->content);
+            }
+            return view('admin.cms.maintinance-banner', compact('maintenance_banner', 'data'));
+        } catch (\Exception $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
 }
