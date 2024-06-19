@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Page;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
@@ -64,12 +65,17 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        return Inertia::render('Auth/Login');
+        $maintenance_banner = Page::where('slug', 'maintenance-banner')->first();
+        $data = [];
+        if ($maintenance_banner && $maintenance_banner->content) {
+            $data = json_decode($maintenance_banner->content);
+        }
+        return Inertia::render('Auth/Login', ['maintenance_banner' => $data]);
     }
 
     protected function authenticated(Request $request, $user)
     {
-        if ( $user->role_id == 1 ) {
+        if ($user->role_id == 1) {
             return redirect()->route('dashboard');
         }
 

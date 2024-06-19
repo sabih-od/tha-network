@@ -40,4 +40,17 @@ class Post extends Model implements HasMedia
     {
         return $this->morphMany(Comment::class, 'commentable')/*->orderBy('comments.created_at')*/ ;
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($post) {
+            if ($post->isForceDeleting()) {
+                $post->comments()->forceDelete();
+            } else {
+                $post->comments()->delete();
+            }
+        });
+    }
 }

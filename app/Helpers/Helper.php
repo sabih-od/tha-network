@@ -401,6 +401,28 @@ function suspend_accounts()
     }
 }
 
+function post_delete_60_days()
+{
+    Log::info('post_delete_60_days: Start Successfully');
+
+    try {
+        $date = Carbon::now()->subDays(60);
+        $posts = Post::where('created_at', '<', $date)->get();
+
+        foreach ($posts as $post) {
+            Log::error('Successfully soft delete post ' . $post->id);
+            $post->comments()->delete();
+            $post->delete();
+        }
+
+    } catch (\Exception $e) {
+        Log::error('post_delete_60_days: catch ' . $e->getMessage());
+    }
+
+    Log::info('post_delete_60_days: Exit Successfully');
+
+}
+
 function close_accounts()
 {
     Log::info('close_account: Function Start');

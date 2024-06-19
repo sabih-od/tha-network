@@ -115,9 +115,10 @@
 
                                 <span v-else>Not available in your country.</span>
 
-                                <button class="themeBtn backBtn" @click="backToHome" type="button">
+                                <button class="themeBtn" @click="backToHome" type="button">
                                     <i class="fas fa-chevron-left mr-1"></i> Home
                                 </button>
+
                             </div>
 
                         </form>
@@ -221,7 +222,7 @@
 
                                 <span v-else>Not available in your country.</span>
 
-                                <button class="themeBtn backBtn" @click="backToHome" type="button">
+                                <button class="themeBtn" @click="backToHome" type="button">
                                     <i class="fas fa-chevron-left mr-1"></i> Home
                                 </button>
                             </div>

@@ -686,7 +686,7 @@ footer .links li a:hover {
 }
 
 .loginWrap .contentWrap {
-    padding: 12rem 8rem 2rem 3rem;
+    padding: 12rem 2rem 2rem 3rem;
     max-width: 100%;
     position: relative;
 }
@@ -2864,9 +2864,19 @@ ul.chatCont {
 .headline {
     padding: 1.5rem 0;
     background: var(--secondary);
-    font-size: 1.125rem;
+    /*font-size: 1.125rem;*/
     font-weight: 700;
     color: var(--white);
     text-transform: uppercase;
-    text-shadow: 0px 0px 4px var(--black);
+    /*text-shadow: 0px 0px 4px var(--black);*/
+}
+
+.postWrapper {
+    height: 1420px;
+    overflow-y: auto;
+    border-radius: 1rem;
+}
+
+.postWrapper::-webkit-scrollbar {
+    display: none;
 }
