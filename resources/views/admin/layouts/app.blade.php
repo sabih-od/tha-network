@@ -51,6 +51,12 @@
             border-color: #f2f2f2;
         }
 
+        .bannerStatus {
+            display: block;
+            width: 30px;
+            aspect-ratio: 1;
+            margin-bottom: 0.5rem;
+        }
     </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -252,15 +258,15 @@
                                     </p>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{route('admin.cms.maintenance.banner')}}"
-                                   class="nav-link {{ request()->IS('admin/cms/maintenance-banner') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-angle-double-right"></i>
-                                    <p>
-                                        Maintenance Banner
-                                    </p>
-                                </a>
-                            </li>
+                            {{--                            <li class="nav-item">--}}
+                            {{--                                <a href="{{route('admin.cms.maintenance.banner')}}"--}}
+                            {{--                                   class="nav-link {{ request()->IS('admin/cms/maintenance-banner') ? 'active' : '' }}">--}}
+                            {{--                                    <i class="nav-icon fas fa-angle-double-right"></i>--}}
+                            {{--                                    <p>--}}
+                            {{--                                        Maintenance Banner--}}
+                            {{--                                    </p>--}}
+                            {{--                                </a>--}}
+                            {{--                            </li>--}}
                         </ul>
                     </li>
                     <li class="nav-item">

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AdminWithdrawal;
 use App\Models\Customers;
 use App\Models\Order;
+use App\Models\Page;
 use App\Models\Product;
 use App\Models\ProductReview;
 use App\Models\Reward;
@@ -53,6 +54,12 @@ class AdminController extends Controller
             ->whereDate('date', '<=', Carbon::now()->endOfYear())
             ->sum('amount');
 //
+        $maintenance_banners = Page::where('name', 'Maintenance Banner')->first();
+        $maintenance_banner = [];
+        if ($maintenance_banners && $maintenance_banners->content) {
+            $maintenance_banner = json_decode($maintenance_banners->content);
+        }
+
         return view('admin.dashboard',
             compact(
                 'total_reward_amount_this_year',
@@ -71,12 +78,14 @@ class AdminController extends Controller
                 'admin_withdrawals_this_year',
                 'total_admin_withdrawals_this_month',
                 'total_admin_withdrawals_this_year',
+                'maintenance_banner'
             )
         );
 //        return view('admin.dashboard');
     }
 
-    public function getRewardLogsByRange ($start, $end) {
+    public function getRewardLogsByRange($start, $end)
+    {
         $reward_logs = RewardLog::with('reward.user', 'reward.invited_user')
             ->where('created_at', '>=', $start)
             ->where('created_at', '<=', $end)
@@ -95,7 +104,7 @@ class AdminController extends Controller
         ];
     }
 
-    public function getSubscriptionPayments ($year, $month = null)
+    public function getSubscriptionPayments($year, $month = null)
     {
         $stripe = new \Stripe\StripeClient(
             env('STRIPE_SECRET_KEY')
@@ -126,7 +135,7 @@ class AdminController extends Controller
                             $invoice['total'] = ($invoice['total'] / 100);
 //                            $invoice['formatted_date'] = date('m', $invoice->effective_at).'-'.date('d', $invoice->effective_at).'-'.date('Y', $invoice->effective_at);
                             $invoice['formatted_date'] = (Carbon::parse($charge->created)->format('M d, Y.')) ?? '';
-                            $invited_by = Reward::where('on_inviting' , $invoice['user']->id)->with('user')->first();
+                            $invited_by = Reward::where('on_inviting', $invoice['user']->id)->with('user')->first();
                             $invoice['is_company_invite'] = isset($invited_by) && $invited_by->user->role_id == 1;
                             $subscriptionPayments[] = $invoice;
                             $payment_count += 1;
@@ -137,7 +146,7 @@ class AdminController extends Controller
                             $invoice['total'] = ($invoice['total'] / 100);
 //                            $invoice['formatted_date'] = date('m', $invoice->effective_at).'-'.date('d', $invoice->effective_at).'-'.date('Y', $invoice->effective_at);
                             $invoice['formatted_date'] = (Carbon::parse($charge->created)->format('M d, Y.'));
-                            $invited_by = Reward::where('on_inviting' , $invoice['user']->id)->with('user')->first();
+                            $invited_by = Reward::where('on_inviting', $invoice['user']->id)->with('user')->first();
                             $invoice['is_company_invite'] = isset($invited_by) && $invited_by->user->role_id == 1;
                             $subscriptionPayments[] = $invoice;
                             $payment_count += 1;
@@ -171,7 +180,7 @@ class AdminController extends Controller
                         $decoded_charge_object->user = $user_with_charge_object;
 //                        $decoded_charge_object->formatted_date = date('m', $decoded_charge_object->created).'-'.date('d', $decoded_charge_object->created).'-'.date('Y', $decoded_charge_object->created);
                         $decoded_charge_object->formatted_date = (Carbon::parse($decoded_charge_object->created)->format('M d, Y.'));
-                        $invited_by = Reward::where('on_inviting' , $decoded_charge_object->user->id)->with('user')->first();
+                        $invited_by = Reward::where('on_inviting', $decoded_charge_object->user->id)->with('user')->first();
                         $decoded_charge_object->is_company_invite = isset($invited_by) && $invited_by->user->role_id == 1;;
                         $subscriptionPayments[] = $decoded_charge_object;
                         $payment_count += 1;
@@ -183,7 +192,7 @@ class AdminController extends Controller
                         $decoded_charge_object->user = $user_with_charge_object;
 //                        $decoded_charge_object->formatted_date = date('m', $decoded_charge_object->created).'-'.date('d', $decoded_charge_object->created).'-'.date('Y', $decoded_charge_object->created);
                         $decoded_charge_object->formatted_date = (Carbon::parse($decoded_charge_object->created)->format('M d, Y.'));
-                        $invited_by = Reward::where('on_inviting' , $decoded_charge_object->user->id)->with('user')->first();
+                        $invited_by = Reward::where('on_inviting', $decoded_charge_object->user->id)->with('user')->first();
                         $decoded_charge_object->is_company_invite = isset($invited_by) && $invited_by->user->role_id == 1;;
                         $subscriptionPayments[] = $decoded_charge_object;
                         $payment_count += 1;
