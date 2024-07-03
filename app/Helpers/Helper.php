@@ -410,7 +410,7 @@ function post_delete_60_days()
         $posts = Post::where('created_at', '<', $date)->get();
 
         foreach ($posts as $post) {
-            Log::error('Successfully soft delete post ' . $post->id);
+            Log::info('Successfully soft delete post ' . $post->id);
             $post->comments()->delete();
             $post->delete();
         }
