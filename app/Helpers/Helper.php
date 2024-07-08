@@ -278,7 +278,6 @@ function no_referrals_for_the_day()
     }
 }
 
-
 function set_weekly_goal()
 {
     $users = get_eloquent_users();
@@ -346,6 +345,7 @@ function has_made_monthly_payment($id = null): bool
 //    $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
 //
 //    return ($latest_invoice->status == "paid");
+    return false;
 }
 
 function payment_not_made()
@@ -1586,6 +1586,7 @@ function commission_distribution()
 
     function get_inviter_by_user_id($user_id)
     {
+
         if (!$user = User::find($user_id)) {
             return false;
         }
@@ -1597,6 +1598,7 @@ function commission_distribution()
         if (!$user = User::where('id', $referral->user_id)->first()) {
             return false;
         }
-
         return $user;
+
     }
+}
