@@ -39,24 +39,33 @@
                             <span
                                 v-if="preferred_payout_form.preferred_payout_method === 'stripe' && this.stripe_account_id && this.has_provided_stripe_payout_information">You have successfully connected your Stripe account.</span>
                         </div>
-                        <!--                        <div class="col-md-6">-->
-                        <!--                            <h4>-->
-                        <!--                                Paypal-->
-                        <!--                                <input type="radio" name="preferred_payout_method" :checked="preferred_payout_form.preferred_payout_method === 'paypal'" @click="submitPreferredPayoutForm('paypal')" style="transform: scale(1.5);">-->
-                        <!--                            </h4>-->
+                        <div class="col-md-6 mt-3">
+                            <h4>
+                                Paypal
+                                <input type="radio" name="preferred_payout_method"
+                                       :checked="preferred_payout_form.preferred_payout_method === 'paypal'"
+                                       @click="submitPreferredPayoutForm('paypal')" style="transform: scale(1.5);">
+                            </h4>
 
-                        <!--                            &lt;!&ndash;badge&ndash;&gt;-->
-                        <!--&lt;!&ndash;                            <span :class="'badge badge-pill badge-' + (this.paypal_account_details ? 'success' : 'danger')">{{ this.paypal_account_details ? 'Connected' : 'Not Connected' }}</span>&ndash;&gt;-->
-                        <!--                            <input class="form-control" type="email" placeholder="Paypal Email" v-model="paypalForm.paypal_account_details">-->
-                        <!--                            <br />-->
+                            <!--badge-->
+                            <!--                            <span :class="'badge badge-pill badge-' + (this.paypal_account_details ? 'success' : 'danger')">{{ this.paypal_account_details ? 'Connected' : 'Not Connected' }}</span>-->
+                            <input class="form-control" type="email" placeholder="Paypal Email"
+                                   v-model="paypalForm.paypal_account_details">
+                            <br/>
 
-                        <!--                            &lt;!&ndash;button&ndash;&gt;-->
-                        <!--                            <button type="button" class="btn btn-success btn-sm" :disabled="preferred_payout_form.preferred_payout_method === 'stripe'" @click.prevent="connectPaypalAccount()">{{ (this.paypal_account_details && preferred_payout_form.preferred_payout_method !== 'stripe') ? 'Connected' : 'Connect' }}</button>-->
-                        <!--                            <br />-->
+                            <!--button-->
+                            <button type="button" class="btn btn-success btn-sm"
+                                    :disabled="preferred_payout_form.preferred_payout_method === 'stripe'"
+                                    @click.prevent="connectPaypalAccount()">{{
+                                    (this.paypal_account_details && preferred_payout_form.preferred_payout_method !== 'stripe') ? 'Connected' : 'Connect'
+                                }}
+                            </button>
+                            <br/>
 
-                        <!--&lt;!&ndash;                            <span v-if="this.paypal_account_details">You have successfully connected your Paypal account.</span>&ndash;&gt;-->
-                        <!--                            <span v-if="preferred_payout_form.preferred_payout_method === 'paypal' && this.paypal_account_details">You have successfully connected your Paypal account.</span>-->
-                        <!--                        </div>-->
+                            <!--                            <span v-if="this.paypal_account_details">You have successfully connected your Paypal account.</span>-->
+                            <span
+                                v-if="preferred_payout_form.preferred_payout_method === 'paypal' && this.paypal_account_details">You have successfully connected your Paypal account.</span>
+                        </div>
                         <br/>
 
                         <!--                        <span class="ml-3">-->
