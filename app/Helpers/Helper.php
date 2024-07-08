@@ -561,8 +561,6 @@ function commission_distribution()
                 }
             }
 
-//        if($reward->user->stripe_account_id) {
-//        if($reward->user->preferred_payout_method == 'stripe' || $reward->user->preferred_payout_method == '') {
             if ($reward->user->preferred_payout_method == 'stripe') {
                 $reward_log_check = RewardLog::where('reward_id', $reward->id)->whereDate('created_at', Carbon::today())->get();
 
@@ -585,633 +583,684 @@ function commission_distribution()
                         "destination" => $reward->user->stripe_account_id,
                     ]);
 
-//            if () {
                     $reward->is_paid = true;
                     $reward->last_paid_on = Carbon::now();
                     $reward->save();
 
                     //create reward log
                     RewardLog::create(['reward_id' => $reward->id]);
-//            }
                 }
-            }
+
+            } elseif ($reward->user->preferred_payout_method == 'paypal') {
+
+                $clientId = env('PAYPAL_CLIENT_ID');
+                $clientSecret = env('PAYPAL_CLIENT_SECRET');
+
+                $environment = env('PAYPAL_LIVE_MODE') === 'true'
+                    ? new ProductionEnvironment($clientId, $clientSecret)
+                    : new SandboxEnvironment($clientId, $clientSecret);
+
+                $client = new PayPalHttpClient($environment);
+
+                $reward_log_check = RewardLog::where('reward_id', $reward->id)->whereDate('created_at', Carbon::today())->get();
+
+                if (count($reward_log_check) == 0) {
+                    $request = new PayoutsPostRequest();
+                    $request->body = [
+                        "sender_batch_header" => [
+                            "sender_batch_id" => uniqid(),
+                            "email_subject" => "You have a payout!",
+                        ],
+                        "items" => [
+                            [
+                                "recipient_type" => "EMAIL",
+                                "amount" => [
+                                    "value" => $reward->amount,
+                                    "currency" => "USD"
+                                ],
+                                "receiver" => $reward->user->paypal_account_details,
+                                "note" => "Thank you for your participation!",
+                                "sender_item_id" => uniqid()
+                            ]
+                        ]
+                    ];
+
+                    try {
+                        $response = $client->execute($request);
+                        Log::info('commission_distribution | transfer: Paypal account detail: '
+                            . $reward->user->paypal_account_details . ' user: ' . $reward->user->id . ', amount: ' . $reward->amount);
+
+                        $reward->is_paid = true;
+                        $reward->last_paid_on = Carbon::now();
+                        $reward->save();
+
+                        // Create reward log
+                        RewardLog::create(['reward_id' => $reward->id]);
+                    } catch (HttpException $ex) {
+                        Log::error('PayPal Payout failed: ' . $ex->statusCode . ' - ' . $ex->getMessage());
+                    }
+
+                }
+
 //            DB::commit();
-        } catch (\Exception $e) {
+            }
+
+        } catch
+        (\Exception $e) {
 //            DB::rollBack();
             Log::error('commission_distribution: catch ' . $e->getMessage());
         }
-    }
-    Log::info('commission_distribution: Exit Successfully');
-}
-
-function is_in_my_network($user_id): bool
-{
-    $my_network = Network::where('user_id', Auth::id())->first();
-
-    if (!$my_network) {
-        return false;
+        Log::info('commission_distribution: Exit Successfully');
     }
 
-    $check = NetworkMember::where('network_id', $my_network->id)->where('user_id', $user_id)->first();
+    function is_in_my_network($user_id): bool
+    {
+        $my_network = Network::where('user_id', Auth::id())->first();
 
-    return (bool)$check;
-}
+        if (!$my_network) {
+            return false;
+        }
 
-function create_chat_channel($user_id, $target_id, $return = false)
-{
-    $channel = Channel::
-    orWhere(function ($q) use ($user_id, $target_id) {
-        return $q->where('creator_id', $user_id)->where('participants', 'LIKE', '%' . $target_id . '%');
-    })
-        ->orWhere(function ($q) use ($user_id, $target_id) {
-            return $q->where('creator_id', $target_id)->where('participants', 'LIKE', '%' . $user_id . '%');
+        $check = NetworkMember::where('network_id', $my_network->id)->where('user_id', $user_id)->first();
+
+        return (bool)$check;
+    }
+
+    function create_chat_channel($user_id, $target_id, $return = false)
+    {
+        $channel = Channel::
+        orWhere(function ($q) use ($user_id, $target_id) {
+            return $q->where('creator_id', $user_id)->where('participants', 'LIKE', '%' . $target_id . '%');
         })
-        ->first();
+            ->orWhere(function ($q) use ($user_id, $target_id) {
+                return $q->where('creator_id', $target_id)->where('participants', 'LIKE', '%' . $user_id . '%');
+            })
+            ->first();
 
-    if (is_null($channel)) {
-        $channel = new Channel;
-        $channel->creator_id = $user_id;
-        $channel->users()->attach([$user_id, $target_id]);
-        $channel->save();
+        if (is_null($channel)) {
+            $channel = new Channel;
+            $channel->creator_id = $user_id;
+            $channel->users()->attach([$user_id, $target_id]);
+            $channel->save();
+        }
+
+        if ($return) {
+            return $channel;
+        }
     }
 
-    if ($return) {
-        return $channel;
+    function get_inviter_id($user_id = null)
+    {
+        $network_member = NetworkMember::where('user_id', $user_id ?? Auth::id())->orderBy('created_at', 'ASC')->first();
+        $inviters_network_id = $network_member->network_id ?? null;
+        $network = Network::find($inviters_network_id) ?? null;
+        return $network->user_id ?? null;
     }
-}
 
-function get_inviter_id($user_id = null)
-{
-    $network_member = NetworkMember::where('user_id', $user_id ?? Auth::id())->orderBy('created_at', 'ASC')->first();
-    $inviters_network_id = $network_member->network_id ?? null;
-    $network = Network::find($inviters_network_id) ?? null;
-    return $network->user_id ?? null;
-}
-
-function send_mail($to, $subject, $string): bool
-{
+    function send_mail($to, $subject, $string): bool
+    {
 //        $from = 'no-reply@tha-network.com';
-    $from = 'support@thanetwork.org';
+        $from = 'support@thanetwork.org';
 
-    // To send HTML mail, the Content-type header must be set
-    $headers = 'MIME-Version: 1.0' . "\r\n";
-    $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+        // To send HTML mail, the Content-type header must be set
+        $headers = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 
-    // Create email headers
-    $headers .= 'From: ' . $from . "\r\n" .
-        'Reply-To: ' . $from . "\r\n" .
-        'X-Mailer: PHP/' . phpversion();
+        // Create email headers
+        $headers .= 'From: ' . $from . "\r\n" .
+            'Reply-To: ' . $from . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
 
-    $html = $string;
+        $html = $string;
 
-    // Sending email
-    Mail::send([], [], function ($message) use ($to, $subject, $html) {
-        $message->to($to)
-            ->subject($subject)
-            ->setBody($html, 'text/html'); // for HTML rich messages
-    });
+        // Sending email
+        Mail::send([], [], function ($message) use ($to, $subject, $html) {
+            $message->to($to)
+                ->subject($subject)
+                ->setBody($html, 'text/html'); // for HTML rich messages
+        });
 
-    if (Mail::failures()) {
-        return false;
-    }
+        if (Mail::failures()) {
+            return false;
+        }
 
-    return true;
-}
-
-function referral_reversion_mail($to, $subject, $string): bool
-{
-//        $from = 'no-reply@tha-network.com';
-    $from = 'support@thanetwork.org';
-
-    // To send HTML mail, the Content-type header must be set
-    $headers = 'MIME-Version: 1.0' . "\r\n";
-    $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-
-    // Create email headers
-    $headers .= 'From: ' . $from . "\r\n" .
-        'Reply-To: ' . $from . "\r\n" .
-        'X-Mailer: PHP/' . phpversion();
-
-    $html = $string;
-
-    // Sending email
-    Mail::send([], [], function ($message) use ($to, $subject, $html) {
-        $message->to($to)
-            ->subject($subject)
-            ->setBody($html, 'text/html'); // for HTML rich messages
-    });
-
-    if (Mail::failures()) {
-        return false;
-    }
-
-    return true;
-}
-
-function account_closure_mail($to, $subject, $string): bool
-{
-//        $from = 'no-reply@tha-network.com';
-    $from = 'support@thanetwork.org';
-
-    // To send HTML mail, the Content-type header must be set
-    $headers = 'MIME-Version: 1.0' . "\r\n";
-    $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-
-    // Create email headers
-    $headers .= 'From: ' . $from . "\r\n" .
-        'Reply-To: ' . $from . "\r\n" .
-        'X-Mailer: PHP/' . phpversion();
-
-    $html = $string;
-
-    // Sending email
-    Mail::send([], [], function ($message) use ($to, $subject, $html) {
-        $message->to($to)
-            ->subject($subject)
-            ->setBody($html, 'text/html'); // for HTML rich messages
-    });
-
-    if (Mail::failures()) {
-        return false;
-    }
-
-    return true;
-}
-
-function generateBarcodeNumber()
-{
-    $number = mt_rand(1000000000, 9999999999); // better than rand()
-
-    // call the same function if the barcode exists already
-    if (barcodeNumberExists($number)) {
-        return generateBarcodeNumber();
-    }
-
-    // otherwise, it's valid and can be used
-    return $number;
-}
-
-function barcodeNumberExists($number)
-{
-    // query the database and return a boolean
-    // for instance, it might look like this in Laravel
-    return User::where('invitation_code', $number)->exists();
-}
-
-function delete_deleted_accounts()
-{
-    $month_ago = now()->subMonth(); // Get the date that was a month ago
-
-    $soft_deleted_users = User::where('role_id', 2)->onlyTrashed()
-        ->whereDate('deleted_at', '<', $month_ago)
-        ->get();
-
-    foreach ($soft_deleted_users as $user) {
-        $user->forceDelete(); // Permanently delete the user
-    }
-}
-
-function delete_closed_accounts()
-{
-    $month_ago = now()->subMonth(); // Get the date that was a month ago
-
-    $closed_users = User::where('role_id', 2)->whereNotNull('closed_on')
-        ->whereDate('closed_on', '<', $month_ago)
-        ->get();
-
-    foreach ($closed_users as $user) {
-        $user->forceDelete(); // Permanently delete the user
-    }
-}
-
-function delete_suspended_accounts()
-{
-    $month_ago = now()->subMonth(); // Get the date that was a month ago
-
-    $suspended_users = User::where('role_id', 2)->whereNotNull('suspended_on')
-        ->whereDate('suspended_on', '<', $month_ago)
-        ->get();
-
-    foreach ($suspended_users as $user) {
-        $user->forceDelete(); // Permanently delete the user
-    }
-}
-
-function is_user_id($id)
-{
-    $user_check = User::find($id);
-
-    if ($user_check) {
         return true;
     }
 
-    return false;
-}
+    function referral_reversion_mail($to, $subject, $string): bool
+    {
+//        $from = 'no-reply@tha-network.com';
+        $from = 'support@thanetwork.org';
 
-function toggle_user_subscription($id = null, $pause = true, $resume = false)
-{
-    Log::info('toggle_user_subscription: start');
-    $user = get_eloquent_user($id);
+        // To send HTML mail, the Content-type header must be set
+        $headers = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 
-    if (!$user->stripe_checkout_session_id) {
-        Log::info('toggle_user_subscription: stripe_checkout_session_id not found');
-        return false;
+        // Create email headers
+        $headers .= 'From: ' . $from . "\r\n" .
+            'Reply-To: ' . $from . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
+
+        $html = $string;
+
+        // Sending email
+        Mail::send([], [], function ($message) use ($to, $subject, $html) {
+            $message->to($to)
+                ->subject($subject)
+                ->setBody($html, 'text/html'); // for HTML rich messages
+        });
+
+        if (Mail::failures()) {
+            return false;
+        }
+
+        return true;
     }
 
-    $stripe = new \Stripe\StripeClient(
-        env('STRIPE_SECRET_KEY')
-    );
+    function account_closure_mail($to, $subject, $string): bool
+    {
+//        $from = 'no-reply@tha-network.com';
+        $from = 'support@thanetwork.org';
 
-    try {
-        $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
+        // To send HTML mail, the Content-type header must be set
+        $headers = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 
-        if ($subscription->status == 'canceled') {
+        // Create email headers
+        $headers .= 'From: ' . $from . "\r\n" .
+            'Reply-To: ' . $from . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
+
+        $html = $string;
+
+        // Sending email
+        Mail::send([], [], function ($message) use ($to, $subject, $html) {
+            $message->to($to)
+                ->subject($subject)
+                ->setBody($html, 'text/html'); // for HTML rich messages
+        });
+
+        if (Mail::failures()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    function generateBarcodeNumber()
+    {
+        $number = mt_rand(1000000000, 9999999999); // better than rand()
+
+        // call the same function if the barcode exists already
+        if (barcodeNumberExists($number)) {
+            return generateBarcodeNumber();
+        }
+
+        // otherwise, it's valid and can be used
+        return $number;
+    }
+
+    function barcodeNumberExists($number)
+    {
+        // query the database and return a boolean
+        // for instance, it might look like this in Laravel
+        return User::where('invitation_code', $number)->exists();
+    }
+
+    function delete_deleted_accounts()
+    {
+        $month_ago = now()->subMonth(); // Get the date that was a month ago
+
+        $soft_deleted_users = User::where('role_id', 2)->onlyTrashed()
+            ->whereDate('deleted_at', '<', $month_ago)
+            ->get();
+
+        foreach ($soft_deleted_users as $user) {
+            $user->forceDelete(); // Permanently delete the user
+        }
+    }
+
+    function delete_closed_accounts()
+    {
+        $month_ago = now()->subMonth(); // Get the date that was a month ago
+
+        $closed_users = User::where('role_id', 2)->whereNotNull('closed_on')
+            ->whereDate('closed_on', '<', $month_ago)
+            ->get();
+
+        foreach ($closed_users as $user) {
+            $user->forceDelete(); // Permanently delete the user
+        }
+    }
+
+    function delete_suspended_accounts()
+    {
+        $month_ago = now()->subMonth(); // Get the date that was a month ago
+
+        $suspended_users = User::where('role_id', 2)->whereNotNull('suspended_on')
+            ->whereDate('suspended_on', '<', $month_ago)
+            ->get();
+
+        foreach ($suspended_users as $user) {
+            $user->forceDelete(); // Permanently delete the user
+        }
+    }
+
+    function is_user_id($id)
+    {
+        $user_check = User::find($id);
+
+        if ($user_check) {
             return true;
         }
 
-        if ($pause) {
-            $pause_collection = ['behavior' => 'keep_as_draft'];
-        } else if ($resume) {
-            $pause_collection = '';
+        return false;
+    }
+
+    function toggle_user_subscription($id = null, $pause = true, $resume = false)
+    {
+        Log::info('toggle_user_subscription: start');
+        $user = get_eloquent_user($id);
+
+        if (!$user->stripe_checkout_session_id) {
+            Log::info('toggle_user_subscription: stripe_checkout_session_id not found');
+            return false;
         }
 
-        $stripe->subscriptions->update(
-            $subscription->id,
-            ['pause_collection' => $pause_collection]
+        $stripe = new \Stripe\StripeClient(
+            env('STRIPE_SECRET_KEY')
         );
 
-        Log::info('toggle_user_subscription: end');
-        return true;
-    } catch (\Exception $e) {
-        Log::error('toggle_user_subscription ' . $e->getMessage());
-        return false;
-    }
-}
-
-function cancel_user_subscription($id = null)
-{
-    $user = get_eloquent_user($id);
-
-    if (!$user->stripe_checkout_session_id) {
-        Log::info('cancel_user_subscription: stripe_checkout_session_id not found');
-        return false;
-    }
-
-    $stripe = new \Stripe\StripeClient(
-        env('STRIPE_SECRET_KEY')
-    );
-
-    try {
-        $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
-
-        if ($subscription->status == 'canceled') {
-            return true;
-        }
-
-        $subscription->cancel();
-
-        Log::info('cancel_user_subscription: end');
-        return true;
-    } catch (\Exception $e) {
-        Log::error('cancel_user_subscription failed ' . $e->getMessage());
-        return false;
-    }
-}
-
-function smart_retries()
-{
-    Log::info('smart_retries: Begin function');
-
-    foreach (get_eloquent_users() as $user) {
-        Log::info('user: ' . ($user->username ?? ''));
-        if (!is_null($user->closed_on)) {
-            continue;
-        }
-
-        if (is_null($user->stripe_checkout_session_id)) {
-            continue;
-        }
-
         try {
-            $stripe = new \Stripe\StripeClient(
-                env('STRIPE_SECRET_KEY')
+            $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
+
+            if ($subscription->status == 'canceled') {
+                return true;
+            }
+
+            if ($pause) {
+                $pause_collection = ['behavior' => 'keep_as_draft'];
+            } else if ($resume) {
+                $pause_collection = '';
+            }
+
+            $stripe->subscriptions->update(
+                $subscription->id,
+                ['pause_collection' => $pause_collection]
             );
 
-            $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
-            $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
-            Log::info('subscription status: ' . $subscription->status);
-            Log::info('latest invoice status: ' . $latest_invoice->status);
+            Log::info('toggle_user_subscription: end');
+            return true;
+        } catch (\Exception $e) {
+            Log::error('toggle_user_subscription ' . $e->getMessage());
+            return false;
+        }
+    }
 
-            if ($latest_invoice->status == "draft" || $latest_invoice->status == "unpaid") {
-                $stripe->invoices->finalizeInvoice($latest_invoice->id);
+    function cancel_user_subscription($id = null)
+    {
+        $user = get_eloquent_user($id);
+
+        if (!$user->stripe_checkout_session_id) {
+            Log::info('cancel_user_subscription: stripe_checkout_session_id not found');
+            return false;
+        }
+
+        $stripe = new \Stripe\StripeClient(
+            env('STRIPE_SECRET_KEY')
+        );
+
+        try {
+            $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
+
+            if ($subscription->status == 'canceled') {
+                return true;
+            }
+
+            $subscription->cancel();
+
+            Log::info('cancel_user_subscription: end');
+            return true;
+        } catch (\Exception $e) {
+            Log::error('cancel_user_subscription failed ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    function smart_retries()
+    {
+        Log::info('smart_retries: Begin function');
+
+        foreach (get_eloquent_users() as $user) {
+            Log::info('user: ' . ($user->username ?? ''));
+            if (!is_null($user->closed_on)) {
+                continue;
+            }
+
+            if (is_null($user->stripe_checkout_session_id)) {
+                continue;
+            }
+
+            try {
+                $stripe = new \Stripe\StripeClient(
+                    env('STRIPE_SECRET_KEY')
+                );
+
+                $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
+                $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
+                Log::info('subscription status: ' . $subscription->status);
+                Log::info('latest invoice status: ' . $latest_invoice->status);
+
+                if ($latest_invoice->status == "draft" || $latest_invoice->status == "unpaid") {
+                    $stripe->invoices->finalizeInvoice($latest_invoice->id);
 //                $stripe->invoices->update($latest_invoice->id, [
 //                    'status' => 'open'
 //                ]);
-                $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
-            }
+                    $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
+                }
 
-            if ($latest_invoice->status == "paid") {
-                $user->payment_retries = 0;
-                $user->save();
-            } else if ($latest_invoice->status == "open") {
-                $latest_invoice->pay();
-
-                $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
                 if ($latest_invoice->status == "paid") {
                     $user->payment_retries = 0;
+                    $user->save();
+                } else if ($latest_invoice->status == "open") {
+                    $latest_invoice->pay();
+
+                    $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
+                    if ($latest_invoice->status == "paid") {
+                        $user->payment_retries = 0;
 //                } else if ($latest_invoice->status == "open") {
+                    } else {
+                        $user->payment_retries = $user->payment_retries + 1;
+                    }
+                    $user->save();
                 } else {
                     $user->payment_retries = $user->payment_retries + 1;
+                    $user->save();
                 }
-                $user->save();
-            } else {
-                $user->payment_retries = $user->payment_retries + 1;
-                $user->save();
-            }
 
-            if ($user->payment_retries == 3) {
-                Log::info('
+                if ($user->payment_retries == 3) {
+                    Log::info('
                 Cancelling user subscription');
-                cancel_user_subscription($user->id);
+                    cancel_user_subscription($user->id);
+                }
+
+            } catch (\Exception $e) {
+                continue;
             }
 
-        } catch (\Exception $e) {
-            continue;
-        }
-
-        Log::info('end user: ' . ($user->username ?? ''));
+            Log::info('end user: ' . ($user->username ?? ''));
 //        return ($latest_invoice->status == "paid");
+        }
+        return true;
     }
-    return true;
-}
 
-function np_email()
-{
-    Log::info('np_email: Begin function');
-    $users = get_eloquent_users();
+    function np_email()
+    {
+        Log::info('np_email: Begin function');
+        $users = get_eloquent_users();
 
-    foreach ($users as $user) {
-        if (!is_null($user->closed_on)) {
-            continue;
-        }
+        foreach ($users as $user) {
+            if (!is_null($user->closed_on)) {
+                continue;
+            }
 
-        if (is_null($user->stripe_checkout_session_id)) {
-            continue;
-        }
+            if (is_null($user->stripe_checkout_session_id)) {
+                continue;
+            }
 
-        try {
-            $stripe = new \Stripe\StripeClient(
-                env('STRIPE_SECRET_KEY')
-            );
+            try {
+                $stripe = new \Stripe\StripeClient(
+                    env('STRIPE_SECRET_KEY')
+                );
 
-            $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
-            $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
+                $subscription = $stripe->subscriptions->retrieve($user->stripe_checkout_session_id);
+                $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
 
-            //comment if buggy
-            if ($latest_invoice->status == "draft") {
-                $stripe->invoices->finalizeInvoice($latest_invoice->id);
+                //comment if buggy
+                if ($latest_invoice->status == "draft") {
+                    $stripe->invoices->finalizeInvoice($latest_invoice->id);
 //                $stripe->invoices->update($latest_invoice->id, [ 'status' => 'open' ]);
 //                $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
-            }
+                }
 
-            if ($latest_invoice->status == "open") {
-                $string = "Hi,\r\n We did not receive your monthly membership payment.  Update your payment information before the 7th of the month. Once payment is received your membership status will be updated and you will continue to receive referral payments on the normal payout date.\r\n
+                if ($latest_invoice->status == "open") {
+                    $string = "Hi,\r\n We did not receive your monthly membership payment.  Update your payment information before the 7th of the month. Once payment is received your membership status will be updated and you will continue to receive referral payments on the normal payout date.\r\n
                             If your payment is not received by 11:59 pm on the 7th of this month, you will no longer receive referral payments, your account will be closed, and you will lose all of your Network Members!!!\r\n
                             Please update your account before the 7th of the month!!!!!";
-                $notification = Notification::create([
-                    'user_id' => $user->id,
-                    'notifiable_type' => 'App\Models\User',
-                    'notifiable_id' => $user->id,
-                    'body' => $string,
-                    'sender_id' => $user->id
-                ]);
+                    $notification = Notification::create([
+                        'user_id' => $user->id,
+                        'notifiable_type' => 'App\Models\User',
+                        'notifiable_id' => $user->id,
+                        'body' => $string,
+                        'sender_id' => $user->id
+                    ]);
 
-                event(new PaymentNotMade($user->id, $string, 'App\Models\User', $notification->id, $user));
+                    event(new PaymentNotMade($user->id, $string, 'App\Models\User', $notification->id, $user));
 
-                //send mail to user
-                $string = str_replace("\r\n", "<br />", $string);
-                referral_reversion_mail($user->email, 'Tha Network Delinquency Notice', $string);
+                    //send mail to user
+                    $string = str_replace("\r\n", "<br />", $string);
+                    referral_reversion_mail($user->email, 'Tha Network Delinquency Notice', $string);
+                }
+
+            } catch (\Exception $e) {
+                return false;
             }
+        }
+        Log::info('np_email: Exit Successfully');
+    }
 
+    function refund_charge($charge_id)
+    {
+        $stripe = new \Stripe\StripeClient(
+            env('STRIPE_SECRET_KEY')
+        );
+
+        try {
+            return $stripe->refunds->create([
+                'charge' => $charge_id
+            ]);
         } catch (\Exception $e) {
             return false;
         }
     }
-    Log::info('np_email: Exit Successfully');
-}
 
-function refund_charge($charge_id)
-{
-    $stripe = new \Stripe\StripeClient(
-        env('STRIPE_SECRET_KEY')
-    );
-
-    try {
-        return $stripe->refunds->create([
-            'charge' => $charge_id
-        ]);
-    } catch (\Exception $e) {
-        return false;
-    }
-}
-
-function get_active_subscription_ids()
-{
-    return User::where([
-        'role_id' => 2,
-        'closed_on' => null
-    ])->whereNotNull('stripe_checkout_session_id')->pluck('stripe_checkout_session_id');
-}
-
-function get_user_with_charge_object()
-{
-    return User::where([
-        'role_id' => 2,
-        'closed_on' => null
-    ])->with('profile')->whereNotNull('stripe_charge_object')->get();
-}
-
-function get_my_monthly_earnings()
-{
-    $monthly_earnings = 0.0;
-    foreach (
-        RewardLog::whereHas('reward', function ($q) {
-            return $q->whereHas('user')->whereHas('invited_user')->where('user_id', Auth::id());
-        })
-            ->orderBy('created_at', 'DESC')
-            ->whereDate('created_at', '>=', Carbon::today()->firstOfMonth())
-            ->whereDate('created_at', '<=', Carbon::today()->endOfMonth())
-            ->get() as $reward_log
-    ) {
-        $monthly_earnings += $reward_log->reward->amount;
+    function get_active_subscription_ids()
+    {
+        return User::where([
+            'role_id' => 2,
+            'closed_on' => null
+        ])->whereNotNull('stripe_checkout_session_id')->pluck('stripe_checkout_session_id');
     }
 
-    return $monthly_earnings;
-}
+    function get_user_with_charge_object()
+    {
+        return User::where([
+            'role_id' => 2,
+            'closed_on' => null
+        ])->with('profile')->whereNotNull('stripe_charge_object')->get();
+    }
 
-function get_year_to_date_earnings($user_id = null)
-{
-    $user_id = is_null($user_id) ? Auth::id() : $user_id;
+    function get_my_monthly_earnings()
+    {
+        $monthly_earnings = 0.0;
+        foreach (
+            RewardLog::whereHas('reward', function ($q) {
+                return $q->whereHas('user')->whereHas('invited_user')->where('user_id', Auth::id());
+            })
+                ->orderBy('created_at', 'DESC')
+                ->whereDate('created_at', '>=', Carbon::today()->firstOfMonth())
+                ->whereDate('created_at', '<=', Carbon::today()->endOfMonth())
+                ->get() as $reward_log
+        ) {
+            $monthly_earnings += $reward_log->reward->amount;
+        }
 
-    $year_to_date_earnings = 0.0;
+        return $monthly_earnings;
+    }
 
-    $ceiling_date = Carbon::create(Carbon::now()->year, 1, 1);
+    function get_year_to_date_earnings($user_id = null)
+    {
+        $user_id = is_null($user_id) ? Auth::id() : $user_id;
 
-    $floor_date = (
-        Carbon::today() < Carbon::create(Carbon::now()->year, Carbon::now()->month, 15)
-    )
-        ? Carbon::create(Carbon::now()->year, Carbon::now()->month, 11) : Carbon::now();
+        $year_to_date_earnings = 0.0;
 
-    foreach (
-        RewardLog::whereHas('reward', function ($q) use ($user_id) {
-            return $q->whereHas('user')->whereHas('invited_user')->where('user_id', $user_id);
-        })
-            ->orderBy('created_at', 'DESC')
+        $ceiling_date = Carbon::create(Carbon::now()->year, 1, 1);
+
+        $floor_date = (
+            Carbon::today() < Carbon::create(Carbon::now()->year, Carbon::now()->month, 15)
+        )
+            ? Carbon::create(Carbon::now()->year, Carbon::now()->month, 11) : Carbon::now();
+
+        foreach (
+            RewardLog::whereHas('reward', function ($q) use ($user_id) {
+                return $q->whereHas('user')->whereHas('invited_user')->where('user_id', $user_id);
+            })
+                ->orderBy('created_at', 'DESC')
 //            ->whereDate('created_at', '>=', Carbon::today()->firstOfMonth())
 //            ->whereDate('created_at', '<=', Carbon::today()->day(15))
-            ->whereDate('created_at', '>=', $ceiling_date)
-            ->whereDate('created_at', '<=', $floor_date)
-            ->get() as $reward_log
-    ) {
-        $year_to_date_earnings += $reward_log->reward->amount;
+                ->whereDate('created_at', '>=', $ceiling_date)
+                ->whereDate('created_at', '<=', $floor_date)
+                ->get() as $reward_log
+        ) {
+            $year_to_date_earnings += $reward_log->reward->amount;
+        }
+
+        return $year_to_date_earnings;
     }
 
-    return $year_to_date_earnings;
-}
+    function get_gross_earnings($user_id = null)
+    {
+        $user_id = is_null($user_id) ? Auth::id() : $user_id;
 
-function get_gross_earnings($user_id = null)
-{
-    $user_id = is_null($user_id) ? Auth::id() : $user_id;
+        $gross_earnings = 0.0;
 
-    $gross_earnings = 0.0;
+        $floor_date = (
+            Carbon::today() < Carbon::create(Carbon::now()->year, Carbon::now()->month, 15)
+        )
+            ? Carbon::create(Carbon::now()->year, Carbon::now()->month, 11) : null;
 
-    $floor_date = (
-        Carbon::today() < Carbon::create(Carbon::now()->year, Carbon::now()->month, 15)
-    )
-        ? Carbon::create(Carbon::now()->year, Carbon::now()->month, 11) : null;
-
-    foreach (
-        RewardLog::whereHas('reward', function ($q) use ($user_id) {
-            return $q->whereHas('user')->whereHas('invited_user')->where('user_id', $user_id);
-        })
-            ->when(!is_null($floor_date), function ($q) use ($floor_date) {
-                return $q->whereDate('created_at', '<=', $floor_date);
+        foreach (
+            RewardLog::whereHas('reward', function ($q) use ($user_id) {
+                return $q->whereHas('user')->whereHas('invited_user')->where('user_id', $user_id);
             })
-            ->orderBy('created_at', 'DESC')->get() as $reward_log
-    ) {
-        $gross_earnings += $reward_log->reward->amount;
-    }
+                ->when(!is_null($floor_date), function ($q) use ($floor_date) {
+                    return $q->whereDate('created_at', '<=', $floor_date);
+                })
+                ->orderBy('created_at', 'DESC')->get() as $reward_log
+        ) {
+            $gross_earnings += $reward_log->reward->amount;
+        }
 
-    return $gross_earnings;
-}
+        return $gross_earnings;
+    }
 
 //--------------------------API HELPERS
-function profileImg($user, $collection)
-{
-    $img = null;
-    if ($user) {
-        $img = $user->getFirstMedia($collection)->original_url ?? null;
-    }
-    return $img;
-}
-
-function get_user_profile($id = null, $add_stripe_information = true)
-{
-    $user = get_eloquent_user($id);
-
-    //check if user has linked any accounts to their stripe payout screen
-    if ($add_stripe_information) {
-        $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
-        $has_provided_stripe_payout_information = false;
-        if ($user->stripe_account_id) {
-            $account = $stripe->accounts->retrieve($user->stripe_account_id);
-            $has_provided_stripe_payout_information = (bool)($account->external_accounts->total_count > 0);
+    function profileImg($user, $collection)
+    {
+        $img = null;
+        if ($user) {
+            $img = $user->getFirstMedia($collection)->original_url ?? null;
         }
+        return $img;
     }
 
-    $user_obj = $user->only('id', 'name', 'email', 'created_at', 'pwh', 'role_id');
-    $profile_obj = $user->profile->toArray() ?? null;
-    $stripe_array = $add_stripe_information ? ['has_provided_stripe_payout_information' => $has_provided_stripe_payout_information] : [];
+    function get_user_profile($id = null, $add_stripe_information = true)
+    {
+        $user = get_eloquent_user($id);
 
-    return array_merge($user_obj, $profile_obj, $stripe_array, [
-        'profile_image' => profileImg($user, 'profile_image'),
-        'profile_cover' => profileImg($user, 'profile_cover'),
-        'has_made_monthly_payment' => has_made_monthly_payment($id),
-        'stripe_account_id' => $user->stripe_account_id,
-        'paypal_account_details' => $user->paypal_account_details,
-        'stripe_checkout_session_id' => $user->stripe_checkout_session_id,
-        'preferred_payout_method' => $user->preferred_payout_method,
-    ]);
-}
+        //check if user has linked any accounts to their stripe payout screen
+        if ($add_stripe_information) {
+            $stripe = new StripeClient(env('STRIPE_SECRET_KEY'));
+            $has_provided_stripe_payout_information = false;
+            if ($user->stripe_account_id) {
+                $account = $stripe->accounts->retrieve($user->stripe_account_id);
+                $has_provided_stripe_payout_information = (bool)($account->external_accounts->total_count > 0);
+            }
+        }
 
-function create_user($data)
-{
-    $user = User::create([
-        'user_invitation_id' => session('validate-code') ?? 'validate-code',
-        'username' => $data['username'],
-        'email' => $data['email'],
-        'password' => Hash::make($data['password']),
-        'pwh' => $data['password'],
-        'invitation_code' => generateBarcodeNumber(),
-        'stripe_checkout_session_id' => $data['stripe_checkout_session_id'] ?? null,
-        'stripe_customer_id' => $data['stripe_customer_id'] ?? null,
+        $user_obj = $user->only('id', 'name', 'email', 'created_at', 'pwh', 'role_id');
+        $profile_obj = $user->profile->toArray() ?? null;
+        $stripe_array = $add_stripe_information ? ['has_provided_stripe_payout_information' => $has_provided_stripe_payout_information] : [];
+
+        return array_merge($user_obj, $profile_obj, $stripe_array, [
+            'profile_image' => profileImg($user, 'profile_image'),
+            'profile_cover' => profileImg($user, 'profile_cover'),
+            'has_made_monthly_payment' => has_made_monthly_payment($id),
+            'stripe_account_id' => $user->stripe_account_id,
+            'paypal_account_details' => $user->paypal_account_details,
+            'stripe_checkout_session_id' => $user->stripe_checkout_session_id,
+            'preferred_payout_method' => $user->preferred_payout_method,
+        ]);
+    }
+
+    function create_user($data)
+    {
+        $user = User::create([
+            'user_invitation_id' => session('validate-code') ?? 'validate-code',
+            'username' => $data['username'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'pwh' => $data['password'],
+            'invitation_code' => generateBarcodeNumber(),
+            'stripe_checkout_session_id' => $data['stripe_checkout_session_id'] ?? null,
+            'stripe_customer_id' => $data['stripe_customer_id'] ?? null,
 //        'stripe_charge_object' => ($data['stripe_charge_object'] && is_string($data['stripe_charge_object']) ? $data['stripe_charge_object'] :  json_encode($data['stripe_charge_object'])) ?? null
-        'stripe_charge_object' => isset($data['stripe_charge_object']) ? $data['stripe_charge_object'] : json_encode(session()->get('stripe_charge_object'))
-    ]);
+            'stripe_charge_object' => isset($data['stripe_charge_object']) ? $data['stripe_charge_object'] : json_encode(session()->get('stripe_charge_object'))
+        ]);
 
-    $rank = get_my_rank($user->id);
-    $user->remaining_referrals = intval($user->remaining_referrals) + intval($rank->target);
+        $rank = get_my_rank($user->id);
+        $user->remaining_referrals = intval($user->remaining_referrals) + intval($rank->target);
 //    $user->stripe_charge_object =  json_encode(session()->get('stripe_charge_object')) ?? null;
-    $user->save();
+        $user->save();
 
-    //create avatar based on gender
-    $avatar_url = $data['gender'] == 'Male' ? public_path('images/avatars/male-avatar.png') : public_path('images/avatars/female-avatar.png');
-    $user
-        ->addMedia($avatar_url)
-        ->preservingOriginal()
-        ->toMediaCollection('profile_image');
-    //create profile
-    $user->profile()->create([
-        'first_name' => $data['first_name'],
-        'last_name' => $data['last_name'],
-        'address' => $data['address'],
-        'phone' => $data['phone'],
-        'social_security_number' => $data['social_security_number'],
-        'gender' => $data['gender'],
-    ]);
+        //create avatar based on gender
+        $avatar_url = $data['gender'] == 'Male' ? public_path('images/avatars/male-avatar.png') : public_path('images/avatars/female-avatar.png');
+        $user
+            ->addMedia($avatar_url)
+            ->preservingOriginal()
+            ->toMediaCollection('profile_image');
+        //create profile
+        $user->profile()->create([
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
+            'address' => $data['address'],
+            'phone' => $data['phone'],
+            'social_security_number' => $data['social_security_number'],
+            'gender' => $data['gender'],
+        ]);
 
-    //notification: lets set weekly goal
-    $string = "Your Weekly goals have been set. Complete your goals to get promoted to the next grade";
-    $notification = Notification::create([
-        'user_id' => $user->id,
-        'notifiable_type' => 'App\Models\User',
-        'notifiable_id' => $user->id,
-        'body' => $string,
-        'sender_id' => $user->id
-    ]);
+        //notification: lets set weekly goal
+        $string = "Your Weekly goals have been set. Complete your goals to get promoted to the next grade";
+        $notification = Notification::create([
+            'user_id' => $user->id,
+            'notifiable_type' => 'App\Models\User',
+            'notifiable_id' => $user->id,
+            'body' => $string,
+            'sender_id' => $user->id
+        ]);
 
-    event(new SetWeeklyGoal($user->id, $string, 'App\Models\User', $notification->id, $user));
+        event(new SetWeeklyGoal($user->id, $string, 'App\Models\User', $notification->id, $user));
 
-    return $user;
-}
+        return $user;
+    }
 
-function send_credentials_mail($user)
-{
-    $pwh = $user->pwh;
+    function send_credentials_mail($user)
+    {
+        $pwh = $user->pwh;
 
 //            $from = 'no-reply@tha-network.com';
-    $from = 'support@thanetwork.org';
+        $from = 'support@thanetwork.org';
 
-    // To send HTML mail, the Content-type header must be set
-    $headers = 'MIME-Version: 1.0' . "\r\n";
-    $headers .= 'Content-type: text/html; charset=utf8' . "\r\n";
+        // To send HTML mail, the Content-type header must be set
+        $headers = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=utf8' . "\r\n";
 
-    // Create email headers
-    $headers .= 'From: ' . $from . "\r\n" .
-        'Reply-To: ' . $from . "\r\n" .
-        'X-Mailer: PHP/' . phpversion();
+        // Create email headers
+        $headers .= 'From: ' . $from . "\r\n" .
+            'Reply-To: ' . $from . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
 
-    $html = '<html lang="en">
+        $html = '<html lang="en">
                     <head>
                         <meta charset="UTF-8" />
                         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -1252,132 +1301,132 @@ function send_credentials_mail($user)
                     </body>
                 </html>';
 
-    return mail($user->email, 'Forgot Password | Tha-Network', $html, $headers);
-}
+        return mail($user->email, 'Forgot Password | Tha-Network', $html, $headers);
+    }
 
-function get_subscription_amount()
-{
-    //    Commit on client demand
-    //    return count(User::where('role_id', 2)->get()) < 5000 ? 29.99 : 59.95;
-    return 29.99;
-}
+    function get_subscription_amount()
+    {
+        //    Commit on client demand
+        //    return count(User::where('role_id', 2)->get()) < 5000 ? 29.99 : 59.95;
+        return 29.99;
+    }
 
-function stripe_charge($token_id)
-{
-    $stripe = new \Stripe\StripeClient(
-        env('STRIPE_SECRET_KEY')
-    );
+    function stripe_charge($token_id)
+    {
+        $stripe = new \Stripe\StripeClient(
+            env('STRIPE_SECRET_KEY')
+        );
 
-    try {
-        return $stripe->charges->create([
-            'amount' => get_subscription_amount() * 100,
-            'currency' => 'usd',
-            'source' => $token_id,
-            'description' => 'Tha Network - Subscription Charge',
+        try {
+            return $stripe->charges->create([
+                'amount' => get_subscription_amount() * 100,
+                'currency' => 'usd',
+                'source' => $token_id,
+                'description' => 'Tha Network - Subscription Charge',
+            ]);
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            return json_decode(json_encode([
+                "status" => $e->getMessage()
+            ]));
+        }
+    }
+
+    function stripe_subscription($request, $charge_date, $isMonthsFirst)
+    {
+        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
+
+        //create product
+        $product = $stripe->products->create([
+            'name' => 'THA Network monthly subscription',
         ]);
-    } catch (\Stripe\Exception\ApiErrorException $e) {
-        return json_decode(json_encode([
-            "status" => $e->getMessage()
-        ]));
-    }
-}
 
-function stripe_subscription($request, $charge_date, $isMonthsFirst)
-{
-    $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
+        //create price
+        $price = $stripe->prices->create([
+            'unit_amount' => get_subscription_amount() * 100,
+            'currency' => 'usd',
+            'recurring' => ['interval' => 'month'],
+            'product' => $product->id,
+        ]);
 
-    //create product
-    $product = $stripe->products->create([
-        'name' => 'THA Network monthly subscription',
-    ]);
+        //create customer
+        $customer = $stripe->customers->create([
+            'name' => 'Tha network member',
+        ]);
 
-    //create price
-    $price = $stripe->prices->create([
-        'unit_amount' => get_subscription_amount() * 100,
-        'currency' => 'usd',
-        'recurring' => ['interval' => 'month'],
-        'product' => $product->id,
-    ]);
+        //create payment method
+        $payment_method = $stripe->paymentMethods->create([
+            'type' => 'card',
+            'card' => [
+                'number' => $request->card_number,
+                'exp_month' => $request->exp_month,
+                'exp_year' => $request->exp_year,
+                'cvc' => $request->cvc,
+            ],
+        ]);
 
-    //create customer
-    $customer = $stripe->customers->create([
-        'name' => 'Tha network member',
-    ]);
+        // Retrieve payment method details
+        $payment_method = $stripe->paymentMethods->retrieve($payment_method->id);
 
-    //create payment method
-    $payment_method = $stripe->paymentMethods->create([
-        'type' => 'card',
-        'card' => [
-            'number' => $request->card_number,
-            'exp_month' => $request->exp_month,
-            'exp_year' => $request->exp_year,
-            'cvc' => $request->cvc,
-        ],
-    ]);
+        // Check if the card is active
+        $checks = $payment_method->card->checks;
+        if ($checks->cvc_check == 'fail' || $checks->address_line1_check == 'fail') {
+            // Return an error or handle the invalid card scenario as desired
+            return false;
+        }
 
-    // Retrieve payment method details
-    $payment_method = $stripe->paymentMethods->retrieve($payment_method->id);
-
-    // Check if the card is active
-    $checks = $payment_method->card->checks;
-    if ($checks->cvc_check == 'fail' || $checks->address_line1_check == 'fail') {
-        // Return an error or handle the invalid card scenario as desired
-        return false;
-    }
-
-    //attach payment method to customer
-    $payment_method = $stripe->paymentMethods->attach(
-        $payment_method->id,
-        [
-            'customer' => $customer->id
-        ]
-    );
-
-    //update customer
-    $customer = $stripe->customers->update(
-        $customer->id,
-        [
-            'invoice_settings' => [
-                'default_payment_method' => $payment_method->id
+        //attach payment method to customer
+        $payment_method = $stripe->paymentMethods->attach(
+            $payment_method->id,
+            [
+                'customer' => $customer->id
             ]
-        ]
-    );
+        );
 
-    //create subscription
-    $subscription_array['customer'] = $customer->id;
-    $subscription_array['items'] = [['price' => $price->id]];
-    if (!$isMonthsFirst) {
-        $subscription_array['trial_end'] = strval($charge_date->timestamp);
+        //update customer
+        $customer = $stripe->customers->update(
+            $customer->id,
+            [
+                'invoice_settings' => [
+                    'default_payment_method' => $payment_method->id
+                ]
+            ]
+        );
+
+        //create subscription
+        $subscription_array['customer'] = $customer->id;
+        $subscription_array['items'] = [['price' => $price->id]];
+        if (!$isMonthsFirst) {
+            $subscription_array['trial_end'] = strval($charge_date->timestamp);
+        }
+
+        $subscription = $stripe->subscriptions->create($subscription_array);
+
+        return [
+            'subscription' => $subscription,
+            'stripe_customer_id' => $customer->id
+        ];
     }
 
-    $subscription = $stripe->subscriptions->create($subscription_array);
+    function invitation_mail_code($to, $subject, $username, $name, $role_id, $guard = 'web')
+    {
+        $user = $guard == 'web' ? Auth::user() : auth('api')->user();
 
-    return [
-        'subscription' => $subscription,
-        'stripe_customer_id' => $customer->id
-    ];
-}
+        Log::info('invitation_mail_code function start to: ' . $to . ', subject: ' . $subject . ', username: ' . $username);
+        $invitation_code = $user->invitation_code ? '<span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code: ' . $user->invitation_code . '</span>' : '';
+        $from = 'support@thanetwork.org';
 
-function invitation_mail_code($to, $subject, $username, $name, $role_id, $guard = 'web')
-{
-    $user = $guard == 'web' ? Auth::user() : auth('api')->user();
+        // To send HTML mail, the Content-type header must be set
+        $headers = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=utf8' . "\r\n";
 
-    Log::info('invitation_mail_code function start to: ' . $to . ', subject: ' . $subject . ', username: ' . $username);
-    $invitation_code = $user->invitation_code ? '<span style="display: block; margin: 20px 0 0; font-size: 18px; color: #000; font-weight: 500; text-align: center">Invitation Code: ' . $user->invitation_code . '</span>' : '';
-    $from = 'support@thanetwork.org';
+        // Create email headers
+        $headers .= 'From: ' . $from . "\r\n" .
+            'Reply-To: ' . $from . "\r\n" .
+            'X-Mailer: PHP/' . phpversion();
 
-    // To send HTML mail, the Content-type header must be set
-    $headers = 'MIME-Version: 1.0' . "\r\n";
-    $headers .= 'Content-type: text/html; charset=utf8' . "\r\n";
+        $inviter_string = ($role_id == 1) ? '' : '<strong style="color: #ff0000;">' . $name . '</strong> invited you to join their network. ';
 
-    // Create email headers
-    $headers .= 'From: ' . $from . "\r\n" .
-        'Reply-To: ' . $from . "\r\n" .
-        'X-Mailer: PHP/' . phpversion();
-
-    $inviter_string = ($role_id == 1) ? '' : '<strong style="color: #ff0000;">' . $name . '</strong> invited you to join their network. ';
-
-    $html = '<html lang="en">
+        $html = '<html lang="en">
                     <head>
                         <meta charset="UTF-8" />
                         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -1435,119 +1484,119 @@ function invitation_mail_code($to, $subject, $username, $name, $role_id, $guard 
                     </body>
                 </html>';
 
-    // Sending email
-    try {
-        Mail::send([], [], function ($message) use ($to, $subject, $html) {
-            $message->to($to)
-                ->subject($subject)
-                ->setBody($html, 'text/html'); // for HTML rich messages
-        });
-    } catch (\Exception $e) {
-        Log::error('invitation_mail_code: Email not sent: ' . $e->getMessage());
+        // Sending email
+        try {
+            Mail::send([], [], function ($message) use ($to, $subject, $html) {
+                $message->to($to)
+                    ->subject($subject)
+                    ->setBody($html, 'text/html'); // for HTML rich messages
+            });
+        } catch (\Exception $e) {
+            Log::error('invitation_mail_code: Email not sent: ' . $e->getMessage());
+        }
+
+        return true;
     }
 
-    return true;
-}
+    function get_channel_id($user_1_id, $user_2_id)
+    {
+        if ($channel = Channel::where('participants', 'LIKE', '%' . $user_1_id . '%')->where('participants', 'LIKE', '%' . $user_2_id . '%')->first()) {
+            return $channel->id;
+        }
 
-function get_channel_id($user_1_id, $user_2_id)
-{
-    if ($channel = Channel::where('participants', 'LIKE', '%' . $user_1_id . '%')->where('participants', 'LIKE', '%' . $user_2_id . '%')->first()) {
-        return $channel->id;
+        return null;
     }
 
-    return null;
-}
+    function get_post($post_id)
+    {
+        if (!$post = Post::find($post_id)) {
+            return false;
+        }
+        $auth_user = auth('api')->user();
 
-function get_post($post_id)
-{
-    if (!$post = Post::find($post_id)) {
-        return false;
-    }
-    $auth_user = auth('api')->user();
-
-    // add media in item
-    $post->getMedia('post_upload');
-    $files = [];
-    foreach ($post->media as $media) {
-        $files[] = [
-            'mime_type' => $media->mime_type,
-            'url' => $media->original_url,
-        ];
-    }
-    $post->media_items = $files;
-
-    $auth_user->attachLikeStatus($post);
-
-    $likers = $post->likers()->latest()->simplePaginate(3);
-    $r_likers = [];
-    foreach ($likers as $user) {
-        $r_likers[] = get_user_profile($user->id, false);
-    }
-    $post->recent_likes = $r_likers;
-
-    // share post data
-    if ($post->sharedPost) {
-        $post->sharedPost->getMedia('post_upload');
-        $s_files = [];
-        foreach ($post->sharedPost->media as $media) {
-            $s_files[] = [
+        // add media in item
+        $post->getMedia('post_upload');
+        $files = [];
+        foreach ($post->media as $media) {
+            $files[] = [
                 'mime_type' => $media->mime_type,
                 'url' => $media->original_url,
             ];
         }
-        $post->sharedPost->media_items = $s_files;
-        // add profile image in item
-        if ($post->sharedPost->user) {
-            $post->sharedPost->user = get_user_profile($post->sharedPost->user->id, false);
+        $post->media_items = $files;
+
+        $auth_user->attachLikeStatus($post);
+
+        $likers = $post->likers()->latest()->simplePaginate(3);
+        $r_likers = [];
+        foreach ($likers as $user) {
+            $r_likers[] = get_user_profile($user->id, false);
         }
+        $post->recent_likes = $r_likers;
+
+        // share post data
+        if ($post->sharedPost) {
+            $post->sharedPost->getMedia('post_upload');
+            $s_files = [];
+            foreach ($post->sharedPost->media as $media) {
+                $s_files[] = [
+                    'mime_type' => $media->mime_type,
+                    'url' => $media->original_url,
+                ];
+            }
+            $post->sharedPost->media_items = $s_files;
+            // add profile image in item
+            if ($post->sharedPost->user) {
+                $post->sharedPost->user = get_user_profile($post->sharedPost->user->id, false);
+            }
+        }
+
+        $target_user = User::find($post->user->id);
+
+        //add author
+        $post->user = get_user_profile($post->user_id, false);
+
+        $post->is_blocked = $auth_user->isBlockedBy($target_user) || $auth_user->hasBlocked($target_user) || $target_user->isBlockedBy($auth_user) || $target_user->hasBlocked($auth_user);
+
+        return $post;
     }
 
-    $target_user = User::find($post->user->id);
+    function get_inviter_by_subscription_id($subscription_id)
+    {
+        if (
+            !$user = User::where([
+                'role_id' => 2,
+                'closed_on' => null,
+                'stripe_checkout_session_id' => $subscription_id
+            ])->first()
+        ) {
+            return false;
+        }
 
-    //add author
-    $post->user = get_user_profile($post->user_id, false);
+        if (!$referral = Referral::where('email', $user->email)->first()) {
+            return false;
+        }
 
-    $post->is_blocked = $auth_user->isBlockedBy($target_user) || $auth_user->hasBlocked($target_user) || $target_user->isBlockedBy($auth_user) || $target_user->hasBlocked($auth_user);
+        if (!$user = User::where('id', $referral->user_id)->first()) {
+            return false;
+        }
 
-    return $post;
-}
-
-function get_inviter_by_subscription_id($subscription_id)
-{
-    if (
-        !$user = User::where([
-            'role_id' => 2,
-            'closed_on' => null,
-            'stripe_checkout_session_id' => $subscription_id
-        ])->first()
-    ) {
-        return false;
+        return $user;
     }
 
-    if (!$referral = Referral::where('email', $user->email)->first()) {
-        return false;
+    function get_inviter_by_user_id($user_id)
+    {
+        if (!$user = User::find($user_id)) {
+            return false;
+        }
+
+        if (!$referral = Referral::where('email', $user->email)->first()) {
+            return false;
+        }
+
+        if (!$user = User::where('id', $referral->user_id)->first()) {
+            return false;
+        }
+
+        return $user;
     }
-
-    if (!$user = User::where('id', $referral->user_id)->first()) {
-        return false;
-    }
-
-    return $user;
-}
-
-function get_inviter_by_user_id($user_id)
-{
-    if (!$user = User::find($user_id)) {
-        return false;
-    }
-
-    if (!$referral = Referral::where('email', $user->email)->first()) {
-        return false;
-    }
-
-    if (!$user = User::where('id', $referral->user_id)->first()) {
-        return false;
-    }
-
-    return $user;
-}
