@@ -278,7 +278,6 @@ function no_referrals_for_the_day()
     }
 }
 
-
 function set_weekly_goal()
 {
     $users = get_eloquent_users();
@@ -346,6 +345,7 @@ function has_made_monthly_payment($id = null): bool
 //    $latest_invoice = $stripe->invoices->retrieve($subscription->latest_invoice);
 //
 //    return ($latest_invoice->status == "paid");
+    return false;
 }
 
 function payment_not_made()
@@ -561,8 +561,6 @@ function commission_distribution()
                 }
             }
 
-//        if($reward->user->stripe_account_id) {
-//        if($reward->user->preferred_payout_method == 'stripe' || $reward->user->preferred_payout_method == '') {
             if ($reward->user->preferred_payout_method == 'stripe') {
                 $reward_log_check = RewardLog::where('reward_id', $reward->id)->whereDate('created_at', Carbon::today())->get();
 
@@ -585,23 +583,75 @@ function commission_distribution()
                         "destination" => $reward->user->stripe_account_id,
                     ]);
 
-//            if () {
                     $reward->is_paid = true;
                     $reward->last_paid_on = Carbon::now();
                     $reward->save();
 
                     //create reward log
                     RewardLog::create(['reward_id' => $reward->id]);
-//            }
                 }
-            }
+
+            } elseif ($reward->user->preferred_payout_method == 'paypal') {
+
+                $clientId = env('PAYPAL_CLIENT_ID');
+                $clientSecret = env('PAYPAL_CLIENT_SECRET');
+
+                $environment = env('PAYPAL_LIVE_MODE') === 'true'
+                    ? new ProductionEnvironment($clientId, $clientSecret)
+                    : new SandboxEnvironment($clientId, $clientSecret);
+
+                $client = new PayPalHttpClient($environment);
+
+                $reward_log_check = RewardLog::where('reward_id', $reward->id)->whereDate('created_at', Carbon::today())->get();
+
+                if (count($reward_log_check) == 0) {
+                    $request = new PayoutsPostRequest();
+                    $request->body = [
+                        "sender_batch_header" => [
+                            "sender_batch_id" => uniqid(),
+                            "email_subject" => "You have a payout!",
+                        ],
+                        "items" => [
+                            [
+                                "recipient_type" => "EMAIL",
+                                "amount" => [
+                                    "value" => $reward->amount,
+                                    "currency" => "USD"
+                                ],
+                                "receiver" => $reward->user->paypal_account_details,
+                                "note" => "Thank you for your participation!",
+                                "sender_item_id" => uniqid()
+                            ]
+                        ]
+                    ];
+
+                    try {
+                        $response = $client->execute($request);
+                        Log::info('commission_distribution | transfer: Paypal account detail: '
+                            . $reward->user->paypal_account_details . ' user: ' . $reward->user->id . ', amount: ' . $reward->amount);
+
+                        $reward->is_paid = true;
+                        $reward->last_paid_on = Carbon::now();
+                        $reward->save();
+
+                        // Create reward log
+                        RewardLog::create(['reward_id' => $reward->id]);
+                    } catch (HttpException $ex) {
+                        Log::error('PayPal Payout failed: ' . $ex->statusCode . ' - ' . $ex->getMessage());
+                    }
+
+                }
+
 //            DB::commit();
-        } catch (\Exception $e) {
+            }
+
+        } catch
+        (\Exception $e) {
 //            DB::rollBack();
             Log::error('commission_distribution: catch ' . $e->getMessage());
         }
+        Log::info('commission_distribution: Exit Successfully');
     }
-    Log::info('commission_distribution: Exit Successfully');
 }
 
 function is_in_my_network($user_id): bool
@@ -1537,6 +1587,7 @@ function get_inviter_by_subscription_id($subscription_id)
 
 function get_inviter_by_user_id($user_id)
 {
+
     if (!$user = User::find($user_id)) {
         return false;
     }
@@ -1548,6 +1599,6 @@ function get_inviter_by_user_id($user_id)
     if (!$user = User::where('id', $referral->user_id)->first()) {
         return false;
     }
-
     return $user;
+
 }
