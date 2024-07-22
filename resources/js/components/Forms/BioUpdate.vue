@@ -96,7 +96,7 @@ export default {
                 return
 
             // if(!this.stripe_account_id && !this.paypal_account_details) {
-            if (!this.stripe_account_id && !this.isAdmin) {
+            if (!this.stripe_account_id && !this.paypal_account_details && !this.isAdmin) {
                 return (useToast()).error('You must Create a Stripe account or log into your Stripe account by selecting the “Create Stripe Account” button before continuing.', {timeout: false});
             }
 
