@@ -88,8 +88,8 @@ export default {
                 return
 
             // if(!this.stripe_account_id && !this.paypal_account_details) {
-            if(!this.stripe_account_id && !this.isAdmin) {
-                return (useToast()).error('You must Create a Stripe account or log into your Stripe account by selecting the “Create Stripe Account” button before continuing.', { timeout: false });
+            if (!this.stripe_account_id && !this.paypal_account_details && !this.isAdmin) {
+                return (useToast()).error('You must Create a Stripe account or log into your Stripe account by selecting the “Create Stripe Account” button before continuing.', {timeout: false});
             }
 
             this.form.post(this.$route('updateProfile'), {
@@ -114,12 +114,12 @@ export default {
             this.form.postal_code = usePage().props.value?.profile?.postal_code
             this.isEdit = false
         },
-        showSuccessMessage () {
+        showSuccessMessage() {
             if (!this.form.clear_all) {
                 this.$store.dispatch('Utils/showSuccessMessage')
             }
         },
-        discardChanges () {
+        discardChanges() {
             this.form.address = '';
             this.form.country = '';
             this.form.city = '';
