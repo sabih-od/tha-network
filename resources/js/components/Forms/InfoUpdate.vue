@@ -96,7 +96,8 @@ export default {
 
             // if(!this.stripe_account_id && !this.paypal_account_details) {
             if (!this.stripe_account_id && !this.paypal_account_details && !this.isAdmin) {
-                return (useToast()).error('You must Create a Stripe account or log into your Stripe account by selecting the “Create Stripe Account” button before continuing.', { timeout: false });
+                // return (useToast()).error('You must Create a Stripe account or log into your Stripe account by selecting the “Create Stripe Account” button before continuing.', { timeout: false });
+                return (useToast()).error('Before continuing, please create or log into your Stripe or PayPal account below by selecting the "Create Stripe Account" or "Log into PayPal" button.', {timeout: false});
             }
 
             this.form.post(this.$route('updateProfile'), {
