@@ -117,7 +117,7 @@ class ProfileController extends Controller
                 'payment_method_updated' => (boolean)$request->has('pmu'),
                 'payment_method_notification' => $payment_method_changed_notification,
 //            ])->with('error', ($has_provided_stripe_payout_information == false && $user->paypal_account_details) ? null : 'You must Create a Stripe account or log into your Stripe account by selecting the “Create Stripe Account” button before continuing.');
-            ])->with('error', ($has_provided_stripe_payout_information == false && $user->paypal_account_details) ? null : 'Before continuing, please create or log into your Stripe or PayPal account below by selecting the "Create Stripe Account" or "Log into PayPal" button.');
+            ])->with('error', ($user->stripe_account_id || $user->paypal_account_details) ? null : 'Before continuing, please create or log into your Stripe or PayPal account below by selecting the "Create Stripe Account" or "Log into PayPal" button.');
         } catch (\Exception $e) {
             return redirect()->route('editProfileForm')->with('error', $e->getMessage());
         }
