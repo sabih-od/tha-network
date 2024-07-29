@@ -560,8 +560,8 @@ function commission_distribution()
                     continue;
                 }
             }
-
             if ($reward->user->preferred_payout_method == 'stripe') {
+
                 $reward_log_check = RewardLog::where('reward_id', $reward->id)->whereDate('created_at', Carbon::today())->get();
 
                 if (count($reward_log_check) == 0) {
@@ -594,7 +594,7 @@ function commission_distribution()
             } elseif ($reward->user->preferred_payout_method == 'paypal') {
 
                 $clientId = env('PAYPAL_CLIENT_ID');
-                $clientSecret = env('PAYPAL_CLIENT_SECRET');
+                $clientSecret = env('PAYPAL_SECRET_KEY');
 
                 $environment = env('PAYPAL_LIVE_MODE') === 'true'
                     ? new ProductionEnvironment($clientId, $clientSecret)
@@ -603,7 +603,6 @@ function commission_distribution()
                 $client = new PayPalHttpClient($environment);
 
                 $reward_log_check = RewardLog::where('reward_id', $reward->id)->whereDate('created_at', Carbon::today())->get();
-
                 if (count($reward_log_check) == 0) {
                     $request = new PayoutsPostRequest();
                     $request->body = [
@@ -624,11 +623,10 @@ function commission_distribution()
                             ]
                         ]
                     ];
-
                     try {
                         $response = $client->execute($request);
                         Log::info('commission_distribution | transfer: Paypal account detail: '
-                            . $reward->user->paypal_account_details . ' user: ' . $reward->user->id . ', amount: ' . $reward->amount);
+                            . $reward->user->paypal_account_details . ' user: ' . $reward->user->id . ', amount: ' . $response);
 
                         $reward->is_paid = true;
                         $reward->last_paid_on = Carbon::now();
@@ -648,7 +646,7 @@ function commission_distribution()
         } catch
         (\Exception $e) {
 //            DB::rollBack();
-            Log::error('commission_distribution: catch ' . $e->getMessage());
+            Log::error('commission_distribution: catch reward id :' . $reward->id . $e->getMessage());
         }
         Log::info('commission_distribution: Exit Successfully');
     }
