@@ -609,6 +609,8 @@ function commission_distribution()
                         "sender_batch_header" => [
                             "sender_batch_id" => uniqid(),
                             "email_subject" => "You have a payout!",
+                            "email_message" => "Congratulations! You have received a payout from tha-network.",
+                            "description" => "Payout for reward program participation in tha-network"
                         ],
                         "items" => [
                             [
@@ -626,7 +628,7 @@ function commission_distribution()
                     try {
                         $response = $client->execute($request);
                         Log::info('commission_distribution | transfer: Paypal account detail: '
-                            . $reward->user->paypal_account_details . ' user: ' . $reward->user->id . ', amount: ' . $response);
+                            . $reward->user->paypal_account_details . ' user: ' . $reward->user->id . ', paypal response: ' .  json_encode($response));
 
                         $reward->is_paid = true;
                         $reward->last_paid_on = Carbon::now();
@@ -646,7 +648,7 @@ function commission_distribution()
         } catch
         (\Exception $e) {
 //            DB::rollBack();
-            Log::error('commission_distribution: catch reward id :' . $reward->id . $e->getMessage());
+            Log::error('commission_distribution: catch reward id :' . $reward->id  . $e->getMessage());
         }
         Log::info('commission_distribution: Exit Successfully');
     }
