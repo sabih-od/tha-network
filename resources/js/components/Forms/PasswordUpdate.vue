@@ -15,8 +15,11 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="oldpass">Your Current Password</label>
-                        <span class="mr-4" v-if="pwh_is_visible">{{pwh}}</span>
-                        <button v-if="pwh" class="btn btn-primary btn-sm" @click.prevent="pwh_is_visible = !pwh_is_visible">{{ pwh_is_visible ? 'Hide' : 'Show Current Password' }}</button>
+                        <span class="mr-4" v-if="pwh_is_visible">{{ pwh }}</span>
+                        <button v-if="pwh" class="btn btn-primary btn-sm"
+                                @click.prevent="pwh_is_visible = !pwh_is_visible">
+                            {{ pwh_is_visible ? 'Hide' : 'Show Current Password' }}
+                        </button>
                         <input type="password" name="oldpass" class="form-control"
                                placeholder="*********" v-model="form.oldpass" :readonly="!isEdit">
                     </div>
@@ -81,8 +84,9 @@ export default {
                 return
 
             // if(!this.stripe_account_id && !this.paypal_account_details) {
-            if(!this.stripe_account_id && !this.isAdmin) {
-                return (useToast()).error('You must Create a Stripe account or log into your Stripe account by selecting the “Create Stripe Account” button before continuing.', { timeout: false });
+            if (!this.stripe_account_id && !this.paypal_account_details && !this.isAdmin) {
+                // return (useToast()).error('You must Create a Stripe account or log into your Stripe account by selecting the “Create Stripe Account” button before continuing.', {timeout: false});
+                return (useToast()).error('Before continuing, please create or log into your Stripe or PayPal account below by selecting the "Create Stripe Account" or "Log into PayPal" button.', {timeout: false});
             }
 
             this.form.post(this.$route('updateProfile'), {

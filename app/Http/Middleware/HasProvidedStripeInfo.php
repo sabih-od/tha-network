@@ -13,8 +13,8 @@ class HasProvidedStripeInfo
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
@@ -24,7 +24,7 @@ class HasProvidedStripeInfo
         }
 
         $user = get_eloquent_user();
-        if (is_null($user->stripe_account_id) && $user->role_id != 1) {
+        if ((is_null($user->stripe_account_id) && is_null($user->paypal_account_details)) && $user->role_id != 1) {
             return redirect()->route('editProfileForm');
             return Inertia::render('EditProfile', [
                 'user' => $user->only('name', 'email', 'created_at', 'pwh') ?? null,
@@ -39,7 +39,8 @@ class HasProvidedStripeInfo
                 'stripe_portal_session' => session()->get('stripe_portal_session') ?? null,
                 'has_provided_stripe_payout_information' => false,
                 'preferred_payout_method' => $user->preferred_payout_method,
-            ])->with('error', 'You must Create a Stripe account or log into your Stripe account by selecting the “Create Stripe Account” button before continuing.');
+//            ])->with('error', 'You must Create a Stripe account or log into your Stripe account by selecting the “Create Stripe Account” button before continuing.');
+            ])->with('error', 'Before continuing, please create or log into your Stripe or PayPal account below by selecting the "Create Stripe Account" or "Log into PayPal" button.');
         }
 
         return $next($request);
