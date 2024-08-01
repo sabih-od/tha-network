@@ -14,11 +14,12 @@
                                     <div class="col-12">
                                         <h1>{{ msg }}</h1>
                                         <div class="btnCont">
-<!--                                            <button class="themeBtn" @click="randomize()">Generate Random</button>-->
-<!--                                            <button class="themeBtn" @click="generateAvatar()">Generate Avatar</button>-->
-<!--                                            <button class="themeBtn" @click="uploadPicture()">Upload Picture</button>-->
+                                            <!--                                            <button class="themeBtn" @click="randomize()">Generate Random</button>-->
+                                            <!--                                            <button class="themeBtn" @click="generateAvatar()">Generate Avatar</button>-->
+                                            <!--                                            <button class="themeBtn" @click="uploadPicture()">Upload Picture</button>-->
                                             <p>Select Gender to get started creating your Avatar</p>
-                                            <input type="file" hidden class="input_hidden_image" id="input_hidden_image">
+                                            <input type="file" hidden class="input_hidden_image"
+                                                   id="input_hidden_image">
                                         </div>
                                     </div>
                                     <div class="col-sm-6">
@@ -31,7 +32,8 @@
                                         <div class="fieldsBox">
                                             <div class="form-group">
                                                 <label for="gender">Gender </label>
-                                                <select class="form-control gender" id="gender" v-model="choices.gender" @change="changeStyle()">
+                                                <select class="form-control gender" id="gender" v-model="choices.gender"
+                                                        @change="changeStyle()">
                                                     <option v-for="gender in libMojiData.genders" :value="gender[1]">
                                                         {{ gender[0] }}
                                                     </option>
@@ -39,21 +41,24 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="styles">Styles </label>
-                                                <select class="form-control" id="styles" v-model="choices.style" @change="changeStyle()">
-                                                    <option value="1">bitmoji</option>
+                                                <select class="form-control" id="styles" v-model="choices.style"
+                                                        @change="changeStyle()">
+                                                    <option value="5">bitmoji</option>
                                                     <!--          <option v-for="style in libMojiData.styles" :value="style[1]">{{ style[0] }}</option>-->
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="poses">Poses </label>
-                                                <select class="form-control" id="poses" v-model="choices.pose" @change="generateAvatar()">
-                                                    <option v-for="pose in libMojiData.poses" :value="pose">{{pose}}
+                                                <select class="form-control" id="poses" v-model="choices.pose"
+                                                        @change="generateAvatar()">
+                                                    <option v-for="pose in libMojiData.poses" :value="pose">{{ pose }}
                                                     </option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="brand">Brands </label>
-                                                <select class="form-control" id="brand" v-model="choices.brand" @change="generateOutfits()">
+                                                <select class="form-control" id="brand" v-model="choices.brand"
+                                                        @change="generateOutfits()">
                                                     <option v-for="(brand, key) in filteredBrands" :value="key">
                                                         {{ brand.name }}
                                                     </option>
@@ -61,34 +66,44 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="outfit">Outfit </label>
-                                                <select class="form-control" id="outfit" v-model="choices.outfit" @change="generateAvatar()">
-                                                    <option v-if="choices.gender != 0" v-for="(outfit, key) in libMojiData.outfits" :value="key">{{slugs[choices.gender - 1].outfits[outfit.outfit] ?? outfit.outfit}}
+                                                <select class="form-control" id="outfit" v-model="choices.outfit"
+                                                        @change="generateAvatar()">
+                                                    <option v-if="choices.gender != 0"
+                                                            v-for="(outfit, key) in libMojiData.outfits" :value="key">
+                                                        {{ slugs[choices.gender - 1].outfits[outfit.outfit] ?? outfit.outfit }}
                                                     </option>
                                                 </select>
                                             </div>
                                             <div class="form-group" v-if="choices.pose == 'body'">
                                                 <label for="rotation">Rotation </label>
-                                                <select class="form-control" id="rotation" v-model="choices.rotation" @change="generateAvatar()">
+                                                <select class="form-control" id="rotation" v-model="choices.rotation"
+                                                        @change="generateAvatar()">
                                                     <option value="0">Straight</option>
                                                     <option value="1">Right</option>
                                                     <option value="7">Left</option>
                                                 </select>
                                             </div>
                                             <br v-if="choices.pose == 'body'">
-                                            <div class="form-group" v-if="choices.gender != 0" v-for="(traits, key) in libMojiData.traits">
+                                            <div class="form-group" v-if="choices.gender != 0"
+                                                 v-for="(traits, key) in libMojiData.traits">
                                                 <label :for="traits.key">{{ traits.key }}&nbsp;</label>
-                                                <select class="form-control" :id="traits.key" v-model="choices.traits[traits.key]" :key="key"
+                                                <select class="form-control" :id="traits.key"
+                                                        v-model="choices.traits[traits.key]" :key="key"
                                                         @change="generateAvatar()">
                                                     <option v-for="(trait, key) in traits.options" :value="trait.value">
-                                                        {{ slugs[choices.gender - 1].traits[(traits.key).toString() + ' ' + (key + 1).toString()] ?? (traits.key).toString() + ' ' + (key + 1).toString() }}
+                                                        {{
+                                                            slugs[choices.gender - 1].traits[(traits.key).toString() + ' ' + (key + 1).toString()] ?? (traits.key).toString() + ' ' + (key + 1).toString()
+                                                        }}
                                                     </option>
                                                 </select>
                                             </div>
                                         </div>
                                         <!--                                        <button @click="generateAvatar()">Generate Avatar</button>-->
-                                        <button class="themeBtn mr-2" @click="hide()" :disabled="formLoading">Cancel</button>
+                                        <button class="themeBtn mr-2" @click="hide()" :disabled="formLoading">Cancel
+                                        </button>
                                         <button class="themeBtn" @click="profileImgUpload()" :disabled="formLoading">
-                                            {{ formLoading ? 'Please Wait' : 'Confirm' }}</button>
+                                            {{ formLoading ? 'Please Wait' : 'Confirm' }}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -119,7 +134,8 @@ export default {
             choices: {
                 gender: 1,
                 genderStr: '',
-                style: 1,
+                // style: 1,
+                style: 5,
                 styleStr: '',
                 pose: 'body',
                 brand: 0,
@@ -572,7 +588,7 @@ export default {
                         "hat 28": "Black Gus Hat with Red Strip.",
                         "hat 29": "Turquoise Turban.",
                         "hat 30": "Black Officer Hat with Red Strip.",
-                        "hat 31":"Teal Open Face Helmet.",
+                        "hat 31": "Teal Open Face Helmet.",
                         "hat 32": "Black Nurse Hat.",
                         "hat 33": "Dull Gold Crown.",
                         "hat 34": "Purple Crown.",
@@ -1711,8 +1727,8 @@ export default {
     },
     watch: {
         //generate avatar when gender is selected
-        "choices.gender": function(nVal, oVal) {
-            if(nVal && nVal !== 0) {
+        "choices.gender": function (nVal, oVal) {
+            if (nVal && nVal !== 0) {
                 this.generateAvatar();
             }
         }
@@ -1721,7 +1737,7 @@ export default {
         msg: String,
     },
     computed: {
-        filteredBrands () {
+        filteredBrands() {
             // return this.libMojiData.brands;
             let non_working_brands_on_female = [
                 'New Arrivals',
@@ -1743,7 +1759,7 @@ export default {
                     new_brands[index] = item;
                 }
             });
-            new_brands = new_brands.filter(item =>  item != null);
+            new_brands = new_brands.filter(item => item != null);
             return new_brands;
         }
     },
@@ -1763,7 +1779,7 @@ export default {
         // }, 2000);
 
         //img upload instead of avatar
-        $('.input_hidden_image').on('change', function(e) {
+        $('.input_hidden_image').on('change', function (e) {
             _t.createUploadedImageURL(e);
         });
 
@@ -1845,7 +1861,8 @@ export default {
                 "fashion",
                 3,
                 gender[1],
-                style[1],
+                // style[1],
+                5,
                 0,
                 traits,
                 outfit
@@ -1853,7 +1870,7 @@ export default {
         },
         profileImgUpload() {
             this.formLoading = true;
-            if(this.image_upload_flag === false) {
+            if (this.image_upload_flag === false) {
                 this.form.url = this.avatar.url;
             } else {
                 this.form.url = null;
@@ -1875,10 +1892,10 @@ export default {
                 }
             })
         },
-        uploadPicture () {
+        uploadPicture() {
             $('.input_hidden_image').click();
         },
-        createUploadedImageURL (e) {
+        createUploadedImageURL(e) {
             console.log(e.target.files);
             this.form.file = e.target.files[0];
             this.image_upload_flag = true;
