@@ -3,7 +3,7 @@
         <div class="df aic jcsb mb-2">
             <h4>
                 This month's subscription payment
-                <button class="stripeBtn" @click.prevent="manageStripeSubscription" v-if="stripe_checkout_session_id">Manage Your Stripe Subscription</button>
+                <button class="stripeBtn" @click.prevent="manageStripeSubscription" v-if="stripe_checkout_session_id">Manage your Membership Subscription payment information.</button>
 <!--                <h6 v-if="!has_made_monthly_payment" style="color:red;">{{ monthNames[new Date().getMonth()]+' Payment Due' }}</h6>-->
                 <h6 v-if="!has_made_monthly_payment" style="color:red;">{{ 'Payment Due ' + this_months_first }}</h6>
                 <h6 v-if="has_made_monthly_payment" style="color:green;">{{ monthNames[new Date().getMonth()]+' Payment Clear' }}</h6>
