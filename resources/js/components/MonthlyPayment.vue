@@ -10,7 +10,7 @@
 <!--                <h6 style="font-weight: 100; color: #817373; font-size: 14px;">Users must need to provide their payment details for receiving their referral payments.</h6>-->
             </h4>
             <div class="df aic gap1">
-                <img src="images/payment2.png" alt="">
+                <img src="images/payment.png" alt="">
             </div>
         </div>
     </div>
