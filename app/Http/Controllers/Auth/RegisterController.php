@@ -220,7 +220,6 @@ class RegisterController extends Controller
 //        return $user;
     }
 
-
 //    override function
     public function register(Request $request)
     {
